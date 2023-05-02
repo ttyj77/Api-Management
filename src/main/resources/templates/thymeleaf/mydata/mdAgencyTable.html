@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+
+<head>
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Agency</title>
+    <th:block layout:fragment="css">
+        <!-- Custom fonts for this template -->
+        <link
+                href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+                rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+              integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+              crossorigin="anonymous">
+
+    </th:block>
+    <th:block layout:fragment="script">
+
+        <script src="https://kit.fontawesome.com/24311b556d.js" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+                integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+                crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+                integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+                crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js"
+                integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+                crossorigin="anonymous"></script>
+    </th:block>
+    <style>
+        .tdContent:hover {
+            background-color: #f5f6fb;
+        }
+
+        .tdHead {
+            background-color: #f5f5f5;
+            width: 30%;
+        }
+
+        .trContent {
+            vertical-align: middle;
+        !important;
+        }
+
+        .borderTop {
+            border-top: 1px solid #dee2e6;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<!-- Page Wrapper -->
+<div layout:fragment="content">
+
+
+    <!-- Begin Page Content -->
+    <div class="container-fluid mr-4">
+        <!--메인화면(계정목록)-->
+        <!-- Page Heading -->
+        <div class="wrapper" style="margin-bottom: 5px">
+            <h1 class="h3 mb-2 text-gray-800" style="margin-left: 12px">마이데이터 기관목록</h1>
+        </div>
+        <div class="card shadow mb-4">
+            <div class="d-flex justify-content-end p-3">
+                <select class="custom-select" style="width: 30%">
+                    <option selected>전체</option>
+                    <option value="1">정보제공자(API 자체구축)</option>
+                    <option value="2">정보제공자(중계기관이용)</option>
+                    <option value="3">마이데이터사업자</option>
+                    <option value="4">중계기관</option>
+                    <option value="5">통합인증기관(인증서 본인확인 기관)</option>
+                    <option value="6">통합인증기관(전자서명인증사업자)</option>
+                    <option value="7">종합포털</option>
+                    <option value="8">기타</option>
+                </select>
+            </div>
+            <!--기관정보테이블 시작-->
+            <div class="card-body table-responsive">
+                <table class="table table-hover"
+                       style="text-align: center; font-size: 14px">
+                    <thead>
+                    <tr style="font-weight: bold; background-color: #f5f6fb;">
+                        <th>기관코드</th>
+                        <th>기관구분</th>
+                        <th>기관명</th>
+                        <th>업권</th>
+                        <th>비고</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="trContent">
+                        <td data-bs-toggle="modal" data-bs-target="#agencyModal">A1AAAK0000</td>
+                        <td data-bs-toggle="modal" data-bs-target="#agencyModal">정보제공자 (API 자체구축)</td>
+                        <td data-bs-toggle="modal" data-bs-target="#agencyModal">SC제일</td>
+                        <td data-bs-toggle="modal" data-bs-target="#agencyModal">bank</td>
+                        <td data-bs-toggle="modal" data-bs-target="#etcModal"><i class="fa-solid fa-braille"
+                                                                                 style="cursor: pointer"></i></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <!-- 기관 정보 모달  -->
+                <div class="modal fade tab" id="agencyModal" tabindex="-1">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4>마이데이터 기관 정보</h4>
+                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="w-100 p-2">
+                                    <div class="border mb-3">
+                                        <div class="border-bottom">
+                                            <h5 class="text-muted p-3 m-0">기본 정보</h5>
+                                        </div>
+                                        <div class="p-4">
+                                            <table class="table table-borderless">
+                                                <tbody>
+                                                <tr>
+                                                    <td class="tdHead">
+                                                        기관코드
+                                                    </td>
+                                                    <td class="tdContent">
+                                                        A1AAAK0000
+                                                    </td>
+                                                </tr>
+                                                <tr class="borderTop">
+                                                    <td class="tdHead">
+                                                        기관구분
+                                                    </td>
+                                                    <td class="tdContent">
+                                                        정보제공자 (API 자체구축)
+                                                    </td>
+                                                </tr>
+                                                <tr class="borderTop">
+                                                    <td class="tdHead">
+                                                        기관명
+                                                    </td>
+                                                    <td class="tdContent">
+                                                        SC제일
+                                                    </td>
+                                                </tr>
+                                                <tr class="borderTop">
+                                                    <td class="tdHead">
+                                                        업권
+                                                    </td>
+                                                    <td class="tdContent">
+                                                        bank
+                                                    </td>
+                                                </tr>
+                                                <tr class="borderTop">
+                                                    <td class="tdHead">
+                                                        주소
+                                                    </td>
+                                                    <td class="tdContent">
+                                                        제일은형 000
+                                                    </td>
+                                                </tr>
+                                                <tr class="borderTop">
+                                                    <td class="tdHead">
+                                                        중계기관 기관코드
+                                                    </td>
+                                                    <td class="tdContent">
+                                                        ZWAAEA0000
+                                                    </td>
+                                                </tr>
+                                                <tr class="borderTop">
+                                                    <td class="tdHead">
+                                                        정보수신자 여부
+                                                    </td>
+                                                    <td class="tdContent">
+                                                        동의
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="border mb-3">
+                                        <div class="border-bottom">
+                                            <h5 class="text-muted p-3 m-0">등록번호</h5>
+                                        </div>
+                                        <div class="p-4">
+                                            <table class="table table-borderless">
+                                                <tbody>
+                                                <tr>
+                                                    <td class="tdHead">
+                                                        사업자등록번호
+                                                    </td>
+                                                    <td class="tdContent">
+                                                        316-37-2022
+                                                    </td>
+                                                </tr>
+                                                <tr class="borderTop">
+                                                    <td class="tdHead">
+                                                        법인등록번호
+                                                    </td>
+                                                    <td class="tdContent">
+                                                        9483613015356
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="border mb-3">
+                                        <div class="border-bottom">
+                                            <h5 class="text-muted p-3 m-0">도메인</h5>
+                                        </div>
+                                        <div class="p-4">
+                                            <table class="table table-borderless">
+                                                <tbody>
+                                                <tr>
+                                                    <td class="tdHead">
+                                                        API서버 도메인명
+                                                    </td>
+                                                    <td class="tdContent">
+                                                        https://yu.ju.janggim.gimgim.igimbag.net
+                                                    </td>
+                                                </tr>
+                                                <tr class="borderTop">
+                                                    <td class="tdHead">
+                                                        API서버 공인IP
+                                                    </td>
+                                                    <td class="tdContent">
+                                                        20.194.110.196:443
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="border mb-3">
+                                        <div class="border-bottom">
+                                            <h5 class="text-muted p-3 m-0">인증</h5>
+                                        </div>
+                                        <div class="p-4">
+                                            <table class="table table-borderless">
+                                                <tbody>
+                                                <tr>
+                                                    <td class="tdHead">
+                                                        제공 인증방식
+                                                    </td>
+                                                    <td class="tdContent">
+                                                        통합인증만 제공
+                                                    </td>
+                                                </tr>
+                                                <tr class="borderTop">
+                                                    <td class="tdHead">
+                                                        TLS 인증서 시리얼넘버
+                                                    </td>
+                                                    <td class="tdContent">
+                                                        KXKU91859992130604
+                                                    </td>
+                                                </tr>
+                                                <tr class="borderTop">
+                                                    <td class="tdHead">
+                                                        통합인증기관의 DN값
+                                                    </td>
+                                                    <td class="tdContent"></td>
+                                                </tr>
+                                                <tr class="borderTop">
+                                                    <td class="tdHead">
+                                                        허용 통합인증서 OID
+                                                    </td>
+                                                    <td class="tdContent">
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="border mb-3">
+                                        <div class="border-bottom">
+                                            <h5 class="text-muted p-3 m-0">IP</h5>
+                                        </div>
+                                        <div class="p-4">
+                                            <table class="table table-borderless">
+                                                <tbody>
+                                                <tr>
+                                                    <td class="tdHead">
+                                                        IP 및 PORT
+                                                    </td>
+                                                    <td class="tdContent">
+                                                        75.74.47.65
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                        닫기
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 기관 정보 모달 끝  -->
+
+                <!-- 비고에 있는 서비스 목록 모달-->
+                <div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="etcModal" tabindex="-1">
+                    <div class="modal-dialog modal-xl modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4>서비스 목록</h4>
+                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body table-responsive">
+                                <table class="table table-hover"
+                                       style="text-align: center; font-size: 14px">
+                                    <thead>
+                                    <tr style="font-weight: bold; background-color: #f5f6fb;">
+                                        <th>클라이언트 ID</th>
+                                        <th>서비스명</th>
+                                        <th>클라이언트 Secret</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr class="trContent" data-bs-toggle="modal" data-bs-target="#serviceModal">
+                                        <td>lrkFiDveCxHtQVRrnjMlEEqZFeZjqReOQtEazAKQnWpLZONo
+                                        </td>
+                                        <td>123456789012345678901234567890</td>
+                                        <td>2b1d5240618759d199684ba6bbe0803a</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                    닫기
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 비고에 있는 서비스 목록 모달 끝-->
+
+                <!-- 서비스 정보 모달 -->
+                <div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="serviceModal" tabindex="-1" style="overflow-y: auto;">
+                    <div class="modal-dialog modal-lg modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4>마이데이터 서비스 정보</h4>
+                                <button type="button" class="close" data-bs-toggle="modal" data-bs-target="#etcModal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="w-100 p-2">
+                                    <div class="border mb-3">
+                                        <div class="border-bottom">
+                                            <h5 class="text-muted p-3 m-0">기본 정보</h5>
+                                        </div>
+                                        <div class="p-4 table-responsive">
+                                            <table class="table table-borderless">
+                                                <tbody>
+                                                <tr>
+                                                    <td class="tdHead">
+                                                        클라이언트 ID
+                                                    </td>
+                                                    <td class="tdContent">
+                                                        lrkFiDveCxHtQVRrnjMlEEqZFeZjqReOQtEazAKQnWpLZONo
+                                                    </td>
+                                                </tr>
+                                                <tr class="borderTop">
+                                                    <td class="tdHead">
+                                                        서비스명
+                                                    </td>
+                                                    <td class="tdContent">
+                                                        123456789012345678901234567890
+                                                    </td>
+                                                </tr>
+                                                <tr class="borderTop">
+                                                    <td class="tdHead">
+                                                        클라이언트 Secret
+                                                    </td>
+                                                    <td class="tdContent">
+                                                        2b1d5240618759d199684ba6bbe0803a
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="border mb-3">
+                                        <div class="border-bottom">
+                                            <h5 class="text-muted p-3 m-0">Callback URL</h5>
+                                        </div>
+                                        <div class="p-4 table-responsive">
+                                            <table class="table table-borderless">
+                                                <tbody>
+                                                <tr>
+                                                    <!-- rowspan 에 callback URL 갯수 들어가야 함-->
+                                                    <td class="tdHead" rowspan="2" style="vertical-align: middle">
+                                                        callback URL
+                                                    </td>
+
+                                                    <td class="tdContent">
+                                                        https://www.yu.kr/
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="tdContent">
+                                                        https://ian.kr/
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="border mb-3">
+                                        <div class="border-bottom">
+                                            <h5 class="text-muted p-3 m-0">앱 URL 스킴</h5>
+                                        </div>
+                                        <div class="p-4 table-responsive">
+                                            <table class="table table-borderless">
+                                                <tbody>
+                                                <tr>
+                                                    <td class="tdHead">
+                                                        API서버 도메인명
+                                                    </td>
+                                                    <td class="tdContent">
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#etcModal">
+                                        닫기
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 서비스 정보 모달 끝-->
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+</div>
+</body>
+</html>

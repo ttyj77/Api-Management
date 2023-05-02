@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <style>
+        .tdContent:hover {
+            background-color: #f5f6fb;
+        }
+
+        .tdHead {
+            background-color: #f5f5f5;
+        }
+    </style>
+
+    <title>거래이력(사업자)</title>
+
+    <th:block layout:fragment="css">
+        <link
+                href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+                rel="stylesheet">
+        <link href="/css/sb-admin-2.min.css" rel="stylesheet">
+    </th:block>
+
+    <th:block layout:fragment="script">
+        <script src="https://kit.fontawesome.com/24311b556d.js" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+                integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+                crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+                integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+                crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js"
+                integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+                crossorigin="anonymous"></script>
+
+    </th:block>
+
+</head>
+
+<body>
+<div layout:fragment="content">
+
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <h1 class="h3 mb-2 text-gray-800">사업자 API 거래이력</h1>
+                    <p class="mb-4"></p>
+
+                    <!-- DataTales Example -->
+                    <div class="card shadow mb-4">
+                        <!-- Topbar Search -->
+                        <div class=" row" style="    display: flex;justify-content: space-between;">
+                            <div class="col-md-7 m-3">
+                                <label for="selectDate">조회날짜&nbsp;&nbsp;</label>
+                                <input type="date" id="selectDate" name="selectDate"
+                                       style="width: 220px; text-align: center;">
+                                <input class="btn btn-primary p-1" type="submit" value="오늘"
+                                       style="  margin-bottom: 4px; height: 31px;">
+                                <button class="btn btn-primary">조회</button>
+                            </div>
+                            <div class="col-md-3 input-group m-3">
+                                <input type="text" class="form-control"
+                                       placeholder="검색어를 입력해주세요"
+                                       aria-label="Search" aria-describedby="basic-addon2">
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" type="button"
+                                            style="height: 38px;">
+                                        <i class="fas fa-search fa-sm"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover" id="dataTable"
+                                       style="text-align: center; font-size: 13px">
+                                    <thead>
+                                    <tr style=" width: -webkit-fill-available; font-weight: bold; background-color: #f5f6fb;">
+                                        <td>요청일</td>
+                                        <td>요청시간</td>
+                                        <td>응답일자</td>
+                                        <td>응답시간(ms)</td>
+                                        <td>응답코드</td>
+                                        <td>API코드</td>
+                                        <td>정기적 전송</td>
+                                        <td>타겟호스트</td>
+                                        <td>거래고유번호</td>
+                                    </tr>
+                                    </thead>
+
+                                    <tbody>
+                                    <tr data-bs-toggle="modal" data-bs-target="#collectorModal">
+                                        <td>2021-11-23</td>
+                                        <td>15:18:16.614</td>
+                                        <td>2021-11-23 15:18:16.642</td>
+                                        <td>000.280</td>
+                                        <td>00000</td>
+                                        <td>IS08</td>
+                                        <td>user-refresh</td>
+                                        <td>https://developers.mydatakorea.org:9443</td>
+                                        <td>QMBFCK67NULBGK72D1YE1MMYB</td>
+                                        <td></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.container-fluid -->
+                <!-- Button trigger modal -->
+
+                <!-- collector Modal start -->
+                <div class="modal fade" id="collectorModal" tabindex="-1" role="dialog"
+                     aria-labelledby="collectorModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="collectorModalLabel">사업자 API 거래이력</h5>
+                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body" id="modalDark" style="overflow-y: scroll;overflow-x: hidden">
+                                <h3 class="mb-1">
+                                    기본 정보
+                                </h3>
+                                <table class="table table-bordered align-middle"
+                                       style="width: -webkit-fill-available; font-size: 15px">
+                                    <tbody>
+                                    <tr>
+                                        <td class="tdHead">거래고유번호</td>
+                                        <td class="tdContent">A5BRYUZ5ZPIABN760L66AA6W9</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tdHead">요청API Resource</td>
+                                        <td class="tdContent">/insu/irps</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tdHead">xTargetHost</td>
+                                        <td class="tdContent">https://developers.mydatakorea.org:9443</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tdHead" style="vertical-align: middle">요청헤더</td>
+                                        <td class="tdContent"><textarea
+                                                style="height: 150px; width: -webkit-fill-available;">{Content-Type=application/json; charset=UTF-8, Host=developers.mydatakorea.org:9443, X-FSI-SVC-DATA-KEY=Y, x-api-tran-id=INSU000012M00000000000001, x-api-type=user-search, Authorization=Bearer eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIyOTQiLCJpc3MiOiJ0ZXN0IGJlZCIsImF1ZCI6Ijk4IiwianRpIjoiMDAwMDAxN2YtNGQzNS0wOTdmLTAwMDAtMDE3ZGIyZjEyNWE4IiwiZXhwIjoxNjU0MDQzNzk1LCJzY29wZSI6ImJhbmsubGlzdCBiYW5rLmludmVzdCBiYW5rLmxvYW4gYmFuay5pcnAgY2FyZC5saXN0IGNhcmQuY2FyZCBjYXJkLnBvaW50IGNhcmQuYmlsbCBjYXJkLmxvYW4gaW52ZXN0Lmxpc3QgaW52ZXN0LmlycCBiYW5rLmRlcG9zaXQgZWZpbi5wcmVwYWlkIGVmaW4ucGFpZCBjYSBib25kLmxpc3QgdXN1cnkubGlzdCBib25kLmJvbmQgdXN1cnkuYm9uZCBjYXJkLnByZXBhaWQgaW52ZXN0LmFjY291bnQgcDJwLmxpc3QgcDJwLmxlbmRpbmcgaW5zdS5saXN0IGluc3UuaW5zdXJhbmNlIGluc3UubG9hbiBpbnN1LmlycCBlZmluLmxpc3QgY2FwaXRhbC5saXN0IGNhcGl0YWwubG9hbiBnaW5zdS5saXN0IGdpbnN1Lmluc3VyYW5jZSB0ZWxlY29tLmxpc3QgdGVsZWNvbS5tZ210IG1hbmFnZSJ9.jClg424IIHNtuGetgvKsGl2Z3nJ0q_RrwiJ11GsfjPxJ-NNH-f6Fq5XCOqwE-3_5vZIzNhnd0XHBuKDY0WMHv0H8dxNd7hhA8UaXuoOKmQXB5SHiSsUa5BpQNI8axX8BJFRtEO1Xi3T__tRf5c5_t9l1HF-llZ-_i5GkynyQAEzY1htwMCFeil17rQh17vRhhB0qURlwjzDm5hejOOnKs-WwJ3e3GTW_Ej4LtwlvTGWrDfE5YcBVpi-2ovX0aWL4zi-al2cOmuMD1ITjV2LjLN0IY8xVndamdt3JZq0Tki__MmXP9wLCSYvymsMmK1nrKWbBGKiJOdUjyI_ZQjITcA, x-target-host=https://developers.mydatakorea.org:9443}</textarea>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tdHead" style="vertical-align: middle">요청데이터</td>
+                                        <td class="tdContent"><textarea
+                                                style="height: 120px; width: -webkit-fill-available;">org_code=B1AAAI0000&search_timestamp=0</textarea>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tdHead">응답메세지</td>
+                                        <td class="tdContent">성공</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tdHead" style="vertical-align: middle">응답데이터</td>
+                                        <td class="tdContent"><textarea
+                                                style="height: 150px; width: -webkit-fill-available;">{'irp_cnt': '1', 'rsp_msg': '성공', 'irp_list': [{'prod_name': '교보생명 원리금보장상품(IRP정기예금)', 'is_consent': 'true', 'account_num': '3575507379791901'}], 'rsp_code': '00000', 'search_timestamp': '0'}</textarea>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End of Main Content -->
+            <!-- details info Modal end -->
+        </div>
+        <!-- End of Content Wrapper -->
+    </div>
+    <!-- End of Page Wrapper -->
+</div>
+</body>
+
+</html>

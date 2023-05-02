@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+
+</head>
+<body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<th:block th:fragment="headerFragment">
+
+    <div>
+        <div style="width: 100vw; height: 100px; background-color: #fafafa">
+            <div style="display: flex; justify-content: space-between;">
+                <div>
+                    <img src="../images/logo4.png" style="width: 200px; margin-left: 1%; cursor: pointer;"
+                         onclick="javascript:location.href='/api'">
+                </div>
+                <div style="margin-top: 30px; margin-right: 30px">
+                    <i style="width: 20px; margin-right:10px " class="fa-solid fa-user fa-bounce"
+                       onclick="location.href='/user/login'"></i>
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                </div>
+
+            </div>
+        </div>
+
+        <div style="width: 100vw; height: 50px; background-color: #1c294e"></div>
+    </div>
+</th:block>
+
+<th:block th:fragment="sideBarFragment">
+
+    <!-- ======= Sidebar ======= -->
+    <aside id="sidebar" class="sidebar">
+
+        <ul class="sidebar-nav" id="sidebar-nav">
+
+            <li class="nav-item">
+                <a class="nav-link " href="/api">
+                    <i class="bi bi-grid"></i>
+                    <span>APIs</span>
+                </a>
+            </li><!-- End Dashboard Nav -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="/api/trash">
+                    <i class="fa-solid fa-trash-can" style="color: #797a7c;font-weight: 100;"></i>
+                    <span>휴지통 관리</span>
+                </a>
+            </li><!-- End Profile Page Nav -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="/requestPage">
+                    <i class="bi bi-person"></i>
+
+                    <span>요청 관리</span>
+                </a>
+            </li><!-- End Profile Page Nav -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="/accountList">
+                    <i class="bi bi-person"></i>
+                    <span>계정 관리</span>
+                </a>
+            </li><!-- End Profile Page Nav -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="/authorization">
+                    <i class="bi bi-person"></i>
+                    <span>권한 관리</span>
+                </a>
+            </li><!-- End Profile Page Nav -->
+
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse"
+                   href="#">
+                    <i class="bi bi-menu-button-wide"></i><span>마이데이터</span><i
+                        class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a href="/mydata/mydataSendReq">
+                            <i class="bi bi-circle"></i><span>전송요구관리</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/mydata/agencyTable">
+                            <i class="bi bi-circle"></i><span>기관관리</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/mydata/mydataServiceControl">
+                            <i class="bi bi-circle"></i><span>서비스관리</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/mydata/mydataToken">
+                            <i class="bi bi-circle"></i><span>발급토큰관리</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/mydata/providerTable">
+                            <i class="bi bi-circle"></i><span>거래이력(제공자)</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/mydata/collectorTable">
+                            <i class="bi bi-circle"></i><span>거래이력(사업자)</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/mydata/statistics-Daily">
+                            <i class="bi bi-circle"></i><span>통계(1일)관리</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/mydata/statistics-7Day">
+                            <i class="bi bi-circle"></i><span>통계(7일)관리</span>
+                        </a>
+                </ul>
+            </li><!-- End Components Nav -->
+
+
+        </ul>
+    </aside><!-- End Sidebar-->
+
+</th:block>
+
+
+</body>
+</html>

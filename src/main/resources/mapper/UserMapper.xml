@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ipa.openapi_inzent.dao.UserDao">
+    <insert id="register" parameterType="com.ipa.openapi_inzent.model.UserDTO">
+        INSERT INTO user(username, password,role)
+        VALUES (#{username}, #{password},#{role})
+    </insert>
+    <select id="findByUsername" parameterType="String" resultType="com.ipa.openapi_inzent.model.UserDTO">
+        SELECT id, username, password,role
+        FROM public."user" where username = #{username};
+    </select>
+</mapper>
+

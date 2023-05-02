@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <style>
+        .tdContent:hover {
+            background-color: #f5f6fb;
+        }
+
+        .tdHead {
+            background-color: #f5f5f5;
+            font-size: 12px;
+        }
+
+        .tds {
+            font-size: 14px;
+        }
+    </style>
+
+    <title>전송요구내역</title>
+
+    <th:block layout:fragment="css">
+        <link
+                href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+                rel="stylesheet">
+        <link href="/css/sb-admin-2.min.css" rel="stylesheet">
+    </th:block>
+
+    <th:block layout:fragment="script">
+        <script src="https://kit.fontawesome.com/24311b556d.js" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+                integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+                crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+                integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+                crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js"
+                integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+                crossorigin="anonymous"></script>
+
+    </th:block>
+
+</head>
+
+<body>
+<div layout:fragment="content">
+
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid p-0 pl-1">
+
+                    <!-- Page Heading -->
+                    <h3 class="h3 mb-2 text-gray-800">전송요구내역(전송이동권)</h3>
+                    <p class="mb-4"></p>
+                    <!-- DataTales Example -->
+                    <div class="card shadow mb-4">
+                        <!-- Topbar Search -->
+                        <div class=" row" style="    display: flex;justify-content: space-between;">
+                            <div class="col-md-7 m-3">
+                                <div>상태정보 구분</div>
+                                <select class="form-control" id="statusInfo" style="width: 50%;">
+                                    <option selected>전체</option>
+                                    <option>(통합인증)자산목록</option>
+                                    <option>(통합인증)자산선택</option>
+                                    <option>(개별인증)인가코드</option>
+                                    <option>(개별인증)토큰발급</option>
+                                    <option>[토큰준비]자산목록(통합) + 인가코드(개별)</option>
+                                    <option>[토큰생성]자산목록(통합) + 토큰발급(개별)</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 input-group m-3">
+                                <input type="text" class="form-control"
+                                       placeholder="검색어를 입력해주세요"
+                                       aria-label="Search" aria-describedby="basic-addon2">
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" type="button"
+                                            style="height: 38px;">
+                                        <i class="fas fa-search fa-sm"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover" id="dataTable"
+                                       style="text-align: center; font-size: 13px">
+                                    <thead>
+                                    <tr style=" width: -webkit-fill-available; font-weight: bold; background-color: #f5f6fb;">
+                                        <td>기관코드</td>
+                                        <td>기관명</td>
+                                        <td>서비스명</td>
+                                        <td>전송요구타입</td>
+                                        <td>정보주체번호</td>
+                                        <td>전송주기(기본,추가)</td>
+                                        <td>상태정보</td>
+                                        <td>전송준비일</td>
+                                        <td>전송요구일</td>
+                                        <td>전송요구 종료일</td>
+                                        <td>토큰 유효기간</td>
+                                        <td>토큰폐기일</td>
+                                        <td>자산|토큰</td>
+                                    </tr>
+                                    </thead>
+
+                                    <tbody>
+                                    <tr data-bs-toggle="modal" data-bs-target="#providerModal">
+                                        <td>ZVAAAZ0000</td>
+                                        <td>농업협동조합중앙회</td>
+                                        <td style="color: #0d6efd; font-weight: bold;">상호금융마이데이터</td>
+                                        <td>마이데이터</td>
+                                        <td style="color: #0d6efd; font-weight: bold;">6384308822</td>
+                                        <td>1/w,1/w</td>
+                                        <td>(통합인증)자산선택</td>
+                                        <td>2021-11-15 16:27:12</td>
+                                        <td>2021-11-15 17:09:52</td>
+                                        <td>2022-11-16</td>
+                                        <td>2022-12-11</td>
+                                        <td></td>
+                                        <td><i class="fa-solid fa-file-lines" style="cursor: pointer"
+                                               data-toggle="tooltip"
+                                               title="자산목록"></i> <i class="fa-solid fa-file-shield"
+                                                                    style="cursor: pointer" data-toggle="tooltip"
+                                                                    title="발급 토큰 정보"></i></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.container-fluid -->
+                <!-- Button trigger modal -->
+
+                <!-- details info Modal start -->
+                <div class="modal fade" id="providerModal" tabindex="-1" role="dialog"
+                     aria-labelledby="providerModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title font-weight-bold" id="providerModalLabel" style="color: black">거래이력(제공자)</h5>
+                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body" id="modalDark" style="overflow-y: scroll;overflow-x: hidden">
+                                <div class="mb-3 text-muted">
+                                    [TRQ_20211115162712_0798]
+                                </div>
+                                <div class="w-100 border">
+                                    <div class="border-bottom p-3 font-weight-bold" style="color: black">거래이력</div>
+                                    <div class="mt-2">
+                                        <label for="selectDate">조회날짜&nbsp;&nbsp;</label>
+                                        <input type="date" id="selectDate" name="selectDate"
+                                               style="width: 220px; text-align: center;">
+                                        <input class="btn btn-dark p-1" type="submit" value="오늘"
+                                               style="  margin-bottom: 4px; height: 31px;">
+                                        <button class="btn btn-dark">조회</button>
+                                    </div>
+                                    <table class="table table-hover">
+                                        <thead>
+                                        <tr class="tdHead">
+                                            <td>요청일자</td>
+                                            <td>요청시간</td>
+                                            <td>응답일자</td>
+                                            <td>응답시간(sec)</td>
+                                            <td>응답 Code</td>
+                                            <td>요청API</td>
+                                            <td>요청API Code</td>
+                                            <td>통합고객번호</td>
+                                            <td>정기적 전송</td>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr class="tds" data-bs-toggle="modal" data-bs-target="#detailModal">
+                                            <td>2021-11-23</td>
+                                            <td>01:00:19.915</td>
+                                            <td>2021-11-23 01:00:19.944</td>
+                                            <td>00.287</td>
+                                            <td>00000</td>
+                                            <td>보험-005</td>
+                                            <td>IS05</td>
+                                            <td>6384308822</td>
+                                            <td>scheduled</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+
+
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- details info Modal start -->
+                <div class="modal fade" id="detailModal" tabindex="-1" role="dialog"
+                     aria-labelledby="detailModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title font-weight-bold" style="color: black" id="detailModalLabel">거래이력(제공자)-상세</h5>
+                                <button type="button" class="close" aria-label="Close" data-bs-target="#providerModal"
+                                        data-bs-toggle="modal">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body" style="overflow-x: hidden">
+                                <h5 class="mb-1">
+                                    기본 정보
+                                </h5>
+                                <table class="table table-bordered align-middle"
+                                       style="width: -webkit-fill-available;font-size: 15px;">
+                                    <tbody>
+                                    <tr>
+                                        <td class="tdHead">거래이력 SEQ</td>
+                                        <td colspan="3" class="tdContent">TRH_1332035460658031120
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td class="tdHead">전송요구 SEQ</td>
+                                        <td class="tdContent">TRQ_20211115162712_0798</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="tdHead">거래 고유번호</td>
+                                        <td colspan="3" class="tdContent">KZT8QZCEEOPBO85Z9UAFCNHTK
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td class="tdHead">요청API Resource</td>
+                                        <td colspan="3" class="tdContent">/v1/insu/insurances/payment</td>
+
+                                    </tr>
+                                    <tr>
+                                        <td class="tdHead">증권번호</td>
+                                        <td class="tdContent">168237311096
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="tdHead">응답메시지</td>
+                                        <td class="tdContent">성공
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="tdHead">시간대역</td>
+                                        <td class="tdContent">01
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tdHead" style="vertical-align: middle">resdata
+                                        </td>
+                                        <td class="tdContent p-0 ">
+                                            <textarea style="height: 120px" class="w-100">{'search_timestamp': '0', 'pay_date': '25', 'pay_cycle': '1M', 'pay_amt': '91000', 'rsp_code': '00000', 'pay_cnt': '120', 'pay_end_date': '20060206', 'pay_due': '02', 'rsp_msg': '성공', 'is_auto_pay': 'false', 'pay_org_code': 'AAAI0000'}</textarea>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
+                                        data-bs-target="#providerModal">닫기
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- End of Main Content -->
+            <!-- details info Modal end -->
+        </div>
+        <!-- End of Content Wrapper -->
+    </div>
+    <!-- End of Page Wrapper -->
+</div>
+</body>
+
+</html>

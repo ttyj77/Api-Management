@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>회원가입</title>
+</head>
+<body>
+<!-- start Registration section -->
+<section class="login registration section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 offset-lg-3 col-md-8 offset-md-2 col-12">
+                <div class="form-head">
+                    <h4 class="title">회원가입</h4>
+                    <form th:action="@{/user/register}" method="post">
+
+                        <div class="form-group">
+                            <label
+                            ><span>아이디</span>
+                                <input
+                                        type="text"
+                                        class="form-control"
+                                        id="username"
+                                        name="username"
+                                        placeholder="username"
+                                        required
+                                        maxlength="10"
+                                />
+
+
+                            </label>
+                        </div>
+
+                        <div class="col-md-12 form-group">
+                            <label
+                            ><span>비밀번호</span>
+                                <input
+                                        type="password"
+                                        class="form-control"
+                                        id="pw1"
+                                        name="password"
+                                        required
+                                        maxlength="20"
+                                />
+                            </label>
+                        </div>
+
+
+                        <div class="button">
+                            <button type="submit" class="btn">회원가입</button>
+                        </div>
+                        <p class="outer-link">
+                            이미 계정이 있으신가요? <a href="/user/login"> 지금 바로 로그인</a>
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End Registration section -->
+</body>
+</html>
