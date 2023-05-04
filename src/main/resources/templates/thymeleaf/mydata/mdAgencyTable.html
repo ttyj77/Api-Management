@@ -34,6 +34,172 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js"
                 integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
                 crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
+        <script>
+            function infoModal(value) {
+
+                console.log("infoModal", value.id)
+                let data = {
+                    "id": value.id,
+                };
+                $.ajax({
+                    url: "/mydata/agencyTable/modal",
+                    type: "get",
+                    data: data,
+
+                    success: (message) => {
+                        $('#etcModal').modal('show');
+                        document.getElementById("etcModalTbody").innerHTML = ""
+                        let array = JSON.parse(message.responseText);
+                        createEtcModal(array);
+
+
+                    },
+                    error: (e) => {
+                        console.log("통신 실패", e);
+                    }
+                })
+            }
+
+            /* 서비스 목록 모달 & callbackUrl <br> 추가 */
+            function createEtcModal(array) {
+                document.getElementById("etcModalTbody").innerHTML = ""
+                let i = 0;
+
+                for (i; i < array.length; i++) {
+                    let tr = document.createElement("tr")
+                    let clientId = document.createElement("td")
+                    let serviceName = document.createElement("td")
+                    let callbackUrl = document.createElement("td")
+                    for (let j = 0; j < array[i].callbackUrl.length; j++) {
+                        callbackUrl.append(array[i].callbackUrl[j] + "<br/>");
+                    }
+                    callbackUrl.innerHTML = callbackUrl.textContent
+                    clientId.innerText = array[i].clientId
+                    serviceName.innerText = array[i].mdServiceName
+
+                    tr.append(clientId)
+                    tr.append(serviceName)
+                    tr.append(callbackUrl)
+                    document.getElementById("etcModalTbody").append(tr);
+                }
+            }
+
+            /* selectOne : 기관 클릭 시 개별 상세 모달 */
+            function agencyModal(value) {
+                console.log(value)
+                console.log(value.parentNode)
+                console.log("agencyModal", value.parentNode.id)
+
+                let data = {
+                    "id": value.parentNode.id,
+                };
+                $.ajax({
+                    url: "/mydata/agencyTable/selectOne",
+                    type: "get",
+                    data: data,
+
+                    success: (message) => {
+                        $('#agencyModal').modal('show');
+                        let list = JSON.parse(message.responseText);
+                        createAgencyModal(list);
+                        console.log(list)
+
+
+                    },
+                    error: (e) => {
+                        console.log("통신 실패", e);
+                    }
+                })
+            }
+
+
+            function createAgencyModal(list) {
+                document.getElementById("code").innerText = list.code
+                document.getElementById("division").innerText = list.division
+                document.getElementById("name").innerText = list.name
+                document.getElementById("industry").innerText = list.industry
+                document.getElementById("address").innerText = list.address
+                document.getElementById("domainName").innerText = list.domainName
+                document.getElementById("publicApiIp").innerText = list.publicApiIp
+                document.getElementById("authenticationMethod").innerText = list.authenticationMethod
+                document.getElementById("TLSNum").innerText = list.TLSNum
+                document.getElementById("ipPort").append(list.agencyIp)
+                if (list.agencyPort != null) {
+                    // document.append(" : ")
+
+                    document.getElementById("ipPort").append(" / ")
+                    document.getElementById("ipPort").append(list.agencyPort)
+                }
+
+            }
+
+            function selectChange(value) {
+
+                console.log("selectChange")
+                console.log(value)
+
+                let data = {
+                    "division": value,
+                };
+                $.ajax({
+                    url: "/mydata/agencyTable/selectBox",
+                    type: "get",
+                    data: data,
+
+                    success: (message) => {
+                        document.getElementById("agencyListTbody").innerHTML = ""
+                        let array = JSON.parse(message.responseText);
+                        createAgencyList(array);
+                        console.log(array)
+
+
+                    },
+                    error: (e) => {
+                        console.log("통신 실패", e);
+                    }
+                })
+            }
+
+            function createAgencyList(array) {
+
+                let i = 0;
+                for (i; i < array.length; i++) {
+                    let tr = document.createElement("tr")
+                    let agCode = document.createElement("td")
+                    let name = document.createElement("td")
+                    let division = document.createElement("td")
+                    let industry = document.createElement("td")
+                    let note = document.createElement("td")
+
+                    agCode.append(array[i].code)
+                    division.append(array[i].division)
+                    name.append(array[i].name)
+
+                    industry.append(array[i].industry)
+                    // <td onClick="infoModal(this)" th:id="${agencyList.id}"><i className="fa-solid fa-braille"
+                    // style="cursor: pointer"></i></td>
+
+                    note.onclick = function () {
+                        infoModal(this);
+                    };
+                    note.id = array[i].id
+                    let icon = document.createElement("i")
+                    icon.className = "fa-solid fa-braille";
+                    icon.style.cursor = "pointer"
+                    note.append(icon)
+
+                    tr.append(agCode, division, name, industry, note)
+
+                    document.getElementById("agencyListTbody").append(tr)
+                }
+
+
+            }
+
+        </script>
     </th:block>
     <style>
         .tdContent:hover {
@@ -72,16 +238,17 @@
         </div>
         <div class="card shadow mb-4">
             <div class="d-flex justify-content-end p-3">
-                <select class="custom-select" style="width: 30%">
+                <!--     select box           -->
+                <select class="custom-select" style="width: 30%" onchange="selectChange(value)">
                     <option selected>전체</option>
-                    <option value="1">정보제공자(API 자체구축)</option>
-                    <option value="2">정보제공자(중계기관이용)</option>
-                    <option value="3">마이데이터사업자</option>
-                    <option value="4">중계기관</option>
-                    <option value="5">통합인증기관(인증서 본인확인 기관)</option>
-                    <option value="6">통합인증기관(전자서명인증사업자)</option>
-                    <option value="7">종합포털</option>
-                    <option value="8">기타</option>
+                    <option value="정보제공자(API 자체구축)">정보제공자(API 자체구축)</option>
+                    <option value="정보제공자(중계기관이용)">정보제공자(중계기관이용)</option>
+                    <option value="마이데이터사업자">마이데이터사업자</option>
+                    <option value="중계기관">중계기관</option>
+                    <option value="통합인증기관(인증서 본인확인 기관)">통합인증기관(인증서 본인확인 기관)</option>
+                    <option value="통합인증기관(전자서명인증사업자)">통합인증기관(전자서명인증사업자)</option>
+                    <option value="종합포털">종합포털</option>
+                    <option value="기타">기타</option>
                 </select>
             </div>
             <!--기관정보테이블 시작-->
@@ -97,15 +264,20 @@
                         <th>비고</th>
                     </tr>
                     </thead>
-                    <tbody>
-                    <tr class="trContent">
-                        <td data-bs-toggle="modal" data-bs-target="#agencyModal">A1AAAK0000</td>
-                        <td data-bs-toggle="modal" data-bs-target="#agencyModal">정보제공자 (API 자체구축)</td>
-                        <td data-bs-toggle="modal" data-bs-target="#agencyModal">SC제일</td>
-                        <td data-bs-toggle="modal" data-bs-target="#agencyModal">bank</td>
-                        <td data-bs-toggle="modal" data-bs-target="#etcModal"><i class="fa-solid fa-braille"
-                                                                                 style="cursor: pointer"></i></td>
+                    <tbody id="agencyListTbody">
+
+                    <tr class="trContent" th:each="agencyList : ${agencyList}" th:id="${agencyList.id}">
+                        <td data-bs-toggle="modal" onclick="agencyModal(this)" th:text="${agencyList.code}"></td>
+                        <td data-bs-toggle="modal" onclick="agencyModal(this)" th:text="${agencyList.division}"></td>
+                        <td data-bs-toggle="modal" onclick="agencyModal(this)" th:text="${agencyList.name}"></td>
+                        <td data-bs-toggle="modal" onclick="agencyModal(this)" th:text="${agencyList.industry}"></td>
+                        <!--                        <td data-bs-toggle="modal" data-bs-target="#etcModal"><i class="fa-solid fa-braille"-->
+                        <!--                                                                                 style="cursor: pointer"></i></td>-->
+                        <td onclick="infoModal(this)" th:id="${agencyList.id}"><i class="fa-solid fa-braille"
+                                                                                  style="cursor: pointer"></i></td>
                     </tr>
+
+
                     </tbody>
                 </table>
                 <!-- 기관 정보 모달  -->
@@ -131,85 +303,43 @@
                                                     <td class="tdHead">
                                                         기관코드
                                                     </td>
-                                                    <td class="tdContent">
-                                                        A1AAAK0000
+                                                    <td class="tdContent" id="code">
+
                                                     </td>
                                                 </tr>
                                                 <tr class="borderTop">
                                                     <td class="tdHead">
                                                         기관구분
                                                     </td>
-                                                    <td class="tdContent">
-                                                        정보제공자 (API 자체구축)
+                                                    <td class="tdContent" id="division">
+
                                                     </td>
                                                 </tr>
                                                 <tr class="borderTop">
                                                     <td class="tdHead">
                                                         기관명
                                                     </td>
-                                                    <td class="tdContent">
-                                                        SC제일
+                                                    <td class="tdContent" id="name">
+
                                                     </td>
                                                 </tr>
                                                 <tr class="borderTop">
                                                     <td class="tdHead">
                                                         업권
                                                     </td>
-                                                    <td class="tdContent">
-                                                        bank
+                                                    <td class="tdContent" id="industry">
+
                                                     </td>
                                                 </tr>
                                                 <tr class="borderTop">
                                                     <td class="tdHead">
                                                         주소
                                                     </td>
-                                                    <td class="tdContent">
-                                                        제일은형 000
+                                                    <td class="tdContent" id="address">
+
                                                     </td>
                                                 </tr>
-                                                <tr class="borderTop">
-                                                    <td class="tdHead">
-                                                        중계기관 기관코드
-                                                    </td>
-                                                    <td class="tdContent">
-                                                        ZWAAEA0000
-                                                    </td>
-                                                </tr>
-                                                <tr class="borderTop">
-                                                    <td class="tdHead">
-                                                        정보수신자 여부
-                                                    </td>
-                                                    <td class="tdContent">
-                                                        동의
-                                                    </td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                    <div class="border mb-3">
-                                        <div class="border-bottom">
-                                            <h5 class="text-muted p-3 m-0">등록번호</h5>
-                                        </div>
-                                        <div class="p-4">
-                                            <table class="table table-borderless">
-                                                <tbody>
-                                                <tr>
-                                                    <td class="tdHead">
-                                                        사업자등록번호
-                                                    </td>
-                                                    <td class="tdContent">
-                                                        316-37-2022
-                                                    </td>
-                                                </tr>
-                                                <tr class="borderTop">
-                                                    <td class="tdHead">
-                                                        법인등록번호
-                                                    </td>
-                                                    <td class="tdContent">
-                                                        9483613015356
-                                                    </td>
-                                                </tr>
+
                                                 </tbody>
                                             </table>
                                         </div>
@@ -225,16 +355,16 @@
                                                     <td class="tdHead">
                                                         API서버 도메인명
                                                     </td>
-                                                    <td class="tdContent">
-                                                        https://yu.ju.janggim.gimgim.igimbag.net
+                                                    <td class="tdContent" id="domainName">
+
                                                     </td>
                                                 </tr>
                                                 <tr class="borderTop">
                                                     <td class="tdHead">
                                                         API서버 공인IP
                                                     </td>
-                                                    <td class="tdContent">
-                                                        20.194.110.196:443
+                                                    <td class="tdContent" id="publicApiIp">
+
                                                     </td>
                                                 </tr>
                                                 </tbody>
@@ -252,31 +382,19 @@
                                                     <td class="tdHead">
                                                         제공 인증방식
                                                     </td>
-                                                    <td class="tdContent">
-                                                        통합인증만 제공
+                                                    <td class="tdContent" id="authenticationMethod">
+
                                                     </td>
                                                 </tr>
                                                 <tr class="borderTop">
                                                     <td class="tdHead">
                                                         TLS 인증서 시리얼넘버
                                                     </td>
-                                                    <td class="tdContent">
-                                                        KXKU91859992130604
+                                                    <td class="tdContent" id="TLSNum">
+
                                                     </td>
                                                 </tr>
-                                                <tr class="borderTop">
-                                                    <td class="tdHead">
-                                                        통합인증기관의 DN값
-                                                    </td>
-                                                    <td class="tdContent"></td>
-                                                </tr>
-                                                <tr class="borderTop">
-                                                    <td class="tdHead">
-                                                        허용 통합인증서 OID
-                                                    </td>
-                                                    <td class="tdContent">
-                                                    </td>
-                                                </tr>
+
                                                 </tbody>
                                             </table>
                                         </div>
@@ -292,8 +410,8 @@
                                                     <td class="tdHead">
                                                         IP 및 PORT
                                                     </td>
-                                                    <td class="tdContent">
-                                                        75.74.47.65
+                                                    <td class="tdContent" id="ipPort">
+
                                                     </td>
                                                 </tr>
                                                 </tbody>
@@ -329,16 +447,11 @@
                                     <tr style="font-weight: bold; background-color: #f5f6fb;">
                                         <th>클라이언트 ID</th>
                                         <th>서비스명</th>
-                                        <th>클라이언트 Secret</th>
+                                        <th>callback URL</th>
                                     </tr>
                                     </thead>
-                                    <tbody>
-                                    <tr class="trContent" data-bs-toggle="modal" data-bs-target="#serviceModal">
-                                        <td>lrkFiDveCxHtQVRrnjMlEEqZFeZjqReOQtEazAKQnWpLZONo
-                                        </td>
-                                        <td>123456789012345678901234567890</td>
-                                        <td>2b1d5240618759d199684ba6bbe0803a</td>
-                                    </tr>
+                                    <tbody id="etcModalTbody">
+
                                     </tbody>
                                 </table>
                             </div>
@@ -353,12 +466,14 @@
                 <!-- 비고에 있는 서비스 목록 모달 끝-->
 
                 <!-- 서비스 정보 모달 -->
-                <div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="serviceModal" tabindex="-1" style="overflow-y: auto;">
+                <div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="serviceModal"
+                     tabindex="-1" style="overflow-y: auto;">
                     <div class="modal-dialog modal-lg modal-dialog-centered">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h4>마이데이터 서비스 정보</h4>
-                                <button type="button" class="close" data-bs-toggle="modal" data-bs-target="#etcModal" aria-label="Close">
+                                <button type="button" class="close" data-bs-toggle="modal" data-bs-target="#etcModal"
+                                        aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
@@ -445,7 +560,8 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#etcModal">
+                                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
+                                            data-bs-target="#etcModal">
                                         닫기
                                     </button>
                                 </div>
