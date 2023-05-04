@@ -4,6 +4,7 @@ import com.ipa.openapi_inzent.handler.UserAuthFailHandler;
 import com.ipa.openapi_inzent.handler.UserAuthSuccessHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -47,9 +48,10 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable();
         http.authorizeRequests()
-                .requestMatchers("/", "/error/*", "/login.html", "/login_proc", "/user/login", "/user/register").permitAll() // 설정된 url은 인증되지 않더라도 누구든 접근 가능
+                .requestMatchers(HttpMethod.GET,"/*/**", "/error/*", "/login.html", "/login_proc", "/user/login", "/user/register").permitAll() // 설정된 url은 인증되지 않더라도 누구든 접근 가능
 //                .anyRequest().authenticated()// 위 페이지 외 인증이 되어야 접근가능(ROLE에 상관없이)
                 .requestMatchers("/main").hasRole("ADMIN")
+                .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**").permitAll()
                 .and()
                 .formLogin().defaultSuccessUrl("/").loginPage("/user/login")  // 접근이 차단된 페이지 클릭시 이동할 url
                 .loginProcessingUrl("/login-proc") // 로그인시 맵핑되는 url

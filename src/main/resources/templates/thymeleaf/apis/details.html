@@ -43,7 +43,6 @@
                 /*background-color: #7fffd452;*/
             }
 
-
             .selectBox {
                 position: relative;
             }
@@ -63,35 +62,34 @@
                 bottom: 0;
             }
 
-            #checkboxes {
+            .checkboxes {
                 display: none;
                 border: 1px #dadada solid;
             }
 
-            #checkboxes label {
+            .checkboxes label {
                 display: block;
             }
 
-            #checkboxes label:hover {
+            .checkboxes label:hover {
                 /*background-color: #1e90ff;*/
             }
 
 
-            #authorizationSelectBox {
+            .authorizationSelectBox {
                 display: none;
                 border: 1px #dadada solid;
             }
 
-            #authorizationSelectBox label {
+            .authorizationSelectBox label {
                 display: block;
             }
 
-            #authorizationSelectBox label:hover {
+            .authorizationSelectBox label:hover {
                 /*background-color: #1e90ff;*/
             }
         </style>
     </th:block>
-
 
     <!-- index.html 고유 스크립트 추가 -->
     <th:block layout:fragment="script">
@@ -126,7 +124,7 @@
                         visible.style.display = "none"
                         if (document.getElementById("myTab").children[i].style.display == "block") {
 
-                            document.getElementById("myTab").children[i].children[0].click()
+                            document.getElementById("myTab").children[i].children[0].click();
                             break;
                         } else {
                             document.getElementById(document.getElementById("myTab").children[i].children[0].getAttribute("href").substring(1)).className = "tab-pane fade";
@@ -139,7 +137,7 @@
             var expanded = false;
 
             function showCheckboxes() {
-                var checkboxes = document.getElementById("checkboxes");
+                var checkboxes = document.querySelector(".checkboxes");
                 if (!expanded) {
                     checkboxes.style.display = "block";
                     expanded = true;
@@ -150,7 +148,7 @@
             }
 
             function showSecondSelectBox() {
-                var checkboxes = document.getElementById("authorizationSelectBox");
+                var checkboxes = document.querySelector(".authorizationSelectBox");
                 if (!expanded) {
                     checkboxes.style.display = "block";
                     expanded = true;
@@ -161,10 +159,7 @@
             }
         </script>
     </th:block>
-
-
 </head>
-
 <body>
 <div layout:fragment="content">
     <!-- Page Wrapper -->
@@ -172,13 +167,16 @@
         <!-- Sidebar -->
         <!-- Begin Page Content -->
         <div class="container-fluid">
-
             <!-- Page Heading -->
             <div class="d-flex justify-content-between mb-2">
-                <h1 class="h3 mb-2 text-gray-800">보험업권 ( v1/insu )</h1>
+                <div class="d-flex">
+                    <h1 class="h3 mb-2 text-gray-800" th:text="${api.name}"></h1>
+                    <h3>&nbsp(&nbsp</h3><h4 th:text="${api.context}"></h4><h3>&nbsp)</h3>
+                </div>
                 <div>
                     <button class="btn btn-dark btn-sm">전체 리소스 갱신</button>
                 </div>
+
             </div>
             <div class="d-flex mb-3">
                 <div class="w-100 d-flex">
@@ -186,7 +184,7 @@
                         <option value="resource" selected>리소스</option>
                         <option value="tag">태그</option>
                     </select>
-                    <!--                    <button type="button" class="btn btn-secondary" id="pick" data-toggle="modal"></button>-->
+                    <!-- <button type="button" class="btn btn-secondary" id="pick" data-toggle="modal"></button>-->
 
                     <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#resourceModal">
                         + 리소스 추가
@@ -222,25 +220,25 @@
                                 <div>
                                     <i class="fa-solid fa-plus"
                                        onclick="location.href='#'; event.stopPropagation()"></i>
-                                    /v1/insu | get-v1-insu
+                                    <span th:text="${api.context}"></span> | <span th:text="${operationId}"></span>
                                 </div>
                                 <div>
                                     <i class="fa-solid fa-arrows-rotate renew" data-toggle="tooltip"
                                        title="리소스 갱신"
                                        onclick="location.href='#'; event.stopPropagation()"></i>
-                                    <!--                                    <div id="tooltipRenew">리소스 갱신</div>-->
+                                    <!-- <div id="tooltipRenew">리소스 갱신</div>-->
                                     <i class="fa-solid fa-file-word doc" data-toggle="tooltip"
                                        title="Swagger 문서"
                                        onclick="location.href='#'; event.stopPropagation()"></i>
-                                    <!--                                    <div id="tooltipDoc">Swagger 문서</div>-->
+                                    <!-- <div id="tooltipDoc">Swagger 문서</div>-->
                                     <i onclick="location.href='#'" style="cursor: pointer;" data-toggle="tooltip"
                                        title="Swagger UI"
                                        class="fa-solid fa-globe ui"></i>
-                                    <!--                                    <div id="tooltipUI">Swagger UI</div>-->
+                                    <!-- <div id="tooltipUI">Swagger UI</div>-->
                                     <i onclick="location.href='#'" style="cursor: pointer;" data-toggle="tooltip"
                                        title="삭제"
                                        class="fa-solid fa-trash-can delete"></i>
-                                    <!--                                    <div id="tooltipDelete">삭제</div>-->
+                                    <!-- <div id="tooltipDelete">삭제</div>-->
                                 </div>
                             </div>
                         </button>
@@ -262,43 +260,13 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr onclick="location.href='#'" style="cursor: pointer">
-                                        <td>GET</td>
-                                        <td>/v1/invest/accounts</td>
-                                        <td>get-v1-invest</td>
-                                        <td>Bearer</td>
-                                        <td>get-v1-invest</td>
-                                        <td>v1</td>
-                                        <td>
-                                            <select class="form-select">
-                                                <option selected>develop</option>
-                                                <option value="1">service</option>
-                                                <option value="2">deprecate</option>
-                                                <option value="3">out_of_service</option>
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <i onclick="location.href='#'" style="cursor: pointer;"
-                                               data-toggle="tooltip"
-                                               title="Swagger 문서"
-                                               class="fa-solid fa-file-word doc"></i>
-                                            <i onclick="location.href='#'" style="cursor: pointer;"
-                                               data-toggle="tooltip"
-                                               title="Swagger UI"
-                                               class="fa-solid fa-globe ui"></i>
-                                            <i onclick="location.href='#'" style="cursor: pointer;"
-                                               data-toggle="tooltip"
-                                               title="삭제"
-                                               class="fa-solid fa-trash-can delete"></i>
-                                        </td>
-                                    </tr>
-                                    <tr onclick="location.href='#'" style="cursor: pointer">
-                                        <td>GET</td>
-                                        <td>/v1/invest/accounts</td>
-                                        <td>get-v1-invest</td>
-                                        <td>Bearer</td>
-                                        <td>get-v1-invest</td>
-                                        <td>v1</td>
+                                    <tr onclick="location.href='#'" style="cursor: pointer" th:each="list:${apiList}">
+                                        <td th:text="${list.method}"></td>
+                                        <td th:text="${list.uri}"></td>
+                                        <td th:text="${list.summary}"></td>
+                                        <td th:text="${list.security}"></td>
+                                        <td th:text="${list.operationId}"></td>
+                                        <td th:text="${list.version}"></td>
                                         <td>
                                             <select class="form-select">
                                                 <option selected>develop</option>
@@ -326,58 +294,6 @@
                                 </table>
                             </div>
 
-                        </div>
-                    </div>
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="flush-headingTwo">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#flush-collapseTwo" aria-expanded="false"
-                                    aria-controls="flush-collapseTwo">
-                                <div class="btn-control">
-                                    <div>
-                                        <i class="fa-solid fa-plus"></i>
-                                        /v1/insu | get-v1-insu
-                                    </div>
-                                    <div>
-                                        <i class="fa-solid fa-arrows-rotate"></i>
-                                        <i class="fa-solid fa-file-word"></i>
-                                    </div>
-                                </div>
-                            </button>
-                        </h2>
-                        <div id="flush-collapseTwo" class="accordion-collapse collapse"
-                             aria-labelledby="flush-headingTwo"
-                             data-bs-parent="#accordionFlushExample">
-                            <div class="accordion-body">Placeholder content for this accordion, which is intended to
-                                demonstrate the
-                                <code>.accordion-flush</code>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="flush-headingThree">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#flush-collapseThree" aria-expanded="false"
-                                    aria-controls="flush-collapseThree">
-                                <div class="btn-control">
-                                    <div>
-                                        <i class="fa-solid fa-plus"></i>
-                                        /v1/insu | get-v1-insu
-                                    </div>
-                                    <div>
-                                        <i class="fa-solid fa-arrows-rotate"></i>
-                                        <i class="fa-solid fa-file-word"></i>
-                                    </div>
-                                </div>
-                            </button>
-                        </h2>
-                        <div id="flush-collapseThree" class="accordion-collapse collapse"
-                             aria-labelledby="flush-headingThree"
-                             data-bs-parent="#accordionFlushExample">
-                            <div class="accordion-body">Placeholder content for this accordion, which is intended to
-                                demonstrate the
-                                <code>.accordion-flush</code>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -437,7 +353,8 @@
     </div>
 
     <!-- details info Modal start -->
-    <div class="modal fade" id="resourceModal" tabindex="-1" role="dialog"
+    <div class="modal fade" id="resourceModal" tabindex="-1" role="dialog" data-bs-backdrop="static"
+         data-bs-keyboard="false"
          aria-labelledby="exampleModalLabel"
          aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -547,7 +464,7 @@
                                     <input class="col"
                                            type="text"
                                            placeholder="  get-v1-insu"
-                                           id="operationId"
+                                           id="getOperationId"
                                            style="height: 44px;border-radius: 7px;">
                                 </div>
                                 <div class="col-6">
@@ -555,7 +472,7 @@
                                     <input class="col"
                                            type="text"
                                            placeholder="  get-v1-insu"
-                                           id="summary"
+                                           id="getSummary"
                                            style="height: 44px;border-radius: 7px;">
                                 </div>
                             </div>
@@ -567,13 +484,13 @@
                                     </select>
                                     <div class="overSelect"></div>
                                 </div>
-                                <div id="checkboxes">
-                                    <label for="one">
-                                        <input type="checkbox" id="one"/>First checkbox</label>
-                                    <label for="two">
-                                        <input type="checkbox" id="two"/>Second checkbox</label>
-                                    <label for="three">
-                                        <input type="checkbox" id="three"/>Third checkbox</label>
+                                <div class="checkboxes">
+                                    <label for="getOne">
+                                        <input type="checkbox" id="getOne"/>First checkbox</label>
+                                    <label for="getTwo">
+                                        <input type="checkbox" id="getTwo"/>Second checkbox</label>
+                                    <label for="getThree">
+                                        <input type="checkbox" id="getThree"/>Third checkbox</label>
                                 </div>
                             </div>
                             <!--           인증선택박스                 -->
@@ -584,26 +501,26 @@
                                     </select>
                                     <div class="overSelect"></div>
                                 </div>
-                                <div id="authorizationSelectBox">
-                                    <label for="apiKey">
-                                        <input type="checkbox" id="apiKey"/>APIKey(APIKEY)</label>
-                                    <label for="bearer">
-                                        <input type="checkbox" id="bearer"/>Bearer(APIKEY)</label>
+                                <div class="authorizationSelectBox">
+                                    <label for="getApiKey">
+                                        <input type="checkbox" id="getApiKey"/>APIKey(APIKEY)</label>
+                                    <label for="getBearer">
+                                        <input type="checkbox" id="getBearer"/>Bearer(APIKEY)</label>
                                 </div>
                             </div>
                             <!--파라미터/응답 선택 시작-->
                             <div style="display: flex; justify-content: space-around; margin-top: 5%;">
-                                <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist"
+                                <div class="nav flex-column nav-pills" role="tablist"
                                      aria-orientation="vertical">
-                                    <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill"
+                                    <a class="nav-link active" data-toggle="pill"
                                        href="#v-pills-home"
                                        role="tab" aria-controls="v-pills-home" aria-selected="true">파라미터</a>
-                                    <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill"
+                                    <a class="nav-link" data-toggle="pill"
                                        href="#v-pills-profile"
                                        role="tab" aria-controls="v-pills-profile" aria-selected="false">응답</a>
                                 </div>
-                                <div class="tab-content col-10" id="v-pills-tabContent">
-                                    <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel"
+                                <div class="tab-content col-10">
+                                    <div class="tab-pane fade show active" role="tabpanel"
                                          aria-labelledby="v-pills-home-tab">
                                         <table class="table">
                                             <thead class="thead-light">
@@ -638,7 +555,7 @@
                                         </table>
 
                                     </div>
-                                    <div class="tab-pane fade" id="v-pills-profile" role="tabpanel"
+                                    <div class="tab-pane fade" role="tabpanel"
                                          aria-labelledby="v-pills-profile-tab">
                                         <table class="table">
                                             <thead class="thead-light">
@@ -685,7 +602,7 @@
                                     <input class="col"
                                            type="text"
                                            placeholder="  get-v1-insu"
-                                           id="operationId"
+                                           id="postOperationId"
                                            style="height: 44px;border-radius: 7px;">
                                 </div>
                                 <div class="col-6">
@@ -693,7 +610,7 @@
                                     <input class="col"
                                            type="text"
                                            placeholder="  get-v1-insu"
-                                           id="summary"
+                                           id="postSummary"
                                            style="height: 44px;border-radius: 7px;">
                                 </div>
                             </div>
@@ -705,13 +622,13 @@
                                     </select>
                                     <div class="overSelect"></div>
                                 </div>
-                                <div id="checkboxes">
-                                    <label for="one">
-                                        <input type="checkbox" id="one"/>First checkbox</label>
-                                    <label for="two">
-                                        <input type="checkbox" id="two"/>Second checkbox</label>
-                                    <label for="three">
-                                        <input type="checkbox" id="three"/>Third checkbox</label>
+                                <div class="checkboxes">
+                                    <label for="postOne">
+                                        <input type="checkbox" id="postOne"/>First checkbox</label>
+                                    <label for="postTwo">
+                                        <input type="checkbox" id="postTwo"/>Second checkbox</label>
+                                    <label for="postThree">
+                                        <input type="checkbox" id="postThree"/>Third checkbox</label>
                                 </div>
                             </div>
                             <!--           인증선택박스                 -->
@@ -722,26 +639,26 @@
                                     </select>
                                     <div class="overSelect"></div>
                                 </div>
-                                <div id="authorizationSelectBox">
-                                    <label for="apiKey">
-                                        <input type="checkbox" id="apiKey"/>APIKey(APIKEY)</label>
-                                    <label for="bearer">
-                                        <input type="checkbox" id="bearer"/>Bearer(APIKEY)</label>
+                                <div class="authorizationSelectBox">
+                                    <label for="postApiKey">
+                                        <input type="checkbox" id="postApiKey"/>APIKey(APIKEY)</label>
+                                    <label for="postBearer">
+                                        <input type="checkbox" id="postBearer"/>Bearer(APIKEY)</label>
                                 </div>
                             </div>
                             <!--파라미터/응답 선택 시작-->
                             <div style="display: flex; justify-content: space-around; margin-top: 5%;">
-                                <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist"
+                                <div class="nav flex-column nav-pills" role="tablist"
                                      aria-orientation="vertical">
-                                    <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill"
+                                    <a class="nav-link active" data-toggle="pill"
                                        href="#v-pills-home"
                                        role="tab" aria-controls="v-pills-home" aria-selected="true">파라미터</a>
-                                    <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill"
+                                    <a class="nav-link" data-toggle="pill"
                                        href="#v-pills-profile"
                                        role="tab" aria-controls="v-pills-profile" aria-selected="false">응답</a>
                                 </div>
-                                <div class="tab-content col-10" id="v-pills-tabContent">
-                                    <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel"
+                                <div class="tab-content col-10">
+                                    <div class="tab-pane fade show active" role="tabpanel"
                                          aria-labelledby="v-pills-home-tab">
                                         <table class="table">
                                             <thead class="thead-light">
@@ -776,7 +693,7 @@
                                         </table>
 
                                     </div>
-                                    <div class="tab-pane fade" id="v-pills-profile" role="tabpanel"
+                                    <div class="tab-pane fade" role="tabpanel"
                                          aria-labelledby="v-pills-profile-tab">
                                         <table class="table">
                                             <thead class="thead-light">
@@ -823,7 +740,7 @@
                                     <input class="col"
                                            type="text"
                                            placeholder="  get-v1-insu"
-                                           id="operationId"
+                                           id="putOperationId"
                                            style="height: 44px;border-radius: 7px;">
                                 </div>
                                 <div class="col-6">
@@ -831,7 +748,7 @@
                                     <input class="col"
                                            type="text"
                                            placeholder="  get-v1-insu"
-                                           id="summary"
+                                           id="putSummary"
                                            style="height: 44px;border-radius: 7px;">
                                 </div>
                             </div>
@@ -843,13 +760,13 @@
                                     </select>
                                     <div class="overSelect"></div>
                                 </div>
-                                <div id="checkboxes">
-                                    <label for="one">
-                                        <input type="checkbox" id="one"/>First checkbox</label>
-                                    <label for="two">
-                                        <input type="checkbox" id="two"/>Second checkbox</label>
-                                    <label for="three">
-                                        <input type="checkbox" id="three"/>Third checkbox</label>
+                                <div class="checkboxes">
+                                    <label for="putOne">
+                                        <input type="checkbox" id="putOne"/>First checkbox</label>
+                                    <label for="putTwo">
+                                        <input type="checkbox" id="putTwo"/>Second checkbox</label>
+                                    <label for="putThree">
+                                        <input type="checkbox" id="putThree"/>Third checkbox</label>
                                 </div>
                             </div>
                             <!--           인증선택박스                 -->
@@ -860,26 +777,26 @@
                                     </select>
                                     <div class="overSelect"></div>
                                 </div>
-                                <div id="authorizationSelectBox">
-                                    <label for="apiKey">
-                                        <input type="checkbox" id="apiKey"/>APIKey(APIKEY)</label>
-                                    <label for="bearer">
-                                        <input type="checkbox" id="bearer"/>Bearer(APIKEY)</label>
+                                <div class="authorizationSelectBox">
+                                    <label for="putApiKey">
+                                        <input type="checkbox" id="putApiKey"/>APIKey(APIKEY)</label>
+                                    <label for="putBearer">
+                                        <input type="checkbox" id="putBearer"/>Bearer(APIKEY)</label>
                                 </div>
                             </div>
                             <!--파라미터/응답 선택 시작-->
                             <div style="display: flex; justify-content: space-around; margin-top: 5%;">
-                                <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist"
+                                <div class="nav flex-column nav-pills" role="tablist"
                                      aria-orientation="vertical">
-                                    <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill"
+                                    <a class="nav-link active" data-toggle="pill"
                                        href="#v-pills-home"
                                        role="tab" aria-controls="v-pills-home" aria-selected="true">파라미터</a>
-                                    <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill"
+                                    <a class="nav-link" data-toggle="pill"
                                        href="#v-pills-profile"
                                        role="tab" aria-controls="v-pills-profile" aria-selected="false">응답</a>
                                 </div>
-                                <div class="tab-content col-10" id="v-pills-tabContent">
-                                    <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel"
+                                <div class="tab-content col-10">
+                                    <div class="tab-pane fade show active" role="tabpanel"
                                          aria-labelledby="v-pills-home-tab">
                                         <table class="table">
                                             <thead class="thead-light">
@@ -914,7 +831,7 @@
                                         </table>
 
                                     </div>
-                                    <div class="tab-pane fade" id="v-pills-profile" role="tabpanel"
+                                    <div class="tab-pane fade" role="tabpanel"
                                          aria-labelledby="v-pills-profile-tab">
                                         <table class="table">
                                             <thead class="thead-light">
@@ -944,9 +861,7 @@
                                                 <td colspan="6" style="border-bottom-width: inherit !important;"><i
                                                         class="fa-regular fa-square-plus mr-1" data-toggle="modal"
                                                         data-target="#exampleModal"></i></td>
-
                                             </tr>
-
                                             </tfoot>
                                         </table>
                                     </div>
@@ -961,7 +876,7 @@
                                     <input class="col"
                                            type="text"
                                            placeholder="  get-v1-insu"
-                                           id="operationId"
+                                           id="deleteDOperationId"
                                            style="height: 44px;border-radius: 7px;">
                                 </div>
                                 <div class="col-6">
@@ -969,7 +884,7 @@
                                     <input class="col"
                                            type="text"
                                            placeholder="  get-v1-insu"
-                                           id="summary"
+                                           id="deleteSummary"
                                            style="height: 44px;border-radius: 7px;">
                                 </div>
                             </div>
@@ -981,13 +896,13 @@
                                     </select>
                                     <div class="overSelect"></div>
                                 </div>
-                                <div id="checkboxes">
-                                    <label for="one">
-                                        <input type="checkbox" id="one"/>First checkbox</label>
-                                    <label for="two">
-                                        <input type="checkbox" id="two"/>Second checkbox</label>
-                                    <label for="three">
-                                        <input type="checkbox" id="three"/>Third checkbox</label>
+                                <div class="checkboxes">
+                                    <label for="deleteOne">
+                                        <input type="checkbox" id="deleteOne"/>First checkbox</label>
+                                    <label for="deleteTwo">
+                                        <input type="checkbox" id="deleteTwo"/>Second checkbox</label>
+                                    <label for="deleteThree">
+                                        <input type="checkbox" id="deleteThree"/>Third checkbox</label>
                                 </div>
                             </div>
                             <!--           인증선택박스                 -->
@@ -998,26 +913,26 @@
                                     </select>
                                     <div class="overSelect"></div>
                                 </div>
-                                <div id="authorizationSelectBox">
-                                    <label for="apiKey">
-                                        <input type="checkbox" id="apiKey"/>APIKey(APIKEY)</label>
-                                    <label for="bearer">
-                                        <input type="checkbox" id="bearer"/>Bearer(APIKEY)</label>
+                                <div class="authorizationSelectBox">
+                                    <label for="deleteApiKey">
+                                        <input type="checkbox" id="deleteApiKey"/>APIKey(APIKEY)</label>
+                                    <label for="deleteBearer">
+                                        <input type="checkbox" id="deleteBearer"/>Bearer(APIKEY)</label>
                                 </div>
                             </div>
                             <!--파라미터/응답 선택 시작-->
                             <div style="display: flex; justify-content: space-around; margin-top: 5%;">
-                                <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist"
+                                <div class="nav flex-column nav-pills" role="tablist"
                                      aria-orientation="vertical">
-                                    <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill"
+                                    <a class="nav-link active" data-toggle="pill"
                                        href="#v-pills-home"
                                        role="tab" aria-controls="v-pills-home" aria-selected="true">파라미터</a>
-                                    <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill"
+                                    <a class="nav-link" data-toggle="pill"
                                        href="#v-pills-profile"
                                        role="tab" aria-controls="v-pills-profile" aria-selected="false">응답</a>
                                 </div>
-                                <div class="tab-content col-10" id="v-pills-tabContent">
-                                    <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel"
+                                <div class="tab-content col-10">
+                                    <div class="tab-pane fade show active" role="tabpanel"
                                          aria-labelledby="v-pills-home-tab">
                                         <table class="table">
                                             <thead class="thead-light">
@@ -1052,7 +967,7 @@
                                         </table>
 
                                     </div>
-                                    <div class="tab-pane fade" id="v-pills-profile" role="tabpanel"
+                                    <div class="tab-pane fade" role="tabpanel"
                                          aria-labelledby="v-pills-profile-tab">
                                         <table class="table">
                                             <thead class="thead-light">

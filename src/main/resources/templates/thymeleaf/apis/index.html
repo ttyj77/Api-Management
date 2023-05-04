@@ -47,27 +47,6 @@
             //            });
 
             function saveApi() {
-                // 역할 확인
-                let admin = document.getElementById('admin');
-                let normal = document.getElementById('normal');
-                let api = document.getElementById('api');
-                let md = document.getElementById('md');
-                let roleInput = document.getElementById('roles');
-                //
-                // if(admin.checked){
-                //     roleInput.innerHTML = '{"admin"}';
-                // }
-                // if(normal.checked){
-                //
-                // }
-                // if(api.checked){
-                //
-                // }
-                // if(md.checked){
-                //
-                // }
-
-                // 입력 확인
                 let context = document.querySelector('.contextApi');
                 let name = document.querySelector('.nameApi');
                 if (context.value === '') {
@@ -85,8 +64,7 @@
                         icon: 'success',
                         text: 'API 그룹이 저장되었습니다.'
                     }).then(() => {
-                        // location.href = '/api/insert';
-                        $('#registerApi').submit();
+                        $('#updateModal').modal('hide');
                         $('#registerModal').modal('hide');
                     });
                 }
@@ -108,13 +86,13 @@
                         icon: 'success',
                         text: 'API 그룹이 저장되었습니다.'
                     }).then(() => {
-                        // location.href = '/api/upsert';
                         $('#updateModal').modal('hide');
+                        $('#registerModal').modal('hide');
                     });
                 }
             }
 
-            function removeApi(id) {
+            function removeApi() {
                 Swal.fire({
                     showCancelButton: true,
                     cancelButtonText: "취소",
@@ -126,14 +104,11 @@
                         Swal.fire({
                             title: '삭제 성공',
                             icon: 'success'
-                        }).then(() => {
-                            location.href = "/api/delete/" + id;
-                        });
+                        })
                     }
                 });
             }
 
-            // role 등록 part
             function checkRole() {
                 let admin = document.getElementById('admin');
                 let normal = document.getElementById('normal');
@@ -175,85 +150,13 @@
                 }
             }
 
-            // role 수정 part
-            function checkRole2() {
-                let admin = document.getElementById('admin2');
-                let normal = document.getElementById('normal2');
-                let api = document.getElementById('api2');
-                let md = document.getElementById('md2');
-
-                let adminBadge = $(document.createElement("span")).addClass("badge badge-secondary admin").attr('style', "margin-right:2px").text(admin.value);
-                let normalBadge = $(document.createElement("span")).addClass("badge badge-secondary normal").attr('style', "margin-right:2px").text(normal.value);
-                let apiBadge = $(document.createElement("span")).addClass("badge badge-secondary api").attr('style', "margin-right:2px").text(api.value);
-                let mdBadge = $(document.createElement("span")).addClass("badge badge-secondary md").attr('style', "margin-right:2px").text(md.value);
-
-                let radimin = document.querySelector('.admin');
-                let rnormal = document.querySelector('.normal');
-                let rapi = document.querySelector('.api');
-                let rmd = document.querySelector('.md');
-
-                if (admin.checked && radimin == null) {
-                    $('#target2').append(adminBadge);
-                } else if (radimin != null && !admin.checked) {
-                    $('.admin').remove();
-                }
-
-                if (normal.checked && rnormal == null) {
-                    $('#target2').append(normalBadge);
-                } else if (rnormal != null && !normal.checked) {
-                    $('.normal').remove();
-                }
-
-                if (api.checked && rapi == null) {
-                    $('#target2').append(apiBadge);
-                } else if (rapi != null && !api.checked) {
-                    $('.api').remove();
-                }
-
-                if (md.checked && rmd == null) {
-                    $('#target2').append(mdBadge);
-                } else if (rmd != null && !md.checked) {
-                    $('.md').remove();
-                }
-            }
-
             // modal 선택 시 안 넘어감
             function insertApis(e, id) {
                 if (e.target.parentNode.className == "h3 font-weight-bold text-primary mb-1" || e.target.parentNode.className == "col mr-2") {
-                    location.href = '/api/details/' + id;
-                    console.log(e.target.parentNode.className)
+                    location.href = '/api/details/'+id;
                 } else {
                     console.log("해당없음!!")
                 }
-            }
-
-            function updateApi(apiOne) {
-
-                console.log(apiOne);
-
-                console.log(typeof (apiOne.value))
-                // console.log(apiOne.getAttribute("apione").get("ApiDTO"));
-
-
-                let admin = document.getElementById('admin2');
-                let normal = document.getElementById('normal2');
-                let api = document.getElementById('api2');
-                let md = document.getElementById('md2');
-                let context = document.getElementById('contextApi');
-                let name = document.getElementById('nameApi');
-                let explanation = document.getElementById('explanationApi');
-
-                context.value = "context";
-                name.value = "value";
-                explanation.textContent = "explanation";
-                if (true == true) {
-                    $('#radio1').prop("checked", true);
-                } else {
-                    $('#radio2').prop("checked", true);
-                }
-
-
-                $('#updateModal').modal('show');
             }
         </script>
     </th:block>
@@ -296,18 +199,15 @@
                                                 </div>
                                             </div>
                                             <div class="d-flex flex-column" id="subtable">
-                                                <button class="btn btn-light inBtn modal2"
-                                                         th:value="${api}"
-                                                        onclick="updateApi(this)">
-                                                    <!--                                                    th:onclick="updateApi(this.getAttribute('apiOne'))"-->
+                                                <button class="btn btn-light inBtn modal2" data-bs-toggle="modal"
+                                                        data-bs-target="#updateModal">
                                                     <!--   <button class="btn btn-light inBtn" onclick="event.stopPropagation(); $('#updateModal').modal('show');"-->
                                                     <!--   >-->
 
                                                     <i class="fa-solid fa-pen" style="color: #797a7c;"></i>
                                                 </button>
                                                 <button class="btn btn-light inBtn modal2"
-                                                        th:apiId="${api.id}"
-                                                        th:onclick="removeApi(this.getAttribute('apiId'))">
+                                                        onclick="removeApi()">
                                                     <i class="fa-solid fa-trash-can" style="color: #797a7c;"></i>
                                                 </button>
                                             </div>
@@ -327,32 +227,30 @@
              aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
-                    <form action="/api/insert" method="post">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="registerModalLabel">등록</h5>
-                            <div class="" style="cursor: pointer" data-bs-dismiss="modal"
-                            ><i class="fa-solid fa-xmark" style="color: #7f7f7f;"></i></div>
-                        </div>
-                        <div class="modal-body">
-
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="registerModalLabel">등록</h5>
+                        <div class="" style="cursor: pointer" data-bs-dismiss="modal"
+                        ><i class="fa-solid fa-xmark" style="color: #7f7f7f;"></i></div>
+                    </div>
+                    <div class="modal-body">
+                        <form>
                             <table class="table table-hover">
                                 <tbody>
                                 <tr>
                                     <td class="tdbg">컨텍스트📍</td>
-                                    <td><input type="text" class="form-control contextApi" value="/" name="context"
+                                    <td><input type="text" class="form-control contextApi" value="/"
                                                required></td>
                                 </tr>
                                 <tr>
                                     <td class="tdbg">이름📍</td>
-                                    <td><input type="text" class="form-control nameApi" name="name" required></td>
+                                    <td><input type="text" class="form-control nameApi" required></td>
                                 </tr>
                                 <tr>
                                     <td class="tdbg">공개여부📍</td>
                                     <td class="d-flex">
-                                        <div class="form-check mr-2">
+                                        <div class="form-check">
                                             <input class="form-check-input" type="radio"
-                                                   name="disclosure"
-                                                   value="true"
+                                                   name="flexRadioDefault"
                                                    id="show" checked>
                                             <label class="form-check-label" for="show">
                                                 공개
@@ -360,8 +258,7 @@
                                         </div>
                                         <div class="form-check">
                                             <input class="form-check-input" type="radio"
-                                                   name="disclosure"
-                                                   value="false"
+                                                   name="flexRadioDefault"
                                                    id="noshow">
                                             <label class="form-check-label" for="noshow">
                                                 비공개
@@ -372,9 +269,8 @@
                                 <tr>
                                     <td class="tdbg">역할</td>
                                     <td>
-                                        <div id="target">
+                                        <div>
                                         </div>
-                                        <input type="hidden" name="role" id="roles">
                                         <button type="button"
                                                 class="btn btn-dark btn-sm"
                                                 data-bs-toggle="modal"
@@ -386,18 +282,17 @@
                                 </tr>
                                 <tr>
                                     <td class="tdbg">설명</td>
-                                    <td><textarea class="form-control" name="explanation"></textarea></td>
+                                    <td><textarea class="form-control"></textarea></td>
                                 </tr>
                                 </tbody>
                             </table>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소
-                            </button>
-                            <button type="submit" class="btn btn-primary" id="registerApi" onclick="saveApi()">저장
-                            </button>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소
+                        </button>
+                        <button type="submit" class="btn btn-primary" onclick="saveApi()">저장</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -426,13 +321,13 @@
                                     <td class="tdbg">컨텍스트📍</td>
                                     <td><input type="text" class="form-control"
                                                id="contextApi"
-                                               required></td>
+                                               value="/v1/insu" required></td>
                                 </tr>
                                 <tr>
                                     <td class="tdbg">이름📍</td>
                                     <td><input type="text" class="form-control"
                                                id="nameApi"
-                                               required></td>
+                                               value="보험업권" required></td>
                                 </tr>
                                 <tr>
                                     <td class="tdbg">공개여부📍</td>
@@ -440,24 +335,21 @@
                                         <div class="form-check">
                                             <input class="form-check-input"
                                                    type="radio"
-                                                   name="radio1"
-                                                   id="radio1"
-                                                   value="true"
-                                            >
+                                                   name="flexRadioDefault"
+                                                   id="flexRadioDefault1"
+                                                   checked>
                                             <label class="form-check-label"
-                                                   for="radio1">
+                                                   for="flexRadioDefault1">
                                                 공개
                                             </label>
                                         </div>
                                         <div class="form-check">
                                             <input class="form-check-input"
                                                    type="radio"
-                                                   name="radio2"
-                                                   id="radio2"
-                                                   value="false"
-                                            >
+                                                   name="flexRadioDefault"
+                                                   id="flexRadioDefault2">
                                             <label class="form-check-label"
-                                                   for="radio2">
+                                                   for="flexRadioDefault2">
                                                 비공개
                                             </label>
                                         </div>
@@ -470,12 +362,12 @@
                                 <tr>
                                     <td class="tdbg">역할</td>
                                     <td class="d-flex">
-                                        <div id="target2">
+                                        <div id="target">
                                         </div>
                                         <button type="button"
                                                 class="btn btn-dark btn-sm"
                                                 data-bs-toggle="modal"
-                                                data-bs-target="#roleUpdateModal"><i
+                                                data-bs-target="#roleModal"><i
                                                 class="fa-solid fa-plus"
                                                 style="color: #f7f7f8;"></i>
                                         </button>
@@ -484,7 +376,7 @@
                                 <tr>
                                     <td class="tdbg">설명</td>
                                     <td><textarea
-                                            class="form-control" id="explanationApi"></textarea>
+                                            class="form-control">보험업권</textarea>
                                     </td>
                                 </tr>
                                 </tbody>
@@ -503,7 +395,7 @@
             </div>
         </div>
 
-        <!-- 역할 등록 Modal -->
+        <!-- 역할 Modal -->
         <div class="modal fade" id="roleModal" tabindex="-1" aria-labelledby="roleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
@@ -514,7 +406,7 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="운영자" name="admin" id="admin">
+                            <input class="form-check-input" type="checkbox" value="운영자" name="normal" id="admin">
                             <label class="form-check-label" for="admin">
                                 운영자
                             </label>
@@ -540,52 +432,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-secondary btn-sm" onclick="checkRole()"
-                                data-bs-toggle="modal"
-                                data-bs-target="#registerModal">닫기
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 역할 수정 Modal -->
-        <div class="modal fade" id="roleUpdateModal" tabindex="-1" aria-labelledby="roleUpdateModalLabel"
-             aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="roleUpdateModalLabel">역할 추가 / 삭제</h5>
-                        <div class="" style="cursor: pointer" data-bs-dismiss="modal"
-                        ><i class="fa-solid fa-xmark" style="color: #7f7f7f;"></i></div>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="운영자" name="admin" id="admin2">
-                            <label class="form-check-label" for="admin2">
-                                운영자
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="일반사용자" name="normal" id="normal2">
-                            <label class="form-check-label" for="normal2">
-                                일반사용자
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="API제공자" name="api" id="api2">
-                            <label class="form-check-label" for="api2">
-                                API제공자
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="마이데이터 사업자" name="md" id="md2">
-                            <label class="form-check-label" for="md2">
-                                마이데이터 사업자
-                            </label>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-secondary btn-sm" onclick="checkRole2()"
+                                id="roleBtn"
                                 data-bs-toggle="modal"
                                 data-bs-target="#updateModal">닫기
                         </button>
