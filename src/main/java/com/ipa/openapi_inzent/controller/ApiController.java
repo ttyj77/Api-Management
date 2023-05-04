@@ -10,11 +10,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
-//@Controller
 @RequestMapping("/api")
 @Controller
 public class ApiController {
@@ -47,6 +47,21 @@ public class ApiController {
         model.addAttribute("apiList", ad);
 
         return "/apis/details";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String apiDelete(@PathVariable int id) {
+        apiService.delete(id);
+        return "redirect:/api";
+    }
+
+    @PostMapping("/insert")
+    public String insert(ApiDTO apiDTO, boolean disclosure) {
+        System.out.println("apiDTO = " + apiDTO);
+        System.out.println("disclosure = " + disclosure);
+
+        apiService.insert(apiDTO);
+        return "redirect:/api";
     }
 
     @GetMapping("/trash")
