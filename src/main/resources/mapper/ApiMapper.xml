@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ipa.openapi_inzent.dao.ApiDao">
+    <insert id="insert" parameterType="com.ipa.openapi_inzent.model.ApiDTO">
+        INSERT INTO public.apis(context, name, disclosure, explanation)
+        VALUES (#{context}, #{name}, #{disclosure}, #{explanation});
+    </insert>
+    <select id="selectAll" resultType="com.ipa.openapi_inzent.model.ApiDTO">
+        SELECT *
+        FROM public.apis
+    </select>
+    <select id="selectOne" parameterType="int" resultType="com.ipa.openapi_inzent.model.ApiDTO">
+        SELECT *
+        FROM public.apis
+        WHERE id = #{id};
+    </select>
+    <update id="update" parameterType="com.ipa.openapi_inzent.model.ApiDTO">
+        UPDATE public.apis
+        SET context=#{context},
+        name=#{name},
+        disclosure=#{disclosure},
+        explanation=#{explanation}
+        WHERE id = #{id};
+    </update>
+    <delete id="delete" parameterType="int">
+        DELETE FROM public.apis
+        WHERE id = #{id};
+    </delete>
+</mapper>

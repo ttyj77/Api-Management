@@ -37,14 +37,14 @@
 
         <script>
 
-            $('.inBtn').click(function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-            });
-            $('.goTable').click(function (e) {
-                e.preventDefault();
-                location.href = 'table';
-            });
+            //            $('.inBtn').click(function (e) {
+            //                e.preventDefault();
+            //                e.stopPropagation();
+            //            });
+            //            $('.goTable').click(function (e) {
+            //                e.preventDefault();
+            //                location.href = 'table';
+            //            });
 
             function saveApi() {
                 let context = document.querySelector('.contextApi');
@@ -151,35 +151,22 @@
             }
 
             // modal 선택 시 안 넘어감
-            window.onload = function () {
-                document.getElementById("insuApi").addEventListener("click", insertApis)
-
-                function insertApis(e) {
-                    if (e.target.parentNode.className == "card-body" || e.target.parentNode.className == "col mr-2") {
-                        location.href = '/api/details';
-                    } else {
-                        console.log("해당없음!!")
-                    }
+            function insertApis(e, id) {
+                if (e.target.parentNode.className == "h3 font-weight-bold text-primary mb-1" || e.target.parentNode.className == "col mr-2") {
+                    location.href = '/api/details/'+id;
+                } else {
+                    console.log("해당없음!!")
                 }
             }
-
         </script>
-
     </th:block>
-
-
-    <!-- Page level plugins -->
-    <!--<script src="vendor/datatables/jquery.dataTables.min.js"></script>-->
-    <!--<script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>-->
 
 </head>
 <body>
 <div layout:fragment="content">
     <div id="wrapper">
-
         <div id="content-wrapper" class="d-flex flex-column">
             <div id="content">
-
                 <div class="container-fluid">
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -188,103 +175,34 @@
                                 data-bs-target="#registerModal">
                             <i class="fa-solid fa-plus fa-flip"></i> 서비스 등록
                         </button>
-                        <!--등록 modal-->
-                        <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel"
-                             aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="registerModalLabel">등록</h5>
-                                        <div class="" style="cursor: pointer" data-bs-dismiss="modal"
-                                        ><i class="fa-solid fa-xmark" style="color: #7f7f7f;"></i></div>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form>
-                                            <table class="table table-hover">
-                                                <tbody>
-                                                <tr>
-                                                    <td class="tdbg">컨텍스트📍</td>
-                                                    <td><input type="text" class="form-control contextApi" value="/"
-                                                               required></td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="tdbg">이름📍</td>
-                                                    <td><input type="text" class="form-control nameApi" required></td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="tdbg">공개여부📍</td>
-                                                    <td class="d-flex">
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="radio"
-                                                                   name="flexRadioDefault"
-                                                                   id="show" checked>
-                                                            <label class="form-check-label" for="show">
-                                                                공개
-                                                            </label>
-                                                        </div>
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="radio"
-                                                                   name="flexRadioDefault"
-                                                                   id="noshow">
-                                                            <label class="form-check-label" for="noshow">
-                                                                비공개
-                                                            </label>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="tdbg">역할</td>
-                                                    <td>
-                                                        <div>
-                                                        </div>
-                                                        <button type="button"
-                                                                class="btn btn-dark btn-sm"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#roleModal"><i
-                                                                class="fa-solid fa-plus"
-                                                                style="color: #f7f7f8;"></i>
-                                                        </button>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="tdbg">설명</td>
-                                                    <td><textarea class="form-control"></textarea></td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
-                                        </form>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소
-                                        </button>
-                                        <button type="submit" class="btn btn-primary" onclick="saveApi()">저장</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                     <div class="row">
 
                         <!-- Earnings (Monthly) Card Example -->
 
-                        <div class="col-xl-4 col-md-6 mb-4">
+                        <div class="col-xl-4 col-md-6 mb-4" th:each="api:${list}">
                             <div class="goTable" style="cursor: pointer">
                                 <div class="card border-left-primary shadow h-100 py-2">
                                     <div class="card-body">
-                                        <div class="row no-gutters align-items-center" id="insuApi">
-
+                                        <div class="row no-gutters align-items-center intoApi"
+                                             th:apiId="${api.id}"
+                                             th:onclick="insertApis(event,this.getAttribute('apiId'))">
                                             <div class="col mr-2">
                                                 <div class="h3 font-weight-bold text-primary mb-1">
-                                                    보험업권 (/v1/insu)
+                                                    <span th:text="${api.name}">
+                                                    </span>
+                                                    ( <span th:text="${api.context}"></span> )
                                                 </div>
-                                                <div class="h6 text-dark mb-0">보험 업권 APIs</div>
-                                                <div class="h6 text-dark mb-0">공개</div>
+                                                <div class="h6 text-dark mb-0" th:text="${api.explanation}"></div>
+                                                <div class="h6 text-dark mb-0" th:if="${api.disclosure==true}">공개</div>
+                                                <div class="h6 text-dark mb-0" th:if="${api.disclosure==false}">비공개
+                                                </div>
                                             </div>
                                             <div class="d-flex flex-column" id="subtable">
                                                 <button class="btn btn-light inBtn modal2" data-bs-toggle="modal"
                                                         data-bs-target="#updateModal">
-                                                    <!--                                            <button class="btn btn-light inBtn" onclick="event.stopPropagation(); $('#updateModal').modal('show');"-->
-                                                    <!--                                            >-->
+                                                    <!--   <button class="btn btn-light inBtn" onclick="event.stopPropagation(); $('#updateModal').modal('show');"-->
+                                                    <!--   >-->
 
                                                     <i class="fa-solid fa-pen" style="color: #797a7c;"></i>
                                                 </button>
@@ -293,197 +211,190 @@
                                                     <i class="fa-solid fa-trash-can" style="color: #797a7c;"></i>
                                                 </button>
                                             </div>
-                                            <div id="subtableModal">
-                                                <div class="modal fade modal2" id="updateModal" tabindex="-1"
-                                                     data-bs-backdrop="static" data-bs-keyboard="false"
-                                                     aria-labelledby="updateModalLabel"
-                                                     aria-hidden="true">
-                                                    <div class="modal-dialog modal-dialog-centered modal2"
-                                                         role="document">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title" id="updateModalLabel">보험업권</h5>
-                                                                <div class="" style="cursor: pointer"
-                                                                     data-bs-dismiss="modal"
-                                                                ><i class="fa-solid fa-xmark"
-                                                                    style="color: #7f7f7f;"></i>
-                                                                </div>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <form>
-                                                                    <table class="table table-hover">
-                                                                        <tbody>
-                                                                        <tr>
-                                                                            <td class="tdbg">컨텍스트📍</td>
-                                                                            <td><input type="text" class="form-control"
-                                                                                       id="contextApi"
-                                                                                       value="/v1/insu" required></td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td class="tdbg">이름📍</td>
-                                                                            <td><input type="text" class="form-control"
-                                                                                       id="nameApi"
-                                                                                       value="보험업권" required></td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td class="tdbg">공개여부📍</td>
-                                                                            <td class="d-flex">
-                                                                                <div class="form-check">
-                                                                                    <input class="form-check-input"
-                                                                                           type="radio"
-                                                                                           name="flexRadioDefault"
-                                                                                           id="flexRadioDefault1"
-                                                                                           checked>
-                                                                                    <label class="form-check-label"
-                                                                                           for="flexRadioDefault1">
-                                                                                        공개
-                                                                                    </label>
-                                                                                </div>
-                                                                                <div class="form-check">
-                                                                                    <input class="form-check-input"
-                                                                                           type="radio"
-                                                                                           name="flexRadioDefault"
-                                                                                           id="flexRadioDefault2">
-                                                                                    <label class="form-check-label"
-                                                                                           for="flexRadioDefault2">
-                                                                                        비공개
-                                                                                    </label>
-                                                                                </div>
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td class="tdbg">소유자📍</td>
-                                                                            <td>admin</td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td class="tdbg">역할</td>
-                                                                            <td class="d-flex">
-                                                                                <div id="target">
-                                                                                </div>
-                                                                                <button type="button"
-                                                                                        class="btn btn-dark btn-sm"
-                                                                                        data-bs-toggle="modal"
-                                                                                        data-bs-target="#roleModal"><i
-                                                                                        class="fa-solid fa-plus"
-                                                                                        style="color: #f7f7f8;"></i>
-                                                                                </button>
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td class="tdbg">설명</td>
-                                                                            <td><textarea
-                                                                                    class="form-control">보험업권</textarea>
-                                                                            </td>
-                                                                        </tr>
-                                                                        </tbody>
-                                                                    </table>
-                                                                </form>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary"
-                                                                        data-bs-dismiss="modal">취소
-                                                                </button>
-                                                                <button type="submit" class="btn btn-primary"
-                                                                        onclick="saveApiUpdate()">저장
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <!-- 수정 modal-->
-
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xl-4 col-md-6 mb-4">
-                            <div onclick="location.href='#'" style="cursor: pointer">
-                                <div class="card border-left-primary shadow h-100 py-2">
-                                    <div class="card-body">
-                                        <div class="row no-gutters align-items-center">
-                                            <div class="col mr-2">
-                                                <div class="h3 font-weight-bold text-primary mb-1">
-                                                    은행업권 (/v1/bank)
-                                                </div>
-                                                <div class="h6 text-dark mb-0">은행 업권 APIs</div>
-                                                <div class="h6 text-dark mb-0">공개</div>
-                                            </div>
-                                            <div class="d-flex flex-column">
-                                                <button class="btn btn-light inBtn">
-                                                    <i class="fa-solid fa-pen" style="color: #797a7c;"></i>
-                                                </button>
-                                                <button class="btn btn-light btn-jelly"
-                                                        onclick="location.href='#'; event.stopPropagation();">
-                                                    <i class="fa-solid fa-trash-can" style="color: #797a7c;"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-4 col-md-6 mb-4">
-                            <div onclick="location.href='#'" style="cursor: pointer">
-                                <div class="card border-left-primary shadow h-100 py-2">
-                                    <div class="card-body">
-                                        <div class="row no-gutters align-items-center">
-                                            <div class="col mr-2">
-                                                <div class="h3 font-weight-bold text-primary mb-1">
-                                                    투자업권 (/v1/invest)
-                                                </div>
-                                                <div class="h6 text-dark mb-0">투자 업권 APIs</div>
-                                                <div class="h6 text-dark mb-0">공개</div>
-                                            </div>
-                                            <div class="d-flex flex-column">
-                                                <button class="btn btn-light btn-jelly"
-                                                        onclick="location.href='#'; event.stopPropagation();">
-                                                    <i class="fa-solid fa-pen" style="color: #797a7c;"></i>
-                                                </button>
-                                                <button class="btn btn-light btn-jelly"
-                                                        onclick="location.href='#'; event.stopPropagation();">
-                                                    <i class="fa-solid fa-trash-can" style="color: #797a7c;"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-4 col-md-6 mb-4">
-                            <div onclick="location.href='#'" style="cursor: pointer">
-                                <div class="card border-left-primary shadow h-100 py-2">
-                                    <div class="card-body">
-                                        <div class="row no-gutters align-items-center">
-                                            <div class="col mr-2">
-                                                <div class="h3 font-weight-bold text-primary mb-1">
-                                                    ROOT (/)
-                                                </div>
-                                                <div class="h6 text-dark mb-0">모든 리소스 볼 수 있다.</div>
-                                                <div class="h6 text-dark mb-0">공개</div>
-                                            </div>
-                                            <div class="d-flex flex-column">
-                                                <button class="btn btn-light btn-jelly"
-                                                        onclick="location.href='#'; event.stopPropagation();">
-                                                    <i class="fa-solid fa-pen" style="color: #797a7c;"></i>
-                                                </button>
-                                                <button class="btn btn-light btn-jelly"
-                                                        onclick="location.href='#'; event.stopPropagation();">
-                                                    <i class="fa-solid fa-trash-can" style="color: #797a7c;"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
                     </div>
-
                 </div>
             </div>
         </div>
+
+        <!--modal-->
+        <!--등록 modal-->
+        <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="registerModalLabel">등록</h5>
+                        <div class="" style="cursor: pointer" data-bs-dismiss="modal"
+                        ><i class="fa-solid fa-xmark" style="color: #7f7f7f;"></i></div>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <table class="table table-hover">
+                                <tbody>
+                                <tr>
+                                    <td class="tdbg">컨텍스트📍</td>
+                                    <td><input type="text" class="form-control contextApi" value="/"
+                                               required></td>
+                                </tr>
+                                <tr>
+                                    <td class="tdbg">이름📍</td>
+                                    <td><input type="text" class="form-control nameApi" required></td>
+                                </tr>
+                                <tr>
+                                    <td class="tdbg">공개여부📍</td>
+                                    <td class="d-flex">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio"
+                                                   name="flexRadioDefault"
+                                                   id="show" checked>
+                                            <label class="form-check-label" for="show">
+                                                공개
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio"
+                                                   name="flexRadioDefault"
+                                                   id="noshow">
+                                            <label class="form-check-label" for="noshow">
+                                                비공개
+                                            </label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="tdbg">역할</td>
+                                    <td>
+                                        <div>
+                                        </div>
+                                        <button type="button"
+                                                class="btn btn-dark btn-sm"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#roleModal"><i
+                                                class="fa-solid fa-plus"
+                                                style="color: #f7f7f8;"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="tdbg">설명</td>
+                                    <td><textarea class="form-control"></textarea></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소
+                        </button>
+                        <button type="submit" class="btn btn-primary" onclick="saveApi()">저장</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 수정 modal-->
+        <div class="modal fade modal2" id="updateModal" tabindex="-1"
+             data-bs-backdrop="static" data-bs-keyboard="false"
+             aria-labelledby="updateModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal2"
+                 role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="updateModalLabel">보험업권</h5>
+                        <div class="" style="cursor: pointer"
+                             data-bs-dismiss="modal"
+                        ><i class="fa-solid fa-xmark"
+                            style="color: #7f7f7f;"></i>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <table class="table table-hover">
+                                <tbody>
+                                <tr>
+                                    <td class="tdbg">컨텍스트📍</td>
+                                    <td><input type="text" class="form-control"
+                                               id="contextApi"
+                                               value="/v1/insu" required></td>
+                                </tr>
+                                <tr>
+                                    <td class="tdbg">이름📍</td>
+                                    <td><input type="text" class="form-control"
+                                               id="nameApi"
+                                               value="보험업권" required></td>
+                                </tr>
+                                <tr>
+                                    <td class="tdbg">공개여부📍</td>
+                                    <td class="d-flex">
+                                        <div class="form-check">
+                                            <input class="form-check-input"
+                                                   type="radio"
+                                                   name="flexRadioDefault"
+                                                   id="flexRadioDefault1"
+                                                   checked>
+                                            <label class="form-check-label"
+                                                   for="flexRadioDefault1">
+                                                공개
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input"
+                                                   type="radio"
+                                                   name="flexRadioDefault"
+                                                   id="flexRadioDefault2">
+                                            <label class="form-check-label"
+                                                   for="flexRadioDefault2">
+                                                비공개
+                                            </label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="tdbg">소유자📍</td>
+                                    <td>admin</td>
+                                </tr>
+                                <tr>
+                                    <td class="tdbg">역할</td>
+                                    <td class="d-flex">
+                                        <div id="target">
+                                        </div>
+                                        <button type="button"
+                                                class="btn btn-dark btn-sm"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#roleModal"><i
+                                                class="fa-solid fa-plus"
+                                                style="color: #f7f7f8;"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="tdbg">설명</td>
+                                    <td><textarea
+                                            class="form-control">보험업권</textarea>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                                data-bs-dismiss="modal">취소
+                        </button>
+                        <button type="submit" class="btn btn-primary"
+                                onclick="saveApiUpdate()">저장
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- 역할 Modal -->
         <div class="modal fade" id="roleModal" tabindex="-1" aria-labelledby="roleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
