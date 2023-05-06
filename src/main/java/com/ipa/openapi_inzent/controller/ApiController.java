@@ -56,9 +56,8 @@ public class ApiController {
     }
 
     @PostMapping("/insert")
-    public String insert(ApiDTO apiDTO, boolean disclosure) {
+    public String insert(ApiDTO apiDTO) {
         System.out.println("apiDTO = " + apiDTO);
-        System.out.println("disclosure = " + disclosure);
 
         apiService.insert(apiDTO);
         return "redirect:/api";
