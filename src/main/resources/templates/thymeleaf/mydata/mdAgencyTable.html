@@ -136,6 +136,7 @@
 
             }
 
+            /* 우측 상단 셀렉트 박스 변경시 리스트 체인지 */
             function selectChange(value) {
 
                 console.log("selectChange")
@@ -174,11 +175,23 @@
                     let industry = document.createElement("td")
                     let note = document.createElement("td")
 
-                    agCode.append(array[i].code)
-                    division.append(array[i].division)
-                    name.append(array[i].name)
 
+                    agCode.append(array[i].code)
+                    agCode.onclick = function () {
+                        agencyModal(this)
+                    }
+                    division.append(array[i].division)
+                    division.onclick = function () {
+                        agencyModal(this)
+                    }
+                    name.append(array[i].name)
+                    name.onclick = function () {
+                        agencyModal(this)
+                    }
                     industry.append(array[i].industry)
+                    industry.onclick = function () {
+                        agencyModal(this)
+                    }
                     // <td onClick="infoModal(this)" th:id="${agencyList.id}"><i className="fa-solid fa-braille"
                     // style="cursor: pointer"></i></td>
 
@@ -191,13 +204,36 @@
                     icon.style.cursor = "pointer"
                     note.append(icon)
 
+                    tr.id = array[i].id
                     tr.append(agCode, division, name, industry, note)
 
                     document.getElementById("agencyListTbody").append(tr)
                 }
-
-
             }
+
+            /* 기관 관리 삭제 */
+            function deleteRow(value) {
+                console.log(value.parentNode.parentNode.id)
+                let data = {
+                    "id": value.parentNode.parentNode.id,
+                };
+                $.ajax({
+                    url: "/mydata/agencyTable/delete",
+                    type: "get",
+                    data: data,
+
+                    success: (message) => {
+                        // 1. 리다이렉트
+                        location.href = '/mydata/agencyTable';
+
+
+                    },
+                    error: (e) => {
+                        console.log("통신 실패", e);
+                    }
+                })
+            }
+
 
         </script>
     </th:block>
@@ -262,6 +298,7 @@
                         <th>기관명</th>
                         <th>업권</th>
                         <th>비고</th>
+                        <th>삭제</th>
                     </tr>
                     </thead>
                     <tbody id="agencyListTbody">
@@ -275,6 +312,10 @@
                         <!--                                                                                 style="cursor: pointer"></i></td>-->
                         <td onclick="infoModal(this)" th:id="${agencyList.id}"><i class="fa-solid fa-braille"
                                                                                   style="cursor: pointer"></i></td>
+                        <td>
+                            <button class="btn btn-danger" onclick="deleteRow(this)">삭제</button>
+                        </td>
+
                     </tr>
 
 

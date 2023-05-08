@@ -51,8 +51,8 @@ public class MydataController {
     @ResponseBody
     public JsonObject mdServiceTableModal(int id) {
 
-        List<MdServiceDTO> list = mydataService.mdServiceSelectAll(id);
-
+        List<MdServiceDTO> list = mydataService.mdServiceSelect(id);
+        System.out.println(list);
 
         JsonArray array = new JsonArray();
 
@@ -159,6 +159,14 @@ public class MydataController {
         return result;
     }
 
+    @GetMapping("/agencyTable/delete")
+    @ResponseBody
+    public void agencyTableDeleteRow(int id) {
+        System.out.println("id = " + id);
+        mydataService.mdAgencyDelete(id);
+    }
+
+
     @GetMapping("/statistics-Daily")
     public String statistics_Daily() {
         return "/mydata/statistics-Daily";
@@ -176,6 +184,8 @@ public class MydataController {
 
     @GetMapping("/mydataServiceControl")
     public String mydataServiceControl() {
+        List<MdServiceDTO> list = mydataService.mdServiceSelect();
+
         return "/mydata/mydataServiceControl";
     }
 

@@ -22,9 +22,14 @@ public class MydataService {
         return mydataDao.mdAgencySelectAll();
     }
 
-    public List<MdServiceDTO> mdServiceSelectAll(int id) {
+    /* mdAgency 테이블 - modal - mdService 상세 */
+    public List<MdServiceDTO> mdServiceSelect(int id) {
+        return mydataDao.mdServiceSelect(id);
+    }
 
-        return mydataDao.mdServiceSelectAll(id);
+    /* 마이데이터 서비스 관리 페이지 */
+    public List<MdServiceDTO> mdServiceSelect() {
+        return mydataDao.mdServiceSelect();
     }
 
     public MdAgencyDTO mdAgencySelectOne(int id) {
@@ -34,4 +39,11 @@ public class MydataService {
     public List<MdAgencyDTO> mdAgencySelectBox(String division) {
         return mydataDao.mdAgencySelectBox(division);
     }
+
+    public void mdAgencyDelete(int id) {
+        mydataDao.mdAgencyDelete(id);
+    }
+
+
 }
+

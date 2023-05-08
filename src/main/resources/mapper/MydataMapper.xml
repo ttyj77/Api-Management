@@ -10,6 +10,8 @@
         <result property="mdServiceName" column="mdServiceName"/>
         <result property="clientId" column="clientId"/>
         <result property="domainName" column="domainName"/>
+        <result property="code" column="code"/>
+        <result property="name" column="name"/>
     </resultMap>
 
     <resultMap id="mdServiceAgency" type="com.ipa.openapi_inzent.model.MdAgencyDTO">
@@ -29,26 +31,36 @@
         <collection property="mdServiceDTO" resultMap="mdService"/>
     </resultMap>
 
+    <!-- mdAgency  -->
     <select id="mdAgencySelectAll" resultType="com.ipa.openapi_inzent.model.MdAgencyDTO">
         SELECT * FROM public."mdAgency";
     </select>
-
-    <select id="mdServiceSelectAll" parameterType="int" resultMap="mdService">
-        select DISTINCT (ms.id),ma."domainName",  ms."agencyId", ms.name as "mdServiceName", ms."callbackUrl", ms."clientId" from
-        public."mdService" AS ms join public."mdAgency" AS ma on ms."agencyId" = #{id};
+    <!-- 모달 - mdService 상세 -->
+    <select id="mdServiceSelect" parameterType="int" resultMap="mdService">
+        select ms.id, ms."agencyId",ms."clientId", ms.name as "mdServiceName" , ma.code, ma.name,ms."callbackUrl" from
+        "mdAgency" as ma join "mdService" as ms on ms."agencyId" = ma.id where ma.id = #{id}
     </select>
 
+    <!-- 모달 - mdAgency 상세 -->
     <select id="mdAgencySelectOne" parameterType="int" resultType="com.ipa.openapi_inzent.model.MdAgencyDTO">
         SELECT id, code, division, name, industry, address, "domainName", "publicApiIp", "authenticationMethod",
         "TLSNum", "agencyIp", "agencyPort"
         FROM public."mdAgency" where id = #{id};
     </select>
 
+    <!-- mdAgency 페이지 selectBox 출력물 -->
     <select id="mdAgencySelectBox" parameterType="string" resultType="com.ipa.openapi_inzent.model.MdAgencyDTO">
         SELECT id, code, division, name, industry, address, "domainName", "publicApiIp", "authenticationMethod",
         "TLSNum", "agencyIp", "agencyPort"
         FROM public."mdAgency" where division = #{division};
     </select>
+
+    <!-- mdAgency 페이지 row 삭제 -->
+    <delete id="mdAgencyDelete" parameterType="int">
+        DELETE FROM public."mdAgency"
+        WHERE id= #{id};
+    </delete>
+
 
 </mapper>
 

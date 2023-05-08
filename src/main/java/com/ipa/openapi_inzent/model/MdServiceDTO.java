@@ -14,4 +14,8 @@ public class MdServiceDTO {
 
     private String domainName;
 
+    /* agency Table column */
+    private String code;
+    private String name;
+
 }
