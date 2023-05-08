@@ -24,13 +24,13 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js"
                 integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
                 crossorigin="anonymous"></script>
-
         <!-- Bootstrap core JavaScript-->
-        <script src="/vendor/jquery/jquery.min.js"></script>
+<!--        <script src="/vendor/jquery/jquery.min.js"></script>-->
         <!--<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
         <!-- Core plugin JavaScript-->
-        <script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
+<!--        <script src="/vendor/jquery-easing/jquery.easing.min.js"></script>-->
 
         <!-- Custom scripts for all pages-->
         <script src="/js/sb-admin-2.min.js"></script>
@@ -229,31 +229,40 @@
 
             function updateApi(apiOne) {
 
-                console.log(apiOne);
-
-                console.log(typeof (apiOne.value))
-                // console.log(apiOne.getAttribute("apione").get("ApiDTO"));
-
-
-                let admin = document.getElementById('admin2');
-                let normal = document.getElementById('normal2');
-                let api = document.getElementById('api2');
-                let md = document.getElementById('md2');
                 let context = document.getElementById('contextApi');
                 let name = document.getElementById('nameApi');
                 let explanation = document.getElementById('explanationApi');
 
-                context.value = "context";
-                name.value = "value";
-                explanation.textContent = "explanation";
-                if (true == true) {
-                    $('#radio1').prop("checked", true);
-                } else {
-                    $('#radio2').prop("checked", true);
-                }
-
+                let apiId = apiOne.getAttribute("apiid");
+                let data = {
+                    "apiId": apiId,
+                };
+                $('#radio1').prop("checked", false);
+                $('#radio2').prop("checked", false);
+                $.ajax({
+                    url: "/api/selectOne",
+                    data: data,
+                    method: "get",
+                    success: (message) =>{
+                        context.value = message.apiContext;
+                        name.value = message.apiName;
+                        explanation.textContent = message.apiExplanation;
+                        if (message.apiDisclosure == true) {
+                            $('#radio1').prop("checked", true);
+                        } else {
+                            $('#radio2').prop("checked", true);
+                        }
+                    },
+                    error:(e) =>{
+                        console.log("출력실패",e)
+                    }
+                })
 
                 $('#updateModal').modal('show');
+                // let admin = document.getElementById('admin2');
+                // let normal = document.getElementById('normal2');
+                // let api = document.getElementById('api2');
+                // let md = document.getElementById('md2');
             }
         </script>
     </th:block>
@@ -297,7 +306,7 @@
                                             </div>
                                             <div class="d-flex flex-column" id="subtable">
                                                 <button class="btn btn-light inBtn modal2"
-                                                         th:value="${api}"
+                                                        th:apiId="${api.id}"
                                                         onclick="updateApi(this)">
                                                     <!--                                                    th:onclick="updateApi(this.getAttribute('apiOne'))"-->
                                                     <!--   <button class="btn btn-light inBtn" onclick="event.stopPropagation(); $('#updateModal').modal('show');"-->
