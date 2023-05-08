@@ -25,26 +25,17 @@
                 integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
                 crossorigin="anonymous"></script>
         <!-- Bootstrap core JavaScript-->
-<!--        <script src="/vendor/jquery/jquery.min.js"></script>-->
+        <!--        <script src="/vendor/jquery/jquery.min.js"></script>-->
         <!--<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>-->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
         <!-- Core plugin JavaScript-->
-<!--        <script src="/vendor/jquery-easing/jquery.easing.min.js"></script>-->
+        <!--        <script src="/vendor/jquery-easing/jquery.easing.min.js"></script>-->
 
         <!-- Custom scripts for all pages-->
         <script src="/js/sb-admin-2.min.js"></script>
 
         <script>
-
-            //            $('.inBtn').click(function (e) {
-            //                e.preventDefault();
-            //                e.stopPropagation();
-            //            });
-            //            $('.goTable').click(function (e) {
-            //                e.preventDefault();
-            //                location.href = 'table';
-            //            });
 
             function saveApi() {
                 // 역할 확인
@@ -108,7 +99,7 @@
                         icon: 'success',
                         text: 'API 그룹이 저장되었습니다.'
                     }).then(() => {
-                        // location.href = '/api/upsert';
+                        $('#updateBtn').submit();
                         $('#updateModal').modal('hide');
                     });
                 }
@@ -243,7 +234,7 @@
                     url: "/api/selectOne",
                     data: data,
                     method: "get",
-                    success: (message) =>{
+                    success: (message) => {
                         context.value = message.apiContext;
                         name.value = message.apiName;
                         explanation.textContent = message.apiExplanation;
@@ -252,9 +243,10 @@
                         } else {
                             $('#radio2').prop("checked", true);
                         }
+                        $('#updateApi').attr("action","/api/update/"+apiId)
                     },
-                    error:(e) =>{
-                        console.log("출력실패",e)
+                    error: (e) => {
+                        console.log("출력실패", e)
                     }
                 })
 
@@ -360,8 +352,8 @@
                                     <td class="d-flex">
                                         <div class="form-check mr-2">
                                             <input class="form-check-input" type="radio"
-                                                   name="disclosure"
                                                    value="true"
+                                                   name="public"
                                                    id="show" checked>
                                             <label class="form-check-label" for="show">
                                                 공개
@@ -369,7 +361,7 @@
                                         </div>
                                         <div class="form-check">
                                             <input class="form-check-input" type="radio"
-                                                   name="disclosure"
+                                                   name="public"
                                                    value="false"
                                                    id="noshow">
                                             <label class="form-check-label" for="noshow">
@@ -419,28 +411,28 @@
             <div class="modal-dialog modal-dialog-centered modal2"
                  role="document">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="updateModalLabel">보험업권</h5>
-                        <div class="" style="cursor: pointer"
-                             data-bs-dismiss="modal"
-                        ><i class="fa-solid fa-xmark"
-                            style="color: #7f7f7f;"></i>
+                    <form method="post" id="updateApi">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="updateModalLabel">보험업권</h5>
+                            <div class="" style="cursor: pointer"
+                                 data-bs-dismiss="modal"
+                            ><i class="fa-solid fa-xmark"
+                                style="color: #7f7f7f;"></i>
+                            </div>
                         </div>
-                    </div>
-                    <div class="modal-body">
-                        <form>
+                        <div class="modal-body">
                             <table class="table table-hover">
                                 <tbody>
                                 <tr>
                                     <td class="tdbg">컨텍스트📍</td>
                                     <td><input type="text" class="form-control"
-                                               id="contextApi"
+                                               id="contextApi" name="context"
                                                required></td>
                                 </tr>
                                 <tr>
                                     <td class="tdbg">이름📍</td>
                                     <td><input type="text" class="form-control"
-                                               id="nameApi"
+                                               id="nameApi" name="name"
                                                required></td>
                                 </tr>
                                 <tr>
@@ -449,9 +441,9 @@
                                         <div class="form-check">
                                             <input class="form-check-input"
                                                    type="radio"
-                                                   name="radio1"
                                                    id="radio1"
                                                    value="true"
+                                                   name="publicUpdate"
                                             >
                                             <label class="form-check-label"
                                                    for="radio1">
@@ -461,9 +453,9 @@
                                         <div class="form-check">
                                             <input class="form-check-input"
                                                    type="radio"
-                                                   name="radio2"
                                                    id="radio2"
                                                    value="false"
+                                                   name="publicUpdate"
                                             >
                                             <label class="form-check-label"
                                                    for="radio2">
@@ -493,21 +485,22 @@
                                 <tr>
                                     <td class="tdbg">설명</td>
                                     <td><textarea
-                                            class="form-control" id="explanationApi"></textarea>
+                                            class="form-control" id="explanationApi" name="explanation"></textarea>
                                     </td>
                                 </tr>
                                 </tbody>
                             </table>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary"
-                                data-bs-dismiss="modal">취소
-                        </button>
-                        <button type="submit" class="btn btn-primary"
-                                onclick="saveApiUpdate()">저장
-                        </button>
-                    </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary"
+                                    data-bs-dismiss="modal">취소
+                            </button>
+                            <button type="submit" class="btn btn-primary" id="updateBtn"
+                                    onclick="saveApiUpdate()">저장
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

@@ -48,13 +48,10 @@ public class ApiController {
 
     @GetMapping("/details/{id}")
     public String details(Model model, @PathVariable int id, HttpServletResponse response) {
-
-        System.out.println(response.getStatus()); //200
-
         ApiDTO a = apiService.selectOne(id);
         List<ApiDetailsDTO> ad = apiDetailsService.selectAll(id);
 //        System.out.println("ad.get(0).getOperationId() = " + ad.get(0).getOperationId());
-        System.out.println("ad = " + ad);
+//        System.out.println("ad = " + ad);
 //        model.addAttribute("operationId",ad.get(0).getOperationId());
         model.addAttribute("api", a);
         model.addAttribute("apiList", ad);
@@ -70,14 +67,20 @@ public class ApiController {
 
     @PostMapping("/insert")
     public String insert(ApiDTO apiDTO) {
-        System.out.println("apiDTO = " + apiDTO);
 
         apiService.insert(apiDTO);
         return "redirect:/api";
     }
 
+    @PostMapping("/update/{id}")
+    public String update(ApiDTO apiDTO) {
+        apiService.update(apiDTO);
+        return "redirect:/api";
+    }
+
     @GetMapping("/trash")
     public String apiTrash() {
+
         return "/apis/trash";
     }
 
