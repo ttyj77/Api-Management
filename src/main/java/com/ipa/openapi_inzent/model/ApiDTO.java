@@ -2,6 +2,8 @@ package com.ipa.openapi_inzent.model;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class ApiDTO {
     private int id;
