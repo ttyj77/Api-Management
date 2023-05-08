@@ -49,5 +49,9 @@ public class MydataService {
     public MdServiceDTO mdServiceSelectOne(int id) {
         return mydataDao.mdServiceSelectOne(id);
     }
+
+    public List<MdServiceDTO> mdServiceSearchKeyword(String keyword) {
+        return mydataDao.mdServiceSearchKeyword(keyword);
+    }
 }
 

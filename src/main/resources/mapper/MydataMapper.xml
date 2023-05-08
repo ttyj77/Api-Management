@@ -79,6 +79,16 @@
         WHERE id= #{id};
     </delete>
 
+    <select id="mdServiceSearchKeyword" parameterType="string" resultMap="mdService">
+        select ms.id, ms."agencyId",ms."clientId", ms.name as "mdServiceName" , ma.code,
+        ma.name,ms."callbackUrl"
+        from
+        "mdAgency" as ma join "mdService" as ms on ms."agencyId" = ma.id where ms.name ILIKE CONCAT('%', #{keyword},'%')
+        OR ma.name ILIKE CONCAT('%', #{keyword},'%')
+        OR ma.code ILIKE CONCAT('%', #{keyword},'%')
+        OR ms."clientId" ILIKE CONCAT('%', #{keyword},'%') ;
+    </select>
+
 
 </mapper>
 

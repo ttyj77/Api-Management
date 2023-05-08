@@ -24,4 +24,6 @@ public interface MydataDao {
     void mdAgencyDelete(int id) throws DataAccessException;
 
     MdServiceDTO mdServiceSelectOne(int id) throws DataAccessException;
+
+    List<MdServiceDTO> mdServiceSearchKeyword(String keyword) throws DataAccessException;
 }

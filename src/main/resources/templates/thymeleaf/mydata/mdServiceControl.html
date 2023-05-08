@@ -111,8 +111,11 @@
 
             }
 
-            function searchService(value) {
-                console.log(value)
+            function searchService() {
+
+                console.log(this.inputBox.value)
+
+
             }
         </script>
     </th:block>
@@ -148,17 +151,19 @@
         <div class="card shadow mb-4">
             <!--검색어 입력창-->
             <div class="card-body">
-                <div id="search" class="col-md-4 input-group"
-                     style="float:right; margin: 0; !important;">
-                    <input type="text" class="form-control"
-                           placeholder="검색어를 입력해주세요(ID, 이름)"
-                           aria-label="Search" aria-describedby="basic-addon2"><br>
-                    <div class="input-group-append">
-                        <button class="btn btn-primary" type="button" onclick="searchService(this)">
-                            <i class="fas fa-search fa-sm"></i>
-                        </button>
+                <form action="/mydata/service/search" method="get">
+                    <div id="search" class="col-md-4 input-group"
+                         style="float:right; margin: 0; !important;">
+                        <input type="text" class="form-control"
+                               placeholder="검색어를 입력해주세요(ID, 이름)"
+                               aria-label="Search" aria-describedby="basic-addon2" name="keyword"><br>
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="submit">
+                                <i class="fas fa-search fa-sm"></i>
+                            </button>
+                        </div>
                     </div>
-                </div>
+                </form>
             </div>
             <!--검색어 입력창-->
             <!--유저정보테이블 시작-->

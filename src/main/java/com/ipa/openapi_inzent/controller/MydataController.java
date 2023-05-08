@@ -184,7 +184,7 @@ public class MydataController {
     }
 
     @GetMapping("/serviceTable")
-    public String mydataServiceControl(Model model) {
+    public String serviceTable(Model model) {
         System.out.println(mydataService.mdServiceSelectList());
         model.addAttribute("list", mydataService.mdServiceSelectList());
         return "/mydata/mdServiceControl";
@@ -206,6 +206,14 @@ public class MydataController {
         object.add("callbackUrl", element);
 
         return object;
+    }
+
+    @GetMapping("/service/search")
+    public String serviceSearch(Model model, String keyword) {
+        System.out.println("keyword : " + keyword);
+        System.out.println(mydataService.mdServiceSearchKeyword(keyword));
+        model.addAttribute("list", mydataService.mdServiceSearchKeyword(keyword));
+        return "/mydata/mdServiceControl";
     }
 
     @GetMapping("/mydataSendReq")
