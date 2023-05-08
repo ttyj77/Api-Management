@@ -51,7 +51,8 @@ public class MydataController {
     @ResponseBody
     public JsonObject mdServiceTableModal(int id) {
 
-        List<MdServiceDTO> list = mydataService.mdServiceSelect(id);
+        List<MdServiceDTO> list = mydataService.mdServiceSelectModal(id);
+        System.out.println("id = " + id);
         System.out.println(list);
 
         JsonArray array = new JsonArray();
@@ -182,11 +183,29 @@ public class MydataController {
         return "/mydata/mydataToken";
     }
 
-    @GetMapping("/mydataServiceControl")
-    public String mydataServiceControl() {
-        List<MdServiceDTO> list = mydataService.mdServiceSelect();
+    @GetMapping("/serviceTable")
+    public String mydataServiceControl(Model model) {
+        System.out.println(mydataService.mdServiceSelectList());
+        model.addAttribute("list", mydataService.mdServiceSelectList());
+        return "/mydata/mdServiceControl";
+    }
 
-        return "/mydata/mydataServiceControl";
+    @GetMapping("/service/modal")
+    @ResponseBody
+    public JsonObject serviceModal(int id) {
+        MdServiceDTO mdServiceDTO = mydataService.mdServiceSelectOne(id);
+
+        JsonObject object = new JsonObject();
+        object.addProperty("id", mdServiceDTO.getId());
+        object.addProperty("clientId", mdServiceDTO.getClientId());
+        object.addProperty("mdServiceName", mdServiceDTO.getMdServiceName());
+        object.addProperty("domainName", mdServiceDTO.getDomainName());
+
+        JsonElement element = JsonParser.parseString(mdServiceDTO.getCallbackUrl()).getAsJsonObject().get("url");
+
+        object.add("callbackUrl", element);
+
+        return object;
     }
 
     @GetMapping("/mydataSendReq")

@@ -36,10 +36,28 @@
         SELECT * FROM public."mdAgency";
     </select>
     <!-- 모달 - mdService 상세 -->
-    <select id="mdServiceSelect" parameterType="int" resultMap="mdService">
-        select ms.id, ms."agencyId",ms."clientId", ms.name as "mdServiceName" , ma.code, ma.name,ms."callbackUrl" from
+    <select id="mdServiceSelectModal" parameterType="int" resultMap="mdService">
+        select ms.id, ms."agencyId",ms."clientId", ms.name as "mdServiceName" , ma.code,
+        ma.name,ms."callbackUrl"
+        from
         "mdAgency" as ma join "mdService" as ms on ms."agencyId" = ma.id where ma.id = #{id}
     </select>
+    <!--mydata service 목록 페이지 selectAll-->
+    <select id="mdServiceSelectList" resultMap="mdService">
+        select ms.id, ms."agencyId",ms."clientId", ms.name as "mdServiceName" , ma.code,
+        ma.name,ms."callbackUrl"
+        from
+        "mdAgency" as ma join "mdService" as ms on ms."agencyId" = ma.id
+    </select>
+
+    <!--mydata service 목록 페이지 selectAll-->
+    <select id="mdServiceSelectOne" resultMap="mdService" parameterType="int">
+        select ms.id, ms."agencyId",ms."clientId", ms.name as "mdServiceName" , ma.code,
+        ma.name,ms."callbackUrl"
+        from
+        "mdAgency" as ma join "mdService" as ms on ms."agencyId" = ma.id where ms.id = ${id};
+    </select>
+
 
     <!-- 모달 - mdAgency 상세 -->
     <select id="mdAgencySelectOne" parameterType="int" resultType="com.ipa.openapi_inzent.model.MdAgencyDTO">

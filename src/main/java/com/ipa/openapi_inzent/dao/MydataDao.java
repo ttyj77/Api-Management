@@ -13,13 +13,15 @@ import java.util.List;
 public interface MydataDao {
     List<MdAgencyDTO> mdAgencySelectAll() throws DataAccessException;
 
-    List<MdServiceDTO> mdServiceSelect(int id) throws DataAccessException;
+    List<MdServiceDTO> mdServiceSelectModal(int id) throws DataAccessException;
 
-    List<MdServiceDTO> mdServiceSelect() throws DataAccessException;
+    List<MdServiceDTO> mdServiceSelectList() throws DataAccessException;
 
     MdAgencyDTO mdAgencySelectOne(int id) throws DataAccessException;
 
     List<MdAgencyDTO> mdAgencySelectBox(String division) throws DataAccessException;
 
     void mdAgencyDelete(int id) throws DataAccessException;
+
+    MdServiceDTO mdServiceSelectOne(int id) throws DataAccessException;
 }
