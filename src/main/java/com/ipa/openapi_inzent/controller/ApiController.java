@@ -1,5 +1,6 @@
 package com.ipa.openapi_inzent.controller;
 
+import com.google.gson.JsonObject;
 import com.ipa.openapi_inzent.model.ApiDTO;
 import com.ipa.openapi_inzent.model.ApiDetailsDTO;
 import com.ipa.openapi_inzent.service.ApiDetailsService;
@@ -8,10 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,6 +29,21 @@ public class ApiController {
     public String apis(Model model) {
         model.addAttribute("list", apiService.selectAll());
         return "/apis/index";
+    }
+
+    @GetMapping("/selectOne")
+    @ResponseBody
+    public JsonObject apiOne(int apiId) {
+        JsonObject object = new JsonObject();
+        ApiDTO apiDTO = apiService.selectOne(apiId);
+
+        object.addProperty("apiId", apiId);
+        object.addProperty("apiName", apiDTO.getName());
+        object.addProperty("apiContext", apiDTO.getContext());
+        object.addProperty("apiExplanation", apiDTO.getExplanation());
+        object.addProperty("apiDisclosure", apiDTO.isDisclosure());
+
+        return object;
     }
 
     @GetMapping("/details/{id}")
