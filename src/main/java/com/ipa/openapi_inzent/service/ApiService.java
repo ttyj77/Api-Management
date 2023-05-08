@@ -34,7 +34,10 @@ public class ApiService {
 
     public void delete(int id) {
         apiDao.delete(id);
+    }
 
+    public ApiDTO showRole() {
+        return apiDao.showRole();
     }
 
 }

@@ -16,4 +16,7 @@ public interface ApiDao {
     void update(ApiDTO apiDTO) throws DataAccessException;
 
     void delete(int id) throws DataAccessException;
+
+    ApiDTO showRole() throws DataAccessException;
+
 }
