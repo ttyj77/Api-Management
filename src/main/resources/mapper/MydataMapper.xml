@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ipa.openapi_inzent.dao.MydataDao">
+
+    <resultMap id="mdService" type="com.ipa.openapi_inzent.model.MdServiceDTO">
+        <result property="agencyId" column="agencyId"/>
+        <result property="callbackUrl" column="callbackUrl"/>
+        <result property="mdServiceName" column="mdServiceName"/>
+        <result property="clientId" column="clientId"/>
+        <result property="domainName" column="domainName"/>
+        <result property="code" column="code"/>
+        <result property="name" column="name"/>
+    </resultMap>
+
+    <resultMap id="mdServiceAgency" type="com.ipa.openapi_inzent.model.MdAgencyDTO">
+        <!--property : 현재 DTO에서 사용하는 이름 column : DB에서 사용중인 이름-->
+        <result property="id" column="id"/>
+        <result property="code" column="code"/>
+        <result property="division" column="division"/>
+        <result property="name" column="name"/>
+        <result property="industry" column="industry"/>
+        <result property="address" column="address"/>
+        <result property="domainName" column="domainName"/>
+        <result property="publicApiIp" column="publicApiIp"/>
+        <result property="authenticationMethod" column="authenticationMethod"/>
+        <result property="TLSNum" column="TLSNum"/>
+        <result property="agencyIp" column="agencyIp"/>
+        <result property="agencyPort" column="agencyPort"/>
+        <collection property="mdServiceDTO" resultMap="mdService"/>
+    </resultMap>
+
+    <!-- mdAgency  -->
+    <select id="mdAgencySelectAll" resultType="com.ipa.openapi_inzent.model.MdAgencyDTO">
+        SELECT * FROM public."mdAgency";
+    </select>
+    <!-- 모달 - mdService 상세 -->
+    <select id="mdServiceSelectModal" parameterType="int" resultMap="mdService">
+        select ms.id, ms."agencyId",ms."clientId", ms.name as "mdServiceName" , ma.code,
+        ma.name,ms."callbackUrl"
+        from
+        "mdAgency" as ma join "mdService" as ms on ms."agencyId" = ma.id where ma.id = #{id}
+    </select>
+    <!--mydata service 목록 페이지 selectAll-->
+    <select id="mdServiceSelectList" resultMap="mdService">
+        select ms.id, ms."agencyId",ms."clientId", ms.name as "mdServiceName" , ma.code,
+        ma.name,ms."callbackUrl"
+        from
+        "mdAgency" as ma join "mdService" as ms on ms."agencyId" = ma.id
+    </select>
+
+    <!--mydata service 목록 페이지 selectAll-->
+    <select id="mdServiceSelectOne" resultMap="mdService" parameterType="int">
+        select ms.id, ms."agencyId",ms."clientId", ms.name as "mdServiceName" , ma.code,
+        ma.name,ms."callbackUrl"
+        from
+        "mdAgency" as ma join "mdService" as ms on ms."agencyId" = ma.id where ms.id = ${id};
+    </select>
+
+
+    <!-- 모달 - mdAgency 상세 -->
+    <select id="mdAgencySelectOne" parameterType="int" resultType="com.ipa.openapi_inzent.model.MdAgencyDTO">
+        SELECT id, code, division, name, industry, address, "domainName", "publicApiIp", "authenticationMethod",
+        "TLSNum", "agencyIp", "agencyPort"
+        FROM public."mdAgency" where id = #{id};
+    </select>
+
+    <!-- mdAgency 페이지 selectBox 출력물 -->
+    <select id="mdAgencySelectBox" parameterType="string" resultType="com.ipa.openapi_inzent.model.MdAgencyDTO">
+        SELECT id, code, division, name, industry, address, "domainName", "publicApiIp", "authenticationMethod",
+        "TLSNum", "agencyIp", "agencyPort"
+        FROM public."mdAgency" where division = #{division};
+    </select>
+
+    <!-- mdAgency 페이지 row 삭제 -->
+    <delete id="mdAgencyDelete" parameterType="int">
+        DELETE FROM public."mdAgency"
+        WHERE id= #{id};
+    </delete>
+
+    <select id="mdServiceSearchKeyword" parameterType="string" resultMap="mdService">
+        select ms.id, ms."agencyId",ms."clientId", ms.name as "mdServiceName" , ma.code,
+        ma.name,ms."callbackUrl"
+        from
+        "mdAgency" as ma join "mdService" as ms on ms."agencyId" = ma.id where ms.name ILIKE CONCAT('%', #{keyword},'%')
+        OR ma.name ILIKE CONCAT('%', #{keyword},'%')
+        OR ma.code ILIKE CONCAT('%', #{keyword},'%')
+        OR ms."clientId" ILIKE CONCAT('%', #{keyword},'%') ;
+    </select>
+
+
+</mapper>
+
