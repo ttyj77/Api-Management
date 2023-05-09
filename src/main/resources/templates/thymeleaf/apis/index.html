@@ -16,6 +16,7 @@
         <!-- Custom styles for this page -->
         <link href="/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
         <link href="/css/apis.css" rel="stylesheet"/>
+
     </th:block>
 
 
@@ -34,229 +35,7 @@
 
         <!-- Custom scripts for all pages-->
         <script src="/js/sb-admin-2.min.js"></script>
-
-        <script>
-
-            function saveApi() {
-                // 역할 확인
-                let admin = document.getElementById('admin');
-                let normal = document.getElementById('normal');
-                let api = document.getElementById('api');
-                let md = document.getElementById('md');
-                let roleInput = document.getElementById('roles');
-                //
-                // if(admin.checked){
-                //     roleInput.innerHTML = '{"admin"}';
-                // }
-                // if(normal.checked){
-                //
-                // }
-                // if(api.checked){
-                //
-                // }
-                // if(md.checked){
-                //
-                // }
-
-                // 입력 확인
-                let context = document.querySelector('.contextApi');
-                let name = document.querySelector('.nameApi');
-                if (context.value === '') {
-                    Swal.fire({
-                        icon: 'error',
-                        text: '컨텍스트를 입력해주세요.'
-                    });
-                } else if (name.value === '') {
-                    Swal.fire({
-                        icon: 'error',
-                        text: '이름을 입력해주세요.'
-                    });
-                } else {
-                    Swal.fire({
-                        icon: 'success',
-                        text: 'API 그룹이 저장되었습니다.'
-                    }).then(() => {
-                        // location.href = '/api/insert';
-                        $('#registerApi').submit();
-                        $('#registerModal').modal('hide');
-                    });
-                }
-            }
-
-            function saveApiUpdate() {
-                if ($('#contextApi').val().length === 0) {
-                    Swal.fire({
-                        icon: 'error',
-                        text: '컨텍스트를 입력해주세요.'
-                    });
-                } else if ($('#nameApi').val().length === 0) {
-                    Swal.fire({
-                        icon: 'error',
-                        text: '이름을 입력해주세요.'
-                    });
-                } else {
-                    Swal.fire({
-                        icon: 'success',
-                        text: 'API 그룹이 저장되었습니다.'
-                    }).then(() => {
-                        $('#updateBtn').submit();
-                        $('#updateModal').modal('hide');
-                    });
-                }
-            }
-
-            function removeApi(id) {
-                Swal.fire({
-                    showCancelButton: true,
-                    cancelButtonText: "취소",
-                    confirmButtonText: "삭제",
-                    icon: 'warning',
-                    text: "\'XX업권\' API 그룹을 삭제하시겠습니까?"
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        Swal.fire({
-                            title: '삭제 성공',
-                            icon: 'success'
-                        }).then(() => {
-                            location.href = "/api/delete/" + id;
-                        });
-                    }
-                });
-            }
-
-            // role 등록 part
-            function checkRole() {
-                let admin = document.getElementById('admin');
-                let normal = document.getElementById('normal');
-                let api = document.getElementById('api');
-                let md = document.getElementById('md');
-
-                let adminBadge = $(document.createElement("span")).addClass("badge badge-secondary admin").attr('style', "margin-right:2px").text(admin.value);
-                let normalBadge = $(document.createElement("span")).addClass("badge badge-secondary normal").attr('style', "margin-right:2px").text(normal.value);
-                let apiBadge = $(document.createElement("span")).addClass("badge badge-secondary api").attr('style', "margin-right:2px").text(api.value);
-                let mdBadge = $(document.createElement("span")).addClass("badge badge-secondary md").attr('style', "margin-right:2px").text(md.value);
-
-                let radimin = document.querySelector('.admin');
-                let rnormal = document.querySelector('.normal');
-                let rapi = document.querySelector('.api');
-                let rmd = document.querySelector('.md');
-
-                if (admin.checked && radimin == null) {
-                    $('#target').append(adminBadge);
-                } else if (radimin != null && !admin.checked) {
-                    $('.admin').remove();
-                }
-
-                if (normal.checked && rnormal == null) {
-                    $('#target').append(normalBadge);
-                } else if (rnormal != null && !normal.checked) {
-                    $('.normal').remove();
-                }
-
-                if (api.checked && rapi == null) {
-                    $('#target').append(apiBadge);
-                } else if (rapi != null && !api.checked) {
-                    $('.api').remove();
-                }
-
-                if (md.checked && rmd == null) {
-                    $('#target').append(mdBadge);
-                } else if (rmd != null && !md.checked) {
-                    $('.md').remove();
-                }
-            }
-
-            // role 수정 part
-            function checkRole2() {
-                let admin = document.getElementById('admin2');
-                let normal = document.getElementById('normal2');
-                let api = document.getElementById('api2');
-                let md = document.getElementById('md2');
-
-                let adminBadge = $(document.createElement("span")).addClass("badge badge-secondary admin").attr('style', "margin-right:2px").text(admin.value);
-                let normalBadge = $(document.createElement("span")).addClass("badge badge-secondary normal").attr('style', "margin-right:2px").text(normal.value);
-                let apiBadge = $(document.createElement("span")).addClass("badge badge-secondary api").attr('style', "margin-right:2px").text(api.value);
-                let mdBadge = $(document.createElement("span")).addClass("badge badge-secondary md").attr('style', "margin-right:2px").text(md.value);
-
-                let radimin = document.querySelector('.admin');
-                let rnormal = document.querySelector('.normal');
-                let rapi = document.querySelector('.api');
-                let rmd = document.querySelector('.md');
-
-                if (admin.checked && radimin == null) {
-                    $('#target2').append(adminBadge);
-                } else if (radimin != null && !admin.checked) {
-                    $('.admin').remove();
-                }
-
-                if (normal.checked && rnormal == null) {
-                    $('#target2').append(normalBadge);
-                } else if (rnormal != null && !normal.checked) {
-                    $('.normal').remove();
-                }
-
-                if (api.checked && rapi == null) {
-                    $('#target2').append(apiBadge);
-                } else if (rapi != null && !api.checked) {
-                    $('.api').remove();
-                }
-
-                if (md.checked && rmd == null) {
-                    $('#target2').append(mdBadge);
-                } else if (rmd != null && !md.checked) {
-                    $('.md').remove();
-                }
-            }
-
-            // modal 선택 시 안 넘어감
-            function insertApis(e, id) {
-                if (e.target.parentNode.className == "h3 font-weight-bold text-primary mb-1" || e.target.parentNode.className == "col mr-2") {
-                    location.href = '/api/details/' + id;
-                    console.log(e.target.parentNode.className)
-                } else {
-                    console.log("해당없음!!")
-                }
-            }
-
-            function updateApi(apiOne) {
-
-                let context = document.getElementById('contextApi');
-                let name = document.getElementById('nameApi');
-                let explanation = document.getElementById('explanationApi');
-
-                let apiId = apiOne.getAttribute("apiid");
-                let data = {
-                    "apiId": apiId,
-                };
-                $('#radio1').prop("checked", false);
-                $('#radio2').prop("checked", false);
-                $.ajax({
-                    url: "/api/selectOne",
-                    data: data,
-                    method: "get",
-                    success: (message) => {
-                        context.value = message.apiContext;
-                        name.value = message.apiName;
-                        explanation.textContent = message.apiExplanation;
-                        if (message.apiDisclosure == true) {
-                            $('#radio1').prop("checked", true);
-                        } else {
-                            $('#radio2').prop("checked", true);
-                        }
-                        $('#updateApi').attr("action","/api/update/"+apiId)
-                    },
-                    error: (e) => {
-                        console.log("출력실패", e)
-                    }
-                })
-
-                $('#updateModal').modal('show');
-                // let admin = document.getElementById('admin2');
-                // let normal = document.getElementById('normal2');
-                // let api = document.getElementById('api2');
-                // let md = document.getElementById('md2');
-            }
-        </script>
+        <script src="/js/index.js"></script>
     </th:block>
 
 </head>
@@ -334,7 +113,7 @@
                             <div class="" style="cursor: pointer" data-bs-dismiss="modal"
                             ><i class="fa-solid fa-xmark" style="color: #7f7f7f;"></i></div>
                         </div>
-                        <div class="modal-body">
+                        <div class="modal-body" id="registerModalBody">
 
                             <table class="table table-hover">
                                 <tbody>
@@ -375,7 +154,6 @@
                                     <td>
                                         <div id="target">
                                         </div>
-                                        <input type="hidden" name="role" id="roles">
                                         <button type="button"
                                                 class="btn btn-dark btn-sm"
                                                 data-bs-toggle="modal"
@@ -476,7 +254,7 @@
                                         <button type="button"
                                                 class="btn btn-dark btn-sm"
                                                 data-bs-toggle="modal"
-                                                data-bs-target="#roleUpdateModal"><i
+                                                data-bs-target="#roleModal"><i
                                                 class="fa-solid fa-plus"
                                                 style="color: #f7f7f8;"></i>
                                         </button>
@@ -507,36 +285,18 @@
 
         <!-- 역할 등록 Modal -->
         <div class="modal fade" id="roleModal" tabindex="-1" aria-labelledby="roleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="roleModalLabel">역할 추가 / 삭제</h5>
                         <div class="" style="cursor: pointer" data-bs-dismiss="modal"
                         ><i class="fa-solid fa-xmark" style="color: #7f7f7f;"></i></div>
                     </div>
-                    <div class="modal-body">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="운영자" name="admin" id="admin">
-                            <label class="form-check-label" for="admin">
-                                운영자
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="일반사용자" name="normal" id="normal">
-                            <label class="form-check-label" for="normal">
-                                일반사용자
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="API제공자" name="api" id="api">
-                            <label class="form-check-label" for="api">
-                                API제공자
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="마이데이터 사업자" name="md" id="md">
-                            <label class="form-check-label" for="md">
-                                마이데이터 사업자
+                    <div class="modal-body" id="roleModalBody">
+                        <div class="form-check" th:each="role:${roles}">
+                            <input class="form-check-input" type="checkbox" th:value="${role.name}" th:name="${role.code}"
+                                   th:id="${role.code}" id="roleName">
+                            <label class="form-check-label" th:for="${role.code}" th:text="${role.name}">
                             </label>
                         </div>
                     </div>
@@ -551,9 +311,8 @@
         </div>
 
         <!-- 역할 수정 Modal -->
-        <div class="modal fade" id="roleUpdateModal" tabindex="-1" aria-labelledby="roleUpdateModalLabel"
-             aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
+        <div class="modal fade" id="roleUpdateModal" tabindex="-1" aria-labelledby="roleUpdateModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="roleUpdateModalLabel">역할 추가 / 삭제</h5>
@@ -561,33 +320,15 @@
                         ><i class="fa-solid fa-xmark" style="color: #7f7f7f;"></i></div>
                     </div>
                     <div class="modal-body">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="운영자" name="admin" id="admin2">
-                            <label class="form-check-label" for="admin2">
-                                운영자
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="일반사용자" name="normal" id="normal2">
-                            <label class="form-check-label" for="normal2">
-                                일반사용자
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="API제공자" name="api" id="api2">
-                            <label class="form-check-label" for="api2">
-                                API제공자
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="마이데이터 사업자" name="md" id="md2">
-                            <label class="form-check-label" for="md2">
-                                마이데이터 사업자
+                        <div class="form-check" th:each="role:${roles}">
+                            <input class="form-check-input" type="checkbox" th:value="${role.name}" th:name="${role.code}"
+                                   th:id="${role.code}">
+                            <label class="form-check-label" th:for="${role.code}" th:text="${role.name}">
                             </label>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-secondary btn-sm" onclick="checkRole2()"
+                        <button type="button" class="btn btn-outline-secondary btn-sm" onclick="checkRole(${roles})"
                                 data-bs-toggle="modal"
                                 data-bs-target="#updateModal">닫기
                         </button>
@@ -596,7 +337,6 @@
             </div>
         </div>
     </div>
-
 </div>
 
 </body>

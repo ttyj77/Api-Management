@@ -3,6 +3,7 @@ package com.ipa.openapi_inzent.service;
 import com.ipa.openapi_inzent.dao.ApiDao;
 import com.ipa.openapi_inzent.dao.UserDao;
 import com.ipa.openapi_inzent.model.ApiDTO;
+import com.ipa.openapi_inzent.model.ApisRoleDTO;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
@@ -16,8 +17,12 @@ public class ApiService {
         this.apiDao = apiDao;
     }
 
-    public void insert(ApiDTO apiDTO) {
-        apiDao.insert(apiDTO);
+    public void insertApi(ApiDTO apiDTO) {
+        apiDao.insertApi(apiDTO);
+    }
+
+    public void insertRole(ApisRoleDTO apisRoleDTO) {
+        apiDao.insertRole(apisRoleDTO);
     }
 
     public void update(ApiDTO apiDTO) {
@@ -39,5 +44,6 @@ public class ApiService {
     public ApiDTO showRole() {
         return apiDao.showRole();
     }
+
 
 }

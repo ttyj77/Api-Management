@@ -1,0 +1,18 @@
+package com.ipa.openapi_inzent.dao;
+
+import com.ipa.openapi_inzent.model.ApiDTO;
+import com.ipa.openapi_inzent.model.RoleDTO;
+import org.apache.ibatis.annotations.Mapper;
+import org.springframework.dao.DataAccessException;
+
+import java.util.List;
+
+@Mapper
+public interface RoleDao {
+    void insert(RoleDTO roleDTO) throws DataAccessException;
+
+    List<RoleDTO> selectAll() throws DataAccessException;
+
+    RoleDTO selectOne(int id) throws DataAccessException;
+
+}

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ipa.openapi_inzent.dao.RoleDao">
+    <insert id="insert" parameterType="com.ipa.openapi_inzent.model.RoleDTO">
+        INSERT INTO public.role(code, name)
+        VALUES (#{code}, #{name});
+    </insert>
+    <select id="selectAll" resultType="com.ipa.openapi_inzent.model.RoleDTO">
+        SELECT *
+        FROM public.role
+    </select>
+    <select id="selectOne" parameterType="int" resultType="com.ipa.openapi_inzent.model.RoleDTO">
+        SELECT *
+        FROM public.role
+        WHERE id = #{id};
+    </select>
+</mapper>

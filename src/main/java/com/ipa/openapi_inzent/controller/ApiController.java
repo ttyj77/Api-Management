@@ -3,8 +3,10 @@ package com.ipa.openapi_inzent.controller;
 import com.google.gson.JsonObject;
 import com.ipa.openapi_inzent.model.ApiDTO;
 import com.ipa.openapi_inzent.model.ApiDetailsDTO;
+import com.ipa.openapi_inzent.model.ApisRoleDTO;
 import com.ipa.openapi_inzent.service.ApiDetailsService;
 import com.ipa.openapi_inzent.service.ApiService;
+import com.ipa.openapi_inzent.service.RoleService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,17 +19,20 @@ import java.util.List;
 @Controller
 public class ApiController {
     ApiService apiService;
+    RoleService roleService;
     ApiDetailsService apiDetailsService;
 
     @Autowired
-    public ApiController(ApiService apiService, ApiDetailsService apiDetailsService) {
+    public ApiController(ApiService apiService, ApiDetailsService apiDetailsService, RoleService roleService) {
         this.apiService = apiService;
         this.apiDetailsService = apiDetailsService;
+        this.roleService = roleService;
     }
 
     @GetMapping("")
     public String apis(Model model) {
         model.addAttribute("list", apiService.selectAll());
+        model.addAttribute("roles", roleService.selectAll());
         return "/apis/index";
     }
 
@@ -66,9 +71,9 @@ public class ApiController {
     }
 
     @PostMapping("/insert")
-    public String insert(ApiDTO apiDTO) {
-
-        apiService.insert(apiDTO);
+    public String insert(ApiDTO apiDTO, ApisRoleDTO apisRoleDTO) {
+        apiService.insertApi(apiDTO);
+        apiService.insertRole(apisRoleDTO);
         return "redirect:/api";
     }
 
