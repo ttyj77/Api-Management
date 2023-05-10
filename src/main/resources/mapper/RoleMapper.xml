@@ -16,4 +16,11 @@
         FROM public.role
         WHERE id = #{id};
     </select>
+    <select id="selectApisRoleList" parameterType="int" resultType="com.ipa.openapi_inzent.model.RoleDTO">
+        SELECT *
+        FROM public.role
+        INNER JOIN public."apisRole"
+        ON public.role.id = public."apisRole"."roleId"
+        WHERE public."apisRole"."apisId" = #{id}
+    </select>
 </mapper>

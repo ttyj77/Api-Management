@@ -15,4 +15,6 @@ public interface RoleDao {
 
     RoleDTO selectOne(int id) throws DataAccessException;
 
+    List<RoleDTO> selectApisRoleList(int id) throws DataAccessException;
+
 }

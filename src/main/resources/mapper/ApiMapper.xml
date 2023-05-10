@@ -3,17 +3,25 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ipa.openapi_inzent.dao.ApiDao">
-    <insert id="insertApi" parameterType="com.ipa.openapi_inzent.model.ApiDTO">
+    <insert id="insertApi" parameterType="com.ipa.openapi_inzent.model.ApiDTO" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO public.apis(context, name, disclosure, explanation)
         VALUES (#{context}, #{name}, #{disclosure}, #{explanation});
     </insert>
     <insert id="insertRole" parameterType="com.ipa.openapi_inzent.model.ApiDTO">
-        INSERT INTO public."apisRole"(apisId, roleId)
+        INSERT INTO public."apisRole"("apisId", "roleId")
         VALUES (#{apisId}, #{roleId});
     </insert>
     <select id="selectAll" resultType="com.ipa.openapi_inzent.model.ApiDTO">
         SELECT *
         FROM public.apis
+    </select>
+    <select id="selectRoleList" parameterType="int" resultType="com.ipa.openapi_inzent.model.ApiDTO">
+        SELECT *
+        FROM public.apis
+        INNER JOIN public."apisRole"
+        ON public.apis.id = public."apisRole"."apisId"
+        WHERE public."apisRole"."apisId" = #{id}
+        ORDER BY public.apis.id
     </select>
     <select id="selectOne" parameterType="int" resultType="com.ipa.openapi_inzent.model.ApiDTO">
         SELECT *

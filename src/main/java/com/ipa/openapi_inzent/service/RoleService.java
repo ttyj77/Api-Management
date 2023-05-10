@@ -5,6 +5,7 @@ import com.ipa.openapi_inzent.model.RoleDTO;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import javax.management.relation.Role;
 import java.util.List;
 
 @Service
@@ -24,5 +25,9 @@ public class RoleService {
 
     public RoleDTO selectOne(int id) {
         return roleDao.selectOne(id);
+    }
+
+    public List<RoleDTO> selectApisRoleList(int id) {
+        return roleDao.selectApisRoleList(id);
     }
 }

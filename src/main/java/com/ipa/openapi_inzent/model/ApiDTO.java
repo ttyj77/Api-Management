@@ -9,6 +9,8 @@ public class ApiDTO {
     private String name;
     private boolean disclosure;
     private String explanation;
+
+    // apisRole
     private int apisId;
     private int roleId;
 }

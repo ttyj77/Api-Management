@@ -16,6 +16,9 @@ public interface ApiDao {
     ApiDTO selectOne(int id) throws DataAccessException;
 
     void update(ApiDTO apiDTO) throws DataAccessException;
+    void updateRole(ApisRoleDTO apisRoleDTO) throws DataAccessException;
+
+    List<ApiDTO> selectRoleList(int id) throws DataAccessException;
 
     void delete(int id) throws DataAccessException;
 

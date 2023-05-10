@@ -1,9 +1,11 @@
 package com.ipa.openapi_inzent.controller;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.ipa.openapi_inzent.model.ApiDTO;
 import com.ipa.openapi_inzent.model.ApiDetailsDTO;
 import com.ipa.openapi_inzent.model.ApisRoleDTO;
+import com.ipa.openapi_inzent.model.RoleDTO;
 import com.ipa.openapi_inzent.service.ApiDetailsService;
 import com.ipa.openapi_inzent.service.ApiService;
 import com.ipa.openapi_inzent.service.RoleService;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RequestMapping("/api")
@@ -33,7 +36,8 @@ public class ApiController {
     public String apis(Model model) {
         model.addAttribute("list", apiService.selectAll());
         model.addAttribute("roles", roleService.selectAll());
-        return "/apis/index";
+
+        return "/apis/index2";
     }
 
     @GetMapping("/selectOne")
@@ -47,6 +51,34 @@ public class ApiController {
         object.addProperty("apiContext", apiDTO.getContext());
         object.addProperty("apiExplanation", apiDTO.getExplanation());
         object.addProperty("apiDisclosure", apiDTO.isDisclosure());
+
+        return object;
+    }
+
+    @GetMapping("/roleList")
+    @ResponseBody
+    public JsonObject roleList(int apiId) {
+        JsonObject object = new JsonObject();
+//        List<ApiDTO> list = apiService.selectRoleList(apiId);
+        List<RoleDTO> roleList = roleService.selectApisRoleList(apiId);
+        System.out.println("roleList = " + roleList); //해당하는 apis의  role 리스트
+//        System.out.println("roleList.get(1).getName() = " + roleList.get(1).getName());
+
+        List<RoleDTO> roleAll = roleService.selectAll();
+
+        for (RoleDTO role : roleList) {
+            object.addProperty(role.getCode(), role.getName());
+        }
+        JsonArray array = new JsonArray();
+        for (RoleDTO r : roleAll) {
+            JsonObject roleObject = new JsonObject();
+            roleObject.addProperty("code", r.getCode());
+            array.add(roleObject);
+        }
+
+        object.addProperty("roleAll", array.toString());
+        System.out.println("object = " + object);
+
 
         return object;
     }
@@ -71,15 +103,51 @@ public class ApiController {
     }
 
     @PostMapping("/insert")
-    public String insert(ApiDTO apiDTO, ApisRoleDTO apisRoleDTO) {
-        apiService.insertApi(apiDTO);
-        apiService.insertRole(apisRoleDTO);
+    public String insert(ApiDTO apiDTO, ApisRoleDTO apisRoleDTO, @RequestParam(value = "roleId") List<String> roleId) {
+        int id = apiService.insertApi(apiDTO);
+//        List<RoleDTO> list = roleService.selectAll();
+        System.out.println("roleId = " + roleId);
+        apisRoleDTO.setApisId(id);
+
+        if (apisRoleDTO.getApisId() == 0 || apisRoleDTO.getRoleId() == 0) {
+            System.out.println("fk 제약조건 위배");
+        } else {
+            for (String role : roleId) {
+                apisRoleDTO.setRoleId(Integer.parseInt(role));
+                apiService.insertRole(apisRoleDTO);
+            }
+            System.out.println("apisRoleDTO = " + apisRoleDTO);
+
+        }
         return "redirect:/api";
     }
 
     @PostMapping("/update/{id}")
-    public String update(ApiDTO apiDTO) {
+    public String update(ApiDTO apiDTO, @RequestParam(value = "roleId") List<String> roleId, @PathVariable int id) {
         apiService.update(apiDTO);
+        System.out.println("roleId = " + roleId);
+        System.out.println("id = " + id);
+        List<ApiDTO> roleList = apiService.selectRoleList(id);
+        ApisRoleDTO apisRoleDTO = new ApisRoleDTO();
+        apisRoleDTO.setApisId(id);
+        // 수정시 업데이트될 역할들어갈 list
+        List<Integer> roles = new ArrayList<>();
+
+        if (apisRoleDTO.getApisId() == 0 || apisRoleDTO.getRoleId() == 0) {
+            System.out.println("선택된 ROLE 없음");
+        } else {
+            for (ApiDTO roleOne : roleList) {
+                for (String role : roleId) {
+                    if (roleOne.getRoleId() == Integer.parseInt(role)) {
+                        System.out.println("");
+                    }
+                    apisRoleDTO.setRoleId(Integer.parseInt(role));
+                    apiService.updateRole(apisRoleDTO);
+                }
+
+            }
+
+        }
         return "redirect:/api";
     }
 

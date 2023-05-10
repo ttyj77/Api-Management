@@ -15,7 +15,7 @@
         <link href="/css/sb-admin-2.min.css" rel="stylesheet">
         <!-- Custom styles for this page -->
         <link href="/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
-        <link href="/css/apis.css" rel="stylesheet"/>
+        <!--        <link href="/css/apis.css" rel="stylesheet"/>-->
 
     </th:block>
 
@@ -256,7 +256,8 @@
                                         <button type="button"
                                                 class="btn btn-dark btn-sm"
                                                 data-bs-toggle="modal"
-                                                data-bs-target="#roleUpdateModal"><i
+                                                data-bs-target="#roleUpdateModal"
+                                        ><i
                                                 class="fa-solid fa-plus"
                                                 style="color: #f7f7f8;"></i>
                                         </button>
@@ -274,7 +275,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary"
-                                    data-bs-dismiss="modal" >취소
+                                    data-bs-dismiss="modal">취소
                             </button>
                             <button type="submit" class="btn btn-primary" id="updateBtn"
                                     onclick="saveApiUpdate()">저장
@@ -296,7 +297,8 @@
                     </div>
                     <div class="modal-body" id="roleModalBody">
                         <div class="form-check" th:each="role:${roles}">
-                            <input class="form-check-input" type="checkbox" th:value="${role.name}" th:name="${role.code}"
+                            <input class="form-check-input" type="checkbox" th:value="${role.name}"
+                                   th:name="${role.code}"
                                    th:id="${role.code}" id="roleName">
                             <label class="form-check-label" th:for="${role.code}" th:text="${role.name}">
                             </label>
@@ -314,7 +316,8 @@
         </div>
 
         <!-- 역할 수정 Modal -->
-        <div class="modal fade" id="roleUpdateModal" tabindex="-1" aria-labelledby="roleUpdateModalLabel" aria-hidden="true">
+        <div class="modal fade" id="roleUpdateModal" tabindex="-1" aria-labelledby="roleUpdateModalLabel"
+             aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -323,11 +326,16 @@
                         ><i class="fa-solid fa-xmark" style="color: #7f7f7f;"></i></div>
                     </div>
                     <div class="modal-body">
-                        <div class="form-check" th:each="role:${roles}">
-                            <input class="form-check-input" type="checkbox" th:value="${role.name}" th:name="${role.code}"
-                                   th:id="${role.code}">
-                            <label class="form-check-label" th:for="${role.code}" th:text="${role.name}">
-                            </label>
+                        <!--                        <div class="form-check" th:each="role:${roles}">-->
+                        <!--                            <input class="form-check-input" type="checkbox" th:value="${role.name}"-->
+                        <!--                                   th:name="${role.code}"-->
+                        <!--                                   th:id="${role.code}">-->
+                        <!--                            <label class="form-check-label" th:for="${role.code}" th:text="${role.name}">-->
+                        <!--                            </label>-->
+                        <!--                        </div>-->
+                        <div class="form-check" isd="roleBox">
+                            <input class="form-check-input" type="checkbox" value="1" id="관리자">
+                            <label class="form-check-label" for="관리자" value="">관리자</label>
                         </div>
                     </div>
                     <div class="modal-footer">

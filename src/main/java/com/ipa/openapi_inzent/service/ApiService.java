@@ -1,7 +1,6 @@
 package com.ipa.openapi_inzent.service;
 
 import com.ipa.openapi_inzent.dao.ApiDao;
-import com.ipa.openapi_inzent.dao.UserDao;
 import com.ipa.openapi_inzent.model.ApiDTO;
 import com.ipa.openapi_inzent.model.ApisRoleDTO;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -17,16 +16,26 @@ public class ApiService {
         this.apiDao = apiDao;
     }
 
-    public void insertApi(ApiDTO apiDTO) {
+    public int insertApi(ApiDTO apiDTO) {
         apiDao.insertApi(apiDTO);
+        return apiDTO.getId();
     }
 
     public void insertRole(ApisRoleDTO apisRoleDTO) {
+        System.out.println("apisRoleDTO.getRoleId() = " + apisRoleDTO.getRoleId());
         apiDao.insertRole(apisRoleDTO);
     }
 
     public void update(ApiDTO apiDTO) {
         apiDao.update(apiDTO);
+    }
+
+    public void updateRole(ApisRoleDTO apisRoleDTO) {
+        apiDao.updateRole(apisRoleDTO);
+    }
+
+    public List<ApiDTO> selectRoleList(int id) {
+        return apiDao.selectRoleList(id);
     }
 
     public List<ApiDTO> selectAll() {
