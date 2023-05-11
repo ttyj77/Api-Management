@@ -60,92 +60,6 @@ function removeApi(apiOne) {
     });
 }
 
-//
-// // role 등록 part
-// function checkRole() {
-//
-//     let admin = document.getElementById('ROLE_ADMIN');
-//     let normal = document.getElementById('ROLE_NORMAL');
-//     let api = document.getElementById('ROLE_PROVIDER');
-//     let md = document.getElementById('ROLE_MYDATA');
-//
-//     let adminBadge = $(document.createElement("span")).addClass("badge badge-secondary admin").attr('style', "margin-right:2px").text(admin.value);
-//     let normalBadge = $(document.createElement("span")).addClass("badge badge-secondary normal").attr('style', "margin-right:2px").text(normal.value);
-//     let apiBadge = $(document.createElement("span")).addClass("badge badge-secondary api").attr('style', "margin-right:2px").text(api.value);
-//     let mdBadge = $(document.createElement("span")).addClass("badge badge-secondary md").attr('style', "margin-right:2px").text(md.value);
-//
-//     let radimin = document.querySelector('.admin');
-//     let rnormal = document.querySelector('.normal');
-//     let rapi = document.querySelector('.api');
-//     let rmd = document.querySelector('.md');
-//
-//     if (admin.checked && radimin == null) {
-//         $('#target').append(adminBadge);
-//     } else if (radimin != null && !admin.checked) {
-//         $('.admin').remove();
-//     }
-//
-//     if (normal.checked && rnormal == null) {
-//         $('#target').append(normalBadge);
-//     } else if (rnormal != null && !normal.checked) {
-//         $('.normal').remove();
-//     }
-//
-//     if (api.checked && rapi == null) {
-//         $('#target').append(apiBadge);
-//     } else if (rapi != null && !api.checked) {
-//         $('.api').remove();
-//     }
-//
-//     if (md.checked && rmd == null) {
-//         $('#target').append(mdBadge);
-//     } else if (rmd != null && !md.checked) {
-//         $('.md').remove();
-//     }
-// }
-//
-// // role 수정 part
-// function checkRole2() {
-//     let admin = document.getElementById('admin2');
-//     let normal = document.getElementById('normal2');
-//     let api = document.getElementById('api2');
-//     let md = document.getElementById('md2');
-//
-//     let adminBadge = $(document.createElement("span")).addClass("badge badge-secondary admin").attr('style', "margin-right:2px").text(admin.textContent);
-//     let normalBadge = $(document.createElement("span")).addClass("badge badge-secondary normal").attr('style', "margin-right:2px").text(normal.textContent);
-//     let apiBadge = $(document.createElement("span")).addClass("badge badge-secondary api").attr('style', "margin-right:2px").text(api.textContent);
-//     let mdBadge = $(document.createElement("span")).addClass("badge badge-secondary md").attr('style', "margin-right:2px").text(md.textContent);
-//
-//     let radimin = document.querySelector('.admin');
-//     let rnormal = document.querySelector('.normal');
-//     let rapi = document.querySelector('.api');
-//     let rmd = document.querySelector('.md');
-//
-//     if (admin.checked && radimin == null) {
-//         $('#target2').append(adminBadge);
-//     } else if (radimin != null && !admin.checked) {
-//         $('.admin').remove();
-//     }
-//
-//     if (normal.checked && rnormal == null) {
-//         $('#target2').append(normalBadge);
-//     } else if (rnormal != null && !normal.checked) {
-//         $('.normal').remove();
-//     }
-//
-//     if (api.checked && rapi == null) {
-//         $('#target2').append(apiBadge);
-//     } else if (rapi != null && !api.checked) {
-//         $('.api').remove();
-//     }
-//
-//     if (md.checked && rmd == null) {
-//         $('#target2').append(mdBadge);
-//     } else if (rmd != null && !md.checked) {
-//         $('.md').remove();
-//     }
-// }
-//
 // modal 선택 시 안 넘어감
 function insertApis(e, id) {
     if (e.target.parentNode.className == "h3 font-weight-bold text-primary mb-1" || e.target.parentNode.className == "col mr-2") {
@@ -156,80 +70,12 @@ function insertApis(e, id) {
     }
 }
 
-//
-// function showRole() {
-//     $.ajax({
-//         url: "/role/selectAll", method: "get", success: (result) => {
-//             for (let i = 0; i < result.length; i++) {
-//                 // document.getElementById("reset").addEventListener('hidden.bs.modal', function (event) {
-//                 //     $('#' + result[i].code).prop("checked", false);
-//                 // })
-//                 console.log("추가부분"+i)
-//                 console.log(document.getElementById(result[i].code))
-//                 console.log(document.getElementById(result[i].code).checked)
-//                 console.log(document.querySelector('.' + result[i].code) == null)
-//                 console.log("==============================")
-//                 console.log("삭제부분"+i)
-//                 console.log(document.querySelector('.' + result[i].code)!= null)
-//                 console.log(!document.getElementById(result[i].code).checked)
-//                 console.log("##########################################")
-//                 if (document.getElementById(result[i].code).checked && document.querySelector('.' + result[i].code) == null) {
-//                     console.log("추가중")
-//                     $('#target').append($(document.createElement("input")).addClass("roles " + result[i].code).attr({
-//                         'value': result[i].id, 'name': 'roleId', 'type': 'hidden'
-//                     }));
-//                     $('#target').append($(document.createElement("span")).addClass("badge badge-secondary roles " + result[i].code).attr({
-//                         'style': "margin-right:2px", 'value': result[i].id
-//                     }).text(result[i].name));
-//                 } else if (document.querySelector('.' + result[i].code) != null && !document.getElementById(result[i].code).checked) {
-//
-//                     $('.' + result[i].code).remove();
-//                 }
-//             }
-//         }
-//     })
-// }
-//
-// function showRole2() {
-//     $.ajax({
-//         url: "/role/selectAll", method: "get", success: (result) => {
-//             for (let i = 0; i < result.length; i++) {
-//                 console.log("추가부분"+i)
-//                 console.log(document.getElementById(result[i].code))
-//                 console.log(document.getElementById(result[i].code).checked)
-//                 console.log($('#'+result[i].code).prop("checked"))
-//                 console.log(document.querySelector('.' + result[i].code))
-//                 console.log(document.querySelector('.' + result[i].code) == null)
-//                 console.log("==============================")
-//                 console.log("삭제부분"+i)
-//                 console.log(document.querySelector('.' + result[i].code)!= null)
-//                 console.log(!document.getElementById(result[i].code).checked)
-//                 console.log("##########################################")
-//                 // document.getElementById("roleUpdateModal").addEventListener('hidden.bs.modal', function (event) {
-//                 //     $('#' + result[i].code).prop("checked", false);
-//                 // })
-//                 if (document.getElementById(result[i].code).checked && document.querySelector('.' + result[i].code) == null) {
-//                     console.log("뱃지 만드는 곳")
-//                     $('#target2').append($(document.createElement("input")).addClass("roles " + result[i].code).attr({
-//                         'value': result[i].id, 'name': 'roleId', 'type': 'hidden'
-//                     }));
-//                     $('#target2').append($(document.createElement("span")).addClass("badge badge-secondary roles " + result[i].code).attr({
-//                         'style': "margin-right:2px", 'value': result[i].id
-//                     }).text(result[i].name));
-//                 } else if (document.querySelector('.' + result[i].code) != null && !document.getElementById(result[i].code).checked) {
-//                     console.log("뱃지 삭제하는 곳")
-//                     $('.' + result[i].code).remove();
-//                 }
-//             }
-//         }
-//     })
-// }
-//
 function updateApi(apiOne) {
     console.log("update Api : 연필 모달")
     let context = document.getElementById('contextApi');
     let name = document.getElementById('nameApi');
     let explanation = document.getElementById('explanationApi');
+    let buttonApi = document.getElementsByClassName("btn btn-dark btn-sm api")
 
     let apiId = apiOne.getAttribute("apiid");
     let data = {
@@ -238,110 +84,221 @@ function updateApi(apiOne) {
     $('#radio1').prop("checked", false);
     $('#radio2').prop("checked", false);
     $.ajax({
-        url: "/api/selectOne",
-        data: data,
-        method: "get",
+        url: "/api/selectOne", data: data, method: "get",
 
         success: (message) => {
 
             context.value = message.apiContext;
             name.value = message.apiName;
             explanation.textContent = message.apiExplanation;
-
-
-            if (message.apiDisclosure == true) {
-                $('#radio1').prop("checked", true);
-            } else {
-                $('#radio2').prop("checked", true);
+            buttonApi.id = message.apiId;
+            console.log("message !!! " + message)
+            let selectedRoleList = JSON.parse(message.selectedRoleList);
+            console.log(selectedRoleList)
+            let target2 = document.getElementById("target2")
+            target2.innerHTML = ""
+            for (let i = 0; i < selectedRoleList.length; i++) {
+                let h5 = document.createElement("h5")
+                let badge = document.createElement("span")
+                badge.className = "badge badge-secondary"
+                badge.innerText = selectedRoleList[i].name
+                badge.id = "BADGE_" + selectedRoleList[i].code
+                h5.append(badge)
+                target2.append(h5)
             }
+
             $('#updateApi').attr("action", "/api/update/" + apiId)
         }, error: (e) => {
             console.log("출력실패", e)
         }
     })
-    // 모달 나오기전에 다 지우기 => 모달 공유하고 있기 때문
-    let data2 = {
-        "apiId": apiId
-    }
-    $.ajax({
-        url: "/api/roleList", data: data2, method: "get", success: (message) => {
-            console.log(message);
-            console.log(typeof message.roleAll)
-            let roleJson = JSON.parse(message)
-            console.log(typeof roleJson)
-            console.log(typeof roleJson.length)
-            console.log(typeof roleJson.size)
-
-            let roleBox = document.getElementById("roleBox");
-            for (let i = 0; i < message.roleAll.length; i++) {
-                // document.g
-            }
-            // console.log(Object.keys(message));
-            // console.log(Object.values(message));
-            // console.log(Object.values(message).length);
-            //
-            // for (let i = 0; i < Object.values(message).length; i++) {
-            //     console.log("role 뱃지 지우는 중" + i)
-            //     document.getElementById("updateModal").addEventListener('hidden.bs.modal', function (event) {
-            //         $('.roles').remove();
-            //     })
-            //     $('#target2').append($(document.createElement("input")).addClass("roles " + Object.keys(message)[i]).attr({
-            //         'name': 'roleId', 'type': 'hidden'
-            //     }));
-            //     $('#target2').append($(document.createElement("span")).addClass("badge badge-secondary roles " + Object.keys(message)[i]).attr({'style': "margin-right:2px"}).text(Object.values(message)[i]));
-            //
-            // }
-
-        }
-    })
 
 
     $('#updateModal').modal('show');
-    // let admin = document.getElementById('admin2');
-    // let normal = document.getElementById('normal2');
-    // let api = document.getElementById('api2');
-    // let md = document.getElementById('md2');
 }
 
+function roleList() {
+    if ($("#roleModalBody").children().length > 0) { // 한번이라도 클릭 했다면
+        $('#roleModal').modal('show')
+    } else {
+        $.ajax({
+            url: "/api/roleList",
+            method: "get",
+            success: (message) => {
+                $('#roleModal').modal('show')
+                console.log(message);
 
-// document.addEventListener("DOMContentLoaded", function () {
-//     let myModalEls = document.getElementById("roleModal")
-//     myModalEls.addEventListener('hidden.bs.modal', function (event) {
-//         // do something...
-//         $('#ROLE_ADMIN').prop("checked", false);
-//         $('#ROLE_NORMAL').prop("checked", false);
-//         $('#ROLE_PROVIDER').prop("checked", false);
-//         $('#ROLE_MYDATA').prop("checked", false);
-//
-//     })
-// })\
+                let array = JSON.parse(message.responseText);
+
+                let roleBody = document.getElementById("roleModalBody")
+                roleBody.innerHTML = ""
+                roleBody.id
+
+                for (let i = 0; i < array.length; i++) {
+                    let roleBox = document.createElement("div")
+                    roleBox.className = "form-check"
+
+                    let roleInput = document.createElement("input")
+                    roleInput.className = "form-check-input"
+                    roleInput.type = "checkbox"
+                    roleInput.value = array[i].name
+                    roleInput.id = array[i].code
+                    roleInput.name = 'role'
+                    roleInput.onclick = function () {
+                        is_checked(this);
+                    }
+
+                    let roleLabel = document.createElement("label")
+                    roleLabel.className = "form-check-label"
+                    roleLabel.htmlFor = array[i].code
+                    roleLabel.innerText = array[i].name
+
+                    roleBox.append(roleInput, roleLabel);
+                    roleBody.append(roleBox)
+                }
+            }
+        })
+    }
+}
+
+/* 체크박스 체크 시 input 안에 checkd 넣기*/
+function is_checked(value) {
+    console.log(value.id)
+
+    console.log($('#' + value.id).prop("checked"))
+
+    if ($('#' + value.id).prop("checked")) {
+        $('#' + value.id).prop("checked", true);
+    } else {
+        $('#' + value.id).prop("checked", false);
+    }
+}
+
+/* 역할 모달에서 닫기를 누르면 뱃지 만들어주는용도 */
+function drawRole(value) {
+    console.log("drawRole")
+    console.log(value.id)
+    let target;
+    let parent;
+    if (value.id == "insertServiceModal") { //서비스 등록모달
+        target = document.getElementById("target")
+        parent = document.getElementById("roleModalBody")
+    } else if (value.id == "updateApisModal") { // apis update모달
+        target = document.getElementById("target2")
+        parent = document.getElementById("apiRoleModalBody")
+    }
+    //모달의 따라서 타켓 다르게 설정하기
+
+    target.innerHTML = ""
+
+    // <h5><span className="badge badge-secondary">마이데이터 사업자</span></h5>
+
+    let childNodes = parent.childNodes;
+
+    console.log(parent)
+    console.log(parent.length)
+    console.log()
+    console.log(childNodes)
+
+    console.log(childNodes.length)
+    let cnt = childNodes.length;
+
+    for (let i = 0; i < cnt; i++) {
+
+        let check = childNodes[i].childNodes[0];
+        console.log("check : " + check.id)
+        let isChecked = $('#' + check.id).is(':checked');
+        console.log(isChecked)
+        if (isChecked) { //체크가 되어있다면
+            let h5 = document.createElement("h5")
+            let badge = document.createElement("span")
+            badge.className = "badge badge-secondary"
+            badge.innerText = check.value
+            if (value.id == "updateApisModal") {
+                console.log("update Api modal span id BADGE_ 추가")
+                let id = check.id.substr(4,)
+                console.log(id)
+                badge.id = "BADGE_" + id
+            }
+            h5.append(badge)
+            target.append(h5)
+        }
+    }
+}
+
+// 기존 Apis 역할 모달 리스트  기존 Apis 는 기존의 역할을 가지고 있어야 된다.
+function apisModalRoleList() {
+    let api = document.getElementsByClassName("btn btn-dark btn-sm api")
+    console.log(api.id)
+
+    let data = {
+        "apiId": api.id,
+    };
+
+    // 1. 전체리스트를 가져온다
+    $.ajax({
+        url: "/api/apiRoleList",
+        method: "get",
+        data: data,
+        success: (message) => {
+            $('#roleUpdateModal').modal('show')
+            console.log(message);
+
+            let array = JSON.parse(message.responseText);
+            console.log("array : " + array)
+
+            let roleBody = document.getElementById("apiRoleModalBody")
+            roleBody.innerHTML = ""
+            // roleBody.id
+            for (let i = 0; i < array.length; i++) {
+                let roleBox = document.createElement("div")
+                roleBox.className = "form-check"
+
+                let roleInput = document.createElement("input")
+                roleInput.className = "form-check-input"
+                roleInput.type = "checkbox"
+                roleInput.value = array[i].name
+                roleInput.id = "API_" + array[i].code
+                roleInput.name = 'role'
+                roleInput.onclick = function () {
+                    is_checked(this);
+                }
+
+                let roleLabel = document.createElement("label")
+                roleLabel.className = "form-check-label"
+                roleLabel.htmlFor = "API_" + array[i].code
+                roleLabel.innerText = array[i].name
+
+                roleBox.append(roleInput, roleLabel);
+                roleBody.append(roleBox)
+            }
+
+            // 2. api 해당하는 역할을 체크한다.
+            // 뱃지 기준으로 체크
+            let cnt = document.getElementById("target2").childNodes.length;
+            let parent = document.getElementById("target2").childNodes
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////
-//                                         juhee 🎆                                           //
-////////////////////////////////////////////////////////////////////////////////////////////////
+            console.log(parent)
+            console.log(parent[0])
+            console.log(parent[1])
+            console.log(parent[0].childNodes[0].id)
+            console.log(parent[0].childNodes[1])
+            console.log(parent[0].childNodes[2])
+            console.log("CNT!!!" + cnt)
+            for (let j = 0; j < cnt; j++) {
+                let badgeId = parent[j].childNodes[0].id
+
+                let id = "API_" + badgeId.substring(6,)
+                console.log("id===========" + id)
+                if (!$('#' + id).prop("checked")) {
+                    console.log("checked false")
+                    $('#' + id).prop("checked", true);
+                }
+            }
 
 
 
+    })
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+}
