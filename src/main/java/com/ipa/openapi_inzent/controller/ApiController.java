@@ -2,10 +2,7 @@ package com.ipa.openapi_inzent.controller;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.ipa.openapi_inzent.model.ApiDTO;
-import com.ipa.openapi_inzent.model.ApiDetailsDTO;
-import com.ipa.openapi_inzent.model.ApisRoleDTO;
-import com.ipa.openapi_inzent.model.RoleDTO;
+import com.ipa.openapi_inzent.model.*;
 import com.ipa.openapi_inzent.service.ApiDetailsService;
 import com.ipa.openapi_inzent.service.ApiService;
 import com.ipa.openapi_inzent.service.RoleService;
@@ -37,7 +34,7 @@ public class ApiController {
         model.addAttribute("list", apiService.selectAll());
         model.addAttribute("roles", roleService.selectAll());
 
-        return "/apis/index";
+        return "/apis/index2";
     }
 
     @GetMapping("/selectOne")
@@ -45,7 +42,6 @@ public class ApiController {
     public JsonObject apiOne(int apiId) {
         JsonObject object = new JsonObject();
         ApiDTO apiDTO = apiService.selectOne(apiId);
-        List<RoleDTO> apiSelectedRole = roleService.selectApisRoleList(apiId);
 
         object.addProperty("apiId", apiId);
         object.addProperty("apiName", apiDTO.getName());
@@ -53,82 +49,35 @@ public class ApiController {
         object.addProperty("apiExplanation", apiDTO.getExplanation());
         object.addProperty("apiDisclosure", apiDTO.isDisclosure());
 
-        JsonArray selectRoleArray = new JsonArray();
-        for (RoleDTO role : apiSelectedRole) {
-            JsonObject r = new JsonObject();
-            r.addProperty("id", role.getId());
-            r.addProperty("code", role.getCode());
-            r.addProperty("name", role.getName());
-            selectRoleArray.add(r);
-        }
-        object.addProperty("selectedRoleList", selectRoleArray.toString());
-
-//        System.out.println("roleAll = " + roleAll);
-
-
         return object;
     }
 
-    //단순 모든 role 출력
     @GetMapping("/roleList")
     @ResponseBody
-    public JsonObject roleList() {
+    public JsonObject roleList(int apiId) {
+        JsonObject object = new JsonObject();
+//        List<ApiDTO> list = apiService.selectRoleList(apiId);
+        List<RoleDTO> roleList = roleService.selectApisRoleList(apiId);
+//        System.out.println("roleList = " + roleList); //해당하는 apis의  role 리스트
+//        System.out.println("roleList.get(1).getName() = " + roleList.get(1).getName());
 
-        JsonObject result = new JsonObject();
-//        List<RoleDTO> roleList = roleService.selectApisRoleList(apiId);
         List<RoleDTO> roleAll = roleService.selectAll();
 
-        System.out.println("roleAll = " + roleAll);
-//
-//        for (RoleDTO role : roleList) {
-//            object.addProperty(role.getCode(), role.getName());
-//        }
+        for (RoleDTO role : roleList) {
+            object.addProperty(role.getCode(), role.getName());
+        }
         JsonArray array = new JsonArray();
         for (RoleDTO r : roleAll) {
             JsonObject roleObject = new JsonObject();
-            roleObject.addProperty("id", r.getId());
             roleObject.addProperty("code", r.getCode());
-            roleObject.addProperty("name", r.getName());
             array.add(roleObject);
         }
-        result.addProperty("responseText", array.toString());
-        return result;
-    }
+
+        object.addProperty("roleAll", array.toString());
+//        System.out.println("object = " + object);
 
 
-    //api별  role 출력
-    @GetMapping("/apiRoleList")
-    @ResponseBody
-    public JsonObject apiRoleList(int apiId) {
-
-        JsonObject result = new JsonObject();
-        List<RoleDTO> roleAll = roleService.selectAll();
-
-//        System.out.println("roleAll = " + roleAll);
-        JsonArray array = new JsonArray();
-        for (RoleDTO r : roleAll) {
-            JsonObject roleObject = new JsonObject();
-            roleObject.addProperty("id", r.getId());
-            roleObject.addProperty("code", r.getCode());
-            roleObject.addProperty("name", r.getName());
-            array.add(roleObject);
-        }
-        result.addProperty("responseText", array.toString());
-        return result;
-    }
-
-
-    @GetMapping("/details/{id}")
-    public String details(Model model, @PathVariable int id, HttpServletResponse response) {
-        ApiDTO a = apiService.selectOne(id);
-        List<ApiDetailsDTO> ad = apiDetailsService.selectAll(id);
-//        System.out.println("ad.get(0).getOperationId() = " + ad.get(0).getOperationId());
-//        System.out.println("ad = " + ad);
-//        model.addAttribute("operationId",ad.get(0).getOperationId());
-        model.addAttribute("api", a);
-        model.addAttribute("apiList", ad);
-
-        return "/apis/details";
+        return object;
     }
 
     @GetMapping("/delete/{id}")
@@ -179,9 +128,7 @@ public class ApiController {
                     apisRoleDTO.setRoleId(Integer.parseInt(role));
                     apiService.updateRole(apisRoleDTO);
                 }
-
             }
-
         }
         return "redirect:/api";
     }
@@ -195,5 +142,43 @@ public class ApiController {
     @GetMapping("/resourceModal")
     public String resourceModal() {
         return "/apis/resourceModal";
+    }
+
+
+    // ########################################
+    //             Api Details Part
+    // ########################################
+
+    @GetMapping("/details/{apisId}") // id = apisId
+    public String details(Model model, @PathVariable int apisId, HttpServletResponse response) {
+        // 리소스 list, 안에 들어갈 apiId 조건으로 묶여 있는 apiDetails List 필요
+
+        ApiDTO a = apiService.selectOne(apisId); // detail 맨 위 정보 때문에 필요 (ex. 보험업권) // apisId
+        List<ResourceDTO> resourceList = apiDetailsService.resourceList(apisId); // apisId
+        List<ApiDetailsDTO> apiDetailsDTOList = apiDetailsService.detailsList(apisId);
+//        System.out.println("apiDetailsDTOList = " + apiDetailsDTOList);
+//
+//        System.out.println("a = " + a);
+//        System.out.println("resourceList = " + resourceList);
+
+        model.addAttribute("api", a);
+        model.addAttribute("resourceIndex", resourceList);
+        model.addAttribute("apiDetailsDTOList", apiDetailsDTOList);
+
+        return "/apis/details";
+    }
+
+    @PostMapping("/resource/{id}")
+    @ResponseBody
+    public JsonObject resources(Model model, @PathVariable int id) {
+        // 리소스 하나씩
+        List<ApiDetailsDTO> resourceInAdList = apiDetailsService.resourceInAdList(id); // resource table id
+        System.out.println("resourceInAdList = " + resourceInAdList);
+
+        JsonObject object = new JsonObject();
+        List<ApiDetailsDTO> adList = apiDetailsService.resourceInAdList(id);
+
+
+        return object;
     }
 }

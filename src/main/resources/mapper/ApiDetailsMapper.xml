@@ -3,15 +3,61 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ipa.openapi_inzent.dao.ApiDetailsDao">
-    <select id="selectAll" parameterType="int" resultType="com.ipa.openapi_inzent.model.ApiDetailsDTO">
+    <resultMap id="apisDetails" type="com.ipa.openapi_inzent.model.ApiDetailsDTO">
+        <result property="apisId" column="id"/>
+        <result property="context" column="context"/>
+        <result property="name" column="name"/>
+        <result property="disclosure" column="disclosure"/>
+        <result property="explanation" column="explanation"/>
+    </resultMap>
+
+    <resultMap id="adWithResource" type="com.ipa.openapi_inzent.model.ApiDetailsDTO">
+        <result property="apisId" column="apisId"/>
+        <result property="resourceId" column="id"/>
+    </resultMap>
+    <!-- 모든 apiDetails  -->
+    <select id="selectALl" resultType="com.ipa.openapi_inzent.model.ApiDetailsDTO">
         select * from public."apiDetails"
-        inner join public.api
-        on public.api.id = public."apiDetails".id
-        where public.api."apisId" = #{id};
+        order by id asc;
+    </select>
+    <!-- 리소스 List  resultType: ResourceDTO-->
+    <select id="resourceList" parameterType="int" resultType="com.ipa.openapi_inzent.model.ResourceDTO">
+        select id from public.resource
+        where "apisId" = #{apisId}
+        order by id asc;
+    </select>
+    <!-- 리소스 안에 있는 apiDetails   -->
+    <select id="resourceInAdList" parameterType="int" resultType="com.ipa.openapi_inzent.model.ApiDetailsDTO">
+        select  r."apisId", r.id as resource_id, ad.id, ad."resourceId", ad.method, ad.url, ad.uri, ad.summary, ad.security, ad.scope, ad."operationId", ad.version, ad.status, ad."authorization", ad.tag, ad.trash from public.resource as r
+        join public."apiDetails" as ad
+        on ad."resourceId" = r."id"
+        where "apisId" = #{apisId};
     </select>
     <select id="selectOne" parameterType="int" resultType="com.ipa.openapi_inzent.model.ApiDetailsDTO">
         SELECT * FROM public."apiDetails"
         WHERE id = #{id};
     </select>
+    <!--    <select id="apisDetails" parameterType="int" resultMap="apisDetails">-->
+    <!--        SELECT * FROM public.api as api-->
+    <!--        INNER JOIN public.apis as apis-->
+    <!--        ON api."apisId" = apis.id-->
+    <!--        INNER JOIN public."apiDetails" as ad-->
+    <!--        ON ad.id = api.id-->
+    <!--        WHERE apis.id = #{id}-->
+    <!--    </select>-->
+
+    <select id="detailsList" parameterType="int" resultType="com.ipa.openapi_inzent.model.ApiDetailsDTO">
+        select * from public."apiDetails"
+        inner join public.resource
+        on public.resource.id = public."apiDetails"."resourceId"
+        where public.resource."apisId" = #{apisId};
+    </select>
+    <select id="goTrashResource" parameterType="boolean" resultType="com.ipa.openapi_inzent.model.ApiDetailsDTO">
+        select * from public."apiDetails"
+        inner join public.resource
+        on public.resource.id = public."apiDetails"."resourceId"
+        where public.resource.trash = true;
+    </select>
+
 
 </mapper>
