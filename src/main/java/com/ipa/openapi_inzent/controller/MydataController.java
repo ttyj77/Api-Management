@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.ipa.openapi_inzent.model.MdAgencyDTO;
+import com.ipa.openapi_inzent.model.MdProviderDTO;
 import com.ipa.openapi_inzent.model.MdServiceDTO;
 import com.ipa.openapi_inzent.service.MydataService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.sql.ClientInfoStatus;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,11 +30,6 @@ public class MydataController {
         this.mydataService = mydataService;
     }
 
-
-    @GetMapping("/providerTable")
-    public String providerTable() {
-        return "/mydata/mdProviderTable";
-    }
 
     @GetMapping("/collectorTable")
     public String collectorTable() {
@@ -220,4 +217,41 @@ public class MydataController {
     public String mydataSendReq() {
         return "/mydata/mydataSendReq";
     }
+
+
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    //                            (oﾟvﾟ)ノ  Provider Page  (oﾟvﾟ)ノ                           //
+    ///////////////////////////////////////////////////////////////////////////////////////////
+
+    @GetMapping("/providerTable")
+    public String mdProviderSelectAll(Model model) {
+
+        model.addAttribute("list", mydataService.mdProviderSelectAll());
+        return "/mydata/mdProviderTable";
+    }
+
+    @GetMapping("/provider/selectOne")
+    @ResponseBody
+    public JsonObject mdProviderSelectAll(int id) {
+//        null 처리
+        MdProviderDTO mdProviderDTO = mydataService.mdProviderSelectOne(id);
+        JsonObject object = new JsonObject();
+        object.addProperty("id", mdProviderDTO.getId());
+        object.addProperty("reqSEQ", mdProviderDTO.getMdReqInfoDTO().getReqSEQ());
+        object.addProperty("apiResources", mdProviderDTO.getApiResources()); //거래고유번호
+        object.addProperty("reqHeader", mdProviderDTO.getReqHeader());
+        object.addProperty("resMsg", mdProviderDTO.getResMsg()); //응답메세지
+        object.addProperty("resData", mdProviderDTO.getResData());
+        object.addProperty("statusInfo", mdProviderDTO.getStatusInfo()); //상태정보 ex)마이데이터
+        object.addProperty("agencyName", mdProviderDTO.getMdReqInfoDTO().getAgencyName());//기관명
+        object.addProperty("serviceName", mdProviderDTO.getMdReqInfoDTO().getServiceName()); //서비스명
+        object.addProperty("consumerNum", mdProviderDTO.getMdReqInfoDTO().getConsumerNum()); //통합고객번호
+        object.addProperty("code", mdProviderDTO.getMdReqInfoDTO().getCode());
+        object.addProperty("tokenExpiryDate", mdProviderDTO.getMdReqInfoDTO().getTokenExpiryDate()); //토큰유효기간
+        object.addProperty("reqType", mdProviderDTO.getMdReqInfoDTO().getReqType()); //전송요구타입
+
+
+        return object;
+    }
+
 }
