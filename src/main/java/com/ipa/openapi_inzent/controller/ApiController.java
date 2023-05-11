@@ -37,7 +37,7 @@ public class ApiController {
         model.addAttribute("list", apiService.selectAll());
         model.addAttribute("roles", roleService.selectAll());
 
-        return "/apis/index2";
+        return "/apis/index";
     }
 
     @GetMapping("/selectOne")
@@ -45,6 +45,7 @@ public class ApiController {
     public JsonObject apiOne(int apiId) {
         JsonObject object = new JsonObject();
         ApiDTO apiDTO = apiService.selectOne(apiId);
+        List<RoleDTO> apiSelectedRole = roleService.selectApisRoleList(apiId);
 
         object.addProperty("apiId", apiId);
         object.addProperty("apiName", apiDTO.getName());
@@ -52,36 +53,70 @@ public class ApiController {
         object.addProperty("apiExplanation", apiDTO.getExplanation());
         object.addProperty("apiDisclosure", apiDTO.isDisclosure());
 
+        JsonArray selectRoleArray = new JsonArray();
+        for (RoleDTO role : apiSelectedRole) {
+            JsonObject r = new JsonObject();
+            r.addProperty("id", role.getId());
+            r.addProperty("code", role.getCode());
+            r.addProperty("name", role.getName());
+            selectRoleArray.add(r);
+        }
+        object.addProperty("selectedRoleList", selectRoleArray.toString());
+
+//        System.out.println("roleAll = " + roleAll);
+
+
         return object;
     }
 
+    //단순 모든 role 출력
     @GetMapping("/roleList")
     @ResponseBody
-    public JsonObject roleList(int apiId) {
-        JsonObject object = new JsonObject();
-//        List<ApiDTO> list = apiService.selectRoleList(apiId);
-        List<RoleDTO> roleList = roleService.selectApisRoleList(apiId);
-        System.out.println("roleList = " + roleList); //해당하는 apis의  role 리스트
-//        System.out.println("roleList.get(1).getName() = " + roleList.get(1).getName());
+    public JsonObject roleList() {
 
+        JsonObject result = new JsonObject();
+//        List<RoleDTO> roleList = roleService.selectApisRoleList(apiId);
         List<RoleDTO> roleAll = roleService.selectAll();
 
-        for (RoleDTO role : roleList) {
-            object.addProperty(role.getCode(), role.getName());
-        }
+        System.out.println("roleAll = " + roleAll);
+//
+//        for (RoleDTO role : roleList) {
+//            object.addProperty(role.getCode(), role.getName());
+//        }
         JsonArray array = new JsonArray();
         for (RoleDTO r : roleAll) {
             JsonObject roleObject = new JsonObject();
+            roleObject.addProperty("id", r.getId());
             roleObject.addProperty("code", r.getCode());
+            roleObject.addProperty("name", r.getName());
             array.add(roleObject);
         }
-
-        object.addProperty("roleAll", array.toString());
-        System.out.println("object = " + object);
-
-
-        return object;
+        result.addProperty("responseText", array.toString());
+        return result;
     }
+
+
+    //api별  role 출력
+    @GetMapping("/apiRoleList")
+    @ResponseBody
+    public JsonObject apiRoleList(int apiId) {
+
+        JsonObject result = new JsonObject();
+        List<RoleDTO> roleAll = roleService.selectAll();
+
+//        System.out.println("roleAll = " + roleAll);
+        JsonArray array = new JsonArray();
+        for (RoleDTO r : roleAll) {
+            JsonObject roleObject = new JsonObject();
+            roleObject.addProperty("id", r.getId());
+            roleObject.addProperty("code", r.getCode());
+            roleObject.addProperty("name", r.getName());
+            array.add(roleObject);
+        }
+        result.addProperty("responseText", array.toString());
+        return result;
+    }
+
 
     @GetMapping("/details/{id}")
     public String details(Model model, @PathVariable int id, HttpServletResponse response) {
