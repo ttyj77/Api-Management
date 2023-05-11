@@ -272,7 +272,7 @@ function updateApi(apiOne) {
 
             let roleBox = document.getElementById("roleBox");
             for (let i = 0; i < message.roleAll.length; i++) {
-                document.g
+                // document.g
             }
             // console.log(Object.keys(message));
             // console.log(Object.values(message));

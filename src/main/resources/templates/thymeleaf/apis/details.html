@@ -157,6 +157,33 @@
                     expanded = false;
                 }
             }
+
+            function goTrash(resource) {
+                let resourceId = resource.getAttribute("resource");
+                console.log(resourceId);
+                console.log(resource);
+
+                // location.href = "/api/trash/"+resourceId;
+
+            }
+
+            // function accordionBtn(resource) {
+            //     console.log(resource);
+            //     let resourceId = resource.getAttribute('resource');
+            //     console.log(resourceId);
+            //     let data = {
+            //         "resourceId" : resourceId,
+            //     };
+            //     $.ajax({
+            //         url: "/api/resource/" + resourceId,
+            //         data: data,
+            //         method: "post",
+            //
+            //         success:(message) => {
+            //
+            //         }
+            //     })
+            // }
         </script>
     </th:block>
 </head>
@@ -171,7 +198,8 @@
             <div class="d-flex justify-content-between mb-2">
                 <div class="d-flex">
                     <h1 class="h3 mb-2 text-gray-800" th:text="${api.name}"></h1>
-                    <h3>&nbsp(&nbsp</h3><h4 th:text="${api.context}"></h4><h3>&nbsp)</h3>
+                    <h3>&nbsp(&nbsp</h3><h4 th:text="${api.context}"></h4>
+                    <h3>&nbsp)</h3>
                 </div>
                 <div>
                     <button class="btn btn-dark btn-sm">전체 리소스 갱신</button>
@@ -207,20 +235,20 @@
                         </button>
                     </form>
                 </div>
-
             </div>
-            <!-- DataTales Example -->
+            <!-- 리소스 정보들 -->
             <div class="card shadow mb-4">
                 <div class="accordion accordion-flush" id="accordionFlushExample">
-                    <div class="accordion-item">
+                    <div class="accordion-item" th:each="index:${resourceIndex}">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#flush-collapseOne" aria-expanded="false"
-                                aria-controls="flush-collapseOne">
+                                th:data-bs-target="'#flush-collapse'+${index.id}" aria-expanded="false"
+                                th:aria-controls="'flush-collapse'+${index.id}"
+                        >
                             <div class="btn-control">
                                 <div>
                                     <i class="fa-solid fa-plus"
                                        onclick="location.href='#'; event.stopPropagation()"></i>
-                                    <span th:text="${api.context}"></span> | <span th:text="${operationId}"></span>
+                                    <span th:text="${index.id}"></span> | <span th:text="${index.id}"></span>
                                 </div>
                                 <div>
                                     <i class="fa-solid fa-arrows-rotate renew" data-toggle="tooltip"
@@ -235,15 +263,16 @@
                                        title="Swagger UI"
                                        class="fa-solid fa-globe ui"></i>
                                     <!-- <div id="tooltipUI">Swagger UI</div>-->
-                                    <i onclick="location.href='#'" style="cursor: pointer;" data-toggle="tooltip"
+                                    <i th:rosource="${index.id}" onclick="goTrash(this)" style="cursor: pointer;"
+                                       data-toggle="tooltip"
                                        title="삭제"
                                        class="fa-solid fa-trash-can delete"></i>
                                     <!-- <div id="tooltipDelete">삭제</div>-->
                                 </div>
                             </div>
                         </button>
-                        <div id="flush-collapseOne" class="accordion-collapse collapse"
-                             aria-labelledby="flush-headingOne"
+                        <div th:id="'flush-collapse'+${index.id}" class="accordion-collapse collapse"
+                             th:aria-labelledby="'flush-heading'+${index.id}"
                              data-bs-parent="#accordionFlushExample">
                             <div class="accordion-body">
                                 <table class="table table-hover demo02">
@@ -260,13 +289,14 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr onclick="location.href='#'" style="cursor: pointer" th:each="list:${apiList}">
-                                        <td th:text="${list.method}"></td>
-                                        <td th:text="${list.uri}"></td>
-                                        <td th:text="${list.summary}"></td>
-                                        <td th:text="${list.security}"></td>
-                                        <td th:text="${list.operationId}"></td>
-                                        <td th:text="${list.version}"></td>
+                                    <tr onclick="location.href='#'" style="cursor: pointer"
+                                        th:each="detail:${apiDetailsDTOList}" th:if="${index.id == detail.resourceId}">
+                                        <td th:text="${detail.method}"></td>
+                                        <td th:text="${detail.uri}"></td>
+                                        <td th:text="${detail.summary}"></td>
+                                        <td th:text="${detail.security}"></td>
+                                        <td th:text="${detail.operationId}"></td>
+                                        <td th:text="${detail.version}"></td>
                                         <td>
                                             <select class="form-select">
                                                 <option selected>develop</option>
@@ -293,11 +323,12 @@
                                     </tbody>
                                 </table>
                             </div>
-
                         </div>
                     </div>
+
                 </div>
             </div>
+            <!--  리소스 정보 끝   -->
             <div class="w-100 d-flex justify-content-center">
                 <ul class="pagination">
                     <li class="page-item">
