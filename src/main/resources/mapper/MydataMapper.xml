@@ -14,6 +14,7 @@
         <result property="name" column="name"/>
     </resultMap>
 
+    <!--mdAgency Table + mdServiceTable-->
     <resultMap id="mdServiceAgency" type="com.ipa.openapi_inzent.model.MdAgencyDTO">
         <!--property : 현재 DTO에서 사용하는 이름 column : DB에서 사용중인 이름-->
         <result property="id" column="id"/>
@@ -30,6 +31,39 @@
         <result property="agencyPort" column="agencyPort"/>
         <collection property="mdServiceDTO" resultMap="mdService"/>
     </resultMap>
+
+    <!--mdProvider Table + mdReqInfo Table-->
+    <resultMap id="providerInfo" type="com.ipa.openapi_inzent.model.MdProviderDTO">
+        <result property="id" column="id"/>
+        <result property="reqDate" column="reqDate"/>
+        <result property="runtime" column="runtime"/>
+        <result property="resCode" column="resCode"/>
+        <result property="apiCode" column="apiCode"/>
+        <result property="customerNum" column="customerNum"/>
+        <result property="regularTransmission" column="regularTransmission"/>
+        <result property="uniqueNum" column="uniqueNum"/>
+        <result property="statusInfo" column="statusInfo"/>
+        <result property="apiResources" column="apiResources"/>
+        <result property="reqHeader" column="reqHeader"/>
+        <result property="resMsg" column="resMsg"/>
+        <result property="resData" column="resData"/>
+        <collection property="mdReqInfoDTO" resultMap="mdReqInfo"></collection>
+
+    </resultMap>
+
+    <!--mdReqInfo table -->
+    <resultMap id="mdReqInfo" type="com.ipa.openapi_inzent.model.MdReqInfoDTO">
+        <result property="id" column="reqId"/>
+        <result property="providerId" column="providerId"/>
+        <result property="code" column="code"/>
+        <result property="agencyName" column="agencyName"/>
+        <result property="serviceName" column="serviceName"/>
+        <result property="consumerNum" column="consumerNum"/>
+        <result property="reqSEQ" column="reqSEQ"/>
+        <result property="reqType" column="reqType"/>
+        <result property="tokenExpiryDate" column="tokenExpiryDate"/>
+    </resultMap>
+
 
     <!-- mdAgency  -->
     <select id="mdAgencySelectAll" resultType="com.ipa.openapi_inzent.model.MdAgencyDTO">
@@ -87,6 +121,21 @@
         OR ma.name ILIKE CONCAT('%', #{keyword},'%')
         OR ma.code ILIKE CONCAT('%', #{keyword},'%')
         OR ms."clientId" ILIKE CONCAT('%', #{keyword},'%') ;
+    </select>
+
+    <!--    ///////////////////////////////////////////////////////////////////////////////////////////-->
+    <!--    //                            (oﾟvﾟ)ノ  Provider Page  (oﾟvﾟ)ノ                           //-->
+    <!--    ///////////////////////////////////////////////////////////////////////////////////////////-->
+
+    <select id="mdProviderSelectAll" resultType="com.ipa.openapi_inzent.model.MdProviderDTO">
+        SELECT id, "reqDate", runtime, "resCode", "apiCode", "customerNum", "regularTransmission", "uniqueNum",
+        "statusInfo", "apiResources", "reqHeader", "resMsg", "resData"
+        FROM public."providerHistory";
+    </select>
+
+    <select id="mdProviderSelectOne" parameterType="int" resultMap="providerInfo">
+        SELECT res.id as "reqId", res."providerId", res.code, res."agencyName", res."serviceName", res."reqType", res."consumerNum", res."reqSEQ", res."tokenExpiryDate", pro.id, pro."reqDate", pro.runtime, pro."resCode", pro."apiCode", pro."customerNum", pro."regularTransmission", pro."uniqueNum", pro."statusInfo", pro."apiResources", pro."reqHeader", pro."resMsg", pro."resData"
+        FROM public."providerHistory" as pro join public."reqInfo" as res on pro.id = res."providerId" where pro.id = #{id}
     </select>
 
 

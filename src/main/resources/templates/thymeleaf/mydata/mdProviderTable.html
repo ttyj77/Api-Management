@@ -40,6 +40,48 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js"
                 integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
                 crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script>
+            function providerModal(value) {
+                console.log("id : " + value.id)
+                let data = {
+                    "id": value.id,
+                };
+                $.ajax({
+                    url: "/mydata/provider/selectOne",
+                    type: "get",
+                    data: data,
+
+                    success: (message) => {
+                        $('#serviceInfoModal').modal('show');
+                        console.log(message)
+                        createProviderModal(message);
+
+
+                    },
+                    error: (e) => {
+                        console.log("통신 실패", e);
+                    }
+                })
+            }
+
+            function createProviderModal(data) {
+                console.log(data)
+                document.getElementById("reqSEQ").innerText = data.reqSEQ
+                document.getElementById("name").innerText = data.agencyName + " : " + data.serviceName
+                document.getElementById("apiResources").innerText = data.apiResources
+                document.getElementById("reqHeader").innerText = data.reqHeader
+                document.getElementById("resMsg").innerText = data.resMsg
+                document.getElementById("resData").innerText = data.resData
+                document.getElementById("reqType").innerText = data.reqType
+                document.getElementById("code").innerText = data.code
+                document.getElementById("agencyName").innerText = data.agencyName
+                document.getElementById("serviceName").innerText = data.serviceName
+                document.getElementById("statusInfo").innerText = data.statusInfo
+                document.getElementById("consumerNum").innerText = data.consumerNum
+                document.getElementById("tokenExpiryDate").innerText = data.tokenExpiryDate
+            }
+        </script>
 
     </th:block>
 
@@ -48,8 +90,6 @@
 <body>
 <div layout:fragment="content">
 
-
-    <!-- Page Wrapper -->
     <div id="wrapper">
 
 
@@ -103,24 +143,26 @@
                                         <td>API코드</td>
                                         <td>통합고객번호</td>
                                         <td>정기적 전송</td>
-                                        <td>거래고유번호</td>
+                                        <td>providerModal</td>
                                         <td>전송요구타입</td>
 
                                     </tr>
                                     </thead>
 
                                     <tbody>
-                                    <tr data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                        <td>2021-11-23</td>
-                                        <td>15:18:16.614</td>
-                                        <td>2021-11-23 15:18:16.642</td>
-                                        <td>00.280</td>
-                                        <td>00000</td>
-                                        <td>IS08</td>
-                                        <td>9077805756</td>
-                                        <td>user-refresh</td>
-                                        <td>QMBFCK67NULBGK72D1YE1MMYB</td>
-                                        <td>마이데이터</td>
+                                    <tr class="trContent" th:each="list : ${list}" th:id="${list.id}"
+                                        data-bs-toggle="modal" data-bs-target="#providerModal"
+                                        onclick="providerModal(this)">
+                                        <td th:text="${list.reqDate}"></td>
+                                        <td th:text="${list.reqTime}"></td>
+                                        <td th:text="${list.resDate}"></td>
+                                        <td th:text="${list.runtime}"></td>
+                                        <td th:text="${list.resCode}"></td>
+                                        <td th:text="${list.apiCode}"></td>
+                                        <td th:text="${list.customerNum}"></td>
+                                        <td th:text="${list.regularTransmission}"></td>
+                                        <td th:text="${list.uniqueNum}"></td>
+                                        <td th:text="${list.statusInfo}"></td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -132,13 +174,13 @@
                 <!-- Button trigger modal -->
 
                 <!-- details info Modal start -->
-                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
-                     aria-labelledby="exampleModalLabel"
+                <div class="modal fade" id="providerModal" tabindex="-1" role="dialog"
+                     aria-labelledby="providerModalLabel"
                      aria-hidden="true">
                     <div class="modal-dialog modal-lg" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">정보제공 API 거래이력</h5>
+                                <h5 class="modal-title" id="providerModalLabel">정보제공 API 거래이력</h5>
                                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -152,7 +194,9 @@
                                     <tbody>
                                     <tr>
                                         <td class="tdHead">전송요구SEQ</td>
-                                        <td class="tdContent">TRQ_20211123094515_1725
+
+                                        <td class="tdContent" style="display: flex">
+                                            <h6 class="mr-4 mt-2 mb-1" id="reqSEQ"></h6>
                                             <button class="badge badge-dark" id="beDark" data-bs-toggle="modal"
                                                     style="cursor: pointer;"
                                                     data-bs-target="#requestModal">전송요구정보
@@ -162,26 +206,28 @@
                                     </tr>
                                     <tr>
                                         <td class="tdHead">기관명:서비스명</td>
-                                        <td class="tdContent">주식회사 하나은행 : 마이데이터 서비스</td>
+                                        <td class="tdContent" id="name"></td>
                                     </tr>
                                     <tr>
                                         <td class="tdHead">거래고유번호</td>
-                                        <td class="tdContent">QMBFCK67NULBGK72D1YE1MMYB</td>
+                                        <td class="tdContent" id="apiResources"></td>
                                     </tr>
                                     <tr>
                                         <td class="tdHead" style="vertical-align: middle">요청헤더</td>
-                                        <td class="tdContent"><textarea
-                                                style="height: 150px; width: -webkit-fill-available;">{Host=mydata.kyobo.com:9443, authorization=Bearer eyJhbGciOiJSUzI1NiJ9.eyJhdWQiOiJaVkFBRVMwMDAwIiwianRpIjoiMTA1NSIsImlzcyI6Im15ZGF0YS5reW9iby5jb20iLCJzdWIiOiJCZExEdk9uM2dsSWhTY3FNQTJ1eXpHQlFvTE9wbmVBUCIsInNjb3BlIjoiaW5zdS5saXN0IGluc3UuaW5zdXJhbmNlIiwiZXhwIjoxNjY5MTgzNjE0LCJpYXQiOjE2Mzc2NDc2MTR9.BM3p5FEfEafY19XfLd7c7T_Vzf75QpodhPznY7BfeVsza9NSqDDJBVmdkUX9iGgQcwgBgDjzeKeq1Heb8iy2I2uH453l4BH6gCrtlWJizF5U9q6Bzg0994UeaAlqDQhLMD5FZE2zT8CquRRivyjlgwlcLvl9GeswBhJydrmzCh2C1kHg_H8Y5GuWDbfL7AKi5ozk0stvW_9FxotP24l_pd_sUwFdUcy_V3L9Jt9lQ14unJmrBsTdRAwqMfQ3dRLkQ_i43B-tDb436HKlvB3viuq01QjbyKn9chShc-RLIsrzBojS_R28T3h8N6u0oe5CSLNIaHIsaAf5NtjghEs40w, Cache-Control=no-cache, client_id=BdLDvOn3glIhScqMA2uyzGBQoLOpneAP, domain=https://mydata.kyobo.com:9443, guid=20211123MYS202011518160000007200, iss=B1AAAI0000, Timestamp=2021-11-23 15:18:16.016, TUID=, user-agent=Apache-HttpClient/4.5.2 (Java/1.8.0_251), x-api-tran-id=ZVAAES0000M15EHSGEHH3GDA2, x-api-type=user-refresh, x-user-ci=qe7eDnXCzhW9EVxn11wAgWL+cdvzJi2lGT75yZtr8XpBY0LyMYw2hc8k2ELhRrFa2JisP56NKzkLe50crKjC9g==, Content-Type=application/json, X-SSL-CLIENT-S=CN=mdapigw.hanabank.com,O=KEB Hana Bank,L=Jung-gu,ST=Seoul,C=KR,serialNumber=110111-0672538,jurisdictionST=Seoul,jurisdictionC=KR,businessCategory=Private Organization, X-Forwarded-For=10.41.81.158, X-Forwarded-Host=mydata.kyobo.com:9443, X-Forwarded-Server=mydata.kyobo.com, Content-Length=74, Connection=Keep-Alive}</textarea>
+                                        <td class="tdContent">
+                                            <textarea disabled id="reqHeader"
+                                                      style="height: 150px; width: -webkit-fill-available;"></textarea>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td class="tdHead">응답메세지</td>
-                                        <td class="tdContent">200</td>
+                                        <td class="tdContent" id="resMsg">200</td>
                                     </tr>
                                     <tr>
                                         <td class="tdHead" style="vertical-align: middle">응답데이터</td>
-                                        <td class="tdContent"><textarea
-                                                style="height: 150px; width: -webkit-fill-available;">{Host=mydata.kyobo.com:9443, authorization=Bearer eyJhbGciOiJSUzI1NiJ9.eyJhdWQiOiJaVkFBRVMwMDAwIiwianRpIjoiMTA1NSIsImlzcyI6Im15ZGF0YS5reW9iby5jb20iLCJzdWIiOiJCZExEdk9uM2dsSWhTY3FNQTJ1eXpHQlFvTE9wbmVBUCIsInNjb3BlIjoiaW5zdS5saXN0IGluc3UuaW5zdXJhbmNlIiwiZXhwIjoxNjY5MTgzNjE0LCJpYXQiOjE2Mzc2NDc2MTR9.BM3p5FEfEafY19XfLd7c7T_Vzf75QpodhPznY7BfeVsza9NSqDDJBVmdkUX9iGgQcwgBgDjzeKeq1Heb8iy2I2uH453l4BH6gCrtlWJizF5U9q6Bzg0994UeaAlqDQhLMD5FZE2zT8CquRRivyjlgwlcLvl9GeswBhJydrmzCh2C1kHg_H8Y5GuWDbfL7AKi5ozk0stvW_9FxotP24l_pd_sUwFdUcy_V3L9Jt9lQ14unJmrBsTdRAwqMfQ3dRLkQ_i43B-tDb436HKlvB3viuq01QjbyKn9chShc-RLIsrzBojS_R28T3h8N6u0oe5CSLNIaHIsaAf5NtjghEs40w, Cache-Control=no-cache, client_id=BdLDvOn3glIhScqMA2uyzGBQoLOpneAP, domain=https://mydata.kyobo.com:9443, guid=20211123MYS202011518160000007200, iss=B1AAAI0000, Timestamp=2021-11-23 15:18:16.016, TUID=, user-agent=Apache-HttpClient/4.5.2 (Java/1.8.0_251), x-api-tran-id=ZVAAES0000M15EHSGEHH3GDA2, x-api-type=user-refresh, x-user-ci=qe7eDnXCzhW9EVxn11wAgWL+cdvzJi2lGT75yZtr8XpBY0LyMYw2hc8k2ELhRrFa2JisP56NKzkLe50crKjC9g==, Content-Type=application/json, X-SSL-CLIENT-S=CN=mdapigw.hanabank.com,O=KEB Hana Bank,L=Jung-gu,ST=Seoul,C=KR,serialNumber=110111-0672538,jurisdictionST=Seoul,jurisdictionC=KR,businessCategory=Private Organization, X-Forwarded-For=10.41.81.158, X-Forwarded-Host=mydata.kyobo.com:9443, X-Forwarded-Server=mydata.kyobo.com, Content-Length=74, Connection=Keep-Alive}</textarea>
+                                        <td class="tdContent">
+                                            <textarea style="height: 150px; width: -webkit-fill-available;" id="resData"
+                                                      disabled></textarea>
                                         </td>
                                     </tr>
                                     </tbody>
@@ -193,6 +239,7 @@
                         </div>
                     </div>
                 </div>
+
                 <!-- details info Modal start -->
                 <div class="modal fade" id="requestModal" tabindex="-1" role="dialog"
                      aria-labelledby="requestModalLabel"
@@ -201,56 +248,50 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="requestModalLabel">전송요구내역</h5>
-                                <button type="button" class="close" aria-label="Close" data-bs-target="#exampleModal" data-bs-toggle="modal">
+                                <button type="button" class="close" aria-label="Close" data-bs-target="#exampleModal"
+                                        data-bs-toggle="modal">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                             <div class="modal-body" style="overflow-x: hidden">
-                                <h3 class="mb-1">
+                                <h5 class="mb-1">
                                     기본 정보
-                                </h3>
+                                </h5>
                                 <table class="table table-bordered align-middle"
                                        style="width: -webkit-fill-available;font-size: 15px;">
                                     <tbody>
                                     <tr>
                                         <td class="tdHead">기관코드</td>
-                                        <td colspan="3" class="tdContent">ZVAABG0000
+                                        <td colspan="3" class="tdContent" id="code">
                                         </td>
                                     </tr>
                                     <tr>
                                         <td class="tdHead">기관명</td>
-                                        <td class="tdContent">농협은행 주식회사</td>
+                                        <td class="tdContent" id="agencyName"></td>
                                         <td class="tdHead">서비스명</td>
-                                        <td class="tdContent">NH마이데이터서비스</td>
+                                        <td class="tdContent" id="serviceName"></td>
                                     </tr>
                                     <tr>
                                         <td class="tdHead">전송요구타입</td>
-                                        <td colspan="3" class="tdContent">자산목록
+                                        <td colspan="3" class="tdContent" id="reqType">reqType
                                         </td>
                                     </tr>
                                     <tr>
                                         <td class="tdHead">통합고객번호</td>
-                                        <td colspan="3" class="tdContent">5730791447</td>
+                                        <td colspan="3" class="tdContent" id="consumerNum"></td>
                                     </tr>
                                     <tr>
                                         <td class="tdHead">전송주기</td>
-                                        <td class="tdContent">1/w,1/w
+                                        <td class="tdContent">
                                         </td>
                                         <td class="tdHead">상태정보</td>
-                                        <td class="tdContent">마이데이터
+                                        <td class="tdContent" id="statusInfo">
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <td class="tdHead">전송준비일</td>
-                                        <td class="tdContent">2021-11-23
-                                        </td>
-                                        <td class="tdHead">전송요구일</td>
-                                        <td class="tdContent"> 2021-11-26
-                                        </td>
-                                    </tr>
+
                                     <tr>
                                         <td class="tdHead">토큰유효기간</td>
-                                        <td class="tdContent">2021-12-21
+                                        <td class="tdContent" id="tokenExpiryDate">
                                         </td>
                                         <td class="tdHead">토큰만료기간</td>
                                         <td class="tdContent">
@@ -260,7 +301,9 @@
                                 </table>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary"  data-bs-toggle="modal" data-bs-target="#exampleModal">닫기</button>
+                                <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
+                                        data-bs-target="#exampleModal">닫기
+                                </button>
                             </div>
                         </div>
                     </div>
