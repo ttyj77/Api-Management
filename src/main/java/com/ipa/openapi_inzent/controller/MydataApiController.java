@@ -3,6 +3,11 @@ package com.ipa.openapi_inzent.controller;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.ipa.openapi_inzent.model.DataDTO;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.BufferedReader;
@@ -17,9 +22,9 @@ public class MydataApiController {
 
     @GetMapping("/invest/accounts")
     @ResponseBody
-    public StringBuffer invest_001(@RequestParam String org_code, @RequestParam String limit, @RequestHeader String Authorization) {
-        System.out.println("Authorization = " + Authorization);
-        String token = Authorization;
+    public StringBuffer invest_001(@RequestParam String org_code, @RequestParam String limit, @RequestHeader String token) {
+//        System.out.println("Authorization = " + Authorization);
+//        String token = Authorization;
         String x_api_tran_id = "1168119031SAA202303171424";
         String x_api_type = "user-search";
         StringBuffer response = null;
@@ -37,6 +42,9 @@ public class MydataApiController {
             con.setRequestProperty("X-FSI-SVC-DATA-KEY", "Y");
             con.setRequestProperty("accept", "application/json; charset=UTF-8");
             int responseCode = con.getResponseCode();
+
+            System.out.println("responseCode = " + responseCode);
+
             BufferedReader br;
             if (responseCode == 200) { // 정상 호출
                 br = new BufferedReader(new InputStreamReader(con.getInputStream()));
@@ -54,6 +62,8 @@ public class MydataApiController {
             br.close();
             JsonParser jsonParser = new JsonParser();
             JsonObject jsonObject = (JsonObject) jsonParser.parse(response.toString());
+            System.out.println("jsonObject = " + jsonObject);
+            System.out.println(jsonObject.get("account_list").toString());
 
             DataDTO dataDTO = new DataDTO();
             dataDTO.setResponse(jsonObject.get("account_list").toString());
@@ -77,5 +87,24 @@ public class MydataApiController {
         return con;
     }
 
+//    @RestController
+//    @Api(tags = "Welcome Controller", description = "Welcome API")
+//    public class HomeController {
+//
+//        @ApiOperation(value = "Sent secret message", notes = "Sent secret message")
+//
+//        @ApiImplicitParams({
+//                @ApiImplicitParam(name = "Authorization", value = "Access Token", required = false, allowEmptyValue = false, paramType = "header", dataTypeClass = String.class, example = "Bearer access_token")})
+//        @GetMapping("/invest/secret-message")
+//        public Object tokenResponse() {
+//
+//            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//            System.out.println("principal = " + principal);
+//            return principal;
+//        }
+//
+//    }
+
 }
+
 
