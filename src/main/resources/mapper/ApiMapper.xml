@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ipa.openapi_inzent.dao.ApiDao">
+    <insert id="insertApi" parameterType="com.ipa.openapi_inzent.model.ApiDTO" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO public.apis(context, name, disclosure, explanation)
+        VALUES (#{context}, #{name}, #{disclosure}, #{explanation});
+    </insert>
+    <insert id="insertRole" parameterType="com.ipa.openapi_inzent.model.ApiDTO">
+        INSERT INTO public."apisRole"("apisId", "roleId")
+        VALUES (#{apisId}, #{roleId});
+    </insert>
+    <select id="selectAll" resultType="com.ipa.openapi_inzent.model.ApiDTO">
+        SELECT *
+        FROM public.apis
+    </select>
+    <select id="selectRoleList" parameterType="int" resultType="com.ipa.openapi_inzent.model.ApiDTO">
+        SELECT *
+        FROM public.apis
+        INNER JOIN public."apisRole"
+        ON public.apis.id = public."apisRole"."apisId"
+        WHERE public."apisRole"."apisId" = #{id}
+        ORDER BY public.apis.id
+    </select>
+    <select id="selectOne" parameterType="int" resultType="com.ipa.openapi_inzent.model.ApiDTO">
+        SELECT *
+        FROM public.apis
+        WHERE id = #{id};
+    </select>
+    <update id="update" parameterType="com.ipa.openapi_inzent.model.ApiDTO">
+        UPDATE public.apis
+        SET context=#{context},
+        name=#{name},
+        disclosure=#{disclosure},
+        explanation=#{explanation}
+        WHERE id = #{id};
+    </update>
+    <update id="updateRole" parameterType="com.ipa.openapi_inzent.model.ApiDTO">
+        UPDATE public."apisRole"
+        SET "roleId"=#{roleId}
+        WHERE "apisId"=#{apisId};
+    </update>
+    <delete id="delete" parameterType="int">
+        DELETE FROM public.apis
+        WHERE id = #{id};
+    </delete>
+    <select id="showRole" resultType="com.ipa.openapi_inzent.model.ApiDTO">
+        SELECT id, context, name, disclosure, explanation,public."apisRole"."apisId", public."apisRole"."roleId"
+        FROM public.apis
+        INNER JOIN public."apisRole"
+        ON public.apis.id = public."apisRole"."apisId"
+        ORDER BY public.apis.id
+    </select>
+</mapper>

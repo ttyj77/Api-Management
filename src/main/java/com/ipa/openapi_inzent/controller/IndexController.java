@@ -19,6 +19,7 @@ public class IndexController {
     }
 
     @GetMapping("/test")
+    @ResponseBody
     public String test() {
         return "tables";
     }
@@ -50,17 +51,17 @@ public class IndexController {
         return "modalTest";
     }
 
-    @GetMapping("accountList")
+    @GetMapping("/accountList")
     public String accountList() {
         return "accountList";
     }
 
-    @GetMapping("requestPage")
+    @GetMapping("/requestPage")
     public String Authorization() {
         return "requestPage";
     }
 
-    @GetMapping("authorization")
+    @GetMapping("/authorization")
     public String authorization() {
         return "authorization";
     }
