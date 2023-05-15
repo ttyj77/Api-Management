@@ -20,7 +20,7 @@ public class ApiDetailsDTO {
     private boolean trash;
     // ApiDetailsDTO end
 
-    //    private ResourceDTO resourceDTO;
+    // private ResourceDTO resourceDTO;
     // 리소스 List 테이블
     private int resource_id;
     private int apisId;
