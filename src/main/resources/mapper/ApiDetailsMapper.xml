@@ -16,10 +16,10 @@
         <result property="resourceId" column="id"/>
     </resultMap>
     <!-- 모든 apiDetails  -->
-    <select id="selectALl" resultType="com.ipa.openapi_inzent.model.ApiDetailsDTO">
-        select * from public."apiDetails"
-        order by id asc;
-    </select>
+<!--    <select id="selectALl" resultType="com.ipa.openapi_inzent.model.ApiDetailsDTO">-->
+<!--        select * from public."apiDetails"-->
+<!--        order by id asc;-->
+<!--    </select>-->
     <!-- 리소스 List  resultType: ResourceDTO-->
     <select id="resourceList" parameterType="int" resultType="com.ipa.openapi_inzent.model.ResourceDTO">
         select id from public.resource

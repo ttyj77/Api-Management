@@ -86,8 +86,8 @@
                                                     <i class="fa-solid fa-pen" style="color: #797a7c;"></i>
                                                 </button>
                                                 <button class="btn btn-light inBtn modal2"
-                                                        th:apiId="${api.id}"
-                                                        th:onclick="removeApi(this.getAttribute('apiId'))">
+                                                        th:apiId="${api.id}" th:apiName="${api.name}"
+                                                        onclick="removeApi(this)">
                                                     <i class="fa-solid fa-trash-can" style="color: #797a7c;"></i>
                                                 </button>
                                             </div>

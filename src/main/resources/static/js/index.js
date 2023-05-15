@@ -40,13 +40,15 @@ function saveApiUpdate() {
     }
 }
 
-function removeApi(id) {
+function removeApi(apiOne) {
+    let id = apiOne.getAttribute('apiid');
+    let name = apiOne.getAttribute('apiname');
     Swal.fire({
         showCancelButton: true,
         cancelButtonText: "취소",
         confirmButtonText: "삭제",
         icon: 'warning',
-        text: "\'XX업권\' API 그룹을 삭제하시겠습니까?"
+        text: "\'"+name+"업권\' API 그룹을 삭제하시겠습니까?"
     }).then((result) => {
         if (result.isConfirmed) {
             Swal.fire({

@@ -158,6 +158,45 @@
                 }
             }
 
+            function goTrash(details) {
+                let id = details.getAttribute("detailid");
+                let name = details.getAttribute("detailname");
+                Swal.fire({
+                    showCancelButton: true,
+                    cancelButtonText: "취소",
+                    confirmButtonText: "삭제",
+                    icon: 'warning',
+                    text: "\'" + name + "\' 메소드를 삭제하시겠습니까?"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                            title: '삭제 성공', icon: 'success'
+                        }).then(() => {
+                            location.href = "/api/goTrash/" + id;
+                        });
+                    }
+                });
+            }
+
+            function goTrashResource(resource) {
+                let id = resource.getAttribute("resourceid");
+                Swal.fire({
+                    showCancelButton: true,
+                    cancelButtonText: "취소",
+                    confirmButtonText: "삭제",
+                    icon: 'warning',
+                    text: "리소스를 삭제하시겠습니까?"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                            title: '삭제 성공', icon: 'success'
+                        }).then(() => {
+                            location.href = "/api/goTrashResource/" + id;
+                        });
+                    }
+                });
+            }
+
             // function accordionBtn(resource) {
             //     console.log(resource);
             //     let resourceId = resource.getAttribute('resource');
@@ -254,10 +293,15 @@
                                        title="Swagger UI"
                                        class="fa-solid fa-globe ui"></i>
                                     <!-- <div id="tooltipUI">Swagger UI</div>-->
-                                    <i th:onclick="|location.href='@{/api/goTrashResource/{resourceId}(resourceId = ${index.id})}'|" style="cursor: pointer;"
+                                    <i th:resourceId="${index.id}" onclick="goTrashResource(this)"
+                                       style="cursor: pointer;"
                                        data-toggle="tooltip"
                                        title="삭제"
                                        class="fa-solid fa-trash-can delete"></i>
+                                    <!--                                    <i th:onclick="|location.href='@{/api/goTrashResource/{resourceId}(resourceId = ${index.id})}'|" style="cursor: pointer;"-->
+                                    <!--                                       data-toggle="tooltip"-->
+                                    <!--                                       title="삭제"-->
+                                    <!--                                       class="fa-solid fa-trash-can delete"></i>-->
                                     <!-- <div id="tooltipDelete">삭제</div>-->
                                 </div>
                             </div>
@@ -281,7 +325,8 @@
                                     </thead>
                                     <tbody>
                                     <tr onclick="location.href='#'" style="cursor: pointer"
-                                        th:each="detail:${apiDetailsDTOList}" th:if="${index.id == detail.resourceId}">
+                                        th:each="detail:${apiDetailsDTOList}"
+                                        th:if="${index.id == detail.resourceId} and ${detail.trash == false} and ${apiDetailsDTOList.isEmpty()==false}">
                                         <td th:text="${detail?.method}"></td>
                                         <td th:text="${detail?.uri}"></td>
                                         <td th:text="${detail?.summary}"></td>
@@ -305,11 +350,19 @@
                                                data-toggle="tooltip"
                                                title="Swagger UI"
                                                class="fa-solid fa-globe ui"></i>
-                                            <i th:onclick="|location.href='@{/api/goTrash/{detailId}(detailId = ${detail.id})}'|" style="cursor: pointer;"
+                                            <i th:detailId="${detail.id}" th:detailName="${detail?.summary}"
+                                               onclick="goTrash(this)" style="cursor: pointer;"
                                                data-toggle="tooltip"
                                                title="삭제"
                                                class="fa-solid fa-trash-can delete"></i>
+                                            <!--                                            <i th:onclick="|location.href='@{/api/goTrash/{detailId}(detailId = ${detail.id})}'|" style="cursor: pointer;"-->
+                                            <!--                                               data-toggle="tooltip"-->
+                                            <!--                                               title="삭제"-->
+                                            <!--                                               class="fa-solid fa-trash-can delete"></i>-->
                                         </td>
+                                    </tr>
+                                    <tr th:if="${detail.isEmpty()==true and detail.}">
+
                                     </tr>
                                     </tbody>
                                 </table>
