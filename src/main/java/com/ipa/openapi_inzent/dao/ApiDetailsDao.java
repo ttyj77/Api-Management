@@ -19,4 +19,14 @@ public interface ApiDetailsDao {
 
 
     List<ApiDetailsDTO> detailsList(int apisId) throws DataAccessException;
+
+    List<ResourceDTO> goTrashResource() throws DataAccessException;
+
+    List<ApiDetailsDTO> goTrashDetail() throws DataAccessException;
+
+    void completeDelete(int id) throws DataAccessException;
+
+    void updateDetail(ApiDetailsDTO apiDetailsDTO)throws DataAccessException;
+
+    void updateResource(ApiDetailsDTO apiDetailsDTO)throws DataAccessException;
 }

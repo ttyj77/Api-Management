@@ -24,5 +24,6 @@ public class ApiDetailsDTO {
     // 리소스 List 테이블
     private int resource_id;
     private int apisId;
+    private boolean garbage;
 
 }
