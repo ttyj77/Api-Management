@@ -158,15 +158,6 @@
                 }
             }
 
-            function goTrash(resource) {
-                let resourceId = resource.getAttribute("resource");
-                console.log(resourceId);
-                console.log(resource);
-
-                // location.href = "/api/trash/"+resourceId;
-
-            }
-
             // function accordionBtn(resource) {
             //     console.log(resource);
             //     let resourceId = resource.getAttribute('resource');
@@ -263,7 +254,7 @@
                                        title="Swagger UI"
                                        class="fa-solid fa-globe ui"></i>
                                     <!-- <div id="tooltipUI">Swagger UI</div>-->
-                                    <i th:rosource="${index.id}" onclick="goTrash(this)" style="cursor: pointer;"
+                                    <i th:onclick="|location.href='@{/api/goTrashResource/{resourceId}(resourceId = ${index.id})}'|" style="cursor: pointer;"
                                        data-toggle="tooltip"
                                        title="삭제"
                                        class="fa-solid fa-trash-can delete"></i>
@@ -291,12 +282,12 @@
                                     <tbody>
                                     <tr onclick="location.href='#'" style="cursor: pointer"
                                         th:each="detail:${apiDetailsDTOList}" th:if="${index.id == detail.resourceId}">
-                                        <td th:text="${detail.method}"></td>
-                                        <td th:text="${detail.uri}"></td>
-                                        <td th:text="${detail.summary}"></td>
-                                        <td th:text="${detail.security}"></td>
-                                        <td th:text="${detail.operationId}"></td>
-                                        <td th:text="${detail.version}"></td>
+                                        <td th:text="${detail?.method}"></td>
+                                        <td th:text="${detail?.uri}"></td>
+                                        <td th:text="${detail?.summary}"></td>
+                                        <td th:text="${detail?.security}"></td>
+                                        <td th:text="${detail?.operationId}"></td>
+                                        <td th:text="${detail?.version}"></td>
                                         <td>
                                             <select class="form-select">
                                                 <option selected>develop</option>
@@ -314,7 +305,7 @@
                                                data-toggle="tooltip"
                                                title="Swagger UI"
                                                class="fa-solid fa-globe ui"></i>
-                                            <i onclick="location.href='#'" style="cursor: pointer;"
+                                            <i th:onclick="|location.href='@{/api/goTrash/{detailId}(detailId = ${detail.id})}'|" style="cursor: pointer;"
                                                data-toggle="tooltip"
                                                title="삭제"
                                                class="fa-solid fa-trash-can delete"></i>
