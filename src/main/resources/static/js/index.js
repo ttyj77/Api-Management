@@ -98,10 +98,17 @@ function updateApi(apiOne) {
             for (let i = 0; i < selectedRoleList.length; i++) {
                 let h5 = document.createElement("h5")
                 let badge = document.createElement("span")
+                let inputHidden = document.createElement("input")
+
                 badge.className = "badge badge-secondary"
                 badge.innerText = selectedRoleList[i].name
                 badge.id = "BADGE_" + selectedRoleList[i].code
-                h5.append(badge)
+
+                inputHidden.name = "roleId"
+                inputHidden.value = selectedRoleList[i].id
+                inputHidden.type = "hidden"
+
+                h5.append(badge, inputHidden)
                 target2.append(h5)
             }
 
@@ -141,7 +148,7 @@ function roleList() {
                     roleInput.type = "checkbox"
                     roleInput.value = array[i].name
                     roleInput.id = array[i].code
-                    roleInput.name = 'role'
+                    roleInput.name = array[i].id
                     roleInput.onclick = function () {
                         is_checked(this);
                     }
@@ -208,17 +215,23 @@ function drawRole(value) {
         let isChecked = $('#' + check.id).is(':checked');
         console.log(isChecked)
         if (isChecked) { //체크가 되어있다면
+            console.log(check)
             let h5 = document.createElement("h5")
             let badge = document.createElement("span")
             badge.className = "badge badge-secondary"
             badge.innerText = check.value
+            let inputHidden = document.createElement("input")
+            inputHidden.name = "roleId"
+            inputHidden.value = check.name
+            inputHidden.type = "hidden"
             if (value.id == "updateApisModal") {
                 console.log("update Api modal span id BADGE_ 추가")
                 let id = check.id.substr(4,)
                 console.log(id)
                 badge.id = "BADGE_" + id
+
             }
-            h5.append(badge)
+            h5.append(badge, inputHidden)
             target.append(h5)
         }
     }
@@ -257,7 +270,7 @@ function apisModalRoleList() {
                 roleInput.type = "checkbox"
                 roleInput.value = array[i].name
                 roleInput.id = "API_" + array[i].code
-                roleInput.name = 'role'
+                roleInput.name = 'roleId'
                 roleInput.onclick = function () {
                     is_checked(this);
                 }
