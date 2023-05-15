@@ -17,6 +17,7 @@ public interface ApiDetailsDao {
 
     ApiDetailsDTO selectOne(int id) throws DataAccessException;
 
+
     List<ApiDetailsDTO> detailsList(int apisId) throws DataAccessException;
 
     List<ResourceDTO> goTrashResource() throws DataAccessException;

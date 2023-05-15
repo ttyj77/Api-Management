@@ -106,6 +106,7 @@
                 crossorigin="anonymous"></script>
         <script src="/js/sb-admin-2.min.js"></script>
         <script src="/js/details.js" rel="script"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script>
             function methodSwitch(value) {
 
@@ -197,23 +198,59 @@
                 });
             }
 
-            // function accordionBtn(resource) {
-            //     console.log(resource);
-            //     let resourceId = resource.getAttribute('resource');
-            //     console.log(resourceId);
-            //     let data = {
-            //         "resourceId" : resourceId,
-            //     };
-            //     $.ajax({
-            //         url: "/api/resource/" + resourceId,
-            //         data: data,
-            //         method: "post",
-            //
-            //         success:(message) => {
-            //
-            //         }
-            //     })
-            // }
+            function insertResource() {
+                console.log("========================")
+                const searchParams = new URLSearchParams(location.search);
+                console.log(window.location.href)
+                console.log(window.location.href.split("/").slice(-1)[0]) //페이지 아이디 = apis 아이디
+
+                let method = ['get', 'post', 'put', 'delete']
+                let jsonArr = new Array();
+
+                for (let i = 0; i < 4; i++) {
+                    //insertOperationId
+                    let obj = new Object();
+
+                    let operationId = document.getElementById(method[i] + "OperationId")
+                    let summary = document.getElementById(method[i] + "Summary");
+                    if (operationId != null) {
+                        console.log(operationId.value)
+                        obj.operation = operationId.value;
+                        obj.summary = summary.value
+                        jsonArr.push(obj)
+                    }
+                }
+                console.log("jsonArr ================= " + JSON.stringify(jsonArr))
+
+
+                let arr = [{"method": "get"}, {"url": "/vi/insu/append"}]
+
+                //
+                // [요청 json 데이터 선언]
+                let jsonData = { // Body에 첨부할 json 데이터
+                    "idx": window.location.href.split("/").slice(-1)[0], //apis index
+                    "get": JSON.stringify(arr),
+                    "post": JSON.stringify(arr),
+                    "put": JSON.stringify(arr),
+                    "delete": JSON.stringify(arr),
+                };
+
+                $.ajax({
+                    url: "/api/resource/insert",
+                    data: JSON.stringify(jsonData), //전송 데이터
+                    dataType: "json",
+                    method: "post",
+                    traditional: true, //필수
+                    async: true, //비동기 여부
+                    timeout: 5000, //타임 아웃 설정
+                    dataType: "JSON", //응답받을 데이터 타입 (XML,JSON,TEXT,HTML,JSONP)
+                    contentType: "application/json; charset=utf-8", //헤더의 Content-Type을 설정
+
+                    success: (message) => {
+                        console.log(message)
+                    }
+                })
+            }
         </script>
     </th:block>
 </head>
@@ -269,11 +306,14 @@
             <!-- 리소스 정보들 -->
             <div class="card shadow mb-4">
                 <div class="accordion accordion-flush" id="accordionFlushExample">
-                    <div class="accordion-item" th:each="index:${resourceIndex}">
+                    <div th:if="${#lists.size(resourceIndex) == 0}">
+                        <h5>리스트 없다!</h5>
+                    </div>
+                    <div class="accordion-item" th:unless="${#lists.size(resourceIndex) > 0}"
+                         th:each="index:${resourceIndex}">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 th:data-bs-target="'#flush-collapse'+${index.id}" aria-expanded="false"
-                                th:aria-controls="'flush-collapse'+${index.id}"
-                        >
+                                th:aria-controls="'flush-collapse'+${index.id}">
                             <div class="btn-control">
                                 <div>
                                     <i class="fa-solid fa-plus"
@@ -460,7 +500,12 @@
                                 <tr>
 
                                     <td class="resourceTable" style="background-color: #0000001c">Path</td>
-                                    <td><input class="input-group rounded" type="text" placeholder="  /vi/insu"></td>
+
+                                    <td style="display: flex; align-items: baseline;">
+                                        <div class="mt-1 mr-2" th:text="${api.context}"></div>
+                                        <input
+                                                class="input-group rounded" type="text" placeholder="  /">
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td class="resourceTable" style="background-color: #0000001c;">Method</td>
@@ -571,7 +616,8 @@
                                 </div>
                             </div>
                             <!--           인증선택박스                 -->
-                            <div class="authorizationSelect ml-2 mr-2 mb-4 mt-3" style="margin-left: 1.5% !important;">
+                            <div class="authorizationSelect ml-2 mr-2 mb-4 mt-3"
+                                 style="margin-left: 1.5% !important;">
                                 <div class="selectBox" onclick="showSecondSelectBox()">
                                     <select>
                                         <option>인증</option>
@@ -953,7 +999,7 @@
                                     <input class="col"
                                            type="text"
                                            placeholder="  get-v1-insu"
-                                           id="deleteDOperationId"
+                                           id="deleteOperationId"
                                            style="height: 44px;border-radius: 7px;">
                                 </div>
                                 <div class="col-6">
@@ -983,7 +1029,8 @@
                                 </div>
                             </div>
                             <!--           인증선택박스                 -->
-                            <div class="authorizationSelect ml-2 mr-2 mb-4 mt-3" style="margin-left: 1.5% !important;">
+                            <div class="authorizationSelect ml-2 mr-2 mb-4 mt-3"
+                                 style="margin-left: 1.5% !important;">
                                 <div class="selectBox" onclick="showSecondSelectBox()">
                                     <select>
                                         <option>인증</option>
@@ -1085,22 +1132,16 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
-
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-                    <!--                            <button type="button" class="btn btn-primary">Save changes</button>-->
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="insertResource()">저장
+                    </button>
                 </div>
-
             </div>
-
         </div>
-
     </div>
 </div>
 <!-- End of Main Content -->
-
 
 </body>
 
