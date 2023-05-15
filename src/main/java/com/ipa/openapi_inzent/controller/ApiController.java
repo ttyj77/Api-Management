@@ -139,7 +139,6 @@ public class ApiController {
 
     @PostMapping("/insert")
     public String insert(ApiDTO apiDTO, ApisRoleDTO apisRoleDTO, @RequestParam(value = "roleId") List<String> roleId) {
-        System.out.println("id===================" + roleId);
         int id = apiService.insertApi(apiDTO);
 //        List<RoleDTO> list = roleService.selectAll();
         System.out.println("roleId = " + roleId);
