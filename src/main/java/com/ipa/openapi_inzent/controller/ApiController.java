@@ -118,10 +118,16 @@ public class ApiController {
     @GetMapping("/details/{apisId}") // id = apisId
     public String details(Model model, @PathVariable int apisId, HttpServletResponse response) {
         // 리소스 list, 안에 들어갈 apiId 조건으로 묶여 있는 apiDetails List 필요
+        System.out.println("apisId = " + apisId);
 
         ApiDTO a = apiService.selectOne(apisId); // detail 맨 위 정보 때문에 필요 (ex. 보험업권) // apisId
         List<ResourceDTO> resourceList = apiDetailsService.resourceList(apisId); // apisId
         List<ApiDetailsDTO> apiDetailsDTOList = apiDetailsService.detailsList(apisId);
+
+//        System.out.println("apiDetailsDTOList = " + apiDetailsDTOList);
+//
+//        System.out.println("a = " + a);
+//        System.out.println("resourceList = " + resourceList);
 
         model.addAttribute("api", a);
         model.addAttribute("resourceIndex", resourceList);
@@ -198,7 +204,6 @@ public class ApiController {
     public String apiTrash(Model model) {
         List<ResourceDTO> rlist = apiDetailsService.goTrashResource();
         List<ApiDetailsDTO> adlist = apiDetailsService.goTrashDetail();
-        List<ApiDetailsDTO> temp = new ArrayList<>();
 
         model.addAttribute("rlist", rlist);
         model.addAttribute("adlist", adlist);
