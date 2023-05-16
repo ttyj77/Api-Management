@@ -124,13 +124,11 @@
                     for (let i = 0; i < methodLength; i++) {
                         visible.style.display = "none"
                         if (document.getElementById("myTab").children[i].style.display == "block") {
-
                             document.getElementById("myTab").children[i].children[0].click();
                             break;
                         } else {
                             document.getElementById(document.getElementById("myTab").children[i].children[0].getAttribute("href").substring(1)).className = "tab-pane fade";
                         }
-
                     }
                 }
             }
@@ -159,14 +157,68 @@
                 }
             }
 
-            function goTrash(resource) {
-                let resourceId = resource.getAttribute("resource");
-                console.log(resourceId);
-                console.log(resource);
-
-                // location.href = "/api/trash/"+resourceId;
-
+            function goTrash(details) {
+                let id = details.getAttribute("detailid");
+                let name = details.getAttribute("detailname");
+                Swal.fire({
+                    showCancelButton: true,
+                    cancelButtonText: "취소",
+                    confirmButtonText: "삭제",
+                    icon: 'warning',
+                    text: "\'" + name + "\' 메소드를 삭제하시겠습니까?"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                            title: '삭제 성공', icon: 'success'
+                        }).then(() => {
+                            location.href = "/api/goTrash/" + id;
+                        });
+                    }
+                });
             }
+
+            function goTrashResource(resource) {
+                let id = resource.getAttribute("resourceid");
+                Swal.fire({
+                    showCancelButton: true,
+                    cancelButtonText: "취소",
+                    confirmButtonText: "삭제",
+                    icon: 'warning',
+                    text: "리소스를 삭제하시겠습니까?"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                            title: '삭제 성공', icon: 'success'
+                        }).then(() => {
+                            location.href = "/api/goTrashResource/" + id;
+                        });
+                    }
+                });
+            }
+
+            function insertResource() {
+                console.log("========================")
+                const searchParams = new URLSearchParams(location.search);
+                console.log(window.location.href)
+                console.log(window.location.href.split("/").slice(-1)[0]) //페이지 아이디 = apis 아이디
+
+                let method = ['get', 'post', 'put', 'delete']
+                let jsonArr = new Array();
+
+                for (let i = 0; i < 4; i++) {
+                    //insertOperationId
+                    let obj = new Object();
+
+                    let operationId = document.getElementById(method[i] + "OperationId")
+                    let summary = document.getElementById(method[i] + "Summary");
+                    if (operationId != null) {
+                        console.log(operationId.value)
+                        obj.operation = operationId.value;
+                        obj.summary = summary.value
+                        jsonArr.push(obj)
+                    }
+                }
+                console.log("jsonArr ================= " + JSON.stringify(jsonArr))
 
             function insertResource() {
                 console.log("========================")
@@ -221,6 +273,51 @@
                     }
                 })
             }
+
+                let arr = [{"method": "get"}, {"url": "/vi/insu/append"}]
+
+                //
+                // [요청 json 데이터 선언]
+                let jsonData = { // Body에 첨부할 json 데이터
+                    "idx": window.location.href.split("/").slice(-1)[0], //apis index
+                    "get": JSON.stringify(arr),
+                    "post": JSON.stringify(arr),
+                    "put": JSON.stringify(arr),
+                    "delete": JSON.stringify(arr),
+                };
+
+                $.ajax({
+                    url: "/api/resource/insert",
+                    data: JSON.stringify(jsonData), //전송 데이터
+                    dataType: "json",
+                    method: "post",
+                    traditional: true, //필수
+                    async: true, //비동기 여부
+                    timeout: 5000, //타임 아웃 설정
+                    dataType: "JSON", //응답받을 데이터 타입 (XML,JSON,TEXT,HTML,JSONP)
+                    contentType: "application/json; charset=utf-8", //헤더의 Content-Type을 설정
+
+                    success: (message) => {
+                        console.log(message)
+                    }
+                })
+            }
+
+            window.onload = function () {
+                let cnt = document.querySelectorAll(".tbody").length;
+                let tbody = document.querySelectorAll(".tbody");
+                for (let i = 0; i < cnt; i++) {
+                    let tr = document.createElement("tr");
+                    let td = document.createElement("td");
+                    td.innerText = "데이터가 존재하지 않습니다.";
+                    td.colSpan = 8;
+                    tr.append(td);
+                    if (tbody[i].childElementCount == 0) {
+                        tbody[i].append(tr);
+                    }
+                }
+            }
+
         </script>
     </th:block>
 </head>
@@ -277,8 +374,8 @@
                     <div th:if="${#lists.size(resourceIndex) == 0}">
                         <h5>리스트 없다!</h5>
                     </div>
-                    <div class="accordion-item" th:unless="${#lists.size(resourceIndex) > 0}"
-                         th:each="index:${resourceIndex}">
+                    <div class="accordion-item"
+                         th:each="index:${resourceIndex}" th:if="${#lists.size(resourceIndex) != 0} and ${index.garbage==false}">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 th:data-bs-target="'#flush-collapse'+${index.id}" aria-expanded="false"
                                 th:aria-controls="'flush-collapse'+${index.id}">
@@ -301,10 +398,15 @@
                                        title="Swagger UI"
                                        class="fa-solid fa-globe ui"></i>
                                     <!-- <div id="tooltipUI">Swagger UI</div>-->
-                                    <i th:rosource="${index.id}" onclick="goTrash(this)" style="cursor: pointer;"
+                                    <i th:resourceId="${index.id}" onclick="goTrashResource(this)"
+                                       style="cursor: pointer;"
                                        data-toggle="tooltip"
                                        title="삭제"
                                        class="fa-solid fa-trash-can delete"></i>
+                                    <!--                                    <i th:onclick="|location.href='@{/api/goTrashResource/{resourceId}(resourceId = ${index.id})}'|" style="cursor: pointer;"-->
+                                    <!--                                       data-toggle="tooltip"-->
+                                    <!--                                       title="삭제"-->
+                                    <!--                                       class="fa-solid fa-trash-can delete"></i>-->
                                     <!-- <div id="tooltipDelete">삭제</div>-->
                                 </div>
                             </div>
@@ -326,16 +428,16 @@
                                         <th scope="col">else</th>
                                     </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody class="tbody">
                                     <tr onclick="location.href='#'" style="cursor: pointer"
                                         th:each="detail:${apiDetailsDTOList}"
-                                        th:if="${index.id == detail.resourceId}">
-                                        <td th:text="${detail.method}"></td>
-                                        <td th:text="${detail.uri}"></td>
-                                        <td th:text="${detail.summary}"></td>
-                                        <td th:text="${detail.security}"></td>
-                                        <td th:text="${detail.operationId}"></td>
-                                        <td th:text="${detail.version}"></td>
+                                        th:if="${index.id == detail.resourceId} and ${detail.trash == false} and ${#lists.size(apiDetailsDTOList)!=0}">
+                                        <td th:text="${detail?.method}"></td>
+                                        <td th:text="${detail?.uri}"></td>
+                                        <td th:text="${detail?.summary}"></td>
+                                        <td th:text="${detail?.security}"></td>
+                                        <td th:text="${detail?.operationId}"></td>
+                                        <td th:text="${detail?.version}"></td>
                                         <td>
                                             <select class="form-select">
                                                 <option selected>develop</option>
@@ -353,10 +455,15 @@
                                                data-toggle="tooltip"
                                                title="Swagger UI"
                                                class="fa-solid fa-globe ui"></i>
-                                            <i onclick="location.href='#'" style="cursor: pointer;"
+                                            <i th:detailId="${detail.id}" th:detailName="${detail?.summary}"
+                                               onclick="goTrash(this)" style="cursor: pointer;"
                                                data-toggle="tooltip"
                                                title="삭제"
                                                class="fa-solid fa-trash-can delete"></i>
+                                            <!--   <i th:onclick="|location.href='@{/api/goTrash/{detailId}(detailId = ${detail.id})}'|" style="cursor: pointer;"-->
+                                            <!--   data-toggle="tooltip"-->
+                                            <!--   title="삭제"-->
+                                            <!--   class="fa-solid fa-trash-can delete"></i>-->
                                         </td>
                                     </tr>
                                     </tbody>
@@ -1094,6 +1201,7 @@
     </div>
 </div>
 <!-- End of Main Content -->
+
 
 </body>
 

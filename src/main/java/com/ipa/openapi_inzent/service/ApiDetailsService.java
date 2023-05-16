@@ -35,4 +35,33 @@ public class ApiDetailsService {
     public List<ApiDetailsDTO> detailsList(int apisId) {
         return apiDetailsDao.detailsList(apisId);
     }
+
+
+    public List<ResourceDTO> goTrashResource() {
+        return apiDetailsDao.goTrashResource();
+    }
+
+    public List<ApiDetailsDTO> goTrashDetail() {
+        return apiDetailsDao.goTrashDetail();
+    }
+
+    public void completeDelete(int id) {
+        apiDetailsDao.completeDelete(id);
+    }
+
+    public void updateDetail(ApiDetailsDTO apiDetailsDTO) {
+        apiDetailsDao.updateDetail(apiDetailsDTO);
+    }
+
+    public void updateResource(ResourceDTO resourceDTO) {
+        apiDetailsDao.updateResource(resourceDTO);
+    }
+
+    public ResourceDTO resourceOne(int id) {
+        return apiDetailsDao.resourceOne(id);
+    }
+
+    public void resourceDelete(int id) {
+        apiDetailsDao.resourceDelete(id);
+    }
 }

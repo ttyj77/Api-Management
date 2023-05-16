@@ -192,14 +192,62 @@ public class ApiController {
         return "redirect:/api";
     }
 
+    @GetMapping("/resourceModal")
+    public String resourceModal() {
+        return "/apis/resourceModal";
+    }
+
+
+    // ########################################
+    //             Api Details Part
+    // ########################################
+
     @GetMapping("/trash")
-    public String apiTrash() {
+    public String apiTrash(Model model) {
+        List<ResourceDTO> rlist = apiDetailsService.goTrashResource();
+        List<ApiDetailsDTO> adlist = apiDetailsService.goTrashDetail();
+        List<ApiDetailsDTO> temp = new ArrayList<>();
+
+        model.addAttribute("rlist", rlist);
+        model.addAttribute("adlist", adlist);
 
         return "/apis/trash";
     }
 
-    @GetMapping("/resourceModal")
-    public String resourceModal() {
-        return "/apis/resourceModal";
+    @GetMapping("/completeDelete/{id}")
+    public String completeDetele(@PathVariable int id) {
+        System.out.println("id = " + id);
+        System.out.println("ApiController.completeDetele");
+//        apiDetailsService.completeDelete(id);
+        return "redirect:/api/trash";
+    }
+    @GetMapping("/resourceDelete/{id}")
+    public String resourceDetele(@PathVariable int id) {
+        System.out.println("id = " + id);
+        System.out.println("ApiController.resourceDetele");
+//        apiDetailsService.resourceDelete(id);
+        return "redirect:/api/trash";
+    }
+
+    @GetMapping("/return/{id}")
+    public String goReturn(@PathVariable int id) {
+        ApiDetailsDTO a = apiDetailsService.selectOne(id);
+        a.setTrash(false);
+        return "redirect:/api/trash";
+    }
+    // 휴지통 관리로 보내는 곳
+    @GetMapping("/goTrash/{id}")
+    public String goTrash(@PathVariable int id) {
+        ApiDetailsDTO a = apiDetailsService.selectOne(id);
+        a.setTrash(true);
+        apiDetailsService.updateDetail(a);
+        return "redirect:/api/details/"+a.getApisId();
+    }
+    @GetMapping("/goTrashResource/{id}")
+    public String goTrashResource(@PathVariable int id) {
+        ResourceDTO s = apiDetailsService.resourceOne(id);
+        s.setGarbage(true);
+        apiDetailsService.updateResource(s);
+        return "redirect:/api/details/"+s.getApisId();
     }
 }
