@@ -30,7 +30,8 @@
     </select>
     <!-- 리소스 안에 있는 apiDetails   -->
     <select id="resourceInAdList" parameterType="int" resultType="com.ipa.openapi_inzent.model.ApiDetailsDTO">
-        select r."apisId", r.id as resource_id, ad.id, ad."resourceId", ad.method, ad.url, ad.uri, ad.summary, r.garbage,
+        select r."apisId", r.id as resource_id, ad.id, ad."resourceId", ad.method, ad.url, ad.uri, ad.summary,
+        r.garbage,
         ad.security, ad.scope, ad."operationId", ad.version, ad.status, ad."authorization", ad."tagId", ad.trash from
         public.resource as r
         join public."apiDetails" as ad
@@ -38,7 +39,8 @@
         where "apisId" = #{apisId};
     </select>
     <select id="selectOne" parameterType="int" resultType="com.ipa.openapi_inzent.model.ApiDetailsDTO">
-        select r."apisId", r.id as resource_id, ad.id, ad."resourceId", ad.method, ad.url, ad.uri, ad.summary, r.garbage,
+        select r."apisId", r.id as resource_id, ad.id, ad."resourceId", ad.method, ad.url, ad.uri, ad.summary,
+        r.garbage,
         ad.security, ad.scope, ad."operationId", ad.version, ad.status, ad."authorization", ad."tagId", ad.trash from
         public.resource as r
         join public."apiDetails" as ad
@@ -72,10 +74,7 @@
         on public.resource.id = public."apiDetails"."resourceId"
         order by public."apiDetails".id asc
     </select>
-    <select id="goTrashResource" resultType="com.ipa.openapi_inzent.model.ResourceDTO">
-        select  re."apisId", re.id, re.garbage, ap.context from public.resource as re join public.apis as ap on ap.id = re."apisId"
-        order by re.id asc
-    </select>
+
     <delete id="completeDelete" parameterType="int">
         DELETE FROM public."apiDetails"
         WHERE id = #{id};
@@ -107,12 +106,16 @@
         "resourceId"=#{resourceId}
         WHERE id = #{id};
     </update>
-
-
-
     <!-- tag select All 리소스 추가 할 때 select box   -->
     <select id="selectAllTag" resultType="com.ipa.openapi_inzent.model.TagDTO">
         SELECT *
         FROM public.tag;
     </select>
+
+    <select id="goTrashResource" resultType="com.ipa.openapi_inzent.model.ResourceDTO">
+        select re."apisId", re.id, re.garbage, ap.context from public.resource as re join
+        public.apis as ap on ap.id = re."apisId"
+        order by re.id asc
+    </select>
+
 </mapper>

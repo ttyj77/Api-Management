@@ -119,10 +119,12 @@ public class ApiController {
     @GetMapping("/details/{apisId}") // id = apisId
     public String details(Model model, @PathVariable int apisId, HttpServletResponse response) {
         // 리소스 list, 안에 들어갈 apiId 조건으로 묶여 있는 apiDetails List 필요
+        System.out.println("apisId = " + apisId);
 
         ApiDTO a = apiService.selectOne(apisId); // detail 맨 위 정보 때문에 필요 (ex. 보험업권) // apisId
         List<ResourceDTO> resourceList = apiDetailsService.resourceList(apisId); // apisId
         List<ApiDetailsDTO> apiDetailsDTOList = apiDetailsService.detailsList(apisId);
+        List<TagDTO> tagList = apiDetailsService.selectAllTag();
 
 //        System.out.println("apiDetailsDTOList = " + apiDetailsDTOList);
 //
@@ -132,6 +134,7 @@ public class ApiController {
         model.addAttribute("api", a);
         model.addAttribute("resourceIndex", resourceList);
         model.addAttribute("apiDetailsDTOList", apiDetailsDTOList);
+        model.addAttribute("tagList", tagList);
 
         return "/apis/details";
     }
@@ -144,7 +147,8 @@ public class ApiController {
     }
 
     @PostMapping("/insert")
-    public String insert(ApiDTO apiDTO, ApisRoleDTO apisRoleDTO, @RequestParam(value = "roleId") List<String> roleId) {
+    public String insert(ApiDTO apiDTO, ApisRoleDTO
+            apisRoleDTO, @RequestParam(value = "roleId") List<String> roleId) {
         System.out.println("id===================" + roleId);
         int id = apiService.insertApi(apiDTO);
 //        List<RoleDTO> list = roleService.selectAll();
@@ -232,12 +236,12 @@ public class ApiController {
 //        }
     }
 
-
-    @GetMapping("/trash")
-    public String apiTrash() {
-
-        return "/apis/trash";
-    }
+//
+//    @GetMapping("/trash")
+//    public String apiTrash() {
+//
+//        return "/apis/trash";
+//    }
 
     @GetMapping("/resourceModal")
     public String resourceModal() {
@@ -268,6 +272,7 @@ public class ApiController {
 //        apiDetailsService.completeDelete(id);
         return "redirect:/api/trash";
     }
+
     @GetMapping("/resourceDelete/{id}")
     public String resourceDetele(@PathVariable int id) {
         System.out.println("id = " + id);
@@ -282,19 +287,21 @@ public class ApiController {
         a.setTrash(false);
         return "redirect:/api/trash";
     }
+
     // 휴지통 관리로 보내는 곳
     @GetMapping("/goTrash/{id}")
     public String goTrash(@PathVariable int id) {
         ApiDetailsDTO a = apiDetailsService.selectOne(id);
         a.setTrash(true);
         apiDetailsService.updateDetail(a);
-        return "redirect:/api/details/"+a.getApisId();
+        return "redirect:/api/details/" + a.getApisId();
     }
+
     @GetMapping("/goTrashResource/{id}")
     public String goTrashResource(@PathVariable int id) {
         ResourceDTO s = apiDetailsService.resourceOne(id);
         s.setGarbage(true);
         apiDetailsService.updateResource(s);
-        return "redirect:/api/details/"+s.getApisId();
+        return "redirect:/api/details/" + s.getApisId();
     }
 }
