@@ -110,5 +110,9 @@
 
 
 
-
+    <!-- tag select All 리소스 추가 할 때 select box   -->
+    <select id="selectAllTag" resultType="com.ipa.openapi_inzent.model.TagDTO">
+        SELECT *
+        FROM public.tag;
+    </select>
 </mapper>

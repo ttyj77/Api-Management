@@ -14,17 +14,15 @@
 <body>
 
 <div>
-
     <th:block th:replace="~{fragment/headSideBar :: headerFragment}"></th:block>
     <div class="d-flex">
-        <div  style="margin-right: 22px">
+        <div style="margin-right: 22px">
             <th:block th:replace="~{fragment/headSideBar :: sideBarFragment}"></th:block>
         </div>
         <div class="mt-4" style="width: 88%;">
             <th:block layout:fragment="content"></th:block>
         </div>
     </div>
-
 </div>
 
 

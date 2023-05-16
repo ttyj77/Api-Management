@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RequestMapping("/api")
 @Controller
@@ -190,6 +191,52 @@ public class ApiController {
 
         }
         return "redirect:/api";
+    }
+
+    // ########################################
+    //             Api Details Part
+    // ########################################
+
+
+    @PostMapping("/resource/{id}")
+    @ResponseBody
+    public JsonObject resources(Model model, @PathVariable int id) {
+        // 리소스 하나씩
+        List<ApiDetailsDTO> resourceInAdList = apiDetailsService.resourceInAdList(id); // resource table id
+
+
+        System.out.println("resourceInAdList = " + resourceInAdList);
+
+        JsonObject object = new JsonObject();
+        List<ApiDetailsDTO> adList = apiDetailsService.resourceInAdList(id);
+
+
+        return object;
+    }
+
+    @PostMapping("/resource/insert")
+    @ResponseBody
+    public void insertResources(@RequestBody Map<String, String> paramMap) {
+        System.out.println("ApiController.insertResources");
+        System.out.println("\n");
+        System.out.println("=======================================");
+        System.out.println("[ModuleApiController] : [testPostBodyJson] : [start]");
+        System.out.println("[request keySet] : " + String.valueOf(paramMap.keySet()));
+        System.out.println("[request idx] : " + String.valueOf(paramMap.get("idx")));
+        System.out.println("[request get] : " + String.valueOf(paramMap.get("get")));
+        System.out.println("[request post] : " + String.valueOf(paramMap.get("post")));
+        System.out.println("[request post] : " + String.valueOf(paramMap.get("put")));
+        System.out.println("[request post] : " + String.valueOf(paramMap.get("delete")));
+        System.out.println("=======================================");
+        System.out.println("\n");
+//        }
+    }
+
+
+    @GetMapping("/trash")
+    public String apiTrash() {
+
+        return "/apis/trash";
     }
 
     @GetMapping("/resourceModal")

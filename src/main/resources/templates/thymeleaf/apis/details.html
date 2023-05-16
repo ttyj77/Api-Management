@@ -105,7 +105,6 @@
                 integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
                 crossorigin="anonymous"></script>
         <script src="/js/sb-admin-2.min.js"></script>
-        <script src="/js/details.js" rel="script"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script>
             function methodSwitch(value) {
@@ -135,16 +134,6 @@
 
             var expanded = false;
 
-            function showCheckboxes() {
-                var checkboxes = document.querySelector(".checkboxes");
-                if (!expanded) {
-                    checkboxes.style.display = "block";
-                    expanded = true;
-                } else {
-                    checkboxes.style.display = "none";
-                    expanded = false;
-                }
-            }
 
             function showSecondSelectBox() {
                 var checkboxes = document.querySelector(".authorizationSelectBox");
@@ -243,6 +232,11 @@
                     }
                 }
                 console.log("jsonArr ================= " + JSON.stringify(jsonArr))
+                console.log(jsonArr[0])
+                let arrGet = (jsonArr[0]);
+                // console.log("jsonArr ================= " + (jsonArr)[1])
+                // console.log("jsonArr ================= " + (jsonArr)[2])
+                // console.log("jsonArr ================= " + (jsonArr)[3])
 
 
                 let arr = [{"method": "get"}, {"url": "/vi/insu/append"}]
@@ -251,10 +245,10 @@
                 // [요청 json 데이터 선언]
                 let jsonData = { // Body에 첨부할 json 데이터
                     "idx": window.location.href.split("/").slice(-1)[0], //apis index
-                    "get": JSON.stringify(arr),
-                    "post": JSON.stringify(arr),
-                    "put": JSON.stringify(arr),
-                    "delete": JSON.stringify(arr),
+                    "get": JSON.stringify(jsonArr[0]),
+                    "post": JSON.stringify(jsonArr[1]),
+                    "put": JSON.stringify(jsonArr[2]),
+                    "delete": JSON.stringify(jsonArr[3]),
                 };
 
                 $.ajax({
@@ -346,8 +340,9 @@
                         <option value="resource" selected>리소스</option>
                         <option value="tag">태그</option>
                     </select>
-                    <!-- <button type="button" class="btn btn-secondary" id="pick" data-toggle="modal"></button>-->
-                    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#resourceModal">
+                    <!-- <button type="button" class="btn btn-secondary" id="pick" data-bs-toggle="modal"></button>-->
+                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
+                            data-bs-target="#resourceModal">
                         + 리소스 추가
                     </button>
                     <!-- Button trigger modal -->
@@ -374,8 +369,8 @@
                     <div th:if="${#lists.size(resourceIndex) == 0}">
                         <h5>리스트 없다!</h5>
                     </div>
-                    <div class="accordion-item"
-                         th:each="index:${resourceIndex}" th:if="${#lists.size(resourceIndex) != 0} and ${index.garbage==false}">
+                    <div class="accordion-item" th:if="${#lists.size(resourceIndex) != 0}"
+                         th:each="index:${resourceIndex}">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 th:data-bs-target="'#flush-collapse'+${index.id}" aria-expanded="false"
                                 th:aria-controls="'flush-collapse'+${index.id}">
@@ -533,12 +528,11 @@
          data-bs-keyboard="false"
          aria-labelledby="exampleModalLabel"
          aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content" style="width: 800px;
-    height: 800px;">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">리소스 추가</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -659,19 +653,13 @@
                             </div>
                             <!--           태그선택박스                 -->
                             <div class="multiselect mt-4 ml-2 mr-2" style="margin-left: 1.5% !important;">
-                                <div class="selectBox" onclick="showCheckboxes()">
-                                    <select>
-                                        <option>태그</option>
+                                <div class="selectBox">
+                                    <select name="tagBox">
+                                        <option value=""> -- 태그 선택 --</option>
+                                        <option th:each="list : ${tagList}" th:value="${list?.id}"
+                                                th:utext="${list?.name}">
+                                        </option>
                                     </select>
-                                    <div class="overSelect"></div>
-                                </div>
-                                <div class="checkboxes">
-                                    <label for="getOne">
-                                        <input type="checkbox" id="getOne"/>First checkbox</label>
-                                    <label for="getTwo">
-                                        <input type="checkbox" id="getTwo"/>Second checkbox</label>
-                                    <label for="getThree">
-                                        <input type="checkbox" id="getThree"/>Third checkbox</label>
                                 </div>
                             </div>
                             <!--           인증선택박스                 -->
@@ -691,19 +679,25 @@
                                 </div>
                             </div>
                             <!--파라미터/응답 선택 시작-->
-                            <div style="display: flex; justify-content: space-around; margin-top: 5%;">
-                                <div class="nav flex-column nav-pills" role="tablist"
-                                     aria-orientation="vertical">
-                                    <a class="nav-link active" data-toggle="pill"
-                                       href="#v-pills-home"
-                                       role="tab" aria-controls="v-pills-home" aria-selected="true">파라미터</a>
-                                    <a class="nav-link" data-toggle="pill"
-                                       href="#v-pills-profile"
-                                       role="tab" aria-controls="v-pills-profile" aria-selected="false">응답</a>
+                            <div style="display: flex; margin-top: 5%;">
+                                <div class="d-flex align-items-start">
+                                    <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist"
+                                         aria-orientation="vertical">
+
+                                        <button class="nav-link active" id="v-pills-get-parameter-tab"
+                                                data-bs-toggle="pill"
+                                                data-bs-target="#v-pills-get-parameter" type="button" role="tab"
+                                                aria-controls="v-pills-get-parameter" aria-selected="true">파라미터
+                                        </button>
+                                        <button class="nav-link" id="v-pills-get-response-tab" data-bs-toggle="pill"
+                                                data-bs-target="#v-pills-get-response" type="button" role="tab"
+                                                aria-controls="v-pills-get-response" aria-selected="false">응답
+                                        </button>
+                                    </div>
                                 </div>
-                                <div class="tab-content col-10">
-                                    <div class="tab-pane fade show active" role="tabpanel"
-                                         aria-labelledby="v-pills-home-tab">
+                                <div class="tab-content w-100" id="v-pills-tabContent">
+                                    <div class="tab-pane fade show active" id="v-pills-get-parameter" role="tabpanel"
+                                         aria-labelledby="v-pills-get-parameter-tab">
                                         <table class="table">
                                             <thead class="thead-light">
                                             <tr>
@@ -730,15 +724,28 @@
                                             </tbody>
                                             <tfoot style="text-align:right;">
                                             <tr>
-                                                <td colspan="7" style="border-bottom-width: inherit !important;"><i
-                                                        class="fa-regular fa-square-plus mr-1"></i></td>
+                                                <td colspan="7" style="border-bottom-width: inherit !important;">
+                                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                                            data-bs-target="#insertParameterModal"
+                                                            id="get-parameter" data-bs-dismiss="modal">파라미터 추가
+                                                    </button>
+                                                    <!--                                                    &lt;!&ndash;                                                    <button type="button"&ndash;&gt;-->
+                                                    <!--                                                            data-bs-toggle="modal"-->
+                                                    <!--                                                            data-bs-target="#insertParameterModal"-->
+                                                    <!--                                                            id="get-parameter">파라미터 추가-->
+                                                    <!--                                                        <i class="fa-regular fa-square-plus mr-1"></i>-->
+                                                    <!--                                                    </button>-->
+
+
+                                                </td>
                                             </tr>
                                             </tfoot>
                                         </table>
-
                                     </div>
-                                    <div class="tab-pane fade" role="tabpanel"
-                                         aria-labelledby="v-pills-profile-tab">
+
+                                    <div class="tab-pane fade" id="v-pills-get-response" role="tabpanel"
+                                         aria-labelledby="v-pills-get-response-tab">
+
                                         <table class="table">
                                             <thead class="thead-light">
                                             <tr>
@@ -765,8 +772,8 @@
                                             <tfoot style="text-align:right;">
                                             <tr>
                                                 <td colspan="6" style="border-bottom-width: inherit !important;"><i
-                                                        class="fa-regular fa-square-plus mr-1" data-toggle="modal"
-                                                        data-target="#exampleModal"></i></td>
+                                                        class="fa-regular fa-square-plus mr-1" data-bs-toggle="modal"
+                                                        data-bs-target="#exampleModal"></i></td>
 
                                             </tr>
 
@@ -777,6 +784,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="tab-pane fade" id="post-content" role="tabpanel">
                             <div style="display: flex" class="mt-3">
                                 <div class="col-6">
@@ -798,19 +806,13 @@
                             </div>
                             <!--           태그선택박스                 -->
                             <div class="multiselect mt-4 ml-2 mr-2" style="margin-left: 1.5% !important;">
-                                <div class="selectBox" onclick="showCheckboxes()">
-                                    <select>
-                                        <option>태그</option>
+                                <div class="selectBox">
+                                    <select name="tagBox">
+                                        <option value=""> -- 태그 선택 --</option>
+                                        <option th:each="list : ${tagList}" th:value="${list?.id}"
+                                                th:utext="${list?.name}">
+                                        </option>
                                     </select>
-                                    <div class="overSelect"></div>
-                                </div>
-                                <div class="checkboxes">
-                                    <label for="postOne">
-                                        <input type="checkbox" id="postOne"/>First checkbox</label>
-                                    <label for="postTwo">
-                                        <input type="checkbox" id="postTwo"/>Second checkbox</label>
-                                    <label for="postThree">
-                                        <input type="checkbox" id="postThree"/>Third checkbox</label>
                                 </div>
                             </div>
                             <!--           인증선택박스                 -->
@@ -840,7 +842,7 @@
                                        href="#v-pills-profile"
                                        role="tab" aria-controls="v-pills-profile" aria-selected="false">응답</a>
                                 </div>
-                                <div class="tab-content col-10">
+                                <div class="tab-content w-100">
                                     <div class="tab-pane fade show active" role="tabpanel"
                                          aria-labelledby="v-pills-home-tab">
                                         <table class="table">
@@ -869,7 +871,8 @@
                                             </tbody>
                                             <tfoot style="text-align:right;">
                                             <tr>
-                                                <td colspan="7" style="border-bottom-width: inherit !important;"><i
+                                                <td colspan="7"
+                                                    style="border-bottom-width: inherit !important;"><i
                                                         class="fa-regular fa-square-plus mr-1"></i></td>
                                             </tr>
                                             </tfoot>
@@ -903,9 +906,11 @@
                                             </tbody>
                                             <tfoot style="text-align:right;">
                                             <tr>
-                                                <td colspan="6" style="border-bottom-width: inherit !important;"><i
-                                                        class="fa-regular fa-square-plus mr-1" data-toggle="modal"
-                                                        data-target="#exampleModal"></i></td>
+                                                <td colspan="6"
+                                                    style="border-bottom-width: inherit !important;"><i
+                                                        class="fa-regular fa-square-plus mr-1"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#exampleModal"></i></td>
 
                                             </tr>
 
@@ -937,35 +942,25 @@
                             </div>
                             <!--           태그선택박스                 -->
                             <div class="multiselect mt-4 ml-2 mr-2" style="margin-left: 1.5% !important;">
-                                <div class="selectBox" onclick="showCheckboxes()">
-                                    <select>
-                                        <option>태그</option>
+                                <div class="selectBox">
+                                    <select name="tagBox">
+                                        <option value=""> -- 태그 선택 --</option>
+                                        <option th:each="list : ${tagList}" th:value="${list?.id}"
+                                                th:utext="${list?.name}">
+                                        </option>
                                     </select>
-                                    <div class="overSelect"></div>
-                                </div>
-                                <div class="checkboxes">
-                                    <label for="putOne">
-                                        <input type="checkbox" id="putOne"/>First checkbox</label>
-                                    <label for="putTwo">
-                                        <input type="checkbox" id="putTwo"/>Second checkbox</label>
-                                    <label for="putThree">
-                                        <input type="checkbox" id="putThree"/>Third checkbox</label>
                                 </div>
                             </div>
                             <!--           인증선택박스                 -->
                             <div class="authorizationSelect ml-2 mr-2 mb-4 mt-3"
                                  style="margin-left: 1.5% !important;">
-                                <div class="selectBox" onclick="showSecondSelectBox()">
-                                    <select>
-                                        <option>인증</option>
+                                <div class="selectBox">
+                                    <select name="tagBox">
+                                        <option value=""> -- 태그 선택 --</option>
+                                        <option th:each="list : ${tagList}" th:value="${list?.id}"
+                                                th:utext="${list?.name}">
+                                        </option>
                                     </select>
-                                    <div class="overSelect"></div>
-                                </div>
-                                <div class="authorizationSelectBox">
-                                    <label for="putApiKey">
-                                        <input type="checkbox" id="putApiKey"/>APIKey(APIKEY)</label>
-                                    <label for="putBearer">
-                                        <input type="checkbox" id="putBearer"/>Bearer(APIKEY)</label>
                                 </div>
                             </div>
                             <!--파라미터/응답 선택 시작-->
@@ -979,7 +974,7 @@
                                        href="#v-pills-profile"
                                        role="tab" aria-controls="v-pills-profile" aria-selected="false">응답</a>
                                 </div>
-                                <div class="tab-content col-10">
+                                <div class="tab-content w-100">
                                     <div class="tab-pane fade show active" role="tabpanel"
                                          aria-labelledby="v-pills-home-tab">
                                         <table class="table">
@@ -1008,7 +1003,8 @@
                                             </tbody>
                                             <tfoot style="text-align:right;">
                                             <tr>
-                                                <td colspan="7" style="border-bottom-width: inherit !important;"><i
+                                                <td colspan="7"
+                                                    style="border-bottom-width: inherit !important;"><i
                                                         class="fa-regular fa-square-plus mr-1"></i></td>
                                             </tr>
                                             </tfoot>
@@ -1042,9 +1038,11 @@
                                             </tbody>
                                             <tfoot style="text-align:right;">
                                             <tr>
-                                                <td colspan="6" style="border-bottom-width: inherit !important;"><i
-                                                        class="fa-regular fa-square-plus mr-1" data-toggle="modal"
-                                                        data-target="#exampleModal"></i></td>
+                                                <td colspan="6"
+                                                    style="border-bottom-width: inherit !important;"><i
+                                                        class="fa-regular fa-square-plus mr-1"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#exampleModal"></i></td>
                                             </tr>
                                             </tfoot>
                                         </table>
@@ -1074,35 +1072,25 @@
                             </div>
                             <!--           태그선택박스                 -->
                             <div class="multiselect mt-4 ml-2 mr-2" style="margin-left: 1.5% !important;">
-                                <div class="selectBox" onclick="showCheckboxes()">
-                                    <select>
-                                        <option>태그</option>
+                                <div class="selectBox">
+                                    <select name="tagBox">
+                                        <option value=""> -- 태그 선택 --</option>
+                                        <option th:each="list : ${tagList}" th:value="${list?.id}"
+                                                th:utext="${list?.name}">
+                                        </option>
                                     </select>
-                                    <div class="overSelect"></div>
-                                </div>
-                                <div class="checkboxes">
-                                    <label for="deleteOne">
-                                        <input type="checkbox" id="deleteOne"/>First checkbox</label>
-                                    <label for="deleteTwo">
-                                        <input type="checkbox" id="deleteTwo"/>Second checkbox</label>
-                                    <label for="deleteThree">
-                                        <input type="checkbox" id="deleteThree"/>Third checkbox</label>
                                 </div>
                             </div>
                             <!--           인증선택박스                 -->
                             <div class="authorizationSelect ml-2 mr-2 mb-4 mt-3"
                                  style="margin-left: 1.5% !important;">
-                                <div class="selectBox" onclick="showSecondSelectBox()">
-                                    <select>
-                                        <option>인증</option>
+                                <div class="selectBox">
+                                    <select name="tagBox">
+                                        <option value=""> -- 태그 선택 --</option>
+                                        <option th:each="list : ${tagList}" th:value="${list?.id}"
+                                                th:utext="${list?.name}">
+                                        </option>
                                     </select>
-                                    <div class="overSelect"></div>
-                                </div>
-                                <div class="authorizationSelectBox">
-                                    <label for="deleteApiKey">
-                                        <input type="checkbox" id="deleteApiKey"/>APIKey(APIKEY)</label>
-                                    <label for="deleteBearer">
-                                        <input type="checkbox" id="deleteBearer"/>Bearer(APIKEY)</label>
                                 </div>
                             </div>
                             <!--파라미터/응답 선택 시작-->
@@ -1145,7 +1133,8 @@
                                             </tbody>
                                             <tfoot style="text-align:right;">
                                             <tr>
-                                                <td colspan="7" style="border-bottom-width: inherit !important;"><i
+                                                <td colspan="7"
+                                                    style="border-bottom-width: inherit !important;"><i
                                                         class="fa-regular fa-square-plus mr-1"></i></td>
                                             </tr>
                                             </tfoot>
@@ -1179,9 +1168,11 @@
                                             </tbody>
                                             <tfoot style="text-align:right;">
                                             <tr>
-                                                <td colspan="6" style="border-bottom-width: inherit !important;"><i
-                                                        class="fa-regular fa-square-plus mr-1" data-toggle="modal"
-                                                        data-target="#exampleModal"></i></td>
+                                                <td colspan="6"
+                                                    style="border-bottom-width: inherit !important;"><i
+                                                        class="fa-regular fa-square-plus mr-1"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#exampleModal"></i></td>
                                             </tr>
                                             </tfoot>
                                         </table>
@@ -1193,12 +1184,116 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="insertResource()">저장
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                            onclick="insertResource()">저장
                     </button>
                 </div>
             </div>
         </div>
     </div>
+
+    <!--    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#insertParameterModal"-->
+    <!--            id="get-parameter">파라미터 추가-->
+    <!--    </button>-->
+    <div class="modal fade" id="insertParameterModal" tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalLabel2"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel2">파라미터 추가</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="parameter-name" class="col-form-label">이름:</label>
+                        <input type="text" class="form-control" id="parameter-name">
+                    </div>
+                    <div class="row flex-nowrap">
+                        <div class="mb-3 col-6">
+                            <label for="transferMethod" class="col-form-label">전송방법:</label>
+                            <select class="form-control" id="transferMethod">
+                                <option value="queryString" selected="selected">Query String</option>
+                                <option value="pathVariable">Path Variable</option>
+                                <option value="header">Header</option>
+                            </select>
+                        </div>
+                        <div class="mb-3 col-6">
+                            <label for="required" class="col-form-label">필수여부:</label>
+                            <select class="form-control" id="required">
+                                <option value="true" selected="selected">필수</option>
+                                <option value="false">필수 아님</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="explanation" class="col-form-label">설명:</label>
+                        <input type="text" class="form-control" id="explanation">
+                    </div>
+                    <div class="row flex-nowrap">
+                        <div class="mb-3 col-6">
+                            <label for="type" class="col-form-label">타입:</label>
+                            <select class="form-control" id="type">
+                                <option value="String" selected="selected">String</option>
+                                <option value="integer">integer</option>
+                                <option value="boolean">boolean</option>
+                            </select>
+                        </div>
+                        <div class="mb-3 col-6">
+                            <label for="sample" class="col-form-label">예제:</label>
+                            <input type="text" class="form-control" id="sample">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
+                            data-bs-target="#resourceModal">취소
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="insertParameter()">추가</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel"
+         tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalToggleLabel">Modal 1</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Show a second modal and hide this one with the button below.
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" data-bs-target="#resourceModal" data-bs-toggle="modal"
+                            data-bs-dismiss="modal">Open second modal
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="exampleModalToggle2" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2"
+         tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalToggleLabel2">Modal 2</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Hide this modal and show the first with the button below.
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal"
+                            data-bs-dismiss="modal">Back to first
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <a class="btn btn-primary" data-bs-toggle="modal" href="#exampleModalToggle" role="button">Open first modal</a>
+
 </div>
 <!-- End of Main Content -->
 
