@@ -17,7 +17,6 @@ public interface ApiDetailsDao {
 
     ApiDetailsDTO selectOne(int id) throws DataAccessException;
 
-
     List<ApiDetailsDTO> detailsList(int apisId) throws DataAccessException;
 
     List<ResourceDTO> goTrashResource() throws DataAccessException;
@@ -28,5 +27,9 @@ public interface ApiDetailsDao {
 
     void updateDetail(ApiDetailsDTO apiDetailsDTO)throws DataAccessException;
 
-    void updateResource(ApiDetailsDTO apiDetailsDTO)throws DataAccessException;
+    void updateResource(ResourceDTO resourceDTO)throws DataAccessException;
+
+    ResourceDTO resourceOne(int id) throws DataAccessException;
+
+    void resourceDelete(int id) throws DataAccessException;
 }

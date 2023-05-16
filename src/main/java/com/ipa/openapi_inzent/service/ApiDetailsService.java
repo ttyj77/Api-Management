@@ -53,7 +53,15 @@ public class ApiDetailsService {
         apiDetailsDao.updateDetail(apiDetailsDTO);
     }
 
-    public void updateResource(ApiDetailsDTO apiDetailsDTO) {
-        apiDetailsDao.updateResource(apiDetailsDTO);
+    public void updateResource(ResourceDTO resourceDTO) {
+        apiDetailsDao.updateResource(resourceDTO);
+    }
+
+    public ResourceDTO resourceOne(int id) {
+        return apiDetailsDao.resourceOne(id);
+    }
+
+    public void resourceDelete(int id) {
+        apiDetailsDao.resourceDelete(id);
     }
 }

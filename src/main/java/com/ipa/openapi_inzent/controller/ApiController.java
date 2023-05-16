@@ -194,38 +194,11 @@ public class ApiController {
     //             Api Details Part
     // ########################################
 
-    @GetMapping("/details/{apisId}") // id = apisId
-    public String details(Model model, @PathVariable int apisId, HttpServletResponse response) {
-        // 리소스 list, 안에 들어갈 apiId 조건으로 묶여 있는 apiDetails List 필요
-
-        ApiDTO a = apiService.selectOne(apisId); // detail 맨 위 정보 때문에 필요 (ex. 보험업권) // apisId
-        List<ResourceDTO> resourceList = apiDetailsService.resourceList(apisId); // apisId
-        List<ApiDetailsDTO> apiDetailsDTOList = apiDetailsService.detailsList(apisId);
-
-//        System.out.println("apiDetailsDTOList = " + apiDetailsDTOList);
-//
-//        System.out.println("a = " + a);
-//        System.out.println("resourceList = " + resourceList);
-
-        model.addAttribute("api", a);
-        model.addAttribute("resourceIndex", resourceList);
-        model.addAttribute("apiDetailsDTOList", apiDetailsDTOList);
-
-        return "/apis/details";
-    }
-
     @GetMapping("/trash")
     public String apiTrash(Model model) {
         List<ResourceDTO> rlist = apiDetailsService.goTrashResource();
         List<ApiDetailsDTO> adlist = apiDetailsService.goTrashDetail();
         List<ApiDetailsDTO> temp = new ArrayList<>();
-//        for (int i = 0; i < rlist.size(); i++) {
-//            for (int j = 0; j < adlist.size(); j++) {
-//                if (rlist.get(i).getId() == adlist.get(j).getResourceId()) {
-//
-//                }
-//            }
-//        }
 
         model.addAttribute("rlist", rlist);
         model.addAttribute("adlist", adlist);
@@ -235,8 +208,16 @@ public class ApiController {
 
     @GetMapping("/completeDelete/{id}")
     public String completeDetele(@PathVariable int id) {
-        apiDetailsService.completeDelete(id);
-
+        System.out.println("id = " + id);
+        System.out.println("ApiController.completeDetele");
+//        apiDetailsService.completeDelete(id);
+        return "redirect:/api/trash";
+    }
+    @GetMapping("/resourceDelete/{id}")
+    public String resourceDetele(@PathVariable int id) {
+        System.out.println("id = " + id);
+        System.out.println("ApiController.resourceDetele");
+//        apiDetailsService.resourceDelete(id);
         return "redirect:/api/trash";
     }
 
@@ -250,17 +231,15 @@ public class ApiController {
     @GetMapping("/goTrash/{id}")
     public String goTrash(@PathVariable int id) {
         ApiDetailsDTO a = apiDetailsService.selectOne(id);
-        System.out.println("a = " + a);
         a.setTrash(true);
         apiDetailsService.updateDetail(a);
-        System.out.println("a = " + a);
         return "redirect:/api/details/"+a.getApisId();
     }
     @GetMapping("/goTrashResource/{id}")
     public String goTrashResource(@PathVariable int id) {
-        ApiDetailsDTO a = apiDetailsService.selectOne(id);
-        a.setGarbage(true);
-        apiDetailsService.updateResource(a);
-        return "redirect:/api/details/"+a.getApisId();
+        ResourceDTO s = apiDetailsService.resourceOne(id);
+        s.setGarbage(true);
+        apiDetailsService.updateResource(s);
+        return "redirect:/api/details/"+s.getApisId();
     }
 }
