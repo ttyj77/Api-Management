@@ -3,6 +3,7 @@ package com.ipa.openapi_inzent.service;
 import com.ipa.openapi_inzent.dao.ApiDetailsDao;
 import com.ipa.openapi_inzent.model.ApiDetailsDTO;
 import com.ipa.openapi_inzent.model.ResourceDTO;
+import com.ipa.openapi_inzent.model.TagDTO;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
@@ -63,5 +64,9 @@ public class ApiDetailsService {
 
     public void resourceDelete(int id) {
         apiDetailsDao.resourceDelete(id);
+    }
+
+    public List<TagDTO> selectAllTag() {
+        return apiDetailsDao.selectAllTag();
     }
 }
