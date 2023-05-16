@@ -22,14 +22,14 @@
 <!--    </select>-->
     <!-- 리소스 List  resultType: ResourceDTO-->
     <select id="resourceList" parameterType="int" resultType="com.ipa.openapi_inzent.model.ResourceDTO">
-        select id from public.resource
+        select * from public.resource
         where "apisId" = #{apisId}
         order by id asc;
     </select>
     <!-- 리소스 안에 있는 apiDetails   -->
     <select id="resourceInAdList" parameterType="int" resultType="com.ipa.openapi_inzent.model.ApiDetailsDTO">
         select r."apisId", r.id as resource_id, ad.id, ad."resourceId", ad.method, ad.url, ad.uri, ad.summary, r.garbage,
-        ad.security, ad.scope, ad."operationId", ad.version, ad.status, ad."authorization", ad.tag, ad.trash from
+        ad.security, ad.scope, ad."operationId", ad.version, ad.status, ad."authorization", ad."tagId", ad.trash from
         public.resource as r
         join public."apiDetails" as ad
         on ad."resourceId" = r."id"
@@ -37,11 +37,15 @@
     </select>
     <select id="selectOne" parameterType="int" resultType="com.ipa.openapi_inzent.model.ApiDetailsDTO">
         select r."apisId", r.id as resource_id, ad.id, ad."resourceId", ad.method, ad.url, ad.uri, ad.summary, r.garbage,
-        ad.security, ad.scope, ad."operationId", ad.version, ad.status, ad."authorization", ad.tag, ad.trash from
+        ad.security, ad.scope, ad."operationId", ad.version, ad.status, ad."authorization", ad."tagId", ad.trash from
         public.resource as r
         join public."apiDetails" as ad
         on ad."resourceId" = r."id"
         where ad.id = #{id};
+    </select>
+    <select id="resourceOne" parameterType="int" resultType="com.ipa.openapi_inzent.model.ResourceDTO">
+        select * from public.resource
+        where id = #{id};
     </select>
     <!--    <select id="apisDetails" parameterType="int" resultMap="apisDetails">-->
     <!--        SELECT * FROM public.api as api-->
@@ -60,25 +64,29 @@
     </select>
     <select id="goTrashDetail" resultType="com.ipa.openapi_inzent.model.ApiDetailsDTO">
         select public."apiDetails".id,"apisId", public.resource.id as resource_id, garbage, method, url, uri, summary,
-        security, scope, "operationId", version, status, "authorization", tag, trash, "resourceId" from
+        security, scope, "operationId", version, status, "authorization", "tagId", trash, "resourceId" from
         public."apiDetails"
         inner join public.resource
         on public.resource.id = public."apiDetails"."resourceId"
         order by public."apiDetails".id asc
     </select>
     <select id="goTrashResource" resultType="com.ipa.openapi_inzent.model.ResourceDTO">
-        select * from public.resource
-        order by id asc
+        select  re."apisId", re.id, re.garbage, ap.context from public.resource as re join public.apis as ap on ap.id = re."apisId"
+        order by re.id asc
     </select>
     <delete id="completeDelete" parameterType="int">
         DELETE FROM public."apiDetails"
         WHERE id = #{id};
     </delete>
-    <update id="updateResource" parameterType="com.ipa.openapi_inzent.model.ApiDetailsDTO">
+    <delete id="resourceDelete" parameterType="int">
+        DELETE FROM public.resource
+        WHERE id = #{id};
+    </delete>
+    <update id="updateResource" parameterType="com.ipa.openapi_inzent.model.ResourceDTO">
         UPDATE public.resource SET
         "apisId"=#{apisId},
         garbage=#{garbage}
-        WHERE id = #{resource_id};
+        WHERE id = #{id};
     </update>
     <update id="updateDetail" parameterType="com.ipa.openapi_inzent.model.ApiDetailsDTO">
         UPDATE public."apiDetails" SET
@@ -92,7 +100,7 @@
         version=#{version},
         status=#{status},
         "authorization"=#{authorization},
-        tag=#{tag},
+        "tagId"=#{tagId},
         trash=#{trash},
         "resourceId"=#{resourceId}
         WHERE id = #{id};

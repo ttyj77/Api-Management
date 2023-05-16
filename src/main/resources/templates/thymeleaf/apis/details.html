@@ -124,13 +124,11 @@
                     for (let i = 0; i < methodLength; i++) {
                         visible.style.display = "none"
                         if (document.getElementById("myTab").children[i].style.display == "block") {
-
                             document.getElementById("myTab").children[i].children[0].click();
                             break;
                         } else {
                             document.getElementById(document.getElementById("myTab").children[i].children[0].getAttribute("href").substring(1)).className = "tab-pane fade";
                         }
-
                     }
                 }
             }
@@ -251,6 +249,22 @@
                     }
                 })
             }
+
+            window.onload = function () {
+                let cnt = document.querySelectorAll(".tbody").length;
+                let tbody = document.querySelectorAll(".tbody");
+                for (let i = 0; i < cnt; i++) {
+                    let tr = document.createElement("tr");
+                    let td = document.createElement("td");
+                    td.innerText = "데이터가 존재하지 않습니다.";
+                    td.colSpan = 8;
+                    tr.append(td);
+                    if (tbody[i].childElementCount == 0) {
+                        tbody[i].append(tr);
+                    }
+                }
+            }
+
         </script>
     </th:block>
 </head>
@@ -307,8 +321,8 @@
                     <div th:if="${#lists.size(resourceIndex) == 0}">
                         <h5>리스트 없다!</h5>
                     </div>
-                    <div class="accordion-item" th:unless="${#lists.size(resourceIndex) > 0}"
-                         th:each="index:${resourceIndex}">
+                    <div class="accordion-item"
+                         th:each="index:${resourceIndex}" th:if="${#lists.size(resourceIndex) != 0} and ${index.garbage==false}">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 th:data-bs-target="'#flush-collapse'+${index.id}" aria-expanded="false"
                                 th:aria-controls="'flush-collapse'+${index.id}">
@@ -361,10 +375,10 @@
                                         <th scope="col">else</th>
                                     </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody class="tbody">
                                     <tr onclick="location.href='#'" style="cursor: pointer"
                                         th:each="detail:${apiDetailsDTOList}"
-                                        th:if="${index.id == detail.resourceId} and ${detail.trash == false} and ${apiDetailsDTOList.isEmpty()==false}">
+                                        th:if="${index.id == detail.resourceId} and ${detail.trash == false} and ${#lists.size(apiDetailsDTOList)!=0}">
                                         <td th:text="${detail?.method}"></td>
                                         <td th:text="${detail?.uri}"></td>
                                         <td th:text="${detail?.summary}"></td>
@@ -393,15 +407,10 @@
                                                data-toggle="tooltip"
                                                title="삭제"
                                                class="fa-solid fa-trash-can delete"></i>
-                                            <!--                                            <i th:onclick="|location.href='@{/api/goTrash/{detailId}(detailId = ${detail.id})}'|" style="cursor: pointer;"-->
-                                            <!--                                               data-toggle="tooltip"-->
-                                            <!--                                               title="삭제"-->
-                                            <!--                                               class="fa-solid fa-trash-can delete"></i>-->
-                                        </td>
-                                    </tr>
-                                    <tr th:if="${apiDetailsDTOList.isEmpty()==true or apiDetailsDTOList.size()==1 and detail.trash==true}">
-                                        <td colspan="8">
-                                            데이터가 존재하지 않습니다.
+                                            <!--   <i th:onclick="|location.href='@{/api/goTrash/{detailId}(detailId = ${detail.id})}'|" style="cursor: pointer;"-->
+                                            <!--   data-toggle="tooltip"-->
+                                            <!--   title="삭제"-->
+                                            <!--   class="fa-solid fa-trash-can delete"></i>-->
                                         </td>
                                     </tr>
                                     </tbody>
@@ -409,7 +418,6 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
             <!--  리소스 정보 끝   -->
