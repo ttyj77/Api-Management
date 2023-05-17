@@ -229,8 +229,8 @@ public class ApiController {
         System.out.println("[request idx] : " + String.valueOf(paramMap.get("idx")));
         System.out.println("[request get] : " + String.valueOf(paramMap.get("get")));
         System.out.println("[request post] : " + String.valueOf(paramMap.get("post")));
-        System.out.println("[request post] : " + String.valueOf(paramMap.get("put")));
-        System.out.println("[request post] : " + String.valueOf(paramMap.get("delete")));
+        System.out.println("[request put] : " + String.valueOf(paramMap.get("put")));
+        System.out.println("[request delete] : " + String.valueOf(paramMap.get("delete")));
         System.out.println("=======================================");
         System.out.println("\n");
 //        }
