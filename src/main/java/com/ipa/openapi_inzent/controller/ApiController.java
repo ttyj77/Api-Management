@@ -2,10 +2,12 @@ package com.ipa.openapi_inzent.controller;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.ipa.openapi_inzent.model.*;
 import com.ipa.openapi_inzent.service.ApiDetailsService;
 import com.ipa.openapi_inzent.service.ApiService;
 import com.ipa.openapi_inzent.service.RoleService;
+import io.swagger.v3.core.util.Json;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -227,21 +230,51 @@ public class ApiController {
         System.out.println("[ModuleApiController] : [testPostBodyJson] : [start]");
         System.out.println("[request keySet] : " + String.valueOf(paramMap.keySet()));
         System.out.println("[request idx] : " + String.valueOf(paramMap.get("idx")));
+        System.out.println("[request url] : " + String.valueOf(paramMap.get("url")));
+        System.out.println("[request path] : " + String.valueOf(paramMap.get("path")));
         System.out.println("[request get] : " + String.valueOf(paramMap.get("get")));
+
+        JsonObject object = new JsonObject();
+        object = (JsonObject) JsonParser.parseString(paramMap.get("get"));
+
+        System.out.println(object.size()); // 0
+        System.out.println(object.isEmpty()); // true
+
         System.out.println("[request post] : " + String.valueOf(paramMap.get("post")));
         System.out.println("[request put] : " + String.valueOf(paramMap.get("put")));
         System.out.println("[request delete] : " + String.valueOf(paramMap.get("delete")));
         System.out.println("=======================================");
         System.out.println("\n");
-//        }
+
+//        1 ) 존재하는 리소스 인지 새로 생성해야되는 리소스 인지 판별
+//            1-1) 존재한다면 중복 메소드는 막아야된다.
+
+//        2) 존재하지 않는다면 리소스를 등록해야 된다.
+//            2-1) resource 등록
+//            2-2) apiDetails 등록
+//            2-3) parameters/ body/ response 등록
+
+
     }
 
-//
-//    @GetMapping("/trash")
-//    public String apiTrash() {
-//
-//        return "/apis/trash";
-//    }
+
+    @GetMapping("/search/path")
+    @ResponseBody
+    public JsonObject searchKeyword(String keyword) {
+        List<ApiDetailsDTO> searchList = apiDetailsService.searchPath(keyword);
+        JsonArray array = new JsonArray();
+        for (ApiDetailsDTO a : searchList) {
+            JsonObject object = new JsonObject();
+            object.addProperty("id", a.getId());
+            object.addProperty("uri", a.getUri());
+            object.addProperty("method", a.getMethod());
+            array.add(object);
+        }
+        JsonObject result = new JsonObject();
+        result.addProperty("responseText", array.toString());
+
+        return result;
+    }
 
     @GetMapping("/resourceModal")
     public String resourceModal() {

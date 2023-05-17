@@ -192,43 +192,91 @@
 
                 let method = ['get', 'post', 'put', 'delete']
                 let jsonArr = new Array();
-                let paramArr = new Array();
-
                 for (let i = 0; i < 4; i++) {
+                    let paramArr = new Array();
+                    let resCodeArr = new Array();
+                    let param = new Object();
+
                     //insertOperationId
                     let obj = new Object();
 
                     let operationId = document.getElementById(method[i] + "OperationId")
                     let summary = document.getElementById(method[i] + "Summary");
                     let tag = document.getElementById(method[i] + "TagBox")
-                    let tbodyParam = document.getElementById(method[i] + "parameterItemBody")
+                    let reqData = document.getElementById(method[i] + "ReqData")
+                    console.log("method[i] : " + method[i])
+                    console.log(tag)
+                    // console.log(tag.value)
+                    // console.log(tag.options[tag.selectedIndex].text)
+                    // console.log(tag.options[tag.selectedIndex].id)
+                    // console.log(tag.options[tag.selectedIndex].value)
+
+                    // 파리미터 tr
+                    let param_tr = $('#' + method[i] + "ParameterItemBody tr");
+
+                    // 응답코드 tr
+                    let resCode_tr = $('#' + method[i] + "ResCodeItemBody tr");
+
+                    console.log("resCode_tr : " + resCode_tr)
+                    console.log(resCode_tr)
+
 
                     if (operationId.value != "") {
+
                         console.log(operationId.value)
                         obj.operation = operationId.value;
                         obj.summary = summary.value
                         obj.tag = tag.value
-                        for (let i = 0; i < 5; i++) {
-                            let param = new Object();
-                            param.name = document.getElementById("parameter-name").value
-                            param.transferMethod = document.getElementById("transferMethod").value
-                            param.push(param)
+                        if (method[i] == "post" || method[i] == "put") {
+                            obj.reqData = reqData.value;
                         }
 
+                        // 파라미터 추가 시 tr 추출
+                        $.each(param_tr, function (index, value) {
+                            param = new Object();
+                            let tdList = $(value)
+                            param.name = tdList.children().eq(1).text();
+                            param.transferMethod = tdList.children().eq(2).text()
+                            param.explanation = tdList.children().eq(3).text()
+                            param.required = tdList.children().eq(4).text()
+                            param.type = tdList.children().eq(5).text()
+                            param.sample = tdList.children().eq(6).text()
+                            paramArr.push(param)
+                        });
+                        obj.param = paramArr
 
-                        jsonArr.push(obj)
+                        // 파라미터 추가 시 tr 추출
+                        $.each(resCode_tr, function (index, value) {
+                            param = new Object();
+                            let tdList = $(value)
+                            console.log("==========================")
+                            console.log(tdList.children())
+                            param.code = tdList.children().eq(1).text()
+                            param.explanation = tdList.children().eq(2).text()
+                            param.type = tdList.children().eq(3).text()
+                            resCodeArr.push(param)
+
+                        });
+                        obj.resCode = resCodeArr
+
+
                     }
+
+                    jsonArr.push(obj)
                 }
 
                 //
                 // [요청 json 데이터 선언]
                 let jsonData = { // Body에 첨부할 json 데이터
-                    "idx": window.location.href.split("/").slice(-1)[0], //apis index
-                    "get": JSON.stringify(jsonArr[0]),
-                    "post": JSON.stringify(jsonArr[1]),
-                    "put": JSON.stringify(jsonArr[2]),
-                    "delete": JSON.stringify(jsonArr[3]),
-                };
+                        "idx": window.location.href.split("/").slice(-1)[0], //apis index
+                        "url": document.getElementById("url").value,
+                        "path": document.getElementById("path").name + document.getElementById("path").value,
+                        "get": JSON.stringify(jsonArr[0]),
+                        "post": JSON.stringify(jsonArr[1]),
+                        "put": JSON.stringify(jsonArr[2]),
+                        "delete": JSON.stringify(jsonArr[3]),
+                    }
+                ;
 
                 $.ajax({
                     url: "/api/resource/insert",
@@ -249,24 +297,12 @@
 
             // 파라미터 추가 모달의 추가 버튼
             function insertParameter(value) {
-
-                console.log("----------" + value.parentNode.id)
-                console.log(value.parentNode.children[1])
-                console.log("----------" + value.parentNode.childElementCount)
-
-                console.log(value.parentNode.id.split("-")[0])
                 let method = value.parentNode.id.split("-")[0]
                 let tbody = document.getElementById(method + "ParameterItemBody")
 
                 let name_val = document.getElementById("parameter-name").value
                 let explanation_val = document.getElementById("explanation").value
 
-                console.log(document.getElementById("parameter-name"))
-                console.log(document.getElementById("parameter-name").parentNode)
-                console.log(document.getElementById("parameter-name").parentNode.children[0])
-
-                console.log(name_val)
-                console.log(name_val == "")
                 if (name_val == "") {
                     document.getElementById("parameter-name").parentNode.children[0].style.color = "#1d61ff";
 
@@ -319,150 +355,197 @@
 
                     // 추가 버튼 누르면 모달안의 input value 삭제
                     let get_input = $("#insertParameterModal input[type=text]");
-                    console.log(get_input);
-                    console.log('이녀석 타입은 뭐야? ' + typeof (get_input)); // object
-                    console.log('이녀석 Array이니? ' + Array.isArray(get_input)); //false
                     $.each(get_input, function (index, value) {
-                        // console.log('인덱스값' + index);
-                        console.log(value);
-                        console.log('id =' + $(value).attr("id"));
-                        let id = $(value).attr("id")
-                        // console.log('name =' + $(value).attr("name"));
-                        console.log('value =' + $(value).val());
                         $(value).val('')
                     });
 
                 }
 
+            }
 
-                // 응답코드 추가 모달의 추가 버튼
-                function insertResCodeModal(value) {
+            // 응답코드 추가 모달의 추가 버튼
+            function insertResCode(value) {
+                let method = value.parentNode.id.split("-")[0]
+                let tbody = document.getElementById(method + "ResCodeItemBody")
+                let code_val = document.getElementById("code-name").value
+                let explanation_val = document.getElementById("code-explanation").value
 
-                    console.log("----------" + value.parentNode.id)
-                    console.log(value.parentNode.children[1])
-                    console.log("----------" + value.parentNode.childElementCount)
+                if (code_val == "") {
+                    document.getElementById("code-name").parentNode.children[0].style.color = "#1d61ff";
 
-                    console.log(value.parentNode.id.split("-")[0])
-                    let method = value.parentNode.id.split("-")[0]
-                    let tbody = document.getElementById(method + "ParameterItemBody")
+                    document.getElementById("code-name").focus()
+                } else if (explanation_val == "") {
+                    document.getElementById("code-explanation").parentNode.children[0].style.color = "#1d61ff";
+                    document.getElementById("code-explanation").focus()
 
-                    let name_val = document.getElementById("parameter-name").value
-                    let explanation_val = document.getElementById("explanation").value
+                } else {
+                    let tr = document.createElement("tr")
+                    let th = document.createElement("th")
 
-                    console.log(document.getElementById("parameter-name"))
-                    console.log(document.getElementById("parameter-name").parentNode)
-                    console.log(document.getElementById("parameter-name").parentNode.children[0])
+                    let code = document.createElement("td");
+                    code.className = "code"
+                    let explanation = document.createElement("td");
+                    explanation.className = "explanation";
+                    let type = document.createElement("td");
+                    type.className = "type"
+                    let delUpdate = document.createElement("td");
+                    delUpdate.className = "delUpdate"
 
-                    console.log(name_val)
-                    console.log(name_val == "")
-                    if (name_val == "") {
-                        document.getElementById("parameter-name").parentNode.children[0].style.color = "#1d61ff";
+                    th.scope = "row";
+                    th.innerText = "1"
 
-                        document.getElementById("parameter-name").focus()
-                    } else if (explanation_val == "") {
-                        document.getElementById("explanation").parentNode.children[0].style.color = "#1d61ff";
-                        document.getElementById("explanation").focus()
+                    code.innerText = document.getElementById("code-name").value;
 
-                    } else {
-                        let tr = document.createElement("tr")
-                        let th = document.createElement("th")
-                        let name = document.createElement("td");
+                    explanation.innerText = document.getElementById("code-explanation").value;
 
-                        name.className = "name"
-                        let transferMethod = document.createElement("td");
-                        transferMethod.className = "transferMethod"
-                        let explanation = document.createElement("td");
-                        explanation.className = "explanation";
-                        let required = document.createElement("td");
-                        required.className = "required"
-                        let type = document.createElement("td");
-                        type.className = "type"
-                        let sample = document.createElement("td");
-                        sample.className = "sample"
-                        let delUpdate = document.createElement("td");
-                        delUpdate.className = "delUpdate"
+                    type.innerText = document.getElementById("contentType").value;
 
-                        th.scope = "row";
-                        th.innerText = "1"
+                    delUpdate.innerHTML = "<i class=\"fa-solid fa-pen mr-2\" style=\"color: #797a7c;\"></i><i class=\"fa-solid fa-trash-can\" style=\"color: #797a7c; cursor: pointer\"/>"
 
-                        name.innerText = document.getElementById("parameter-name").value;
+                    tr.append(th, code, explanation, type, delUpdate)
+                    tbody.append(tr)
 
-                        transferMethod.innerText = document.getElementById("transferMethod").value;
+                    $("#insertResCodeModal").modal('hide')
+                    $("#resourceModal").modal('show')
 
-                        explanation.innerText = document.getElementById("explanation").value;
+                    // 추가 버튼 누르면 모달안의 input value 삭제
+                    let get_input = $("#insertResCodeModal input[type=text]");
+                    $.each(get_input, function (index, value) {
+                        $(value).val('')
+                    });
 
-                        required.innerText = document.getElementById("required").value;
+                }
+            }
 
-                        type.innerText = document.getElementById("type").value;
+            // 파라미터 추가 버튼 클릭시 이동
+            function paramModalShow(value) {
+                let btn = document.getElementsByClassName("modal-footer param")[0]
 
-                        sample.innerText = document.getElementById("sample").value;
-                        delUpdate.innerHTML = "<i class=\"fa-solid fa-pen mr-2\" style=\"color: #797a7c;\"></i><i class=\"fa-solid fa-trash-can\" style=\"color: #797a7c; cursor: pointer\"/>"
+                btn.id = value.id.split("-")[0] + "-param"
+                // btn.id =
+                $("#insertParameterModal").modal('show')
+            }
 
-                        tr.append(th, name, transferMethod, explanation, required, type, sample, delUpdate)
-                        tbody.append(tr)
-
-                        $("#insertParameterModal").modal('hide')
-                        $("#resourceModal").modal('show')
+            // 응답코드 추가 버튼 클릭시 이동
+            function resCodeModalShow(value) {
+                let btn = document.getElementsByClassName("modal-footer code")[0]
+                btn.id = value.id.split("-")[0] + "-resCode"
+                // btn.id =
+                $("#insertResCodeModal").modal('show')
+            }
 
 
-                        // 추가 버튼 누르면 모달안의 input value 삭제
-                        let get_input = $("#insertParameterModal input[type=text]");
-                        console.log(get_input);
-                        console.log('이녀석 타입은 뭐야? ' + typeof (get_input)); // object
-                        console.log('이녀석 Array이니? ' + Array.isArray(get_input)); //false
-                        $.each(get_input, function (index, value) {
-                            // console.log('인덱스값' + index);
-                            console.log(value);
-                            console.log('id =' + $(value).attr("id"));
-                            let id = $(value).attr("id")
-                            // console.log('name =' + $(value).attr("name"));
-                            console.log('value =' + $(value).val());
-                            $(value).val('')
-                        });
-
+            window.onload = function () {
+                let cnt = document.querySelectorAll(".tbody").length;
+                let tbody = document.querySelectorAll(".tbody");
+                for (let i = 0; i < cnt; i++) {
+                    let tr = document.createElement("tr");
+                    let td = document.createElement("td");
+                    td.innerText = "데이터가 존재하지 않습니다.";
+                    td.colSpan = 8;
+                    tr.append(td);
+                    if (tbody[i].childElementCount == 0) {
+                        tbody[i].append(tr);
                     }
-
-
                 }
+            }
 
-                // 파라미터 추가 버튼 클릭시 이동
-                function paramModalShow(value) {
-                    let btn = document.getElementsByClassName("modal-footer param")[0]
-                    console.log(btn)
-                    console.log(value.id.split("-")[0]) // ex) get
+            //     url 실시간 검색
+            function searchPath(value) {
+                console.log(value.value)
+                let keyword = value.value
+                let data = {
+                    "keyword": keyword,
+                };
+                $.ajax({
+                    url: "/api/search/path",
+                    type: "get",
+                    data: data,
 
-                    btn.id = value.id.split("-")[0] + "-param"
-                    // btn.id =
-                    $("#insertParameterModal").modal('show')
-                }
-
-                // 응답코드 추가 버튼 클릭시 이동
-                function resCodeModalShow(value) {
-                    let btn = document.getElementsByClassName("modal-footer param")[0]
-                    console.log(btn)
-                    console.log(value.id.split("-")[0]) // ex) get
-
-                    btn.id = value.id.split("-")[0] + "-param"
-                    // btn.id =
-                    $("#insertResCodeModal").modal('show')
-                }
-
-
-                window.onload = function () {
-                    let cnt = document.querySelectorAll(".tbody").length;
-                    let tbody = document.querySelectorAll(".tbody");
-                    for (let i = 0; i < cnt; i++) {
-                        let tr = document.createElement("tr");
-                        let td = document.createElement("td");
-                        td.innerText = "데이터가 존재하지 않습니다.";
-                        td.colSpan = 8;
-                        tr.append(td);
-                        if (tbody[i].childElementCount == 0) {
-                            tbody[i].append(tr);
+                    success: (message) => {
+                        let array = JSON.parse(message.responseText);
+                        let tbody = document.getElementById("searchPathTbody")
+                        tbody.innerHTML = ""
+                        console.log(array)
+                        console.log(array.length)
+                        let arr = []
+                        for (let i = 0; i < array.length; i++) {
+                            arr[i] = array[i].uri
+                            console.log(arr)
                         }
-                    }
-                }
 
+                        let result1 = [...new Set(arr)];
+
+                        console.log(result1); //중복 제거됨
+                        let mt = []
+                        for (let i = 0; i < result1.length; i++) {
+                            let tr = document.createElement("tr")
+                            let id = document.createElement("td");
+                            let path = document.createElement("td");
+                            let possibleMethod = document.createElement("td");
+                            let impossibleMethod = document.createElement("td");
+                            path.innerText = result1[i]
+                            tr.id = result1[i]
+
+                            mt.splice(0, mt.length);
+                            let k = 0;
+                            for (let j = 0; j < array.length; j++) {
+                                if (result1[i] == array[j].uri) {
+                                    mt[k] = array[j].method
+                                    // method.innerHTML = array[j].method;
+                                    k++
+                                }
+                                impossibleMethod.innerHTML = mt;
+                            }
+
+                            let http = ["GET", "POST", "PUT", "DELETE"]
+                            for (let j = 0; j < http.length; j++) {
+                                for (let l = 0; l < mt.length; l++) {
+                                    console.log("mt[l] " + mt[l])
+                                    console.log("http[j]" + http[j])
+                                    if (mt[l] == http[j]) {
+                                        console.log("같다!!!!!")
+                                        http.splice(j, 1)
+                                    }
+                                }
+
+                            }
+                            console.log(http)
+                            possibleMethod.innerHTML = http
+                            impossibleMethod.style.backgroundColor = "rgb(224 0 0 / 22%)"
+                            possibleMethod.style.backgroundColor = "rgb(37 224 0 / 22%)"
+                            id.innerText = array[i].id
+                            tr.onclick = function () {
+                                insertPath(this);
+                            }
+
+                            tr.append(id, path, possibleMethod, impossibleMethod)
+                            tbody.append(tr)
+
+                        }
+
+
+                    },
+                    error: (e) => {
+                        console.log("통신 실패", e);
+                    }
+                })
+            }
+
+            function showPathSearchModal() {
+                $("#resourceModal").modal('hide')
+                $("#searchPathModal").modal('show')
+            }
+
+            function insertPath(value) {
+                console.log(value.id)
+                $("#searchPathModal").modal('hide')
+                $("#resourceModal").modal('show')
+                let input = document.getElementById("path")
+                input.value = value.id
+
+
+            }
         </script>
     </th:block>
 </head>
@@ -691,20 +774,30 @@
                                 <tr>
                                     <td class="resourceTable" style="background-color: #0000001c">서버 URL</td>
                                     <td><input class="input-group rounded" type="text"
-                                               placeholder="  http://localhost8080/api/"></td>
+                                               placeholder="  http://localhost8080/api/" id="url"
+                                    ></td>
                                 </tr>
                                 <tr>
 
                                     <td class="resourceTable" style="background-color: #0000001c">Path</td>
 
-                                    <td style="display: flex; align-items: baseline;">
-                                        <div class="mt-1 mr-2" th:text="${api.context}"></div>
-                                        <input
-                                                class="input-group rounded" type="text" placeholder="  /">
+                                    <td style="display: flex;">
+                                        <div class="mt-2 mr-2" th:text="${api.context+'/'}"
+                                             style="font-size: 18px"></div>
+                                        <input style="height: 46px;align-self: center;"
+                                               class="input-group rounded pl-3 p-2" type="text" placeholder=""
+                                               id="path"
+                                               th:name="${api.context}">
+                                        <button type="button" class="btn btn-danger"
+                                                style="font-size: 16px;height: 46px;width: 130px;margin-left: 1%;"
+                                                onclick="showPathSearchModal()">
+                                            입력하기
+                                        </button>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="resourceTable" style="background-color: #0000001c;">Method</td>
+                                    <td class=" resourceTable" style="background-color: #0000001c;">Method
+                                    </td>
                                     <td>
                                         <nav>
                                             <div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -777,7 +870,7 @@
                             <!--           태그선택박스                 -->
                             <div class="multiselect mt-4 ml-2 mr-2" style="margin-left: 1.5% !important;">
                                 <div class="selectBox">
-                                    <select name="getTagBox">
+                                    <select name="getTagBox" id="getTagBox">
                                         <option value=""> -- 태그 선택 --</option>
                                         <option th:each="list : ${tagList}" th:value="${list?.id}"
                                                 th:utext="${list?.name}">
@@ -801,6 +894,7 @@
                                         <input type="checkbox" id="getBearer"/>Bearer(APIKEY)</label>
                                 </div>
                             </div>
+
                             <!-- GET 파라미터/응답 선택 시작-->
                             <div class="d-flex flex-column">
                                 <div class="d-flex align-items-start">
@@ -862,20 +956,11 @@
                                                 <th scope="col">응답코드</th>
                                                 <th scope="col">설명</th>
                                                 <th scope="col">Content-Type</th>
-                                                <th scope="col">예제</th>
-                                                <th scope="col">&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                                                <th scope="col"></th>
                                             </tr>
                                             </thead>
-                                            <tbody>
-                                            <tr>
-                                                <th scope="row">1</th>
-                                                <td>200</td>
-                                                <td>정상</td>
-                                                <td></td>
-                                                <td></td>
-                                                <td><i class="fa-solid fa-pen mr-2"></i><i
-                                                        class="fa-solid fa-trash-can"></i></td>
-                                            </tr>
+                                            <tbody id="getResCodeItemBody">
+                                            <!--                리소스 추가 페이지 - 응답코드 추가 모달의 추가 버튼 누르면 응답코드 정보 들어가는 곳               -->
 
                                             </tbody>
                                             <tfoot style="text-align:right;">
@@ -920,7 +1005,7 @@
                             <!--           태그선택박스                 -->
                             <div class="multiselect mt-4 ml-2 mr-2" style="margin-left: 1.5% !important;">
                                 <div class="selectBox">
-                                    <select name="tagBox">
+                                    <select name="postTagBox" id="postTagBox">
                                         <option value=""> -- 태그 선택 --</option>
                                         <option th:each="list : ${tagList}" th:value="${list?.id}"
                                                 th:utext="${list?.name}">
@@ -944,6 +1029,8 @@
                                         <input type="checkbox" id="postBearer"/>Bearer(APIKEY)</label>
                                 </div>
                             </div>
+
+
                             <!-- POST 파라미터/응답 선택 시작-->
                             <div class="d-flex flex-column">
                                 <div class="d-flex align-items-start">
@@ -955,9 +1042,16 @@
                                                 data-bs-target="#v-pills-post-parameter" type="button" role="tab"
                                                 aria-controls="v-pills-post-parameter" aria-selected="true">파라미터
                                         </button>
-                                        <button class="nav-link" id="v-pills-post-response-tab" data-bs-toggle="pill"
+                                        <button class="nav-link ml-2" id="v-pills-post-response-tab"
+                                                data-bs-toggle="pill"
                                                 data-bs-target="#v-pills-post-response" type="button" role="tab"
                                                 aria-controls="v-pills-post-response" aria-selected="false">응답
+                                        </button>
+
+                                        <button class="nav-link ml-2" id="v-pills-post-reqData-tab"
+                                                data-bs-toggle="pill"
+                                                data-bs-target="#v-pills-post-reqData" type="button" role="tab"
+                                                aria-controls="v-pills-post-reqData" aria-selected="false">요청데이터
                                         </button>
                                     </div>
                                 </div>
@@ -997,7 +1091,6 @@
 
                                     <div class="tab-pane fade" id="v-pills-post-response" role="tabpanel"
                                          aria-labelledby="v-pills-post-response-tab">
-
                                         <table class="table">
                                             <thead class="thead-light">
                                             <tr>
@@ -1005,34 +1098,47 @@
                                                 <th scope="col">응답코드</th>
                                                 <th scope="col">설명</th>
                                                 <th scope="col">Content-Type</th>
-                                                <th scope="col">예제</th>
-                                                <th scope="col">&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                                                <th scope="col"></th>
                                             </tr>
                                             </thead>
-                                            <tbody>
-                                            <tr>
-                                                <th scope="row">1</th>
-                                                <td>200</td>
-                                                <td>정상</td>
-                                                <td></td>
-                                                <td></td>
-                                                <td><i class="fa-solid fa-pen mr-2"></i><i
-                                                        class="fa-solid fa-trash-can"></i></td>
-                                            </tr>
+                                            <tbody id="postResCodeItemBody">
+                                            <!--                리소스 추가 페이지 - 응답코드 추가 모달의 추가 버튼 누르면 응답코드 정보 들어가는 곳               -->
 
                                             </tbody>
                                             <tfoot style="text-align:right;">
                                             <tr>
-                                                <td colspan="6" style="border-bottom-width: inherit !important;"><i
-                                                        class="fa-regular fa-square-plus mr-1" data-bs-toggle="modal"
-                                                        data-bs-target="#exampleModal"></i></td>
+                                                <td colspan="12" style="border-bottom-width: inherit !important;">
+                                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                                            id="post-resCode" data-bs-dismiss="modal"
+                                                            onclick="resCodeModalShow(this)">응답코드 추가
+                                                    </button>
 
+                                                </td>
                                             </tr>
 
                                             </tfoot>
                                         </table>
                                     </div>
-
+                                    <!--POST 요청 데이터 탭 -->
+                                    <div class="tab-pane fade" id="v-pills-post-reqData" role="tabpanel"
+                                         aria-labelledby="v-pills-post-reqData-tab">
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                <th scope="col"><h5 class="ml-1">Context-Type</h5> | application / json
+                                                </th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <th scope="row">
+                                                       <textarea id="postReqData" placeholder="예시를 입력해주세요"
+                                                                 style="height: 150px; width: -webkit-fill-available; padding: 15px"></textarea>
+                                                </th>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                             <!-- POST 파라미터/응답 선택 끝-->
@@ -1044,7 +1150,7 @@
                                     <h6 class="col-2" style="text-align: left;">operationId</h6>
                                     <input class="col"
                                            type="text"
-                                           placeholder="  get-v1-insu"
+                                           placeholder="  put-v1-insu"
                                            id="putOperationId"
                                            style="height: 44px;border-radius: 7px;">
                                 </div>
@@ -1052,7 +1158,7 @@
                                     <h6 class="col-2" style="text-align: left;">요약</h6>
                                     <input class="col"
                                            type="text"
-                                           placeholder="  get-v1-insu"
+                                           placeholder="  put-v1-insu"
                                            id="putSummary"
                                            style="height: 44px;border-radius: 7px;">
                                 </div>
@@ -1060,7 +1166,7 @@
                             <!--           태그선택박스                 -->
                             <div class="multiselect mt-4 ml-2 mr-2" style="margin-left: 1.5% !important;">
                                 <div class="selectBox">
-                                    <select name="tagBox">
+                                    <select name="putTagBox" id="putTagBox">
                                         <option value=""> -- 태그 선택 --</option>
                                         <option th:each="list : ${tagList}" th:value="${list?.id}"
                                                 th:utext="${list?.name}">
@@ -1072,7 +1178,7 @@
                             <div class="authorizationSelect ml-2 mr-2 mb-4 mt-3"
                                  style="margin-left: 1.5% !important;">
                                 <div class="selectBox">
-                                    <select name="tagBox">
+                                    <select name="TagBox" id="TagBox">
                                         <option value=""> -- 태그 선택 --</option>
                                         <option th:each="list : ${tagList}" th:value="${list?.id}"
                                                 th:utext="${list?.name}">
@@ -1091,9 +1197,14 @@
                                                 data-bs-target="#v-pills-put-parameter" type="button" role="tab"
                                                 aria-controls="v-pills-put-parameter" aria-selected="true">파라미터
                                         </button>
-                                        <button class="nav-link" id="v-pills-put-response-tab" data-bs-toggle="pill"
+                                        <button class="nav-link ml-2" id="v-pills-put-response-tab"
+                                                data-bs-toggle="pill"
                                                 data-bs-target="#v-pills-put-response" type="button" role="tab"
                                                 aria-controls="v-pills-put-response" aria-selected="false">응답
+                                        </button>
+                                        <button class="nav-link ml-2" id="v-pills-put-reqData-tab" data-bs-toggle="pill"
+                                                data-bs-target="#v-pills-put-reqData" type="button" role="tab"
+                                                aria-controls="v-pills-put-reqData" aria-selected="false">요청데이터
                                         </button>
                                     </div>
                                 </div>
@@ -1141,34 +1252,48 @@
                                                 <th scope="col">응답코드</th>
                                                 <th scope="col">설명</th>
                                                 <th scope="col">Content-Type</th>
-                                                <th scope="col">예제</th>
-                                                <th scope="col">&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                                                <th scope="col"></th>
                                             </tr>
                                             </thead>
-                                            <tbody>
-                                            <tr>
-                                                <th scope="row">1</th>
-                                                <td>200</td>
-                                                <td>정상</td>
-                                                <td></td>
-                                                <td></td>
-                                                <td><i class="fa-solid fa-pen mr-2"></i><i
-                                                        class="fa-solid fa-trash-can"></i></td>
-                                            </tr>
+                                            <tbody id="putResCodeItemBody">
+                                            <!--                리소스 추가 페이지 - 응답코드 추가 모달의 추가 버튼 누르면 응답코드 정보 들어가는 곳               -->
 
                                             </tbody>
                                             <tfoot style="text-align:right;">
                                             <tr>
-                                                <td colspan="6" style="border-bottom-width: inherit !important;"><i
-                                                        class="fa-regular fa-square-plus mr-1" data-bs-toggle="modal"
-                                                        data-bs-target="#exampleModal"></i></td>
+                                                <td colspan="12" style="border-bottom-width: inherit !important;">
+                                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                                            id="put-resCode" data-bs-dismiss="modal"
+                                                            onclick="resCodeModalShow(this)">응답코드 추가
+                                                    </button>
 
+                                                </td>
                                             </tr>
-
                                             </tfoot>
                                         </table>
                                     </div>
+                                    <!--PUT 요청 데이터 탭 -->
+                                    <div class="tab-pane fade" id="v-pills-put-reqData" role="tabpanel"
+                                         aria-labelledby="v-pills-post-reqData-tab">
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                <th scope="col"><h5 class="ml-1">Context-Type</h5> | application / json
+                                                </th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <th scope="row">
+                                                       <textarea id="putReqData" placeholder="예시를 입력해주세요"
+                                                                 style="height: 150px; width: -webkit-fill-available; padding: 15px"></textarea>
+                                                </th>
 
+                                            </tr>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                             <!-- PUT 파라미터/응답 선택 끝-->
@@ -1196,7 +1321,7 @@
                             <!--           태그선택박스                 -->
                             <div class="multiselect mt-4 ml-2 mr-2" style="margin-left: 1.5% !important;">
                                 <div class="selectBox">
-                                    <select name="tagBox">
+                                    <select name="deleteTagBox">
                                         <option value=""> -- 태그 선택 --</option>
                                         <option th:each="list : ${tagList}" th:value="${list?.id}"
                                                 th:utext="${list?.name}">
@@ -1269,7 +1394,6 @@
 
                                     <div class="tab-pane fade" id="v-pills-delete-response" role="tabpanel"
                                          aria-labelledby="v-pills-delete-response-tab">
-
                                         <table class="table">
                                             <thead class="thead-light">
                                             <tr>
@@ -1277,34 +1401,26 @@
                                                 <th scope="col">응답코드</th>
                                                 <th scope="col">설명</th>
                                                 <th scope="col">Content-Type</th>
-                                                <th scope="col">예제</th>
-                                                <th scope="col">&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                                                <th scope="col"></th>
                                             </tr>
                                             </thead>
-                                            <tbody>
-                                            <tr>
-                                                <th scope="row">1</th>
-                                                <td>200</td>
-                                                <td>정상</td>
-                                                <td></td>
-                                                <td></td>
-                                                <td><i class="fa-solid fa-pen mr-2"></i><i
-                                                        class="fa-solid fa-trash-can"></i></td>
-                                            </tr>
+                                            <tbody id="deleteResCodeItemBody">
+                                            <!--                리소스 추가 페이지 - 응답코드 추가 모달의 추가 버튼 누르면 응답코드 정보 들어가는 곳               -->
 
                                             </tbody>
                                             <tfoot style="text-align:right;">
                                             <tr>
-                                                <td colspan="6" style="border-bottom-width: inherit !important;"><i
-                                                        class="fa-regular fa-square-plus mr-1" data-bs-toggle="modal"
-                                                        data-bs-target="#exampleModal"></i></td>
+                                                <td colspan="12" style="border-bottom-width: inherit !important;">
+                                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                                            id="delete-resCode" data-bs-dismiss="modal"
+                                                            onclick="resCodeModalShow(this)">응답코드 추가
+                                                    </button>
 
+                                                </td>
                                             </tr>
-
                                             </tfoot>
                                         </table>
                                     </div>
-
                                 </div>
                             </div>
                             <!-- DELETE 파라미터/응답 선택 끝-->
@@ -1380,19 +1496,19 @@
         </div>
     </div>
 
-    <!-- 응답코드 추가 버튼 -->
+    <!-- 응답코드 추가 모달 -->
     <div class="modal fade" id="insertResCodeModal" tabindex="-1" role="dialog"
          aria-labelledby="resCodeModalShowLabel"
          aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="resCodeModalShowLabel">파라미터 추가</h1>
+                    <h1 class="modal-title fs-5" id="resCodeModalShowLabel">응답코드 추가</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label for="parameter-name" class="col-form-label">이름 * </label>
+                        <label for="parameter-name" class="col-form-label">코드번호 * </label>
                         <input type="text" class="form-control" id="code-name">
                     </div>
                     <div class="mb-3">
@@ -1403,12 +1519,12 @@
                         <div class="mb-3 col-6">
                             <label for="type" class="col-form-label">타입</label>
                             <select class="form-control" id="contentType">
-                                <option value="String" selected="selected">application/json</option>
+                                <option value="application/json" selected="selected">application/json</option>
                             </select>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer param">
+                <div class="modal-footer code">
                     <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
                             data-bs-target="#resourceModal">취소
                     </button>
@@ -1417,6 +1533,49 @@
             </div>
         </div>
     </div>
+
+
+    <!--path 검색 모달-->
+    <div class="modal fade" id="searchPathModal" tabindex="-1" role="dialog"
+         aria-labelledby="searchPathModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="searchPathModalLabel">path 검색</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="parameter-name" class="col-form-label">path * </label>
+                        <input type="text" class="form-control" onkeyup="searchPath(this)">
+                    </div>
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">path</th>
+                            <th scope="col">작성 가능</th>
+                            <th scope="col">작성 불가능</th>
+                        </tr>
+                        </thead>
+                        <tbody id="searchPathTbody">
+
+                        </tbody>
+                    </table>
+                </div>
+
+
+                <div class="modal-footer code">
+                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
+                            data-bs-target="#resourceModal">취소
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="insertResCode(this)">추가</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 </div>
 <!-- End of Main Content -->

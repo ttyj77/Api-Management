@@ -27,13 +27,15 @@ public interface ApiDetailsDao {
 
     void completeDelete(int id) throws DataAccessException;
 
-    void updateDetail(ApiDetailsDTO apiDetailsDTO)throws DataAccessException;
+    void updateDetail(ApiDetailsDTO apiDetailsDTO) throws DataAccessException;
 
-    void updateResource(ResourceDTO resourceDTO)throws DataAccessException;
+    void updateResource(ResourceDTO resourceDTO) throws DataAccessException;
 
     ResourceDTO resourceOne(int id) throws DataAccessException;
 
     void resourceDelete(int id) throws DataAccessException;
 
     List<TagDTO> selectAllTag() throws DataAccessException;
+
+    List<ApiDetailsDTO> searchPath(String keyword) throws DataAccessException;
 }

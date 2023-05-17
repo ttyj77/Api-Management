@@ -69,4 +69,8 @@ public class ApiDetailsService {
     public List<TagDTO> selectAllTag() {
         return apiDetailsDao.selectAllTag();
     }
+
+    public List<ApiDetailsDTO> searchPath(String keyword) {
+        return apiDetailsDao.searchPath(keyword);
+    }
 }
