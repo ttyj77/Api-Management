@@ -108,8 +108,10 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script>
             function methodSwitch(value) {
-
+                console.log("click!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+                console.log(value)
                 let method = value.innerText.toLowerCase()
+                console.log(method)
                 let visible = document.getElementById(method)
                 let content = document.getElementById(method + "-tab")
 
@@ -226,7 +228,7 @@
                         console.log(operationId.value)
                         obj.operation = operationId.value;
                         obj.summary = summary.value
-                        obj.tag = tag.value
+                        // obj.tag = tag.value
                         if (method[i] == "post" || method[i] == "put") {
                             obj.reqData = reqData.value;
                         }
@@ -293,7 +295,26 @@
                         console.log(message)
                     }
                 })
+
+                // 추가 버튼 누르면 모달안의 input value 삭제
+                // for (let i = 0; i < method.length; i++) {
+                //     let id = '#' + method[i] + '-content'
+                // let get_input = $(id + ' input[type=text]');
+                let get_input = $("#resourceModal input[type=text]");
+
+                console.log("====================get_input=======================")
+                console.log(get_input)
+                $.each(get_input, function (index, value) {
+                    $(value).val('')
+                });
+                // path 검색 모달의 내용지우기
+                document.getElementById("pathSearchBar").value = '';
+                // path 검색 결과 지우기
+                document.getElementById("searchPathTbody").innerHTML = ""
+                showAllMethod();
+                // }
             }
+
 
             // 파라미터 추가 모달의 추가 버튼
             function insertParameter(value) {
@@ -467,64 +488,83 @@
                         let tbody = document.getElementById("searchPathTbody")
                         tbody.innerHTML = ""
                         console.log(array)
-                        console.log(array.length)
-                        let arr = []
-                        for (let i = 0; i < array.length; i++) {
-                            arr[i] = array[i].uri
-                            console.log(arr)
-                        }
+                        if (array.length == 0) {
+                            // DB에 없는 경우
+                            // 해당 글자를 그대로 받고 + 새로 등록하시겠습니까?
+                            console.log("new!")
+                            console.log(value.value)
 
-                        let result1 = [...new Set(arr)];
-
-                        console.log(result1); //중복 제거됨
-                        let mt = []
-                        for (let i = 0; i < result1.length; i++) {
+                            let defaultUri = document.getElementById("defaultUri").textContent
+                            let newUri = value.value
+                            let h5 = document.createElement("h5")
+                            h5.innerText = newUri
                             let tr = document.createElement("tr")
-                            let id = document.createElement("td");
-                            let path = document.createElement("td");
-                            let possibleMethod = document.createElement("td");
-                            let impossibleMethod = document.createElement("td");
-                            path.innerText = result1[i]
-                            tr.id = result1[i]
-
-                            mt.splice(0, mt.length);
-                            let k = 0;
-                            for (let j = 0; j < array.length; j++) {
-                                if (result1[i] == array[j].uri) {
-                                    mt[k] = array[j].method
-                                    // method.innerHTML = array[j].method;
-                                    k++
-                                }
-                                impossibleMethod.innerHTML = mt;
-                            }
-
-                            let http = ["GET", "POST", "PUT", "DELETE"]
-                            for (let j = 0; j < http.length; j++) {
-                                for (let l = 0; l < mt.length; l++) {
-                                    console.log("mt[l] " + mt[l])
-                                    console.log("http[j]" + http[j])
-                                    if (mt[l] == http[j]) {
-                                        console.log("같다!!!!!")
-                                        http.splice(j, 1)
-                                    }
-                                }
-
-                            }
-                            console.log(http)
-                            possibleMethod.innerHTML = http
-                            impossibleMethod.style.backgroundColor = "rgb(224 0 0 / 22%)"
-                            possibleMethod.style.backgroundColor = "rgb(37 224 0 / 22%)"
-                            id.innerText = array[i].id
-                            tr.onclick = function () {
-                                insertPath(this);
-                            }
-
-                            tr.append(id, path, possibleMethod, impossibleMethod)
+                            let td = document.createElement("td")
+                            td.colSpan = 4
+                            td.innerText = defaultUri + h5.innerText + ' 을 새로 등록하시겠습니까?'
+                            tr.append(td)
                             tbody.append(tr)
 
+                        } else {
+                            console.log(array.length)
+                            let arr = []
+                            for (let i = 0; i < array.length; i++) {
+                                arr[i] = array[i].uri
+                                console.log(arr)
+                            }
+
+                            let result1 = [...new Set(arr)];
+
+                            console.log(result1); //중복 제거됨
+                            let mt = []
+                            for (let i = 0; i < result1.length; i++) {
+                                let tr = document.createElement("tr")
+                                let id = document.createElement("td");
+                                let path = document.createElement("td");
+                                let possibleMethod = document.createElement("td");
+
+                                let impossibleMethod = document.createElement("td");
+                                impossibleMethod.id = 'impossibleMethod'
+                                path.innerText = result1[i]
+                                tr.id = result1[i]
+
+                                mt.splice(0, mt.length);
+                                let k = 0;
+                                for (let j = 0; j < array.length; j++) {
+                                    if (result1[i] == array[j].uri) {
+                                        mt[k] = array[j].method
+                                        // method.innerHTML = array[j].method;
+                                        k++
+                                    }
+                                    impossibleMethod.innerHTML = mt;
+                                }
+
+                                let http = ["GET", "POST", "PUT", "DELETE"]
+                                for (let j = 0; j < http.length; j++) {
+                                    for (let l = 0; l < mt.length; l++) {
+
+                                        if (mt[l] == http[j]) {
+                                            http.splice(j, 1)
+                                        }
+                                    }
+
+                                }
+                                console.log(http)
+                                possibleMethod.innerHTML = http
+                                impossibleMethod.style.backgroundColor = "rgb(224 0 0 / 22%)"
+                                possibleMethod.style.backgroundColor = "rgb(37 224 0 / 22%)"
+                                id.innerText = array[i].id
+                                tr.onclick = function () {
+                                    insertPath(event);
+                                }
+
+                                tr.append(id, path, possibleMethod, impossibleMethod)
+                                tbody.append(tr)
+
+                            }
+
+
                         }
-
-
                     },
                     error: (e) => {
                         console.log("통신 실패", e);
@@ -532,19 +572,87 @@
                 })
             }
 
+            // path 입력하기
             function showPathSearchModal() {
                 $("#resourceModal").modal('hide')
                 $("#searchPathModal").modal('show')
+                showAllMethod()
             }
 
-            function insertPath(value) {
-                console.log(value.id)
+
+            // 검색 결과 표를 클릭하면 input 박스에 들어감
+            function insertPath(e) {
+                console.log(e.target.parentNode.childNodes[1].textContent) // 클릭한 uri
+                console.log(e.target.parentNode.childNodes[3].textContent) // 클릭한 uri의 impossibleMethod
+
                 $("#searchPathModal").modal('hide')
                 $("#resourceModal").modal('show')
+
                 let input = document.getElementById("path")
-                input.value = value.id
+                input.value = e.target.parentNode.childNodes[1].textContent
 
+                // + input 박스에 해당 uri가 들어가면서 자동으로 작성가능한 method만 보이도록 하는 부분
+                let buttonList = $("#nav-tab button[type=button]");
 
+                let impossibleMethod = e.target.parentNode.childNodes[3].textContent
+
+                const arr = impossibleMethod.split(',');
+                console.log(arr) // 작성 불가능한 메서드 리스트
+
+                // 작성 불가능한 메서드들은 disabled 처리
+                for (let i = 0; i < buttonList.length; i++) {
+                    for (let j = 0; j < arr.length; j++) {
+                        console.log("===================")
+                        console.log(arr[j])
+                        let trim = buttonList[i].innerText.trim()
+                        console.log(trim)
+                        console.log("===================")
+                        if (trim == arr[j]) {
+                            console.log("일치 = 작성불가능")
+                            // buttonList[i].click(this)
+                            buttonList[i].style.display = 'none'
+
+                            let visible = document.getElementById(trim.toLowerCase())
+                            console.log(visible)
+                            visible.style.display = "none"
+                            //     tab hidden
+                            tabHidden()
+                        }
+                    }
+                    // 버튼 누르면 모달안의 input value 삭제
+                    let id = '#' + buttonList[i].innerText.trim().toLowerCase() + '-content'
+                    let get_input = $(id + ' input[type=text]');
+                    console.log("====================get_input11122222222222222=======================")
+                    console.log(get_input)
+                    $.each(get_input, function (index, value) {
+                        console.log(index)
+                        console.log(value)
+                        $(value).val('')
+                    });
+
+                }
+
+            }
+
+            function tabHidden() {
+                let tabList = document.getElementById("myTabContent").children
+                let tabHeaderList = document.getElementById("myTab").children
+
+                for (let k = 0; k < tabList.length; k++) {
+                    tabList[k].className = "tab-pane fade"
+                    tabHeaderList[k].style.display = "none"
+                }
+                console.log(tabList)
+            }
+
+            // 모든 method 버튼 show all
+            function showAllMethod() {
+                let buttonList = $("#nav-tab button[type=button]");
+
+                console.log(buttonList)
+                for (let i = 0; i < buttonList.length; i++) {
+                    buttonList[i].style.display = 'block'
+                }
             }
         </script>
     </th:block>
@@ -560,7 +668,7 @@
             <div class="d-flex justify-content-between mb-2">
                 <div class="d-flex">
                     <h1 class="h3 mb-2 text-gray-800" th:text="${api.name}"></h1>
-                    <h3>&nbsp(&nbsp</h3><h4 th:text="${api.context}"></h4>
+                    <h3>&nbsp(&nbsp</h3><h4 th:text="${api.context}" id="defaultUri"></h4>
                     <h3>&nbsp)</h3>
                 </div>
                 <div>
@@ -576,7 +684,7 @@
                     </select>
                     <!-- <button type="button" class="btn btn-secondary" id="pick" data-bs-toggle="modal"></button>-->
                     <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
-                            data-bs-target="#resourceModal">
+                            data-bs-target="#resourceModal" onclick="tabHidden()">
                         + 리소스 추가
                     </button>
                     <!-- Button trigger modal -->
@@ -782,11 +890,11 @@
                                     <td class="resourceTable" style="background-color: #0000001c">Path</td>
 
                                     <td style="display: flex;">
-                                        <div class="mt-2 mr-2" th:text="${api.context+'/'}"
-                                             style="font-size: 18px"></div>
+                                        <!--                                        <div class="mt-2 mr-2" th:text="${api.context+'/'}"-->
+                                        <!--                                             style="font-size: 18px"></div>-->
                                         <input style="height: 46px;align-self: center;"
-                                               class="input-group rounded pl-3 p-2" type="text" placeholder=""
-                                               id="path"
+                                               class="input-group rounded pl-3 p-2" type="text"
+                                               id="path" disabled
                                                th:name="${api.context}">
                                         <button type="button" class="btn btn-danger"
                                                 style="font-size: 16px;height: 46px;width: 130px;margin-left: 1%;"
@@ -1548,7 +1656,7 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="parameter-name" class="col-form-label">path * </label>
-                        <input type="text" class="form-control" onkeyup="searchPath(this)">
+                        <input type="text" class="form-control" onkeyup="searchPath(this)" id="pathSearchBar">
                     </div>
                     <table class="table table-hover">
                         <thead>
@@ -1565,14 +1673,8 @@
                     </table>
                 </div>
 
-
-                <div class="modal-footer code">
-                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
-                            data-bs-target="#resourceModal">취소
-                    </button>
-                    <button type="button" class="btn btn-primary" onclick="insertResCode(this)">추가</button>
-                </div>
             </div>
+
         </div>
     </div>
 
