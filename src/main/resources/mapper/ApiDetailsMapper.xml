@@ -113,9 +113,19 @@
     </select>
 
     <select id="goTrashResource" resultType="com.ipa.openapi_inzent.model.ResourceDTO">
-        select re."apisId", re.id, re.garbage, ap.context from public.resource as re join
-        public.apis as ap on ap.id = re."apisId"
+        select DISTINCT re.id,re."apisId", re.garbage, ad.uri, ad.summary from public.resource as re join
+        public.apis as ap on ap.id = re."apisId" join public."apiDetails" as ad on ad."resourceId" = re.id
         order by re.id asc
+    </select>
+    <select id="trashSearch" parameterType="string" resultType="com.ipa.openapi_inzent.model.ApiDetailsDTO">
+        select r."apisId", r.id as resource_id, ad.id, ad."resourceId", ad.method, ad.url, ad.uri, ad.summary,
+        r.garbage,
+        ad.security, ad.scope, ad."operationId", ad.version, ad.status, ad."authorization", ad."tagId", ad.trash from
+        public.resource as r
+        join public."apiDetails" as ad
+        on ad."resourceId" = r."id"
+        where ad.uri ILIKE CONCAT('%', #{keyword},'%')
+        OR ad.summary ILIKE CONCAT('%', #{keyword},'%');
     </select>
 
 </mapper>

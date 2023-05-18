@@ -11,4 +11,6 @@ public interface UserDao {
     void register(UserDTO userDTO);
 
     UserDTO findByUsername(String username) throws DataAccessException;
+
+    UserDTO findByNickname(String nickname) throws DataAccessException;
 }

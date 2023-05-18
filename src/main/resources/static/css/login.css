@@ -28,6 +28,9 @@
     padding: 0;
     box-sizing: border-box;
 }
+.img-control ,.last-form{
+    margin-bottom: 12px;
+}
 
 html,
 body {
@@ -84,7 +87,7 @@ body {
 .input-group {
     position: relative;
     width: 100%;
-    margin: 1rem 0;
+    /*margin: 1rem 0;*/
 }
 
 .input-group i {
@@ -106,9 +109,9 @@ body {
     outline: none;
 }
 
-.input-group input:focus {
-    border: 0.125rem solid var(--primary-color);
-}
+/*.input-group input:focus {*/
+/*    border: 0.125rem solid var(--primary-color);*/
+/*}*/
 
 .form button {
     cursor: pointer;

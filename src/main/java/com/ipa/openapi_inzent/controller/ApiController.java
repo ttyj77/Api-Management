@@ -19,6 +19,7 @@ import java.util.Map;
 @RequestMapping("/api")
 @Controller
 public class ApiController {
+
     ApiService apiService;
     RoleService roleService;
     ApiDetailsService apiDetailsService;
@@ -269,7 +270,7 @@ public class ApiController {
     public String completeDetele(@PathVariable int id) {
         System.out.println("id = " + id);
         System.out.println("ApiController.completeDetele");
-//        apiDetailsService.completeDelete(id);
+        apiDetailsService.completeDelete(id);
         return "redirect:/api/trash";
     }
 
@@ -277,15 +278,25 @@ public class ApiController {
     public String resourceDetele(@PathVariable int id) {
         System.out.println("id = " + id);
         System.out.println("ApiController.resourceDetele");
-//        apiDetailsService.resourceDelete(id);
+        apiDetailsService.resourceDelete(id);
         return "redirect:/api/trash";
     }
 
     @GetMapping("/return/{id}")
     public String goReturn(@PathVariable int id) {
+        System.out.println("ApiController.goReturn");
         ApiDetailsDTO a = apiDetailsService.selectOne(id);
         a.setTrash(false);
+        apiDetailsService.updateDetail(a);
         return "redirect:/api/trash";
+    }
+
+    @GetMapping("/returnResource/{id}")
+    public String goReturnResource(@PathVariable int id) {
+        ResourceDTO s = apiDetailsService.resourceOne(id);
+        s.setGarbage(false);
+        apiDetailsService.updateResource(s);
+        return "redirect:/api/details/" + s.getApisId();
     }
 
     // 휴지통 관리로 보내는 곳
@@ -304,4 +315,13 @@ public class ApiController {
         apiDetailsService.updateResource(s);
         return "redirect:/api/details/" + s.getApisId();
     }
+
+    @GetMapping("/trashSearch")
+    public String trashSearch(Model model, String keyword) {
+        System.out.println("keyword = " + keyword);
+        model.addAttribute("list", apiDetailsService.trashSearch(keyword));
+        System.out.println("apiDetailsService.trashSearch(keyword) = " + apiDetailsService.trashSearch(keyword));
+        return "/apis/trash";
+    }
+
 }

@@ -56,14 +56,14 @@ public class IndexController {
         return "accountList";
     }
 
-    @GetMapping("/requestPage")
-    public String Authorization() {
-        return "requestPage";
-    }
-
     @GetMapping("/authorization")
     public String authorization() {
         return "authorization";
+    }
+
+    @GetMapping("/register")
+    public String regis() {
+        return "register";
     }
 
 }

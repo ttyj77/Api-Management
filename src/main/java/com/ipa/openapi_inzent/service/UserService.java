@@ -15,15 +15,14 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
         this.userDao = userDao;
     }
-
     public void register(UserDTO userDTO) {
         userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         userDao.register(userDTO);
     }
-
     public UserDTO findByUsername(String username) {
-        System.out.println("UserService.findByUsername >> " + username);
         return userDao.findByUsername(username);
     }
-
+    public UserDTO findByNickname(String nickname) {
+        return userDao.findByNickname(nickname);
+    }
 }

@@ -20,6 +20,7 @@ public class UserCustomDetails implements UserDetails {
         this.userDTO = userDTO;
     }
 
+    // 계정의 권한 목록을 리턴
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> list = new ArrayList<>();
@@ -40,17 +41,17 @@ public class UserCustomDetails implements UserDetails {
     @Override
     public boolean isAccountNonExpired() {
         return true;
-    }
+    } // 계정 만료 여부 리턴
 
     @Override
     public boolean isAccountNonLocked() {
         return true;
-    }
+    } // 계정 잠김 여부 리턴
 
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
-    }
+    } // 비밀번호 만료 여부 리턴
 
     @Override
     public boolean isEnabled() {

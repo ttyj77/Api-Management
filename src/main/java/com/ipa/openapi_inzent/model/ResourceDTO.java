@@ -8,5 +8,6 @@ public class ResourceDTO {
     private int apisId;
     private boolean garbage;
 
-    private String context;
+    private String uri;
+    private String summary;
 }

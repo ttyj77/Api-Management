@@ -69,4 +69,8 @@ public class ApiDetailsService {
     public List<TagDTO> selectAllTag() {
         return apiDetailsDao.selectAllTag();
     }
+
+    public List<ApiDetailsDTO> trashSearch(String keyword) {
+        return apiDetailsDao.trashSearch(keyword);
+    }
 }

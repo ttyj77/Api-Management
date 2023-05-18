@@ -36,4 +36,6 @@ public interface ApiDetailsDao {
     void resourceDelete(int id) throws DataAccessException;
 
     List<TagDTO> selectAllTag() throws DataAccessException;
+
+    List<ApiDetailsDTO> trashSearch(String keyword) throws DataAccessException;
 }
