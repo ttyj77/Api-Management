@@ -11,4 +11,5 @@ public class ResourceDTO {
 
     private String uri;
     private String summary;
+    private String context;
 }

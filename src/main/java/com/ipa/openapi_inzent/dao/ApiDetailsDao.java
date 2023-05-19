@@ -3,6 +3,7 @@ package com.ipa.openapi_inzent.dao;
 import com.ipa.openapi_inzent.model.ApiDetailsDTO;
 import com.ipa.openapi_inzent.model.ResourceDTO;
 import com.ipa.openapi_inzent.model.TagDTO;
+import io.swagger.annotations.Api;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.dao.DataAccessException;
 
@@ -36,6 +37,14 @@ public interface ApiDetailsDao {
     void resourceDelete(int id) throws DataAccessException;
 
     List<TagDTO> selectAllTag() throws DataAccessException;
+
+    List<ApiDetailsDTO> searchPath(String keyword) throws DataAccessException;
+
+    void insertResource(ResourceDTO resourceDTO) throws DataAccessException;
+
+    void insertApiDetail(ApiDetailsDTO apiDetailsDTO) throws DataAccessException;
+
+    ApiDetailsDTO searchDetail(int id) throws DataAccessException;
 
     List<ApiDetailsDTO> trashSearch(String keyword) throws DataAccessException;
 }

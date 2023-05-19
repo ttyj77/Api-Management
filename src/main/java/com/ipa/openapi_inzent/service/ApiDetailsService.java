@@ -70,6 +70,27 @@ public class ApiDetailsService {
         return apiDetailsDao.selectAllTag();
     }
 
+    public List<ApiDetailsDTO> searchPath(String keyword) {
+        return apiDetailsDao.searchPath(keyword);
+    }
+
+    public int insertResource(ResourceDTO resourceDTO) {
+        System.out.println("ApiDetailsService.insertResource");
+        System.out.println("resourceDTO = " + resourceDTO);
+        apiDetailsDao.insertResource(resourceDTO);
+        int id = resourceDTO.getId();
+        return id;
+    }
+
+    public void insertApiDetail(ApiDetailsDTO apiDetailsDTO) {
+        apiDetailsDao.insertApiDetail(apiDetailsDTO);
+
+    }
+
+    public ApiDetailsDTO searchDetail(int id) {
+        return apiDetailsDao.searchDetail(id);
+    }
+
     public List<ApiDetailsDTO> trashSearch(String keyword) {
         return apiDetailsDao.trashSearch(keyword);
     }

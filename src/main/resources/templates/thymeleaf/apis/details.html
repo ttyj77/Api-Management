@@ -88,6 +88,30 @@
             .authorizationSelectBox label:hover {
                 /*background-color: #1e90ff;*/
             }
+
+            .tdContent:hover {
+                background-color: #f5f6fb;
+            }
+
+            .tdHead {
+                background-color: #f5f5f5 !important;
+                width: 30% !important;
+
+            }
+
+            .table td {
+                padding: 0.75rem !important;
+            }
+
+            .trContent {
+                vertical-align: middle;
+            !important;
+            }
+
+            .borderTop {
+                border-top: 1px solid #dee2e6 !important;
+            }
+
         </style>
     </th:block>
 
@@ -105,11 +129,14 @@
                 integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
                 crossorigin="anonymous"></script>
         <script src="/js/sb-admin-2.min.js"></script>
+        <script src="/js/details.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script>
             function methodSwitch(value) {
-
+                console.log("click!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+                console.log(value)
                 let method = value.innerText.toLowerCase()
+                console.log(method)
                 let visible = document.getElementById(method)
                 let content = document.getElementById(method + "-tab")
 
@@ -186,99 +213,97 @@
             }
 
             function insertResource() {
-                console.log("========================")
                 const searchParams = new URLSearchParams(location.search);
                 console.log(window.location.href)
                 console.log(window.location.href.split("/").slice(-1)[0]) //페이지 아이디 = apis 아이디
 
                 let method = ['get', 'post', 'put', 'delete']
                 let jsonArr = new Array();
-
                 for (let i = 0; i < 4; i++) {
+                    let paramArr = new Array();
+                    let resCodeArr = new Array();
+                    let param = new Object();
+
                     //insertOperationId
                     let obj = new Object();
 
                     let operationId = document.getElementById(method[i] + "OperationId")
                     let summary = document.getElementById(method[i] + "Summary");
-                    if (operationId != null) {
+                    let tag = document.getElementById(method[i] + "TagBox")
+                    let reqData = document.getElementById(method[i] + "ReqData")
+
+                    // tab display 확인 none이면 값 있어도 등록 안함
+                    let display = document.getElementById(method[i]).style.display
+
+                    // 파리미터 tr
+                    let param_tr = $('#' + method[i] + "ParameterItemBody tr");
+
+                    // 응답코드 tr
+                    let resCode_tr = $('#' + method[i] + "ResCodeItemBody tr");
+
+                    console.log("resCode_tr : " + resCode_tr)
+                    console.log(resCode_tr)
+                    if (operationId.value != "" && display == "block") {
+
                         console.log(operationId.value)
                         obj.operation = operationId.value;
                         obj.summary = summary.value
-                        jsonArr.push(obj)
-                    }
-                }
-                console.log("jsonArr ================= " + JSON.stringify(jsonArr))
+                        obj.tag = tag.value.toString()
 
-                function insertResource() {
-                    console.log("========================")
-                    const searchParams = new URLSearchParams(location.search);
-                    console.log(window.location.href)
-                    console.log(window.location.href.split("/").slice(-1)[0]) //페이지 아이디 = apis 아이디
-
-                    let method = ['get', 'post', 'put', 'delete']
-                    let jsonArr = new Array();
-
-                    for (let i = 0; i < 4; i++) {
-                        //insertOperationId
-                        let obj = new Object();
-
-                        let operationId = document.getElementById(method[i] + "OperationId")
-                        let summary = document.getElementById(method[i] + "Summary");
-                        if (operationId != null) {
-                            console.log(operationId.value)
-                            obj.operation = operationId.value;
-                            obj.summary = summary.value
-                            jsonArr.push(obj)
+                        if (method[i] == "post" || method[i] == "put") {
+                            obj.reqData = reqData.value;
                         }
+
+                        // 파라미터 추가 시 tr 추출
+                        $.each(param_tr, function (index, value) {
+                            param = new Object();
+                            let tdList = $(value)
+                            param.name = tdList.children().eq(1).text();
+                            param.transferMethod = tdList.children().eq(2).text()
+                            param.explanation = tdList.children().eq(3).text()
+                            param.required = tdList.children().eq(4).text()
+                            param.type = tdList.children().eq(5).text()
+                            param.sample = tdList.children().eq(6).text()
+                            paramArr.push(param)
+                        });
+                        obj.param = paramArr
+
+                        // 파라미터 추가 시 tr 추출
+                        $.each(resCode_tr, function (index, value) {
+                            param = new Object();
+                            let tdList = $(value)
+                            console.log("==========================")
+                            console.log(tdList.children())
+                            param.code = tdList.children().eq(1).text()
+                            param.explanation = tdList.children().eq(2).text()
+                            param.type = tdList.children().eq(3).text()
+                            resCodeArr.push(param)
+
+                        });
+                        obj.resCode = resCodeArr
+
+
                     }
-                    console.log("jsonArr ================= " + JSON.stringify(jsonArr))
-                    console.log(jsonArr[0])
-                    let arrGet = (jsonArr[0]);
-                    // console.log("jsonArr ================= " + (jsonArr)[1])
-                    // console.log("jsonArr ================= " + (jsonArr)[2])
-                    // console.log("jsonArr ================= " + (jsonArr)[3])
-
-
-                    let arr = [{"method": "get"}, {"url": "/vi/insu/append"}]
-
-                    //
-                    // [요청 json 데이터 선언]
-                    let jsonData = { // Body에 첨부할 json 데이터
-                        "idx": window.location.href.split("/").slice(-1)[0], //apis index
-                        "get": JSON.stringify(jsonArr[0]),
-                        "post": JSON.stringify(jsonArr[1]),
-                        "put": JSON.stringify(jsonArr[2]),
-                        "delete": JSON.stringify(jsonArr[3]),
-                    };
-
-                    $.ajax({
-                        url: "/api/resource/insert",
-                        data: JSON.stringify(jsonData), //전송 데이터
-                        dataType: "json",
-                        method: "post",
-                        traditional: true, //필수
-                        async: true, //비동기 여부
-                        timeout: 5000, //타임 아웃 설정
-                        dataType: "JSON", //응답받을 데이터 타입 (XML,JSON,TEXT,HTML,JSONP)
-                        contentType: "application/json; charset=utf-8", //헤더의 Content-Type을 설정
-
-                        success: (message) => {
-                            console.log(message)
-                        }
-                    })
+                    jsonArr.push(obj)
                 }
-
-                let arr = [{"method": "get"}, {"url": "/vi/insu/append"}]
-
                 //
+                console.log("uri index +++++++++++++++++++++++++++++++++++++++++++++")
+                console.log($("#searchPathTbody tr"))
+                console.log($("#searchPathTbody tr").id)
+                // console.log(document.getElementById("searchPathTbody").children[0])
                 // [요청 json 데이터 선언]
                 let jsonData = { // Body에 첨부할 json 데이터
-                    "idx": window.location.href.split("/").slice(-1)[0], //apis index
-                    "get": JSON.stringify(arr),
-                    "post": JSON.stringify(arr),
-                    "put": JSON.stringify(arr),
-                    "delete": JSON.stringify(arr),
-                };
+                    "idx": document.getElementById("apiId").value, //api index
+                    "uriId": document.getElementById("pathid").value,
+                    "url": document.getElementById("url").value,
+                    "path": document.getElementById("path").name + document.getElementById("path").value,
+                    "get": JSON.stringify(jsonArr[0]),
+                    "post": JSON.stringify(jsonArr[1]),
+                    "put": JSON.stringify(jsonArr[2]),
+                    "delete": JSON.stringify(jsonArr[3]),
+
+                }
+
 
                 $.ajax({
                     url: "/api/resource/insert",
@@ -295,7 +320,164 @@
                         console.log(message)
                     }
                 })
+
+                // 추가 버튼 누르면 모달안의 input value 삭제
+                // for (let i = 0; i < method.length; i++) {
+                //     let id = '#' + method[i] + '-content'
+                // let get_input = $(id + ' input[type=text]');
+                let get_input = $("#resourceModal input[type=text]");
+
+                $.each(get_input, function (index, value) {
+                    $(value).val('')
+                });
+                // path 검색 모달의 내용지우기
+                document.getElementById("pathSearchBar").value = '';
+                // path 검색 결과 지우기
+                document.getElementById("searchPathTbody").innerHTML = ""
+                showAllMethod();
+                // }
             }
+
+
+            // 파라미터 추가 모달의 추가 버튼
+            function insertParameter(value) {
+                let method = value.parentNode.id.split("-")[0]
+                let tbody = document.getElementById(method + "ParameterItemBody")
+
+                let name_val = document.getElementById("parameter-name").value
+                let explanation_val = document.getElementById("explanation").value
+
+                if (name_val == "") {
+                    document.getElementById("parameter-name").parentNode.children[0].style.color = "#1d61ff";
+
+                    document.getElementById("parameter-name").focus()
+                } else if (explanation_val == "") {
+                    document.getElementById("explanation").parentNode.children[0].style.color = "#1d61ff";
+                    document.getElementById("explanation").focus()
+
+                } else {
+                    let tr = document.createElement("tr")
+                    let th = document.createElement("th")
+                    let name = document.createElement("td");
+
+                    name.className = "name"
+                    let transferMethod = document.createElement("td");
+                    transferMethod.className = "transferMethod"
+                    let explanation = document.createElement("td");
+                    explanation.className = "explanation";
+                    let required = document.createElement("td");
+                    required.className = "required"
+                    let type = document.createElement("td");
+                    type.className = "type"
+                    let sample = document.createElement("td");
+                    sample.className = "sample"
+                    let delUpdate = document.createElement("td");
+                    delUpdate.className = "delUpdate"
+
+                    th.scope = "row";
+                    th.innerText = "1"
+
+                    name.innerText = document.getElementById("parameter-name").value;
+
+                    transferMethod.innerText = document.getElementById("transferMethod").value;
+
+                    explanation.innerText = document.getElementById("explanation").value;
+
+                    required.innerText = document.getElementById("required").value;
+
+                    type.innerText = document.getElementById("type").value;
+
+                    sample.innerText = document.getElementById("sample").value;
+                    delUpdate.innerHTML = "<i class=\"fa-solid fa-pen mr-2\" style=\"color: #797a7c;\"></i><i class=\"fa-solid fa-trash-can\" style=\"color: #797a7c; cursor: pointer\"/>"
+
+                    tr.append(th, name, transferMethod, explanation, required, type, sample, delUpdate)
+                    tbody.append(tr)
+
+                    $("#insertParameterModal").modal('hide')
+                    $("#resourceModal").modal('show')
+
+
+                    // 추가 버튼 누르면 모달안의 input value 삭제
+                    let get_input = $("#insertParameterModal input[type=text]");
+                    $.each(get_input, function (index, value) {
+                        $(value).val('')
+                    });
+
+                }
+
+            }
+
+            // 응답코드 추가 모달의 추가 버튼
+            function insertResCode(value) {
+                let method = value.parentNode.id.split("-")[0]
+                let tbody = document.getElementById(method + "ResCodeItemBody")
+                let code_val = document.getElementById("code-name").value
+                let explanation_val = document.getElementById("code-explanation").value
+
+                if (code_val == "") {
+                    document.getElementById("code-name").parentNode.children[0].style.color = "#1d61ff";
+
+                    document.getElementById("code-name").focus()
+                } else if (explanation_val == "") {
+                    document.getElementById("code-explanation").parentNode.children[0].style.color = "#1d61ff";
+                    document.getElementById("code-explanation").focus()
+
+                } else {
+                    let tr = document.createElement("tr")
+                    let th = document.createElement("th")
+
+                    let code = document.createElement("td");
+                    code.className = "code"
+                    let explanation = document.createElement("td");
+                    explanation.className = "explanation";
+                    let type = document.createElement("td");
+                    type.className = "type"
+                    let delUpdate = document.createElement("td");
+                    delUpdate.className = "delUpdate"
+
+                    th.scope = "row";
+                    th.innerText = "1"
+
+                    code.innerText = document.getElementById("code-name").value;
+
+                    explanation.innerText = document.getElementById("code-explanation").value;
+
+                    type.innerText = document.getElementById("contentType").value;
+
+                    delUpdate.innerHTML = "<i class=\"fa-solid fa-pen mr-2\" style=\"color: #797a7c;\"></i><i class=\"fa-solid fa-trash-can\" style=\"color: #797a7c; cursor: pointer\"/>"
+
+                    tr.append(th, code, explanation, type, delUpdate)
+                    tbody.append(tr)
+
+                    $("#insertResCodeModal").modal('hide')
+                    $("#resourceModal").modal('show')
+
+                    // 추가 버튼 누르면 모달안의 input value 삭제
+                    let get_input = $("#insertResCodeModal input[type=text]");
+                    $.each(get_input, function (index, value) {
+                        $(value).val('')
+                    });
+
+                }
+            }
+
+            // 파라미터 추가 버튼 클릭시 이동
+            function paramModalShow(value) {
+                let btn = document.getElementsByClassName("modal-footer param")[0]
+
+                btn.id = value.id.split("-")[0] + "-param"
+                // btn.id =
+                $("#insertParameterModal").modal('show')
+            }
+
+            // 응답코드 추가 버튼 클릭시 이동
+            function resCodeModalShow(value) {
+                let btn = document.getElementsByClassName("modal-footer code")[0]
+                btn.id = value.id.split("-")[0] + "-resCode"
+                // btn.id =
+                $("#insertResCodeModal").modal('show')
+            }
+
 
             window.onload = function () {
                 let cnt = document.querySelectorAll(".tbody").length;
@@ -312,6 +494,230 @@
                 }
             }
 
+            //     url 실시간 검색
+            function searchPath(value) {
+
+                console.log(value.value)
+                let keyword = value.value
+                if (keyword.charAt(0) == "/") {
+                    console.log("첫글자 슬래시")
+                    keyword = keyword.slice(1)
+                }
+                console.log("keyword " + keyword)
+
+                let data = {
+                    "keyword": keyword,
+                };
+                $.ajax({
+                    url: "/api/search/path",
+                    type: "get",
+                    data: data,
+
+                    success: (message) => {
+                        let array = JSON.parse(message.responseText);
+                        let tbody = document.getElementById("searchPathTbody")
+                        tbody.innerHTML = ""
+                        console.log(array)
+                        if (array.length == 0) {
+                            // DB에 없는 경우
+                            // 해당 글자를 그대로 받고 + 새로 등록하시겠습니까?
+                            console.log("new!")
+                            console.log(value.value)
+
+                            let defaultUri = document.getElementById("path").name
+                            let newUri = value.value
+                            let h5 = document.createElement("h5")
+                            h5.innerText = newUri
+                            let tr = document.createElement("tr")
+                            let td = document.createElement("td")
+                            td.colSpan = 4
+                            let newFullPath = defaultUri + '/' + h5.innerText
+                            td.innerText = newFullPath + ' 을 새로 등록하시겠습니까?'
+
+                            tr.onclick = function () {
+                                newInsertPath(newFullPath);
+                            }
+                            // 신규라는 의미이다.
+                            tr.id = "0"
+
+
+                            tr.append(td)
+                            tbody.append(tr)
+
+                        } else {
+                            console.log(array.length)
+                            let arr = []
+                            for (let i = 0; i < array.length; i++) {
+                                arr[i] = array[i].uri
+                                console.log(arr)
+                            }
+
+                            let result1 = [...new Set(arr)];
+
+                            console.log(result1); //중복 제거됨
+                            let mt = []
+                            for (let i = 0; i < result1.length; i++) {
+                                let tr = document.createElement("tr")
+                                let id = document.createElement("td");
+                                let path = document.createElement("td");
+                                let possibleMethod = document.createElement("td");
+
+                                let impossibleMethod = document.createElement("td");
+                                impossibleMethod.id = 'impossibleMethod'
+                                path.innerText = result1[i]
+                                tr.id = array[i].id
+
+                                mt.splice(0, mt.length);
+                                let k = 0;
+                                for (let j = 0; j < array.length; j++) {
+                                    if (result1[i] == array[j].uri) {
+                                        mt[k] = array[j].method
+                                        // method.innerHTML = array[j].method;
+                                        k++
+                                    }
+                                    impossibleMethod.innerHTML = mt;
+                                }
+
+                                let http = ["GET", "POST", "PUT", "DELETE"]
+                                for (let j = 0; j < http.length; j++) {
+                                    for (let l = 0; l < mt.length; l++) {
+
+                                        if (mt[l] == http[j]) {
+                                            http.splice(j, 1)
+                                        }
+                                    }
+
+                                }
+                                console.log(http)
+                                possibleMethod.innerHTML = http
+                                impossibleMethod.style.backgroundColor = "rgb(224 0 0 / 22%)"
+                                possibleMethod.style.backgroundColor = "rgb(37 224 0 / 22%)"
+                                id.innerText = array[i].id
+                                tr.onclick = function () {
+                                    insertPath(event);
+                                }
+
+                                tr.append(id, path, possibleMethod, impossibleMethod)
+                                tbody.append(tr)
+
+                            }
+
+
+                        }
+                    },
+                    error: (e) => {
+                        console.log("통신 실패", e);
+                    }
+                })
+            }
+
+            // path 입력하기
+            function showPathSearchModal() {
+                $("#resourceModal").modal('hide')
+                $("#searchPathModal").modal('show')
+                document.getElementById("defaultUri").innerText = document.getElementById("path").name + " /" // 기본 uri
+                showAllMethod()
+            }
+
+
+            // 검색 결과 표를 클릭하면 input 박스에 들어감
+            function insertPath(e) {
+                // console.log(e.target.parentNode.id) // 클릭한 uri
+                // console.log(e.target.parentNode.childNodes[0].textContent) // 클릭한 uri
+                console.log(e.target.parentNode.childNodes[1].textContent) // 클릭한 uri
+                console.log(e.target.parentNode.childNodes[3].textContent) // 클릭한 uri의 impossibleMethod
+
+                $("#searchPathModal").modal('hide')
+                $("#resourceModal").modal('show')
+
+                let input = document.getElementById("path")
+                let pathid = document.getElementById("pathid")
+                pathid.value = e.target.parentNode.id // 선택한 uri id , 새로 생성 시 0
+                let defaultUri = document.getElementById("path").name
+
+                // resouce modal path 값 넣음
+                input.value = defaultUri + '/' + e.target.parentNode.childNodes[1].textContent
+                // hidden으로 기존 리소스 값 넣음
+                // pathid.value
+
+                // + input 박스에 해당 uri가 들어가면서 자동으로 작성가능한 method만 보이도록 하는 부분
+                let buttonList = $("#nav-tab button[type=button]");
+
+
+                let impossibleMethod = e.target.parentNode.childNodes[3].textContent
+
+                const arr = impossibleMethod.split(',');
+                console.log(arr) // 작성 불가능한 메서드 리스트
+
+                // 작성 불가능한 메서드들은 disabled 처리
+                for (let i = 0; i < buttonList.length; i++) {
+                    for (let j = 0; j < arr.length; j++) {
+                        console.log("===================")
+                        console.log(arr[j])
+                        let trim = buttonList[i].innerText.trim()
+                        console.log(trim)
+                        console.log("===================")
+                        if (trim == arr[j]) {
+                            console.log("일치 = 작성불가능")
+                            buttonList[i].style.display = 'none'
+
+                            let visible = document.getElementById(trim.toLowerCase())
+                            console.log(visible)
+                            visible.style.display = "none"
+                            //     tab hidden
+                            tabHidden()
+                        }
+                    }
+                    // 버튼 누르면 모달안의 input value 삭제
+                    let id = '#' + buttonList[i].innerText.trim().toLowerCase() + '-content'
+                    let get_input = $(id + ' input[type=text]');
+                    console.log("====================get_input11122222222222222=======================")
+                    console.log(get_input)
+                    $.each(get_input, function (index, value) {
+                        console.log(index)
+                        console.log(value)
+                        $(value).val('')
+                    });
+
+                }
+
+            }
+
+            // path 신규 등록 시
+            function newInsertPath(uri) {
+
+                $("#searchPathModal").modal('hide')
+
+                document.getElementById("path").value = uri
+                showAllMethod()
+
+                let pathid = document.getElementById("pathid")
+                pathid.value = "0" // 선택한 uri id , 새로 생성 시 0
+
+                $("#resourceModal").modal("show")
+
+            }
+
+            function tabHidden() {
+                let tabList = document.getElementById("myTabContent").children
+                let tabHeaderList = document.getElementById("myTab").children
+
+                for (let k = 0; k < tabList.length; k++) {
+                    tabList[k].className = "tab-pane fade"
+                    tabHeaderList[k].style.display = "none"
+                }
+                console.log(tabList)
+            }
+
+            // 모든 method 버튼 show all
+            function showAllMethod() {
+                let buttonList = $("#nav-tab button[type=button]");
+
+                console.log(buttonList)
+                for (let i = 0; i < buttonList.length; i++) {
+                    buttonList[i].style.display = 'block'
+                }
+            }
         </script>
     </th:block>
 </head>
@@ -342,7 +748,7 @@
                     </select>
                     <!-- <button type="button" class="btn btn-secondary" id="pick" data-bs-toggle="modal"></button>-->
                     <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
-                            data-bs-target="#resourceModal">
+                            data-bs-target="#resourceModal" onclick="tabHidden()">
                         + 리소스 추가
                     </button>
                     <!-- Button trigger modal -->
@@ -399,11 +805,6 @@
                                        data-toggle="tooltip"
                                        title="삭제"
                                        class="fa-solid fa-trash-can delete"></i>
-                                    <!--                                    <i th:onclick="|location.href='@{/api/goTrashResource/{resourceId}(resourceId = ${index.id})}'|" style="cursor: pointer;"-->
-                                    <!--                                       data-toggle="tooltip"-->
-                                    <!--                                       title="삭제"-->
-                                    <!--                                       class="fa-solid fa-trash-can delete"></i>-->
-                                    <!-- <div id="tooltipDelete">삭제</div>-->
                                 </div>
                             </div>
                         </button>
@@ -425,7 +826,7 @@
                                     </tr>
                                     </thead>
                                     <tbody class="tbody">
-                                    <tr onclick="location.href='#'" style="cursor: pointer"
+                                    <tr onclick="detailModal(this)" style="cursor: pointer" id="trDetailId"
                                         th:each="detail:${apiDetailsDTOList}"
                                         th:if="${index.id == detail.resourceId} and ${detail.trash == false} and ${#lists.size(apiDetailsDTOList)!=0}">
                                         <td th:text="${detail?.method}"></td>
@@ -434,6 +835,7 @@
                                         <td th:text="${detail?.security}"></td>
                                         <td th:text="${detail?.operationId}"></td>
                                         <td th:text="${detail?.version}"></td>
+
                                         <td>
                                             <select class="form-select">
                                                 <option selected>develop</option>
@@ -456,10 +858,6 @@
                                                data-toggle="tooltip"
                                                title="삭제"
                                                class="fa-solid fa-trash-can delete"></i>
-                                            <!--   <i th:onclick="|location.href='@{/api/goTrash/{detailId}(detailId = ${detail.id})}'|" style="cursor: pointer;"-->
-                                            <!--   data-toggle="tooltip"-->
-                                            <!--   title="삭제"-->
-                                            <!--   class="fa-solid fa-trash-can delete"></i>-->
                                         </td>
                                     </tr>
                                     </tbody>
@@ -537,7 +935,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body" style="overflow-y: scroll;overflow-x: hidden">
+                <div class="modal-body" style="overflow-x: hidden">
                     <div style="display: flex; flex-direction: column">
                         <div style="height: 20%">
                         </div>
@@ -549,29 +947,41 @@
                                 <tr>
                                     <td class="resourceTable" style="background-color: #0000001c">서버 URL</td>
                                     <td><input class="input-group rounded" type="text"
-                                               placeholder="  http://localhost8080/api/"></td>
+                                               placeholder="  http://localhost8080/api/" id="url"
+                                    ></td>
                                 </tr>
                                 <tr>
 
                                     <td class="resourceTable" style="background-color: #0000001c">Path</td>
 
-                                    <td style="display: flex; align-items: baseline;">
-                                        <div class="mt-1 mr-2" th:text="${api.context}"></div>
-                                        <input
-                                                class="input-group rounded" type="text" placeholder="  /">
+                                    <td style="display: flex;">
+                                        <!--                                        <div class="mt-2 mr-2" th:text="${api.context+'/'}"-->
+                                        <!--                                             style="font-size: 18px"></div>-->
+                                        <input style="height: 46px;align-self: center;"
+                                               class="input-group rounded pl-3 p-2" type="text"
+                                               id="path" disabled
+                                               th:name="${api.context}">
+                                        <input type="hidden" value="0" id="pathid">
+                                        <input type="hidden" th:value="${api.id}" id="apiId">
+                                        <button type="button" class="btn btn-danger"
+                                                style="font-size: 16px;height: 46px;width: 130px;margin-left: 1%;"
+                                                onclick="showPathSearchModal()">
+                                            입력하기
+                                        </button>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="resourceTable" style="background-color: #0000001c;">Method</td>
+                                    <td class=" resourceTable" style="background-color: #0000001c;">Method
+                                    </td>
                                     <td>
                                         <nav>
-                                            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                                            <div class="nav" id="nav-tab" role="tablist">
                                                 <button type="button" class="btn btn-outline-danger mr-3"
                                                         data-toggle="tab"
                                                         href="#nav-get" role="tab" aria-controls="nav-get"
                                                         aria-selected="true" onclick="methodSwitch(this)">GET
                                                 </button>
-                                                <button type="button" class="btn btn-outline-warning mr-3"
+                                                <button type="button" class="btn btn-outline-warning mr-3 hover"
                                                         data-toggle="tab"
                                                         href="#nav-post" role="tab" aria-controls="nav-post"
                                                         aria-selected="false" onclick="methodSwitch(this)">POST
@@ -594,41 +1004,23 @@
                             </table>
                         </div>
                     </div>
-
-
-                    <!--                    <div class="tab-content" id="nav-tabContent">-->
-                    <!--                        <div class="tab-pane fade" id="nav-get" role="tabpanel" aria-labelledby="nav-get-tab">-->
-                    <!--                            get-->
-                    <!--                        </div>-->
-                    <!--                        <div class="tab-pane fade" id="nav-post" role="tabpanel" aria-labelledby="nav-post-tab">-->
-                    <!--                            post-->
-                    <!--                        </div>-->
-                    <!--                        <div class="tab-pane fade" id="nav-put" role="tabpanel" aria-labelledby="nav-put-tab">-->
-                    <!--                            put-->
-                    <!--                        </div>-->
-                    <!--                        <div class="tab-pane fade" id="nav-delete" role="tabpanel" aria-labelledby="nav-delete-tab">-->
-                    <!--                            delete-->
-                    <!--                        </div>-->
-                    <!--                    </div>-->
-
-
-                    <!--method navs start-->
-
-                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <ul class="nav" id="myTab" role="tablist">
                         <li class="nav-item" style="display: none" id="get">
-                            <a class="nav-link" id="get-tab" data-toggle="tab" href="#get-content" role="tab"
+                            <a class="redBtn nav-link" id="get-tab" data-toggle="tab" href="#get-content" role="tab"
                                aria-selected="true">GET</a>
                         </li>
-                        <li class="nav-item" style="display: none" id="post">
-                            <a class="nav-link" id="post-tab" data-toggle="tab" href="#post-content" role="tab"
+                        <li class="nav-item " style="display: none" id="post">
+                            <a class="yellowBtn nav-link " id="post-tab" data-toggle="tab" href="#post-content"
+                               role="tab"
                                aria-selected="false">POST</a>
                         </li>
-                        <li class="nav-item" style="display: none" id="put">
-                            <a class="nav-link" id="put-tab" data-toggle="tab" href="#put-content" role="tab"
+                        <li class="nav-item " style="display: none" id="put">
+                            <a class="nav-link greenBtn" id="put-tab" data-toggle="tab" href="#put-content" role="tab"
                                aria-selected="false">PUT</a>
                         </li>
-                        <li class="nav-item" style="display: none" id="delete">
-                            <a class="nav-link" id="delete-tab" data-toggle="tab" href="#delete-content" role="tab"
+                        <li class="nav-item " style="display: none" id="delete">
+                            <a class="nav-link blackBtn" id="delete-tab" data-toggle="tab" href="#delete-content"
+                               role="tab"
                                aria-selected="false">DELETE</a>
                         </li>
                     </ul>
@@ -655,7 +1047,7 @@
                             <!--           태그선택박스                 -->
                             <div class="multiselect mt-4 ml-2 mr-2" style="margin-left: 1.5% !important;">
                                 <div class="selectBox">
-                                    <select name="tagBox">
+                                    <select name="getTagBox" id="getTagBox">
                                         <option value=""> -- 태그 선택 --</option>
                                         <option th:each="list : ${tagList}" th:value="${list?.id}"
                                                 th:utext="${list?.name}">
@@ -679,10 +1071,11 @@
                                         <input type="checkbox" id="getBearer"/>Bearer(APIKEY)</label>
                                 </div>
                             </div>
-                            <!--파라미터/응답 선택 시작-->
-                            <div style="display: flex; margin-top: 5%;">
+
+                            <!-- GET 파라미터/응답 선택 시작-->
+                            <div class="d-flex flex-column">
                                 <div class="d-flex align-items-start">
-                                    <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist"
+                                    <div class="nav d-flex nav-pills me-3 mb-2" id="v-pills-tab" role="tablist"
                                          aria-orientation="vertical">
 
                                         <button class="nav-link active" id="v-pills-get-parameter-tab"
@@ -709,34 +1102,20 @@
                                                 <th scope="col">필수여부</th>
                                                 <th scope="col">타입</th>
                                                 <th scope="col">샘플</th>
+                                                <th scope="col"></th>
                                             </tr>
                                             </thead>
-                                            <tbody>
-                                            <tr>
-                                                <th scope="row">1</th>
-                                                <td>org-code</td>
-                                                <td>Header</td>
-                                                <td>@mdo</td>
-                                                <td>필수</td>
-                                                <td>String</td>
-                                                <td>DFS456456</td>
-                                            </tr>
+                                            <tbody id="getParameterItemBody">
+                                            <!--                리소스 추가 페이지 - 파라미터 추가 모달의 추가 버튼 누르면 파라미터 정보 들어가는 곳               -->
 
                                             </tbody>
                                             <tfoot style="text-align:right;">
                                             <tr>
-                                                <td colspan="7" style="border-bottom-width: inherit !important;">
+                                                <td colspan="12" style="border-bottom-width: inherit !important;">
                                                     <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                                            data-bs-target="#insertParameterModal"
-                                                            id="get-parameter" data-bs-dismiss="modal">파라미터 추가
+                                                            id="get-parameter" data-bs-dismiss="modal"
+                                                            onclick="paramModalShow(this)">파라미터 추가
                                                     </button>
-                                                    <!--                                                    &lt;!&ndash;                                                    <button type="button"&ndash;&gt;-->
-                                                    <!--                                                            data-bs-toggle="modal"-->
-                                                    <!--                                                            data-bs-target="#insertParameterModal"-->
-                                                    <!--                                                            id="get-parameter">파라미터 추가-->
-                                                    <!--                                                        <i class="fa-regular fa-square-plus mr-1"></i>-->
-                                                    <!--                                                    </button>-->
-
 
                                                 </td>
                                             </tr>
@@ -754,28 +1133,22 @@
                                                 <th scope="col">응답코드</th>
                                                 <th scope="col">설명</th>
                                                 <th scope="col">Content-Type</th>
-                                                <th scope="col">예제</th>
-                                                <th scope="col">&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                                                <th scope="col"></th>
                                             </tr>
                                             </thead>
-                                            <tbody>
-                                            <tr>
-                                                <th scope="row">1</th>
-                                                <td>200</td>
-                                                <td>정상</td>
-                                                <td></td>
-                                                <td></td>
-                                                <td><i class="fa-solid fa-pen mr-2"></i><i
-                                                        class="fa-solid fa-trash-can"></i></td>
-                                            </tr>
+                                            <tbody id="getResCodeItemBody">
+                                            <!--                리소스 추가 페이지 - 응답코드 추가 모달의 추가 버튼 누르면 응답코드 정보 들어가는 곳               -->
 
                                             </tbody>
                                             <tfoot style="text-align:right;">
                                             <tr>
-                                                <td colspan="6" style="border-bottom-width: inherit !important;"><i
-                                                        class="fa-regular fa-square-plus mr-1" data-bs-toggle="modal"
-                                                        data-bs-target="#exampleModal"></i></td>
+                                                <td colspan="12" style="border-bottom-width: inherit !important;">
+                                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                                            id="get-resCode" data-bs-dismiss="modal"
+                                                            onclick="resCodeModalShow(this)">응답코드 추가
+                                                    </button>
 
+                                                </td>
                                             </tr>
 
                                             </tfoot>
@@ -784,15 +1157,16 @@
 
                                 </div>
                             </div>
+                            <!-- GET 파라미터/응답 선택 끝-->
                         </div>
-
+                        <!--post tab 시작-->
                         <div class="tab-pane fade" id="post-content" role="tabpanel">
                             <div style="display: flex" class="mt-3">
                                 <div class="col-6">
                                     <h6 class="col-2" style="text-align: left;">operationId</h6>
                                     <input class="col"
                                            type="text"
-                                           placeholder="  get-v1-insu"
+                                           placeholder="  post-v1-insu"
                                            id="postOperationId"
                                            style="height: 44px;border-radius: 7px;">
                                 </div>
@@ -800,7 +1174,7 @@
                                     <h6 class="col-2" style="text-align: left;">요약</h6>
                                     <input class="col"
                                            type="text"
-                                           placeholder="  get-v1-insu"
+                                           placeholder="  post-v1-insu"
                                            id="postSummary"
                                            style="height: 44px;border-radius: 7px;">
                                 </div>
@@ -808,7 +1182,7 @@
                             <!--           태그선택박스                 -->
                             <div class="multiselect mt-4 ml-2 mr-2" style="margin-left: 1.5% !important;">
                                 <div class="selectBox">
-                                    <select name="tagBox">
+                                    <select name="postTagBox" id="postTagBox">
                                         <option value=""> -- 태그 선택 --</option>
                                         <option th:each="list : ${tagList}" th:value="${list?.id}"
                                                 th:utext="${list?.name}">
@@ -832,20 +1206,35 @@
                                         <input type="checkbox" id="postBearer"/>Bearer(APIKEY)</label>
                                 </div>
                             </div>
-                            <!--파라미터/응답 선택 시작-->
-                            <div style="display: flex; justify-content: space-around; margin-top: 5%;">
-                                <div class="nav flex-column nav-pills" role="tablist"
-                                     aria-orientation="vertical">
-                                    <a class="nav-link active" data-toggle="pill"
-                                       href="#v-pills-home"
-                                       role="tab" aria-controls="v-pills-home" aria-selected="true">파라미터</a>
-                                    <a class="nav-link" data-toggle="pill"
-                                       href="#v-pills-profile"
-                                       role="tab" aria-controls="v-pills-profile" aria-selected="false">응답</a>
+
+
+                            <!-- POST 파라미터/응답 선택 시작-->
+                            <div class="d-flex flex-column">
+                                <div class="d-flex align-items-start">
+                                    <div class="nav d-flex nav-pills me-3 mb-2" role="tablist"
+                                         aria-orientation="vertical">
+
+                                        <button class="nav-link active" id="v-pills-post-parameter-tab"
+                                                data-bs-toggle="pill"
+                                                data-bs-target="#v-pills-post-parameter" type="button" role="tab"
+                                                aria-controls="v-pills-post-parameter" aria-selected="true">파라미터
+                                        </button>
+                                        <button class="nav-link ml-2" id="v-pills-post-response-tab"
+                                                data-bs-toggle="pill"
+                                                data-bs-target="#v-pills-post-response" type="button" role="tab"
+                                                aria-controls="v-pills-post-response" aria-selected="false">응답
+                                        </button>
+
+                                        <button class="nav-link ml-2" id="v-pills-post-reqData-tab"
+                                                data-bs-toggle="pill"
+                                                data-bs-target="#v-pills-post-reqData" type="button" role="tab"
+                                                aria-controls="v-pills-post-reqData" aria-selected="false">요청데이터
+                                        </button>
+                                    </div>
                                 </div>
                                 <div class="tab-content w-100">
-                                    <div class="tab-pane fade show active" role="tabpanel"
-                                         aria-labelledby="v-pills-home-tab">
+                                    <div class="tab-pane fade show active" id="v-pills-post-parameter" role="tabpanel"
+                                         aria-labelledby="v-pills-post-parameter-tab">
                                         <table class="table">
                                             <thead class="thead-light">
                                             <tr>
@@ -856,32 +1245,29 @@
                                                 <th scope="col">필수여부</th>
                                                 <th scope="col">타입</th>
                                                 <th scope="col">샘플</th>
+                                                <th scope="col"></th>
                                             </tr>
                                             </thead>
-                                            <tbody>
-                                            <tr>
-                                                <th scope="row">1</th>
-                                                <td>org-code</td>
-                                                <td>Header</td>
-                                                <td>@mdo</td>
-                                                <td>필수</td>
-                                                <td>String</td>
-                                                <td>DFS456456</td>
-                                            </tr>
+                                            <tbody id="postParameterItemBody">
+                                            <!--                리소스 추가 페이지 - 파라미터 추가 모달의 추가 버튼 누르면 파라미터 정보 들어가는 곳               -->
 
                                             </tbody>
                                             <tfoot style="text-align:right;">
                                             <tr>
-                                                <td colspan="7"
-                                                    style="border-bottom-width: inherit !important;"><i
-                                                        class="fa-regular fa-square-plus mr-1"></i></td>
+                                                <td colspan="12" style="border-bottom-width: inherit !important;">
+                                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                                            id="post-parameter" data-bs-dismiss="modal"
+                                                            onclick="paramModalShow(this)">파라미터 추가
+                                                    </button>
+
+                                                </td>
                                             </tr>
                                             </tfoot>
                                         </table>
-
                                     </div>
-                                    <div class="tab-pane fade" role="tabpanel"
-                                         aria-labelledby="v-pills-profile-tab">
+
+                                    <div class="tab-pane fade" id="v-pills-post-response" role="tabpanel"
+                                         aria-labelledby="v-pills-post-response-tab">
                                         <table class="table">
                                             <thead class="thead-light">
                                             <tr>
@@ -889,46 +1275,59 @@
                                                 <th scope="col">응답코드</th>
                                                 <th scope="col">설명</th>
                                                 <th scope="col">Content-Type</th>
-                                                <th scope="col">예제</th>
-                                                <th scope="col">&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                                                <th scope="col"></th>
                                             </tr>
                                             </thead>
-                                            <tbody>
-                                            <tr>
-                                                <th scope="row">1</th>
-                                                <td>200</td>
-                                                <td>정상</td>
-                                                <td></td>
-                                                <td></td>
-                                                <td><i class="fa-solid fa-pen mr-2"></i><i
-                                                        class="fa-solid fa-trash-can"></i></td>
-                                            </tr>
+                                            <tbody id="postResCodeItemBody">
+                                            <!--                리소스 추가 페이지 - 응답코드 추가 모달의 추가 버튼 누르면 응답코드 정보 들어가는 곳               -->
 
                                             </tbody>
                                             <tfoot style="text-align:right;">
                                             <tr>
-                                                <td colspan="6"
-                                                    style="border-bottom-width: inherit !important;"><i
-                                                        class="fa-regular fa-square-plus mr-1"
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target="#exampleModal"></i></td>
+                                                <td colspan="12" style="border-bottom-width: inherit !important;">
+                                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                                            id="post-resCode" data-bs-dismiss="modal"
+                                                            onclick="resCodeModalShow(this)">응답코드 추가
+                                                    </button>
 
+                                                </td>
                                             </tr>
 
                                             </tfoot>
                                         </table>
                                     </div>
-
+                                    <!--POST 요청 데이터 탭 -->
+                                    <div class="tab-pane fade" id="v-pills-post-reqData" role="tabpanel"
+                                         aria-labelledby="v-pills-post-reqData-tab">
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                <th scope="col"><h5 class="ml-1">Context-Type</h5> | application / json
+                                                </th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <th scope="row">
+                                                       <textarea id="postReqData" placeholder="예시를 입력해주세요"
+                                                                 style="height: 150px; width: -webkit-fill-available; padding: 15px"></textarea>
+                                                </th>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
+                            <!-- POST 파라미터/응답 선택 끝-->
                         </div>
+                        <!--PUT tab 시작-->
                         <div class="tab-pane fade" id="put-content" role="tabpanel" a>
                             <div style="display: flex" class="mt-3">
                                 <div class="col-6">
                                     <h6 class="col-2" style="text-align: left;">operationId</h6>
                                     <input class="col"
                                            type="text"
-                                           placeholder="  get-v1-insu"
+                                           placeholder="  put-v1-insu"
                                            id="putOperationId"
                                            style="height: 44px;border-radius: 7px;">
                                 </div>
@@ -936,7 +1335,7 @@
                                     <h6 class="col-2" style="text-align: left;">요약</h6>
                                     <input class="col"
                                            type="text"
-                                           placeholder="  get-v1-insu"
+                                           placeholder="  put-v1-insu"
                                            id="putSummary"
                                            style="height: 44px;border-radius: 7px;">
                                 </div>
@@ -944,7 +1343,7 @@
                             <!--           태그선택박스                 -->
                             <div class="multiselect mt-4 ml-2 mr-2" style="margin-left: 1.5% !important;">
                                 <div class="selectBox">
-                                    <select name="tagBox">
+                                    <select name="putTagBox" id="putTagBox">
                                         <option value=""> -- 태그 선택 --</option>
                                         <option th:each="list : ${tagList}" th:value="${list?.id}"
                                                 th:utext="${list?.name}">
@@ -956,7 +1355,7 @@
                             <div class="authorizationSelect ml-2 mr-2 mb-4 mt-3"
                                  style="margin-left: 1.5% !important;">
                                 <div class="selectBox">
-                                    <select name="tagBox">
+                                    <select name="TagBox" id="TagBox">
                                         <option value=""> -- 태그 선택 --</option>
                                         <option th:each="list : ${tagList}" th:value="${list?.id}"
                                                 th:utext="${list?.name}">
@@ -964,20 +1363,31 @@
                                     </select>
                                 </div>
                             </div>
-                            <!--파라미터/응답 선택 시작-->
-                            <div style="display: flex; justify-content: space-around; margin-top: 5%;">
-                                <div class="nav flex-column nav-pills" role="tablist"
-                                     aria-orientation="vertical">
-                                    <a class="nav-link active" data-toggle="pill"
-                                       href="#v-pills-home"
-                                       role="tab" aria-controls="v-pills-home" aria-selected="true">파라미터</a>
-                                    <a class="nav-link" data-toggle="pill"
-                                       href="#v-pills-profile"
-                                       role="tab" aria-controls="v-pills-profile" aria-selected="false">응답</a>
+                            <!-- POST 파라미터/응답 선택 시작-->
+                            <div class="d-flex flex-column">
+                                <div class="d-flex align-items-start">
+                                    <div class="nav d-flex nav-pills me-3 mb-2" role="tablist"
+                                         aria-orientation="vertical">
+
+                                        <button class="nav-link active" id="v-pills-put-parameter-tab"
+                                                data-bs-toggle="pill"
+                                                data-bs-target="#v-pills-put-parameter" type="button" role="tab"
+                                                aria-controls="v-pills-put-parameter" aria-selected="true">파라미터
+                                        </button>
+                                        <button class="nav-link ml-2" id="v-pills-put-response-tab"
+                                                data-bs-toggle="pill"
+                                                data-bs-target="#v-pills-put-response" type="button" role="tab"
+                                                aria-controls="v-pills-put-response" aria-selected="false">응답
+                                        </button>
+                                        <button class="nav-link ml-2" id="v-pills-put-reqData-tab" data-bs-toggle="pill"
+                                                data-bs-target="#v-pills-put-reqData" type="button" role="tab"
+                                                aria-controls="v-pills-put-reqData" aria-selected="false">요청데이터
+                                        </button>
+                                    </div>
                                 </div>
                                 <div class="tab-content w-100">
-                                    <div class="tab-pane fade show active" role="tabpanel"
-                                         aria-labelledby="v-pills-home-tab">
+                                    <div class="tab-pane fade show active" id="v-pills-put-parameter" role="tabpanel"
+                                         aria-labelledby="v-pills-put-parameter-tab">
                                         <table class="table">
                                             <thead class="thead-light">
                                             <tr>
@@ -988,32 +1398,30 @@
                                                 <th scope="col">필수여부</th>
                                                 <th scope="col">타입</th>
                                                 <th scope="col">샘플</th>
+                                                <th scope="col"></th>
                                             </tr>
                                             </thead>
-                                            <tbody>
-                                            <tr>
-                                                <th scope="row">1</th>
-                                                <td>org-code</td>
-                                                <td>Header</td>
-                                                <td>@mdo</td>
-                                                <td>필수</td>
-                                                <td>String</td>
-                                                <td>DFS456456</td>
-                                            </tr>
+                                            <tbody id="putParameterItemBody">
+                                            <!--                리소스 추가 페이지 - 파라미터 추가 모달의 추가 버튼 누르면 파라미터 정보 들어가는 곳               -->
 
                                             </tbody>
                                             <tfoot style="text-align:right;">
                                             <tr>
-                                                <td colspan="7"
-                                                    style="border-bottom-width: inherit !important;"><i
-                                                        class="fa-regular fa-square-plus mr-1"></i></td>
+                                                <td colspan="12" style="border-bottom-width: inherit !important;">
+                                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                                            id="put-parameter" data-bs-dismiss="modal"
+                                                            onclick="paramModalShow(this)">파라미터 추가
+                                                    </button>
+
+                                                </td>
                                             </tr>
                                             </tfoot>
                                         </table>
-
                                     </div>
-                                    <div class="tab-pane fade" role="tabpanel"
-                                         aria-labelledby="v-pills-profile-tab">
+
+                                    <div class="tab-pane fade" id="v-pills-put-response" role="tabpanel"
+                                         aria-labelledby="v-pills-put-response-tab">
+
                                         <table class="table">
                                             <thead class="thead-light">
                                             <tr>
@@ -1021,37 +1429,53 @@
                                                 <th scope="col">응답코드</th>
                                                 <th scope="col">설명</th>
                                                 <th scope="col">Content-Type</th>
-                                                <th scope="col">예제</th>
-                                                <th scope="col">&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                                                <th scope="col"></th>
                                             </tr>
                                             </thead>
-                                            <tbody>
-                                            <tr>
-                                                <th scope="row">1</th>
-                                                <td>200</td>
-                                                <td>정상</td>
-                                                <td></td>
-                                                <td></td>
-                                                <td><i class="fa-solid fa-pen mr-2"></i><i
-                                                        class="fa-solid fa-trash-can"></i></td>
-                                            </tr>
+                                            <tbody id="putResCodeItemBody">
+                                            <!--                리소스 추가 페이지 - 응답코드 추가 모달의 추가 버튼 누르면 응답코드 정보 들어가는 곳               -->
 
                                             </tbody>
                                             <tfoot style="text-align:right;">
                                             <tr>
-                                                <td colspan="6"
-                                                    style="border-bottom-width: inherit !important;"><i
-                                                        class="fa-regular fa-square-plus mr-1"
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target="#exampleModal"></i></td>
+                                                <td colspan="12" style="border-bottom-width: inherit !important;">
+                                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                                            id="put-resCode" data-bs-dismiss="modal"
+                                                            onclick="resCodeModalShow(this)">응답코드 추가
+                                                    </button>
+
+                                                </td>
                                             </tr>
                                             </tfoot>
                                         </table>
                                     </div>
+                                    <!--PUT 요청 데이터 탭 -->
+                                    <div class="tab-pane fade" id="v-pills-put-reqData" role="tabpanel"
+                                         aria-labelledby="v-pills-post-reqData-tab">
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                <th scope="col"><h5 class="ml-1">Context-Type</h5> | application / json
+                                                </th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <th scope="row">
+                                                       <textarea id="putReqData" placeholder="예시를 입력해주세요"
+                                                                 style="height: 150px; width: -webkit-fill-available; padding: 15px"></textarea>
+                                                </th>
 
+                                            </tr>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
+                            <!-- PUT 파라미터/응답 선택 끝-->
                         </div>
+                        <!--DELETE tab 시작 -->
                         <div class="tab-pane fade" id="delete-content" role="tabpanel">
                             <div style="display: flex" class="mt-3">
                                 <div class="col-6">
@@ -1074,7 +1498,7 @@
                             <!--           태그선택박스                 -->
                             <div class="multiselect mt-4 ml-2 mr-2" style="margin-left: 1.5% !important;">
                                 <div class="selectBox">
-                                    <select name="tagBox">
+                                    <select name="deleteTagBox">
                                         <option value=""> -- 태그 선택 --</option>
                                         <option th:each="list : ${tagList}" th:value="${list?.id}"
                                                 th:utext="${list?.name}">
@@ -1094,20 +1518,26 @@
                                     </select>
                                 </div>
                             </div>
-                            <!--파라미터/응답 선택 시작-->
-                            <div style="display: flex; justify-content: space-around; margin-top: 5%;">
-                                <div class="nav flex-column nav-pills" role="tablist"
-                                     aria-orientation="vertical">
-                                    <a class="nav-link active" data-toggle="pill"
-                                       href="#v-pills-home"
-                                       role="tab" aria-controls="v-pills-home" aria-selected="true">파라미터</a>
-                                    <a class="nav-link" data-toggle="pill"
-                                       href="#v-pills-profile"
-                                       role="tab" aria-controls="v-pills-profile" aria-selected="false">응답</a>
+                            <!-- DELETE 파라미터/응답 선택 시작-->
+                            <div class="d-flex flex-column">
+                                <div class="d-flex align-items-start">
+                                    <div class="nav d-flex nav-pills me-3 mb-2" role="tablist"
+                                         aria-orientation="vertical">
+
+                                        <button class="nav-link active" id="v-pills-delete-parameter-tab"
+                                                data-bs-toggle="pill"
+                                                data-bs-target="#v-pills-delete-parameter" type="button" role="tab"
+                                                aria-controls="v-pills-delete-parameter" aria-selected="true">파라미터
+                                        </button>
+                                        <button class="nav-link" id="v-pills-delete-response-tab" data-bs-toggle="pill"
+                                                data-bs-target="#v-pills-delete-response" type="button" role="tab"
+                                                aria-controls="v-pills-delete-response" aria-selected="false">응답
+                                        </button>
+                                    </div>
                                 </div>
-                                <div class="tab-content col-10">
-                                    <div class="tab-pane fade show active" role="tabpanel"
-                                         aria-labelledby="v-pills-home-tab">
+                                <div class="tab-content w-100">
+                                    <div class="tab-pane fade show active" id="v-pills-delete-parameter" role="tabpanel"
+                                         aria-labelledby="v-pills-delete-parameter-tab">
                                         <table class="table">
                                             <thead class="thead-light">
                                             <tr>
@@ -1118,32 +1548,29 @@
                                                 <th scope="col">필수여부</th>
                                                 <th scope="col">타입</th>
                                                 <th scope="col">샘플</th>
+                                                <th scope="col"></th>
                                             </tr>
                                             </thead>
-                                            <tbody>
-                                            <tr>
-                                                <th scope="row">1</th>
-                                                <td>org-code</td>
-                                                <td>Header</td>
-                                                <td>@mdo</td>
-                                                <td>필수</td>
-                                                <td>String</td>
-                                                <td>DFS456456</td>
-                                            </tr>
+                                            <tbody id="deleteParameterItemBody">
+                                            <!--                리소스 추가 페이지 - 파라미터 추가 모달의 추가 버튼 누르면 파라미터 정보 들어가는 곳               -->
 
                                             </tbody>
                                             <tfoot style="text-align:right;">
                                             <tr>
-                                                <td colspan="7"
-                                                    style="border-bottom-width: inherit !important;"><i
-                                                        class="fa-regular fa-square-plus mr-1"></i></td>
+                                                <td colspan="12" style="border-bottom-width: inherit !important;">
+                                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                                            id="delete-parameter" data-bs-dismiss="modal"
+                                                            onclick="paramModalShow(this)">파라미터 추가
+                                                    </button>
+
+                                                </td>
                                             </tr>
                                             </tfoot>
                                         </table>
-
                                     </div>
-                                    <div class="tab-pane fade" role="tabpanel"
-                                         aria-labelledby="v-pills-profile-tab">
+
+                                    <div class="tab-pane fade" id="v-pills-delete-response" role="tabpanel"
+                                         aria-labelledby="v-pills-delete-response-tab">
                                         <table class="table">
                                             <thead class="thead-light">
                                             <tr>
@@ -1151,36 +1578,29 @@
                                                 <th scope="col">응답코드</th>
                                                 <th scope="col">설명</th>
                                                 <th scope="col">Content-Type</th>
-                                                <th scope="col">예제</th>
-                                                <th scope="col">&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                                                <th scope="col"></th>
                                             </tr>
                                             </thead>
-                                            <tbody>
-                                            <tr>
-                                                <th scope="row">1</th>
-                                                <td>200</td>
-                                                <td>정상</td>
-                                                <td></td>
-                                                <td></td>
-                                                <td><i class="fa-solid fa-pen mr-2"></i><i
-                                                        class="fa-solid fa-trash-can"></i></td>
-                                            </tr>
+                                            <tbody id="deleteResCodeItemBody">
+                                            <!--                리소스 추가 페이지 - 응답코드 추가 모달의 추가 버튼 누르면 응답코드 정보 들어가는 곳               -->
 
                                             </tbody>
                                             <tfoot style="text-align:right;">
                                             <tr>
-                                                <td colspan="6"
-                                                    style="border-bottom-width: inherit !important;"><i
-                                                        class="fa-regular fa-square-plus mr-1"
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target="#exampleModal"></i></td>
+                                                <td colspan="12" style="border-bottom-width: inherit !important;">
+                                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                                            id="delete-resCode" data-bs-dismiss="modal"
+                                                            onclick="resCodeModalShow(this)">응답코드 추가
+                                                    </button>
+
+                                                </td>
                                             </tr>
                                             </tfoot>
                                         </table>
                                     </div>
-
                                 </div>
                             </div>
+                            <!-- DELETE 파라미터/응답 선택 끝-->
                         </div>
                     </div>
                 </div>
@@ -1192,10 +1612,7 @@
             </div>
         </div>
     </div>
-
-    <!--    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#insertParameterModal"-->
-    <!--            id="get-parameter">파라미터 추가-->
-    <!--    </button>-->
+    <!-- 파라미터 추가 버튼   -->
     <div class="modal fade" id="insertParameterModal" tabindex="-1" role="dialog"
          aria-labelledby="exampleModalLabel2"
          aria-hidden="true">
@@ -1207,12 +1624,12 @@
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label for="parameter-name" class="col-form-label">이름:</label>
+                        <label for="parameter-name" class="col-form-label">이름 * </label>
                         <input type="text" class="form-control" id="parameter-name">
                     </div>
                     <div class="row flex-nowrap">
                         <div class="mb-3 col-6">
-                            <label for="transferMethod" class="col-form-label">전송방법:</label>
+                            <label for="transferMethod" class="col-form-label">전송방법</label>
                             <select class="form-control" id="transferMethod">
                                 <option value="queryString" selected="selected">Query String</option>
                                 <option value="pathVariable">Path Variable</option>
@@ -1220,7 +1637,7 @@
                             </select>
                         </div>
                         <div class="mb-3 col-6">
-                            <label for="required" class="col-form-label">필수여부:</label>
+                            <label for="required" class="col-form-label">필수여부</label>
                             <select class="form-control" id="required">
                                 <option value="true" selected="selected">필수</option>
                                 <option value="false">필수 아님</option>
@@ -1228,12 +1645,12 @@
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label for="explanation" class="col-form-label">설명:</label>
+                        <label for="explanation" class="col-form-label">설명 * </label>
                         <input type="text" class="form-control" id="explanation">
                     </div>
                     <div class="row flex-nowrap">
                         <div class="mb-3 col-6">
-                            <label for="type" class="col-form-label">타입:</label>
+                            <label for="type" class="col-form-label">타입</label>
                             <select class="form-control" id="type">
                                 <option value="String" selected="selected">String</option>
                                 <option value="integer">integer</option>
@@ -1241,63 +1658,243 @@
                             </select>
                         </div>
                         <div class="mb-3 col-6">
-                            <label for="sample" class="col-form-label">예제:</label>
+                            <label for="sample" class="col-form-label">예제</label>
                             <input type="text" class="form-control" id="sample">
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
+                <div class="modal-footer param">
                     <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
                             data-bs-target="#resourceModal">취소
                     </button>
-                    <button type="button" class="btn btn-primary" onclick="insertParameter()">추가</button>
+                    <button type="button" class="btn btn-primary" onclick="insertParameter(this)">추가</button>
                 </div>
             </div>
         </div>
     </div>
-    <div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel"
-         tabindex="-1">
+
+    <!-- 응답코드 추가 모달 -->
+    <div class="modal fade" id="insertResCodeModal" tabindex="-1" role="dialog"
+         aria-labelledby="resCodeModalShowLabel"
+         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalToggleLabel">Modal 1</h5>
+                    <h1 class="modal-title fs-5" id="resCodeModalShowLabel">응답코드 추가</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    Show a second modal and hide this one with the button below.
+                    <div class="mb-3">
+                        <label for="parameter-name" class="col-form-label">코드번호 * </label>
+                        <input type="text" class="form-control" id="code-name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="explanation" class="col-form-label">설명 * </label>
+                        <input type="text" class="form-control" id="code-explanation">
+                    </div>
+                    <div class="row flex-nowrap">
+                        <div class="mb-3 col-6">
+                            <label for="type" class="col-form-label">타입</label>
+                            <select class="form-control" id="contentType">
+                                <option value="application/json" selected="selected">application/json</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
-                <div class="modal-footer">
-                    <button class="btn btn-primary" data-bs-target="#resourceModal" data-bs-toggle="modal"
-                            data-bs-dismiss="modal">Open second modal
+                <div class="modal-footer code">
+                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
+                            data-bs-target="#resourceModal">취소
                     </button>
+                    <button type="button" class="btn btn-primary" onclick="insertResCode(this)">추가</button>
                 </div>
             </div>
         </div>
     </div>
-    <div class="modal fade" id="exampleModalToggle2" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2"
-         tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
+
+
+    <!--path 검색 모달-->
+    <div class="modal fade" id="searchPathModal" tabindex="-1" role="dialog"
+         aria-labelledby="searchPathModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalToggleLabel2">Modal 2</h5>
+                    <h1 class="modal-title fs-5" id="searchPathModalLabel">path 검색</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    Hide this modal and show the first with the button below.
+                    <label for="parameter-name" class="col-form-label">path * </label>
+                    <div class="row mb-3 align-items-center flex-nowrap">
+                        <div class="col-3" style="margin-left: 1%;" id="defaultUri"></div>
+                        <input type="text" class="col-8 form-control" onkeyup="searchPath(this)" id="pathSearchBar"
+                               style="width: 68%;"
+                               autofocus>
+
+                    </div>
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">path</th>
+                            <th scope="col">작성 가능</th>
+                            <th scope="col">작성 불가능</th>
+                        </tr>
+                        </thead>
+                        <tbody id="searchPathTbody">
+
+                        </tbody>
+                    </table>
                 </div>
-                <div class="modal-footer">
-                    <button class="btn btn-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal"
-                            data-bs-dismiss="modal">Back to first
+
+            </div>
+
+        </div>
+    </div>
+
+    <div class="modal fade tab" id="detailModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>마이데이터 기관 정보</h4>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
                     </button>
+                </div>
+                <div class="modal-body">
+                    <div class="w-100 p-2">
+                        <div class="border mb-3">
+                            <div class="border-bottom">
+                                <h5 class="text-muted p-3 m-0">태그</h5>
+                            </div>
+                            <div class="p-4">
+                                <h6 style="background-color: #1c294e; display:inline-block;padding: 15px;color: white;border-radius: 18px">
+                                    금융업권금융업권</h6>
+                            </div>
+                        </div>
+                        <div class="border mb-3">
+
+                            <div class="border-bottom">
+                                <h5 class="text-muted p-3 m-0">기본 정보</h5>
+                            </div>
+                            <div class="p-4">
+                                <table class="table table-borderless">
+                                    <tbody>
+                                    <tr>
+                                        <td class="tdHead">
+                                            기관코드
+                                        </td>
+                                        <td class="tdContent" id="code">
+
+                                        </td>
+                                    </tr>
+                                    <tr class="borderTop">
+                                        <td class="tdHead">
+                                            기관구분
+                                        </td>
+                                        <td class="tdContent" id="division">
+
+                                        </td>
+                                    </tr>
+                                    <tr class="borderTop">
+                                        <td class="tdHead">
+                                            기관명
+                                        </td>
+                                        <td class="tdContent" id="name">
+
+                                        </td>
+                                    </tr>
+                                    <tr class="borderTop">
+                                        <td class="tdHead">
+                                            업권
+                                        </td>
+                                        <td class="tdContent" id="industry">
+
+                                        </td>
+                                    </tr>
+                                    <tr class="borderTop">
+                                        <td class="tdHead">
+                                            주소
+                                        </td>
+                                        <td class="tdContent" id="address">
+
+                                        </td>
+                                    </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="border mb-3">
+                            <div class="border-bottom">
+                                <h5 class="text-muted p-3 m-0">도메인</h5>
+                            </div>
+                            <div class="p-4">
+                                <table class="table table-borderless">
+                                    <tbody>
+                                    <tr>
+                                        <td class="tdHead">
+                                            API서버 도메인명
+                                        </td>
+                                        <td class="tdContent" id="domainName">
+
+                                        </td>
+                                    </tr>
+                                    <tr class="borderTop">
+                                        <td class="tdHead">
+                                            API서버 공인IP
+                                        </td>
+                                        <td class="tdContent" id="publicApiIp">
+
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="border mb-3">
+                            <div class="border-bottom">
+                                <h5 class="text-muted p-3 m-0">인증</h5>
+                            </div>
+                            <div class="p-4">
+
+                                <table class="table table-borderless">
+                                    <tbody>
+                                    <tr>
+                                        <td class="tdHead">
+                                            제공 인증방식
+                                        </td>
+                                        <td class="tdContent" id="authenticationMethod">
+
+                                        </td>
+                                    </tr>
+                                    <tr class="borderTop">
+                                        <td class="tdHead">
+                                            TLS 인증서 시리얼넘버
+                                        </td>
+                                        <td class="tdContent" id="TLSNum">
+
+                                        </td>
+                                    </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            닫기
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <a class="btn btn-primary" data-bs-toggle="modal" href="#exampleModalToggle" role="button">Open first modal</a>
+    <!--detail 모달 끝-->
 
 </div>
 <!-- End of Main Content -->
-
 
 </body>
 

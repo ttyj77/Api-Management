@@ -127,4 +127,27 @@
         OR ad.summary ILIKE CONCAT('%', #{keyword},'%');
     </select>
 
+    <select id="searchPath" parameterType="string" resultType="com.ipa.openapi_inzent.model.ApiDetailsDTO">
+        <!-- uri,method 받아오면 된다. /v1/insu -->
+        SELECT id, method,uri
+        FROM public."apiDetails" where uri ILIKE CONCAT('%', #{keyword},'%') and trash = false order by id;
+    </select>
+    <insert id="insertResource" parameterType="com.ipa.openapi_inzent.model.ResourceDTO" useGeneratedKeys="true"
+            keyProperty="id" keyColumn="id">
+        INSERT INTO public.resource("apisId","tagId", garbage)
+        VALUES (#{apisId},#{tagId}, #{garbage});
+    </insert>
+
+    <insert id="insertApiDetail" parameterType="com.ipa.openapi_inzent.model.ApiDetailsDTO">
+        INSERT INTO public."apiDetails"(
+        method, url, uri, summary, security, scope, "operationId", version, status, "authorization", trash,
+        "resourceId")
+        VALUES (#{method}, #{url}, #{uri}, #{summary}, 'Bearer', #{scope}, #{operationId}, 'V1', 'develop',
+        #{authorization}, #{trash}, #{resourceId});
+    </insert>
+
+    <!--  detail클릭 했을 떄 나오는 모달에 전송할 정보  -->
+    <select id="searchDetail" parameterType="int" resultType="com.ipa.openapi_inzent.model.ApiDetailsDTO">
+        select * from public."apiDetails" where id = #{id}
+    </select>
 </mapper>
