@@ -32,7 +32,7 @@
     <select id="resourceInAdList" parameterType="int" resultType="com.ipa.openapi_inzent.model.ApiDetailsDTO">
         select r."apisId", r.id as resource_id, ad.id, ad."resourceId", ad.method, ad.url, ad.uri, ad.summary,
         r.garbage,
-        ad.security, ad.scope, ad."operationId", ad.version, ad.status, ad."authorization", ad."tagId", ad.trash from
+        ad.security, ad.scope, ad."operationId", ad.version, ad.status, ad."authorization", r."tagId", ad.trash from
         public.resource as r
         join public."apiDetails" as ad
         on ad."resourceId" = r."id"
@@ -41,7 +41,7 @@
     <select id="selectOne" parameterType="int" resultType="com.ipa.openapi_inzent.model.ApiDetailsDTO">
         select r."apisId", r.id as resource_id, ad.id, ad."resourceId", ad.method, ad.url, ad.uri, ad.summary,
         r.garbage,
-        ad.security, ad.scope, ad."operationId", ad.version, ad.status, ad."authorization", ad."tagId", ad.trash from
+        ad.security, ad.scope, ad."operationId", ad.version, ad.status, ad."authorization", r."tagId", ad.trash from
         public.resource as r
         join public."apiDetails" as ad
         on ad."resourceId" = r."id"
@@ -101,7 +101,6 @@
         version=#{version},
         status=#{status},
         "authorization"=#{authorization},
-        "tagId"=#{tagId},
         trash=#{trash},
         "resourceId"=#{resourceId}
         WHERE id = #{id};
@@ -120,7 +119,7 @@
     <select id="trashSearch" parameterType="string" resultType="com.ipa.openapi_inzent.model.ApiDetailsDTO">
         select r."apisId", r.id as resource_id, ad.id, ad."resourceId", ad.method, ad.url, ad.uri, ad.summary,
         r.garbage,
-        ad.security, ad.scope, ad."operationId", ad.version, ad.status, ad."authorization", ad."tagId", ad.trash from
+        ad.security, ad.scope, ad."operationId", ad.version, ad.status, ad."authorization", r."tagId", ad.trash from
         public.resource as r
         join public."apiDetails" as ad
         on ad."resourceId" = r."id"

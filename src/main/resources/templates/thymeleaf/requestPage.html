@@ -61,6 +61,22 @@
                 });
             }
 
+            function reqDetail(reqId) {
+                let id = reqId.getAttribute("req_id");
+                let data = {
+                    "id": id,
+                }
+                $.ajax({
+                    url: "/selectOne/"+id,
+                    data: data,
+                    method: "get",
+
+                    success: (message) =>{
+                        // 여기부터해요
+                    }
+                })
+            }
+
         </script>
     </th:block>
 </head>
@@ -109,7 +125,7 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr th:each="reqList : ${list}">
+                                    <tr th:each="reqList : ${list}" th:req_id="${reqList.id}" onclick="reqDetail(this)">
                                         <td id="requestNumber"
                                             data-toggle="modal" data-target="#exampleModal" th:text="${reqList.id}">
                                         </td>
@@ -117,31 +133,39 @@
                                             data-toggle="modal" data-target="#exampleModal" th:text="${reqList.title}">
                                         </td>
                                         <td id="requestContents" data-bs-toggle="modal"
-                                            data-toggle="modal" data-target="#exampleModal" th:text="${reqList.content}">
+                                            data-toggle="modal" data-target="#exampleModal"
+                                            th:text="${reqList.content}">
                                         </td>
                                         <td id="requestAccount" data-bs-toggle="modal"
-                                            data-toggle="modal" data-target="#exampleModal" th:if="${reqList.status != null}" th:text="${reqList.reqUsername}">
+                                            data-toggle="modal" data-target="#exampleModal"
+                                            th:if="${reqList.status != null}" th:text="${reqList.reqUsername}">
                                         </td>
                                         <td id="requestNone" data-bs-toggle="modal"
-                                            data-toggle="modal" data-target="#exampleModal" th:text="${reqList.reqUsername}">
+                                            data-toggle="modal" data-target="#exampleModal"
+                                            th:text="${reqList.reqUsername}">
                                         </td>
                                         <td id="requestStatus" data-bs-toggle="modal"
-                                            data-toggle="modal" data-target="#exampleModal" th:if="${reqList.status}==null">
+                                            data-toggle="modal" data-target="#exampleModal"
+                                            th:if="${reqList.status}==null">
                                             요청
                                         </td>
                                         <td id="trueStatus" data-bs-toggle="modal"
-                                            data-toggle="modal" data-target="#exampleModal" th:if="${reqList.status}==true">
+                                            data-toggle="modal" data-target="#exampleModal"
+                                            th:if="${reqList.status}==true">
                                             승인
                                         </td>
                                         <td id="falseStatus" data-bs-toggle="modal"
-                                            data-toggle="modal" data-target="#exampleModal" th:if="${reqList.status}==false">
+                                            data-toggle="modal" data-target="#exampleModal"
+                                            th:if="${reqList.status}==false">
                                             거절
                                         </td>
                                         <td id="requestDate" data-bs-toggle="modal"
-                                            data-toggle="modal" data-target="#exampleModal" th:text="${#dates.format(reqList.entryDate, 'yyyy-MM-dd')}">
+                                            data-toggle="modal" data-target="#exampleModal"
+                                            th:text="${#dates.format(reqList.entryDate, 'yyyy-MM-dd')}">
                                         </td>
                                         <td id="responseDate" data-bs-toggle="modal"
-                                            data-toggle="modal" data-target="#exampleModal" th:text="${#dates.format(reqList.procDate, 'yyyy-MM-dd')}">
+                                            data-toggle="modal" data-target="#exampleModal"
+                                            th:text="${#dates.format(reqList.procDate, 'yyyy-MM-dd')}">
                                         </td>
                                         <td id="requestDeletion">
                                             <i class="fa-solid fa-trash-can" style="color: #797a7c; cursor: pointer;"
@@ -164,7 +188,6 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="exampleModalLabel">요청상세정보</h5>
-
                             </div>
                             <div class="modal-body" id="modalDark" style="overflow-x: hidden">
                                 <table class="table table-bordered align-middle"
@@ -172,37 +195,44 @@
                                     <tbody>
                                     <tr>
                                         <td class="tdHead">요청번호</td>
-                                        <td colspan="3" class="tdContent">1</td>
+                                        <td colspan="3" class="tdContent" th:text="${reqList.id}"></td>
                                     </tr>
                                     <tr>
                                         <td class="col-2 tdHead">요청 구분</td>
-                                        <td class="col-4 tdContent">리소스 권한 요청</td>
+                                        <td class="col-4 tdContent" th:text="${reqList.title}"></td>
                                         <td class="col-2 tdHead">해당 아이디</td>
-                                        <td class="col-4 tdContent">109</td>
+                                        <td class="col-4 tdContent" th:text="${reqList.reqUsername}"></td>
                                     </tr>
                                     <tr>
-                                        <td class="col-2 tdHead">요청 계정
-                                        </th>
-                                        <td class="col-4 tdContent">u1</td>
+                                        <td class="col-2 tdHead">요청 이름
+                                        </td>
+                                        <td class="col-4 tdContent" th:text="${reqList.reqNickname}"></td>
                                         <td class="col-2 tdHead">요청 날짜
-                                        </th>
-                                        <td class="col-4 tdContent">2023-04-18</td>
-                                    </tr>
+                                        </td>
+                                        <td class="col-4 tdContent"
+                                            th:text="${#dates.format(reqList.entryDate, 'yyyy-MM-dd')}"></td>
                                     </tr>
                                     <tr>
                                         <td class="col-2 tdHead">요청 상태
-                                        </th>
-                                        <td class="col-4 tdContent">승인</td>
+                                        </td>
+                                        <td class="col-4 tdContent"th:if="${reqList.status}==true">
+                                            승인</td>
+                                        <td class="col-4 tdContent"th:if="${reqList.status}==false">
+                                            거절</td>
+                                        <td class="col-4 tdContent"th:if="${reqList.status}==null">
+                                            요청</td>
                                         <td class="col-2 tdHead">처리결과</td>
-                                        <td class="col-4 tdContent">성공</td>
+                                        <td class="col-4 tdContent" th:if="${reqList.status} != null">성공</td>
+                                        <td th:if="${reqList.status} == null"></td>
                                     </tr>
                                     <tr>
                                         <td class="tdHead">제목</td>
-                                        <td colspan="3" class="tdContent">리소스 권한 요청 [앱 아이디: 104]</td>
+                                        <td colspan="3" class="tdContent" th:text="${reqList.title}"></td>
                                     </tr>
                                     <tr>
                                         <td class="tdHead">내용</td>
-                                        <td colspan="3" class="tdContent">앱 아이디 : 104 앱 이름 : 테스트 리소스 : 아이디: 6, URI:/insu/apis</td>
+                                        <td colspan="3" class="tdContent" th:text="${reqList.content}">
+                                        </td>
                                     </tr>
                                     </tbody>
                                 </table>
