@@ -67,11 +67,11 @@
         where public.resource."apisId" = #{apisId};
     </select>
     <select id="goTrashDetail" resultType="com.ipa.openapi_inzent.model.ApiDetailsDTO">
-        select public."apiDetails".id,"apisId", public.resource.id as resource_id, garbage, method, url, uri, summary,
-        security, scope, "operationId", version, status, "authorization", "tagId", trash, "resourceId" from
+        select public."apiDetails".id,"apisId", re.id as resource_id, garbage, method, url, uri, summary,
+        security, scope, "operationId", version, status, "authorization", re."tagId", trash, "resourceId" from
         public."apiDetails"
-        inner join public.resource
-        on public.resource.id = public."apiDetails"."resourceId"
+        inner join public.resource as re
+        on re.id = public."apiDetails"."resourceId"
         order by public."apiDetails".id asc
     </select>
 
@@ -123,4 +123,17 @@
         SELECT id, method,uri
         FROM public."apiDetails" where uri ILIKE CONCAT('%', #{keyword},'%') and trash = false order by id;
     </select>
+    <insert id="insertResource" parameterType="com.ipa.openapi_inzent.model.ResourceDTO" useGeneratedKeys="true"
+            keyProperty="id" keyColumn="id">
+        INSERT INTO public.resource("apisId","tagId", garbage)
+        VALUES (#{apisId},#{tagId}, #{garbage});
+    </insert>
+
+    <insert id="insertApiDetail" parameterType="com.ipa.openapi_inzent.model.ApiDetailsDTO">
+        INSERT INTO public."apiDetails"(
+        method, url, uri, summary, security, scope, "operationId", version, status, "authorization", trash,
+        "resourceId")
+        VALUES (#{method}, #{url}, #{uri}, #{summary}, 'Bearer', #{scope}, #{operationId}, 'V1', 'develop',
+        #{authorization}, #{trash}, #{resourceId});
+    </insert>
 </mapper>

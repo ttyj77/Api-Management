@@ -73,4 +73,17 @@ public class ApiDetailsService {
     public List<ApiDetailsDTO> searchPath(String keyword) {
         return apiDetailsDao.searchPath(keyword);
     }
+
+    public int insertResource(ResourceDTO resourceDTO) {
+        System.out.println("ApiDetailsService.insertResource");
+        System.out.println("resourceDTO = " + resourceDTO);
+        apiDetailsDao.insertResource(resourceDTO);
+        int id = resourceDTO.getId();
+        return id;
+    }
+
+    public void insertApiDetail(ApiDetailsDTO apiDetailsDTO) {
+        apiDetailsDao.insertApiDetail(apiDetailsDTO);
+
+    }
 }

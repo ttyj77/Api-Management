@@ -7,7 +7,6 @@ import com.ipa.openapi_inzent.model.*;
 import com.ipa.openapi_inzent.service.ApiDetailsService;
 import com.ipa.openapi_inzent.service.ApiService;
 import com.ipa.openapi_inzent.service.RoleService;
-import io.swagger.v3.core.util.Json;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,7 +14,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +23,8 @@ public class ApiController {
     ApiService apiService;
     RoleService roleService;
     ApiDetailsService apiDetailsService;
+
+    String[] array = {"get", "post", "put", "delete"};
 
     @Autowired
     public ApiController(ApiService apiService, ApiDetailsService apiDetailsService, RoleService roleService) {
@@ -210,14 +210,9 @@ public class ApiController {
     public JsonObject resources(Model model, @PathVariable int id) {
         // 리소스 하나씩
         List<ApiDetailsDTO> resourceInAdList = apiDetailsService.resourceInAdList(id); // resource table id
-
-
         System.out.println("resourceInAdList = " + resourceInAdList);
-
         JsonObject object = new JsonObject();
         List<ApiDetailsDTO> adList = apiDetailsService.resourceInAdList(id);
-
-
         return object;
     }
 
@@ -229,9 +224,10 @@ public class ApiController {
         System.out.println("=======================================");
         System.out.println("[ModuleApiController] : [testPostBodyJson] : [start]");
         System.out.println("[request keySet] : " + String.valueOf(paramMap.keySet()));
-        System.out.println("[request idx] : " + String.valueOf(paramMap.get("idx")));
-        System.out.println("[request url] : " + String.valueOf(paramMap.get("url")));
-        System.out.println("[request path] : " + String.valueOf(paramMap.get("path")));
+        System.out.println("[request idx] : " + String.valueOf(paramMap.get("idx"))); //apis id
+        System.out.println("[request uriId] : " + String.valueOf(paramMap.get("uriId"))); // resource id
+        System.out.println("[request url] : " + String.valueOf(paramMap.get("url"))); // https:8080
+        System.out.println("[request path] : " + String.valueOf(paramMap.get("path"))); // resource  /vi/insuf/
         System.out.println("[request get] : " + String.valueOf(paramMap.get("get")));
 
         JsonObject object = new JsonObject();
@@ -246,15 +242,100 @@ public class ApiController {
         System.out.println("=======================================");
         System.out.println("\n");
 
+//        String uriId = String.valueOf(paramMap.get("uriId"));
+        int apiId = Integer.parseInt(paramMap.get("uriId"));
+
+
+        ResourceDTO resourceDTO = new ResourceDTO();
+//        resourceDTO.setApisId(apiId);
+
+
+        getTagId(paramMap, apiId);
+        // 이미 있는 리소스에 메소드만 추가 한 것인지
+
+
+        // tag가 있는지 없는지
+
+
 //        1 ) 존재하는 리소스 인지 새로 생성해야되는 리소스 인지 판별
 //            1-1) 존재한다면 중복 메소드는 막아야된다.
+//        if (uriId.equals("0")) {
+////            신규 리소스 생성
+//            System.out.println("신규 리소스 생성");
+//
+////
+////                // 1. 리소스 등록
+//////                apiDetailsService.insertResource(resourceDTO);
+////
+////            }
+//        } else {
+////            기존 리소스에 추가 등록
+//            System.out.println("기존 리소스에 추가 등록");
+//
+//        }
+////        2) 존재하지 않는다면 리소스를 등록해야 된다.
+////            2-1) resource 등록
+////            2-2) apiDetails 등록
+////            2-3) parameters/ body/ response 등록
 
-//        2) 존재하지 않는다면 리소스를 등록해야 된다.
-//            2-1) resource 등록
-//            2-2) apiDetails 등록
-//            2-3) parameters/ body/ response 등록
+
+    }
+
+    private void getTagId(Map<String, String> paramMap, int apiId) {
+        ResourceDTO resourceDTO = new ResourceDTO();
+        resourceDTO.setApisId(apiId);
+        for (int i = 0; i < array.length; i++) {
+
+            JsonObject obj = (JsonObject) JsonParser.parseString(paramMap.get(array[i]));
+            if (!obj.isEmpty()) {
 
 
+                System.out.println(obj.isEmpty());
+
+
+                if (obj.get("tag") == null || obj.get("tag").toString().replaceAll("[^\\w+]", "").isEmpty()) {
+                    System.out.println("태그 없음.");
+                } else {
+                    System.out.println("태그 있음..");
+                    int tagId = Integer.parseInt(obj.get("tag").toString().replaceAll("[^\\w+]", ""));
+                    resourceDTO.setTagId(tagId);
+
+
+                }
+
+                int uriId = Integer.parseInt(paramMap.get("uriId"));
+                System.out.println(uriId == 0);
+                if (uriId == 0) { //기존의 리소스가 아니라 새로 등록이라면 apiDetails 전에 resource 먼저 등록
+                    System.out.println("리소스 새로등록");
+                    resourceDTO.setApisId(Integer.parseInt(paramMap.get("idx"))); // apis 아이디
+                    System.out.println("resourceDTO = " + resourceDTO);
+
+                    uriId = apiDetailsService.insertResource(resourceDTO); // 리소스 생성
+                    System.out.println("uriId = " + uriId);
+                }
+                ///있는 리소스라면
+                System.out.println("++++++++++++++++++++++++++++++");
+                ApiDetailsDTO apiDetailsDTO = new ApiDetailsDTO();
+                System.out.println(obj.get("operation"));
+                System.out.println(obj.get("summary"));
+                System.out.println(obj.get("param"));
+                System.out.println(obj.get("resCode"));
+
+                apiDetailsDTO.setOperationId(obj.get("operation").toString());
+                apiDetailsDTO.setSummary(obj.get("summary").toString());
+                apiDetailsDTO.setUrl(paramMap.get("url"));
+                apiDetailsDTO.setUri(paramMap.get("path"));
+                apiDetailsDTO.setMethod(array[i].toUpperCase());
+                apiDetailsDTO.setResourceId(uriId);
+                apiDetailsDTO.setApisId(apiId);
+                System.out.println("apiDetailsDTO = " + apiDetailsDTO);
+
+                apiDetailsService.insertApiDetail(apiDetailsDTO);
+                System.out.println("++++++++++++++++++++++++++++++");
+                System.out.println();
+
+            }
+        }
     }
 
 

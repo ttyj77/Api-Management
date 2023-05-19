@@ -88,6 +88,7 @@
             .authorizationSelectBox label:hover {
                 /*background-color: #1e90ff;*/
             }
+
         </style>
     </th:block>
 
@@ -206,12 +207,9 @@
                     let summary = document.getElementById(method[i] + "Summary");
                     let tag = document.getElementById(method[i] + "TagBox")
                     let reqData = document.getElementById(method[i] + "ReqData")
-                    console.log("method[i] : " + method[i])
-                    console.log(tag)
-                    // console.log(tag.value)
-                    // console.log(tag.options[tag.selectedIndex].text)
-                    // console.log(tag.options[tag.selectedIndex].id)
-                    // console.log(tag.options[tag.selectedIndex].value)
+
+                    // tab display 확인 none이면 값 있어도 등록 안함
+                    let display = document.getElementById(method[i]).style.display
 
                     // 파리미터 tr
                     let param_tr = $('#' + method[i] + "ParameterItemBody tr");
@@ -221,14 +219,13 @@
 
                     console.log("resCode_tr : " + resCode_tr)
                     console.log(resCode_tr)
-
-
-                    if (operationId.value != "") {
+                    if (operationId.value != "" && display == "block") {
 
                         console.log(operationId.value)
                         obj.operation = operationId.value;
                         obj.summary = summary.value
-                        // obj.tag = tag.value
+                        obj.tag = tag.value.toString()
+
                         if (method[i] == "post" || method[i] == "put") {
                             obj.reqData = reqData.value;
                         }
@@ -263,22 +260,26 @@
 
 
                     }
-
                     jsonArr.push(obj)
                 }
-
                 //
+                console.log("uri index +++++++++++++++++++++++++++++++++++++++++++++")
+                console.log($("#searchPathTbody tr"))
+                console.log($("#searchPathTbody tr").id)
+                // console.log(document.getElementById("searchPathTbody").children[0])
                 // [요청 json 데이터 선언]
                 let jsonData = { // Body에 첨부할 json 데이터
-                        "idx": window.location.href.split("/").slice(-1)[0], //apis index
-                        "url": document.getElementById("url").value,
-                        "path": document.getElementById("path").name + document.getElementById("path").value,
-                        "get": JSON.stringify(jsonArr[0]),
-                        "post": JSON.stringify(jsonArr[1]),
-                        "put": JSON.stringify(jsonArr[2]),
-                        "delete": JSON.stringify(jsonArr[3]),
-                    }
-                ;
+                    "idx": document.getElementById("apiId").value, //api index
+                    "uriId": document.getElementById("pathid").value,
+                    "url": document.getElementById("url").value,
+                    "path": document.getElementById("path").name + document.getElementById("path").value,
+                    "get": JSON.stringify(jsonArr[0]),
+                    "post": JSON.stringify(jsonArr[1]),
+                    "put": JSON.stringify(jsonArr[2]),
+                    "delete": JSON.stringify(jsonArr[3]),
+
+                }
+
 
                 $.ajax({
                     url: "/api/resource/insert",
@@ -302,8 +303,6 @@
                 // let get_input = $(id + ' input[type=text]');
                 let get_input = $("#resourceModal input[type=text]");
 
-                console.log("====================get_input=======================")
-                console.log(get_input)
                 $.each(get_input, function (index, value) {
                     $(value).val('')
                 });
@@ -473,8 +472,15 @@
 
             //     url 실시간 검색
             function searchPath(value) {
+
                 console.log(value.value)
                 let keyword = value.value
+                if (keyword.charAt(0) == "/") {
+                    console.log("첫글자 슬래시")
+                    keyword = keyword.slice(1)
+                }
+                console.log("keyword " + keyword)
+
                 let data = {
                     "keyword": keyword,
                 };
@@ -494,14 +500,23 @@
                             console.log("new!")
                             console.log(value.value)
 
-                            let defaultUri = document.getElementById("defaultUri").textContent
+                            let defaultUri = document.getElementById("path").name
                             let newUri = value.value
                             let h5 = document.createElement("h5")
                             h5.innerText = newUri
                             let tr = document.createElement("tr")
                             let td = document.createElement("td")
                             td.colSpan = 4
-                            td.innerText = defaultUri + h5.innerText + ' 을 새로 등록하시겠습니까?'
+                            let newFullPath = defaultUri + '/' + h5.innerText
+                            td.innerText = newFullPath + ' 을 새로 등록하시겠습니까?'
+
+                            tr.onclick = function () {
+                                newInsertPath(newFullPath);
+                            }
+                            // 신규라는 의미이다.
+                            tr.id = "0"
+
+
                             tr.append(td)
                             tbody.append(tr)
 
@@ -526,7 +541,7 @@
                                 let impossibleMethod = document.createElement("td");
                                 impossibleMethod.id = 'impossibleMethod'
                                 path.innerText = result1[i]
-                                tr.id = result1[i]
+                                tr.id = array[i].id
 
                                 mt.splice(0, mt.length);
                                 let k = 0;
@@ -576,12 +591,15 @@
             function showPathSearchModal() {
                 $("#resourceModal").modal('hide')
                 $("#searchPathModal").modal('show')
+                document.getElementById("defaultUri").innerText = document.getElementById("path").name + " /" // 기본 uri
                 showAllMethod()
             }
 
 
             // 검색 결과 표를 클릭하면 input 박스에 들어감
             function insertPath(e) {
+                // console.log(e.target.parentNode.id) // 클릭한 uri
+                // console.log(e.target.parentNode.childNodes[0].textContent) // 클릭한 uri
                 console.log(e.target.parentNode.childNodes[1].textContent) // 클릭한 uri
                 console.log(e.target.parentNode.childNodes[3].textContent) // 클릭한 uri의 impossibleMethod
 
@@ -589,10 +607,18 @@
                 $("#resourceModal").modal('show')
 
                 let input = document.getElementById("path")
-                input.value = e.target.parentNode.childNodes[1].textContent
+                let pathid = document.getElementById("pathid")
+                pathid.value = e.target.parentNode.id // 선택한 uri id , 새로 생성 시 0
+                let defaultUri = document.getElementById("path").name
+
+                // resouce modal path 값 넣음
+                input.value = defaultUri + '/' + e.target.parentNode.childNodes[1].textContent
+                // hidden으로 기존 리소스 값 넣음
+                // pathid.value
 
                 // + input 박스에 해당 uri가 들어가면서 자동으로 작성가능한 method만 보이도록 하는 부분
                 let buttonList = $("#nav-tab button[type=button]");
+
 
                 let impossibleMethod = e.target.parentNode.childNodes[3].textContent
 
@@ -609,7 +635,6 @@
                         console.log("===================")
                         if (trim == arr[j]) {
                             console.log("일치 = 작성불가능")
-                            // buttonList[i].click(this)
                             buttonList[i].style.display = 'none'
 
                             let visible = document.getElementById(trim.toLowerCase())
@@ -631,6 +656,21 @@
                     });
 
                 }
+
+            }
+
+            // path 신규 등록 시
+            function newInsertPath(uri) {
+
+                $("#searchPathModal").modal('hide')
+
+                document.getElementById("path").value = uri
+                showAllMethod()
+
+                let pathid = document.getElementById("pathid")
+                pathid.value = "0" // 선택한 uri id , 새로 생성 시 0
+
+                $("#resourceModal").modal("show")
 
             }
 
@@ -668,7 +708,7 @@
             <div class="d-flex justify-content-between mb-2">
                 <div class="d-flex">
                     <h1 class="h3 mb-2 text-gray-800" th:text="${api.name}"></h1>
-                    <h3>&nbsp(&nbsp</h3><h4 th:text="${api.context}" id="defaultUri"></h4>
+                    <h3>&nbsp(&nbsp</h3><h4 th:text="${api.context}"></h4>
                     <h3>&nbsp)</h3>
                 </div>
                 <div>
@@ -896,6 +936,8 @@
                                                class="input-group rounded pl-3 p-2" type="text"
                                                id="path" disabled
                                                th:name="${api.context}">
+                                        <input type="hidden" value="0" id="pathid">
+                                        <input type="hidden" th:value="${api.id}" id="apiId">
                                         <button type="button" class="btn btn-danger"
                                                 style="font-size: 16px;height: 46px;width: 130px;margin-left: 1%;"
                                                 onclick="showPathSearchModal()">
@@ -1654,9 +1696,13 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="parameter-name" class="col-form-label">path * </label>
-                        <input type="text" class="form-control" onkeyup="searchPath(this)" id="pathSearchBar">
+                    <label for="parameter-name" class="col-form-label">path * </label>
+                    <div class="row mb-3 align-items-center flex-nowrap">
+                        <div class="col-3" style="margin-left: 1%;" id="defaultUri"></div>
+                        <input type="text" class="col-8 form-control" onkeyup="searchPath(this)" id="pathSearchBar"
+                               style="width: 68%;"
+                               autofocus>
+
                     </div>
                     <table class="table table-hover">
                         <thead>

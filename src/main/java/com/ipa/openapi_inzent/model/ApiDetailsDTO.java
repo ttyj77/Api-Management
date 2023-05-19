@@ -16,7 +16,7 @@ public class ApiDetailsDTO {
     private String version;
     private String status;
     private String authorization;
-    private String tagId;
+    //    private String tagId;
     private boolean trash;
     // ApiDetailsDTO end
 
