@@ -67,11 +67,11 @@
         where public.resource."apisId" = #{apisId};
     </select>
     <select id="goTrashDetail" resultType="com.ipa.openapi_inzent.model.ApiDetailsDTO">
-        select public."apiDetails".id,"apisId", public.resource.id as resource_id, garbage, method, url, uri, summary,
-        security, scope, "operationId", version, status, "authorization", "tagId", trash, "resourceId" from
+        select public."apiDetails".id,"apisId", re.id as resource_id, garbage, method, url, uri, summary,
+        security, scope, "operationId", version, status, "authorization", re."tagId", trash, "resourceId" from
         public."apiDetails"
-        inner join public.resource
-        on public.resource.id = public."apiDetails"."resourceId"
+        inner join public.resource as re
+        on re.id = public."apiDetails"."resourceId"
         order by public."apiDetails".id asc
     </select>
 

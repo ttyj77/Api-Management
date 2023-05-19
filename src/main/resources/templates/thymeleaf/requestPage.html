@@ -109,38 +109,42 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
+                                    <tr th:each="reqList : ${list}">
                                         <td id="requestNumber"
-                                            data-toggle="modal" data-target="#exampleModal">
-                                            14
+                                            data-toggle="modal" data-target="#exampleModal" th:text="${reqList.id}">
                                         </td>
                                         <td id="requestTitle" data-bs-toggle="modal"
-                                            data-toggle="modal" data-target="#exampleModal">
-                                            리소스 권한
-                                            요청[앱 아이디: 19]
+                                            data-toggle="modal" data-target="#exampleModal" th:text="${reqList.title}">
                                         </td>
                                         <td id="requestContents" data-bs-toggle="modal"
-                                            data-toggle="modal" data-target="#exampleModal">
-                                            앱 아이디: 109, 앱 이름: 123, 리소스: ,아이디:68, URI:/v1/invest/account
+                                            data-toggle="modal" data-target="#exampleModal" th:text="${reqList.content}">
                                         </td>
                                         <td id="requestAccount" data-bs-toggle="modal"
-                                            data-toggle="modal" data-target="#exampleModal">
-                                            u1
+                                            data-toggle="modal" data-target="#exampleModal" th:if="${reqList.status != null}" th:text="${reqList.reqUsername}">
+                                        </td>
+                                        <td id="requestNone" data-bs-toggle="modal"
+                                            data-toggle="modal" data-target="#exampleModal" th:text="${reqList.reqUsername}">
                                         </td>
                                         <td id="requestStatus" data-bs-toggle="modal"
-                                            data-toggle="modal" data-target="#exampleModal">
+                                            data-toggle="modal" data-target="#exampleModal" th:if="${reqList.status}==null">
+                                            요청
+                                        </td>
+                                        <td id="trueStatus" data-bs-toggle="modal"
+                                            data-toggle="modal" data-target="#exampleModal" th:if="${reqList.status}==true">
                                             승인
                                         </td>
+                                        <td id="falseStatus" data-bs-toggle="modal"
+                                            data-toggle="modal" data-target="#exampleModal" th:if="${reqList.status}==false">
+                                            거절
+                                        </td>
                                         <td id="requestDate" data-bs-toggle="modal"
-                                            data-toggle="modal" data-target="#exampleModal">
-                                            2023-04-18
+                                            data-toggle="modal" data-target="#exampleModal" th:text="${#dates.format(reqList.entryDate, 'yyyy-MM-dd')}">
                                         </td>
                                         <td id="responseDate" data-bs-toggle="modal"
-                                            data-toggle="modal" data-target="#exampleModal">
-                                            2023-04-18
+                                            data-toggle="modal" data-target="#exampleModal" th:text="${#dates.format(reqList.procDate, 'yyyy-MM-dd')}">
                                         </td>
                                         <td id="requestDeletion">
-                                            <i class="fa-solid fa-trash-can" style="color: #797a7c;"
+                                            <i class="fa-solid fa-trash-can" style="color: #797a7c; cursor: pointer;"
                                                onclick="removeAlert()"/>
                                         </td>
                                     </tr>
@@ -152,12 +156,11 @@
                 </div>
                 <!-- /.container-fluid -->
 
-
                 <!--요청정보 모달 시작-->
                 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
                      aria-labelledby="exampleModalLabel"
                      aria-hidden="true">
-                    <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="exampleModalLabel">요청상세정보</h5>
@@ -210,14 +213,11 @@
                         </div>
                     </div>
                 </div>
-
             </div>
             <!-- End of Content Wrapper -->
         </div>
         <!--유저정보 모달 끝-->
     </div>
-
 </div>
 </body>
-
 </html>

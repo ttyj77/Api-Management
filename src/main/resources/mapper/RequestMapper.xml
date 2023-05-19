@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ipa.openapi_inzent.dao.RequestDao">
+    <resultMap id="user" type="com.ipa.openapi_inzent.model.RequestDTO">
+        <result property="reqUsername" column="username"/>
+        <result property="reqNickname" column="nickname"/>
+        <result property="id" column="id"/>
+        <result property="entryDate" column="entryDate"/>
+        <result property="procUsername" column="procUsername"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="status" column="status"/>
+    </resultMap>
+    <select id="selectAll" resultType="com.ipa.openapi_inzent.model.RequestDTO">
+        select * from public."userReqList"
+    </select>
+    <select id="reqUserList" resultMap="user">
+        select * from public."userReqList" as ur
+        inner join public.user as u
+        on ur."userId" = u.id
+    </select>
+    <insert id="insert" parameterType="com.ipa.openapi_inzent.model.RequestDTO">
+        INSERT INTO public."userReqList"(
+        "entryDate", title, content, "userId", "reqUsername", "reqNickname")
+        VALUES (NOW(), #{title}, #{content}, #{userId}, #{reqUsername}, #{reqNickname});
+    </insert>
+    <select id="selectOne" parameterType="int" resultType="com.ipa.openapi_inzent.model.RequestDTO">
+        select * from public."userReqList"
+        where id = #{id}
+    </select>
+    <delete id="delete" parameterType="int" >
+        delete from public."userReqList"
+        where id = #{id}
+    </delete>
+</mapper>

@@ -83,6 +83,12 @@
                 <i style="width: 20px; margin-right:10px; cursor: pointer" class="fa-solid fa-user fa-bounce"></i>
                 <i class="fa-solid fa-arrow-right-from-bracket"></i>
             </div>
+            <button type="button" class="btn btn-success" th:if="${session.logIn != null}" th:onclick="|location.href='/user/mypage/'+${session.logIn.id}|">
+                내정보
+            </button>
+            <button type="button" class="btn btn-success" th:if="${session.logIn == null}" th:onclick="|location.href='/user/login'|">
+                로그인!
+            </button>
         </div>
     </div>
 

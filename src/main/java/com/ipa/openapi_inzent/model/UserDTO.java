@@ -15,4 +15,5 @@ public class UserDTO {
     private boolean activate;
     private Date createDate;
     private String role;
+//    private int reqId;
 }

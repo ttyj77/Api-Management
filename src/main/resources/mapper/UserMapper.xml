@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ipa.openapi_inzent.dao.UserDao">
-    <insert id="register" parameterType="com.ipa.openapi_inzent.model.UserDTO">
+    <insert id="register" parameterType="com.ipa.openapi_inzent.model.UserDTO" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO public."user"(username,nickname, password, activate ,"createDate", email, role)
         VALUES (#{username},#{nickname} , #{password}, false ,NOW(),#{email} ,#{role})
     </insert>
@@ -15,5 +15,13 @@
         SELECT *
         FROM public."user" where nickname = #{nickname};
     </select>
+    <select id="selectOne" parameterType="int" resultType="com.ipa.openapi_inzent.model.UserDTO">
+        select *
+        from public.user where id = #{id};
+    </select>
+    <delete id="delete" parameterType="int">
+        DELETE FROM public."user"
+        WHERE id = #{id};
+    </delete>
 </mapper>
 

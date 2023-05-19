@@ -5,15 +5,18 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-public class userReqDTO {
+public class RequestDTO {
     private int id;
     private Date entryDate;
     private Date procDate;
     private String procUsername;
-    private String reqNickname;
-    private String reqUsername;
     private String title;
     private String content;
-    private boolean status;
+    private Boolean status;
+    private int userId;
+
+    // userDTO
+    private String reqUsername;
+    private String reqNickname;
 
 }
