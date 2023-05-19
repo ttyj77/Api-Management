@@ -338,6 +338,25 @@ public class ApiController {
         }
     }
 
+    @GetMapping("/select/detail")
+    @ResponseBody
+    public JsonObject detailModal(int id) {
+        JsonObject object = new JsonObject();
+        ApiDetailsDTO detailList = apiDetailsService.searchDetail(id);
+
+        object.addProperty("id", detailList.getId());
+        object.addProperty("id", detailList.getId());
+        object.addProperty("id", detailList.getId());
+        object.addProperty("id", detailList.getId());
+        object.addProperty("id", detailList.getId());
+        object.addProperty("id", detailList.getId());
+        object.addProperty("id", detailList.getId());
+        object.addProperty("id", detailList.getId());
+        object.addProperty("id", detailList.getId());
+
+        return object;
+    }
+
 
     @GetMapping("/search/path")
     @ResponseBody

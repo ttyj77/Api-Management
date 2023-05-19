@@ -86,4 +86,8 @@ public class ApiDetailsService {
         apiDetailsDao.insertApiDetail(apiDetailsDTO);
 
     }
+
+    public ApiDetailsDTO searchDetail(int id) {
+        return apiDetailsDao.searchDetail(id);
+    }
 }

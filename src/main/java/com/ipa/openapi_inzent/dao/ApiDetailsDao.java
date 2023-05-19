@@ -43,4 +43,6 @@ public interface ApiDetailsDao {
     void insertResource(ResourceDTO resourceDTO) throws DataAccessException;
 
     void insertApiDetail(ApiDetailsDTO apiDetailsDTO) throws DataAccessException;
+
+    ApiDetailsDTO searchDetail(int id) throws DataAccessException;
 }

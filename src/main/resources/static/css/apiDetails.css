@@ -75,8 +75,6 @@ label {
 }
 
 
-
-
 /*tooltip css start*/
 /*#tooltipRenew{*/
 /*    padding: 8px 2px;*/
@@ -158,4 +156,74 @@ label {
     .demo02 td {
         display: block;
     }
+
+
+}
+
+.blackBtn {
+    background-color: #5a5c69;
+    color: white;
+    border-radius: 8px;
+    margin: 3px;
+}
+
+.yellowBtn {
+    background-color: #F6C23E;
+    color: white;
+    border-radius: 8px;
+    margin: 3px;
+}
+
+.redBtn {
+    background-color: #e74a3b;
+    color: white;
+    border-radius: 6px;
+    margin: 3px;
+}
+
+.greenBtn {
+    background-color: #198754;
+    color: white;
+    border-radius: 6px;
+    margin: 3px;
+}
+
+.yellowBtn:hover {
+    background-color: #d79600;
+    color: white;
+}
+
+.yellowBtn:focus {
+    color: white;
+}
+
+.redBtn:hover {
+    color: white;
+    background-color: #a60f00;
+}
+
+.redBtn:focus {
+    color: white;
+}
+
+.greenBtn:hover {
+    color: white;
+    background-color: #054629;
+}
+
+.greenBtn:focus {
+    color: white;
+}
+
+.blackBtn:hover {
+    color: white;
+    background-color: rgba(1, 2, 3, 1);
+}
+
+.blackBtn:focus {
+    color: white;
+}
+
+.hover {
+    --bs-btn-hover-color: #ffffff !important;
 }

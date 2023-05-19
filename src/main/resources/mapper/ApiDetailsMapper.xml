@@ -136,4 +136,9 @@
         VALUES (#{method}, #{url}, #{uri}, #{summary}, 'Bearer', #{scope}, #{operationId}, 'V1', 'develop',
         #{authorization}, #{trash}, #{resourceId});
     </insert>
+
+    <!--  detail클릭 했을 떄 나오는 모달에 전송할 정보  -->
+    <select id="searchDetail" parameterType="int" resultType="com.ipa.openapi_inzent.model.ApiDetailsDTO">
+        select * from public."apiDetails" where id = #{id}
+    </select>
 </mapper>

@@ -89,6 +89,29 @@
                 /*background-color: #1e90ff;*/
             }
 
+            .tdContent:hover {
+                background-color: #f5f6fb;
+            }
+
+            .tdHead {
+                background-color: #f5f5f5 !important;
+                width: 30% !important;
+
+            }
+
+            .table td {
+                padding: 0.75rem !important;
+            }
+
+            .trContent {
+                vertical-align: middle;
+            !important;
+            }
+
+            .borderTop {
+                border-top: 1px solid #dee2e6 !important;
+            }
+
         </style>
     </th:block>
 
@@ -106,6 +129,7 @@
                 integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
                 crossorigin="anonymous"></script>
         <script src="/js/sb-admin-2.min.js"></script>
+        <script src="/js/details.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script>
             function methodSwitch(value) {
@@ -802,7 +826,7 @@
                                     </tr>
                                     </thead>
                                     <tbody class="tbody">
-                                    <tr onclick="location.href='#'" style="cursor: pointer"
+                                    <tr onclick="detailModal(this)" style="cursor: pointer" id="trDetailId"
                                         th:each="detail:${apiDetailsDTOList}"
                                         th:if="${index.id == detail.resourceId} and ${detail.trash == false} and ${#lists.size(apiDetailsDTOList)!=0}">
                                         <td th:text="${detail?.method}"></td>
@@ -811,6 +835,7 @@
                                         <td th:text="${detail?.security}"></td>
                                         <td th:text="${detail?.operationId}"></td>
                                         <td th:text="${detail?.version}"></td>
+
                                         <td>
                                             <select class="form-select">
                                                 <option selected>develop</option>
@@ -910,7 +935,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body" style="overflow-y: scroll;overflow-x: hidden">
+                <div class="modal-body" style="overflow-x: hidden">
                     <div style="display: flex; flex-direction: column">
                         <div style="height: 20%">
                         </div>
@@ -950,13 +975,13 @@
                                     </td>
                                     <td>
                                         <nav>
-                                            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                                            <div class="nav" id="nav-tab" role="tablist">
                                                 <button type="button" class="btn btn-outline-danger mr-3"
                                                         data-toggle="tab"
                                                         href="#nav-get" role="tab" aria-controls="nav-get"
                                                         aria-selected="true" onclick="methodSwitch(this)">GET
                                                 </button>
-                                                <button type="button" class="btn btn-outline-warning mr-3"
+                                                <button type="button" class="btn btn-outline-warning mr-3 hover"
                                                         data-toggle="tab"
                                                         href="#nav-post" role="tab" aria-controls="nav-post"
                                                         aria-selected="false" onclick="methodSwitch(this)">POST
@@ -979,21 +1004,23 @@
                             </table>
                         </div>
                     </div>
-                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <ul class="nav" id="myTab" role="tablist">
                         <li class="nav-item" style="display: none" id="get">
-                            <a class="nav-link" id="get-tab" data-toggle="tab" href="#get-content" role="tab"
+                            <a class="redBtn nav-link" id="get-tab" data-toggle="tab" href="#get-content" role="tab"
                                aria-selected="true">GET</a>
                         </li>
-                        <li class="nav-item" style="display: none" id="post">
-                            <a class="nav-link" id="post-tab" data-toggle="tab" href="#post-content" role="tab"
+                        <li class="nav-item " style="display: none" id="post">
+                            <a class="yellowBtn nav-link " id="post-tab" data-toggle="tab" href="#post-content"
+                               role="tab"
                                aria-selected="false">POST</a>
                         </li>
-                        <li class="nav-item" style="display: none" id="put">
-                            <a class="nav-link" id="put-tab" data-toggle="tab" href="#put-content" role="tab"
+                        <li class="nav-item " style="display: none" id="put">
+                            <a class="nav-link greenBtn" id="put-tab" data-toggle="tab" href="#put-content" role="tab"
                                aria-selected="false">PUT</a>
                         </li>
-                        <li class="nav-item" style="display: none" id="delete">
-                            <a class="nav-link" id="delete-tab" data-toggle="tab" href="#delete-content" role="tab"
+                        <li class="nav-item " style="display: none" id="delete">
+                            <a class="nav-link blackBtn" id="delete-tab" data-toggle="tab" href="#delete-content"
+                               role="tab"
                                aria-selected="false">DELETE</a>
                         </li>
                     </ul>
@@ -1724,10 +1751,150 @@
         </div>
     </div>
 
+    <div class="modal fade tab" id="detailModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>마이데이터 기관 정보</h4>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="w-100 p-2">
+                        <div class="border mb-3">
+                            <div class="border-bottom">
+                                <h5 class="text-muted p-3 m-0">태그</h5>
+                            </div>
+                            <div class="p-4">
+                                <h6 style="background-color: #1c294e; display:inline-block;padding: 15px;color: white;border-radius: 18px">
+                                    금융업권금융업권</h6>
+                            </div>
+                        </div>
+                        <div class="border mb-3">
+
+                            <div class="border-bottom">
+                                <h5 class="text-muted p-3 m-0">기본 정보</h5>
+                            </div>
+                            <div class="p-4">
+                                <table class="table table-borderless">
+                                    <tbody>
+                                    <tr>
+                                        <td class="tdHead">
+                                            기관코드
+                                        </td>
+                                        <td class="tdContent" id="code">
+
+                                        </td>
+                                    </tr>
+                                    <tr class="borderTop">
+                                        <td class="tdHead">
+                                            기관구분
+                                        </td>
+                                        <td class="tdContent" id="division">
+
+                                        </td>
+                                    </tr>
+                                    <tr class="borderTop">
+                                        <td class="tdHead">
+                                            기관명
+                                        </td>
+                                        <td class="tdContent" id="name">
+
+                                        </td>
+                                    </tr>
+                                    <tr class="borderTop">
+                                        <td class="tdHead">
+                                            업권
+                                        </td>
+                                        <td class="tdContent" id="industry">
+
+                                        </td>
+                                    </tr>
+                                    <tr class="borderTop">
+                                        <td class="tdHead">
+                                            주소
+                                        </td>
+                                        <td class="tdContent" id="address">
+
+                                        </td>
+                                    </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="border mb-3">
+                            <div class="border-bottom">
+                                <h5 class="text-muted p-3 m-0">도메인</h5>
+                            </div>
+                            <div class="p-4">
+                                <table class="table table-borderless">
+                                    <tbody>
+                                    <tr>
+                                        <td class="tdHead">
+                                            API서버 도메인명
+                                        </td>
+                                        <td class="tdContent" id="domainName">
+
+                                        </td>
+                                    </tr>
+                                    <tr class="borderTop">
+                                        <td class="tdHead">
+                                            API서버 공인IP
+                                        </td>
+                                        <td class="tdContent" id="publicApiIp">
+
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="border mb-3">
+                            <div class="border-bottom">
+                                <h5 class="text-muted p-3 m-0">인증</h5>
+                            </div>
+                            <div class="p-4">
+
+                                <table class="table table-borderless">
+                                    <tbody>
+                                    <tr>
+                                        <td class="tdHead">
+                                            제공 인증방식
+                                        </td>
+                                        <td class="tdContent" id="authenticationMethod">
+
+                                        </td>
+                                    </tr>
+                                    <tr class="borderTop">
+                                        <td class="tdHead">
+                                            TLS 인증서 시리얼넘버
+                                        </td>
+                                        <td class="tdContent" id="TLSNum">
+
+                                        </td>
+                                    </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            닫기
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--detail 모달 끝-->
 
 </div>
 <!-- End of Main Content -->
-
 
 </body>
 
