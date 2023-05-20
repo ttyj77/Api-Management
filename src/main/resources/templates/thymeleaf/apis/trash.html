@@ -167,6 +167,7 @@
                     });
                 }
             }
+
             window.onload = function () {
                 let target = document.querySelectorAll('.apiContext');
                 let h3 = document.createElement('h3').innerText = "# APIs";
@@ -189,8 +190,10 @@
                         <h1 class="h3 mb-2 text-gray-800">API 휴지통</h1>
                     </div>
                     <div class="d-flex mb-3 justify-content-end">
-                        <form class="d-flex justify-content-end" action="/api/trashSearch" method="get" style="width: 60%">
-                            <input type="text" class="form-control m-0" aria-label="Search" name="keyword" placeholder="검색어를 입력해주세요." style="width: 40%">
+                        <form class="d-flex justify-content-end" action="/api/trashSearch" method="get"
+                              style="width: 60%">
+                            <input type="text" class="form-control m-0" aria-label="Search" name="keyword"
+                                   placeholder="검색어를 입력해주세요." style="width: 40%">
                             <button type="submit" class="btn btn-dark btn-sm" style=" width: 15%">
                                 <i class="fa-solid fa-magnifying-glass" style="color: #ffffff;"></i> 조회
                             </button>
@@ -206,10 +209,11 @@
                                 th:data-bs-target="'#collapse'+ ${index.id}" aria-expanded="false"
                                 th:aria-controls="'collapse'+ ${index.id}">
                             <div class="w-100 mr-2">
-                                <span th:text="${index.uri}"></span> | <span th:text="${index.summary}"></span>
+                                <span th:text="${index.uri}"></span>
                             </div>
                             <div class="d-flex mr-3">
-                                <i th:id="${index.id}" th:resource="${index.uri}" onclick="goReturn(this)" id="backup" style="cursor: pointer;"
+                                <i th:id="${index.id}" th:resource="${index.uri}" onclick="goReturn(this)" id="backup"
+                                   style="cursor: pointer;"
                                    class="fa-solid fa-rotate-left mr-2" data-toggle="tooltip" title="삭제"></i>
                                 <i th:id="${index.id}" th:resource="${index.uri}" onclick="completeDelete(this)"
                                    style="cursor: pointer;"
@@ -218,11 +222,10 @@
                                 <!--                                </a>-->
                             </div>
                         </button>
-
                     </h2>
+
                     <div th:id="'collapse'+${index.id}" class="accordion-collapse collapse"
-                         th:aria-labelledby="'heading'+${index.id}"
-                         >
+                         th:aria-labelledby="'heading'+${index.id}">
                         <div class="accordion-body">
                             <table class="table table-hover demo02">
                                 <thead class="thead-dark">
@@ -238,6 +241,7 @@
                                 </thead>
                                 <tbody>
                                 <div th:each="dlist:${adlist}" th:if="${index.id == dlist.resourceId}">
+
                                     <tr onclick="location.href='#'" style="cursor: pointer">
                                         <td th:text="${dlist?.method}"></td>
                                         <td th:text="${dlist?.uri}"></td>
@@ -253,25 +257,24 @@
                         </div>
                     </div>
                 </div>
-                <!--  /////////////////////////////////////////////////////////////// -->
-<!--                <h3>each 위에</h3>-->
+            </div>
+            <!--  /////////////////////////////////////////////////////////////// -->
+            <h3># Details</h3>
+            <div class="accordion" id="accordionExampleDetails" th:each="index:${rlist}">
                 <div th:each="dlist:${adlist}">
-<!--                    <h3>each 밑에</h3>-->
                     <div class="accordion-item"
                          th:if="${index.garbage == false and dlist.trash == true and index.id == dlist.resourceId}">
-<!--                        <h3>h2 위에</h3>-->
                         <h2 class="accordion-header" th:id="'heading'+${index.id}">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                     th:data-bs-target="'#collapse'+ ${index.id}" aria-expanded="false"
                                     th:aria-controls="'collapse'+ ${index.id}">
                                 <div class="w-100 mr-2">
-                                    <span th:text="${index.uri}"></span> | <span th:text="${index.summary}"></span>
+                                    <span th:text="${index.uri}"></span>
                                 </div>
                             </button>
                         </h2>
                         <div th:id="'collapse'+${index.id}" class="accordion-collapse collapse"
-                             th:aria-labelledby="'heading'+${index.id}"
-                             >
+                             th:aria-labelledby="'heading'+${index.id}">
 
                             <div class="accordion-body">
                                 <table class="table table-hover demo02">
@@ -296,11 +299,13 @@
                                             <td th:text="${dlist?.operationId}"></td>
                                             <td th:text="${dlist?.version}"></td>
                                             <td>
-                                                <i th:id="${dlist.id}" th:detail="${dlist?.summary}" onclick="goReturn(this)" id="return"
+                                                <i th:id="${dlist.id}"
+                                                   onclick="goReturn(this)" id="return"
                                                    style="cursor: pointer;"
                                                    class="fa-solid fa-rotate-left"></i>
                                                 <div id="tooltipReturn">복구</div>
-                                                <i th:id="${dlist.id}" th:detail="${dlist?.summary}" onclick="completeDelete(this)" id="trash"
+                                                <i th:id="${dlist.id}"
+                                                   onclick="completeDelete(this)" id="trash"
                                                    style="cursor: pointer;"
                                                    class="fa-solid fa-trash-can"></i>
                                                 <div id="tooltipTrash">완전 삭제</div>
@@ -315,25 +320,26 @@
                 </div>
             </div>
         </div>
-
-        <div class="w-100 d-flex justify-content-center">
-            <ul class="pagination">
-                <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Previous">
-                        <span aria-hidden="true">«</span>
-                    </a>
-                </li>
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Next">
-                        <span aria-hidden="true">»</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
     </div>
+
+    <div class="w-100 d-flex justify-content-center">
+        <ul class="pagination">
+            <li class="page-item">
+                <a class="page-link" href="#" aria-label="Previous">
+                    <span aria-hidden="true">«</span>
+                </a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item">
+                <a class="page-link" href="#" aria-label="Next">
+                    <span aria-hidden="true">»</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
 </div>
 <!-- /.container-fluid -->
 </div>
