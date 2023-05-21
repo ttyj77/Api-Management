@@ -158,6 +158,10 @@
                         <button type="submit" class="btn btn-danger mb-6">
                             로 그 인
                         </button>
+<!--                        <p th:if="${LoginFailMessage!=null}" th:text="|Error : ${LoginFailMessage}|"-->
+<!--                           style="color: #E23137; font-size: small"></p>-->
+                        <p th:if="${error != null}" th:text="|Error : ${exception}|"
+                           style="color: #E23137; font-size: small"></p>
                         <hr style="margin: 2rem 0;"/>
                         <p class="help-text">
                             <span style="font-size: 12px; margin-right: 40px;">
