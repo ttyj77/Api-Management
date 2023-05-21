@@ -10,15 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <style>
-        .tdContent:hover {
-            background-color: #f5f6fb;
-        }
 
-        .tdHead {
-            background-color: #f5f5f5;
-        }
-    </style>
 
     <title>요청 목록</title>
 
@@ -27,6 +19,15 @@
                 href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
                 rel="stylesheet">
         <link href="/css/sb-admin-2.min.css" rel="stylesheet">
+        <style>
+            .tdContent:hover {
+                background-color: #f5f6fb;
+            }
+
+            .tdHead {
+                background-color: #f5f5f5;
+            }
+        </style>
     </th:block>
 
     <th:block layout:fragment="script">
@@ -40,39 +41,91 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js"
                 integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
                 crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
         <script>
-            function removeAlert() {
+            function removeAlert(reqId) {
+                let id = reqId.getAttribute("req_id");
                 console.log("alert")
                 Swal.fire({
                     showCancelButton: true,
                     cancelButtonText: "취소",
                     confirmButtonText: "확인",
                     icon: 'warning',
-                    text: "리소스 권한 요청을 삭제하시겠습니까?"
+                    text: "해당 요청을 삭제하시겠습니까?"
                 }).then((result) => {
                     if (result.isConfirmed) {
                         Swal.fire({
                             title: '삭제 완료',
                             icon: 'success'
                         }).then(() => {
-
+                            location.href = '/delete/' + id;
                         })
                     }
                 });
             }
 
+            // 승인
+            function approve(id) {
+                console.log(id);
+                Swal.fire({
+                    icon:'success',
+                    title: '승인 완료'
+                }).then(()=>{
+                    location.href = '/approve/' + id;
+                })
+            }
+
+            // 거절
+            function refuse(id) {
+                console.log(id);
+                Swal.fire({
+                    icon:'success',
+                    title:'거절 완료'
+                }).then(()=>{
+                    location.href = '/refuse/'+id;
+                })
+            }
+
+            // 요청 정보 모달에 넣을 데이터
             function reqDetail(reqId) {
+
                 let id = reqId.getAttribute("req_id");
                 let data = {
                     "id": id,
                 }
                 $.ajax({
-                    url: "/selectOne/"+id,
+                    url: "/selectOne/" + id,
                     data: data,
                     method: "get",
 
-                    success: (message) =>{
-                        // 여기부터해요
+                    success: (message) => {
+                        document.getElementById('reqId').innerText = id;
+                        let title = document.getElementsByClassName('reqTitle');
+                        for (let i = 0; i < title.length; i++) {
+                            title[i].innerText = message.title;
+                        }
+                        document.getElementById('reqUsername').innerText = message.reqUsername;
+                        document.getElementById('reqNickname').innerText = message.reqNickname;
+                        document.getElementById('reqEntryDate').innerText = message.entryDate;
+                        document.getElementById('reqId').innerText = id;
+                        document.getElementById('reqContent').innerText = message.content;
+
+                        if (message.status == true) {
+                            document.getElementById('status').innerText = '승인';
+                        } else if (message.status == false) {
+                            document.getElementById('status').innerText = '거절';
+                        } else if (message.status == null) {
+                            document.getElementById('status').innerText = '요청';
+                        }
+                        if (message.status != null) {
+                            document.getElementById('statusNotNull').innerText = '성공';
+                            document.getElementById('reqProcDate').innerText = message.procDate;
+                            document.getElementById('reqProcUsername').innerText = message.procUsername;
+                        }
+
+                        $('#approve').attr('onclick','approve('+message.userId+')');
+                        $('#refuse').attr('onclick','refuse('+message.userId+')');
                     }
                 })
             }
@@ -138,10 +191,6 @@
                                         </td>
                                         <td id="requestAccount" data-bs-toggle="modal"
                                             data-toggle="modal" data-target="#exampleModal"
-                                            th:if="${reqList.status != null}" th:text="${reqList.reqUsername}">
-                                        </td>
-                                        <td id="requestNone" data-bs-toggle="modal"
-                                            data-toggle="modal" data-target="#exampleModal"
                                             th:text="${reqList.reqUsername}">
                                         </td>
                                         <td id="requestStatus" data-bs-toggle="modal"
@@ -168,8 +217,8 @@
                                             th:text="${#dates.format(reqList.procDate, 'yyyy-MM-dd')}">
                                         </td>
                                         <td id="requestDeletion">
-                                            <i class="fa-solid fa-trash-can" style="color: #797a7c; cursor: pointer;"
-                                               onclick="removeAlert()"/>
+                                            <i class="fa-solid fa-trash-can" style="color: #797a7c; cursor: pointer;" th:req_id="${reqList.id}"
+                                               onclick="removeAlert(this)"/>
                                         </td>
                                     </tr>
                                     </tbody>
@@ -195,59 +244,64 @@
                                     <tbody>
                                     <tr>
                                         <td class="tdHead">요청번호</td>
-                                        <td colspan="3" class="tdContent" th:text="${reqList.id}"></td>
+                                        <td colspan="3" class="tdContent" id="reqId"></td>
                                     </tr>
                                     <tr>
                                         <td class="col-2 tdHead">요청 구분</td>
-                                        <td class="col-4 tdContent" th:text="${reqList.title}"></td>
+                                        <td class="col-4 tdContent reqTitle"></td>
                                         <td class="col-2 tdHead">해당 아이디</td>
-                                        <td class="col-4 tdContent" th:text="${reqList.reqUsername}"></td>
+                                        <td class="col-4 tdContent" id="reqUsername"></td>
                                     </tr>
                                     <tr>
                                         <td class="col-2 tdHead">요청 이름
                                         </td>
-                                        <td class="col-4 tdContent" th:text="${reqList.reqNickname}"></td>
+                                        <td class="col-4 tdContent" id="reqNickname"></td>
                                         <td class="col-2 tdHead">요청 날짜
                                         </td>
-                                        <td class="col-4 tdContent"
-                                            th:text="${#dates.format(reqList.entryDate, 'yyyy-MM-dd')}"></td>
+                                        <td class="col-4 tdContent" id="reqEntryDate"></td>
                                     </tr>
                                     <tr>
                                         <td class="col-2 tdHead">요청 상태
                                         </td>
-                                        <td class="col-4 tdContent"th:if="${reqList.status}==true">
-                                            승인</td>
-                                        <td class="col-4 tdContent"th:if="${reqList.status}==false">
-                                            거절</td>
-                                        <td class="col-4 tdContent"th:if="${reqList.status}==null">
-                                            요청</td>
-                                        <td class="col-2 tdHead">처리결과</td>
-                                        <td class="col-4 tdContent" th:if="${reqList.status} != null">성공</td>
-                                        <td th:if="${reqList.status} == null"></td>
+                                        <td class="col-4 tdContent" id="status">
+                                        </td>
+                                        <td class="col-2 tdHead">처리 결과</td>
+                                        <td class="col-4 tdContent" id="statusNotNull"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-2 tdHead">처리 계정
+                                        </td>
+                                        <td class="col-4 tdContent" id="reqProcUsername"></td>
+                                        <td class="col-2 tdHead">처리 날짜</td>
+                                        <td class="col-4 tdContent" id="reqProcDate"></td>
                                     </tr>
                                     <tr>
                                         <td class="tdHead">제목</td>
-                                        <td colspan="3" class="tdContent" th:text="${reqList.title}"></td>
+                                        <td colspan="3" class="tdContent reqTitle"></td>
                                     </tr>
                                     <tr>
                                         <td class="tdHead">내용</td>
-                                        <td colspan="3" class="tdContent" th:text="${reqList.content}">
+                                        <td colspan="3" class="tdContent">
+                                            <textarea class="form-control" id="reqContent" readonly>
+                                            </textarea>
                                         </td>
                                     </tr>
                                     </tbody>
                                 </table>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                                <button type="button" class="btn btn-success" id="approve">승인</button>
+                                <button type="button" class="btn btn-danger ml-2" id="refuse">거절</button>
+                                <button type="button" class="btn btn-secondary ml-2" data-dismiss="modal">닫기</button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- End of Content Wrapper -->
+                <!--유저정보 모달 끝-->
+            </div>
+
         </div>
-        <!--유저정보 모달 끝-->
     </div>
-</div>
 </body>
 </html>

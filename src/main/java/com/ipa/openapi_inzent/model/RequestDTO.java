@@ -8,7 +8,7 @@ import java.util.Date;
 public class RequestDTO {
     private int id;
     private Date entryDate;
-    private Date procDate;
+    private String procDate;
     private String procUsername;
     private String title;
     private String content;

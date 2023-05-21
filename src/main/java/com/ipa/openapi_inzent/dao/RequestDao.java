@@ -16,4 +16,8 @@ public interface RequestDao {
     RequestDTO selectOne(int id) throws DataAccessException;
 
     void delete(int id) throws DataAccessException;
+
+    RequestDTO selectUserId(int userId) throws DataAccessException;
+
+    void updateRequest(RequestDTO requestDTO) throws DataAccessException;
 }

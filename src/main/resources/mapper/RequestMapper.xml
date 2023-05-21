@@ -34,4 +34,17 @@
         delete from public."userReqList"
         where id = #{id}
     </delete>
+    <select id="selectUserId" parameterType="int" resultType="com.ipa.openapi_inzent.model.RequestDTO">
+        select * from public."userReqList"
+        where "userId" = #{userId}
+    </select>
+    <update id="updateRequest" parameterType="com.ipa.openapi_inzent.model.RequestDTO">
+        update public."userReqList" set
+        "procUsername" = #{procUsername},
+        "procDate" = #{procDate},
+        title = #{title},
+        content = #{content},
+        status = #{status}
+        where "userId" = #{userId}
+    </update>
 </mapper>

@@ -34,4 +34,12 @@ public class RequestService {
     public void delete(int id) {
         requestDao.delete(id);
     }
+
+    public RequestDTO selectUserId(int userId) {
+        return requestDao.selectUserId(userId);
+    }
+
+    public void updateRequest(RequestDTO requestDTO) {
+        requestDao.updateRequest(requestDTO);
+    }
 }

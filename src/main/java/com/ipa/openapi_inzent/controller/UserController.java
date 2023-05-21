@@ -79,7 +79,6 @@ public class UserController {
     @GetMapping("/mypage/{id}")
     public String mypage(Model model, @PathVariable int id) {
         UserDTO userDTO = userService.selectOne(id);
-        System.out.println("userDTO = " + userDTO);
 
         model.addAttribute("user", userDTO);
         return "mypage";

@@ -2,7 +2,10 @@ package com.ipa.openapi_inzent.controller;
 
 import com.google.gson.JsonObject;
 import com.ipa.openapi_inzent.model.RequestDTO;
+import com.ipa.openapi_inzent.model.UserDTO;
 import com.ipa.openapi_inzent.service.RequestService;
+import com.ipa.openapi_inzent.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,11 +13,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @Controller
 public class RequestController {
     RequestService requestService;
+    UserService userService;
 
     @Autowired
     public RequestController(RequestService requestService) {
@@ -24,8 +30,6 @@ public class RequestController {
     @GetMapping("/requestPage")
     public String Authorization(Model model) {
         List<RequestDTO> list = requestService.selectAll();
-        System.out.println("list = " + list);
-
 
         model.addAttribute("list", list);
         return "requestPage";
@@ -36,10 +40,16 @@ public class RequestController {
     public JsonObject selectOne(@PathVariable int id){
         JsonObject object = new JsonObject();
         RequestDTO requestDTO = requestService.selectOne(id);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String entryDate = sdf.format(requestDTO.getEntryDate());
+        String procDate = null;
+        if (requestDTO.getProcDate() != null) {
+            procDate = sdf.format(requestDTO.getProcDate());
+        }
 
         object.addProperty("id", id);
-        object.addProperty("entryDate", String.valueOf(requestDTO.getEntryDate()));
-        object.addProperty("procDate", String.valueOf(requestDTO.getProcDate()));
+        object.addProperty("entryDate", entryDate);
+        object.addProperty("procDate", procDate);
         object.addProperty("procUsername", requestDTO.getProcUsername());
         object.addProperty("title", requestDTO.getTitle());
         object.addProperty("content", requestDTO.getContent());
@@ -48,9 +58,56 @@ public class RequestController {
         object.addProperty("reqUsername", requestDTO.getReqUsername());
         object.addProperty("reqNickname", requestDTO.getReqNickname());
 
+        System.out.println("object = " + object);
 
         return object;
     }
+
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable int id) {
+        requestService.delete(id);
+        return "redirect:/requestPage";
+    }
+    @GetMapping("/refuse/{id}")
+    public String refuse(@PathVariable int id, HttpSession session) {
+        UserDTO logIn = (UserDTO) session.getAttribute("logIn");
+        if (logIn == null) {
+            return "redirect:/user/login";
+        }
+        RequestDTO requestDTO = requestService.selectUserId(id);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date now = new Date();
+        String procDate = sdf.format(now);
+
+        requestDTO.setStatus(false);
+        requestDTO.setProcDate(procDate);
+        requestDTO.setProcUsername(logIn.getUsername());
+
+        requestService.updateRequest(requestDTO);
+        userService.delete(id);
+        return "redirect:/requestPage";
+    }
+
+    @GetMapping("/approve/{id}")
+    public String approve(@PathVariable int id, HttpSession session) {
+        UserDTO logIn = (UserDTO) session.getAttribute("logIn");
+        if (logIn == null) {
+            return "redirect:/user/login";
+        }
+        RequestDTO requestDTO = requestService.selectUserId(id);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date now = new Date();
+        String procDate = sdf.format(now);
+
+        requestDTO.setStatus(true);
+        requestDTO.setProcDate(procDate);
+        requestDTO.setProcUsername(logIn.getUsername());
+
+        requestService.updateRequest(requestDTO);
+        userService.delete(id);
+        return "redirect:/requestPage";
+    }
+
 
 
 }
