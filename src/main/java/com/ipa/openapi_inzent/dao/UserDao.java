@@ -19,4 +19,7 @@ public interface UserDao {
     UserDTO selectOne(int id) throws DataAccessException;
 
     void delete(int id) throws DataAccessException;
+
+    void update(UserDTO userDTO) throws DataAccessException;
+
 }

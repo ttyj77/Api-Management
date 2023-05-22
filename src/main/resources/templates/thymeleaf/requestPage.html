@@ -117,15 +117,17 @@
                             document.getElementById('status').innerText = '거절';
                         } else if (message.status == null) {
                             document.getElementById('status').innerText = '요청';
+                            $('#approve').attr('onclick','approve('+message.userId+')').css("display","block");
+                            $('#refuse').attr('onclick','refuse('+message.userId+')').css("display","block");
                         }
                         if (message.status != null) {
                             document.getElementById('statusNotNull').innerText = '성공';
                             document.getElementById('reqProcDate').innerText = message.procDate;
                             document.getElementById('reqProcUsername').innerText = message.procUsername;
+                            $('#approve').css("display","none");
+                            $('#refuse').css("display","none");
                         }
 
-                        $('#approve').attr('onclick','approve('+message.userId+')');
-                        $('#refuse').attr('onclick','refuse('+message.userId+')');
                     }
                 })
             }
@@ -214,7 +216,7 @@
                                         </td>
                                         <td id="responseDate" data-bs-toggle="modal"
                                             data-toggle="modal" data-target="#exampleModal"
-                                            th:text="${#dates.format(reqList.procDate, 'yyyy-MM-dd')}">
+                                            th:text="${reqList.procDate}">
                                         </td>
                                         <td id="requestDeletion">
                                             <i class="fa-solid fa-trash-can" style="color: #797a7c; cursor: pointer;" th:req_id="${reqList.id}"
@@ -290,8 +292,8 @@
                                 </table>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-success" id="approve">승인</button>
-                                <button type="button" class="btn btn-danger ml-2" id="refuse">거절</button>
+                                <button type="button" class="btn btn-success" id="approve" style="display: none">승인</button>
+                                <button type="button" class="btn btn-danger ml-2" id="refuse" style="display: none">거절</button>
                                 <button type="button" class="btn btn-secondary ml-2" data-dismiss="modal">닫기</button>
                             </div>
                         </div>

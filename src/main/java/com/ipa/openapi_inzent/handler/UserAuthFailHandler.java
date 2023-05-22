@@ -23,7 +23,6 @@ public class UserAuthFailHandler extends SimpleUrlAuthenticationFailureHandler {
 //            httpServletRequest.setAttribute("LoginFailMessage", "아이디 또는 비밀번호가 일치하지 않습니다.");
             errorMessage = "아이디 또는 비밀번호가 일치하지 않습니다.";
         } else if (e instanceof DisabledException) {
-            System.out.println("LockedException");
             errorMessage = "본 계정은 현재 비활성화 되어 있습니다. 관리자에게 문의하세요.";
 //            httpServletRequest.setAttribute("LoginFailMessage", "본 계정은 현재 비활성화 되어 있습니다. 관리자에게 문의하세요.");
         }
@@ -36,6 +35,5 @@ public class UserAuthFailHandler extends SimpleUrlAuthenticationFailureHandler {
 //        httpServletResponse.sendRedirect("/login");
 //        RequestDispatcher dispatcher = httpServletRequest.getRequestDispatcher("/login");
 //        dispatcher.forward(httpServletRequest, httpServletResponse);
-        System.out.println("UserAuthFailHandler.onAuthenticationFailure out");
     }
 }

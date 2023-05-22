@@ -23,5 +23,15 @@
         DELETE FROM public."user"
         WHERE id = #{id};
     </delete>
+    <update id="update" parameterType="com.ipa.openapi_inzent.model.UserDTO">
+        UPDATE public.user SET
+        password = #{password},
+        nickname = #{nickname},
+        token = #{token},
+        activate = #{activate},
+        role = #{role},
+        email = #{email}
+        WHERE id = #{id}
+    </update>
 </mapper>
 

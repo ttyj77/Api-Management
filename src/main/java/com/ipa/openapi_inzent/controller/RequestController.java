@@ -23,7 +23,8 @@ public class RequestController {
     UserService userService;
 
     @Autowired
-    public RequestController(RequestService requestService) {
+    public RequestController(RequestService requestService, UserService userService) {
+        this.userService = userService;
         this.requestService = requestService;
     }
 
@@ -79,6 +80,7 @@ public class RequestController {
         Date now = new Date();
         String procDate = sdf.format(now);
 
+        // 계정 거절
         requestDTO.setStatus(false);
         requestDTO.setProcDate(procDate);
         requestDTO.setProcUsername(logIn.getUsername());
@@ -91,6 +93,7 @@ public class RequestController {
     @GetMapping("/approve/{id}")
     public String approve(@PathVariable int id, HttpSession session) {
         UserDTO logIn = (UserDTO) session.getAttribute("logIn");
+        System.out.println("logIn = " + logIn);
         if (logIn == null) {
             return "redirect:/user/login";
         }
@@ -99,12 +102,19 @@ public class RequestController {
         Date now = new Date();
         String procDate = sdf.format(now);
 
+        // 계정 승인
         requestDTO.setStatus(true);
         requestDTO.setProcDate(procDate);
         requestDTO.setProcUsername(logIn.getUsername());
 
+        // 계정 활성화
+        UserDTO userDTO = userService.selectOne(requestDTO.getUserId());
+        userDTO.setActivate(true);
+        System.out.println("userDTO = " + userDTO);
+        userService.update(userDTO);
+
         requestService.updateRequest(requestDTO);
-        userService.delete(id);
+        System.out.println("RequestController.approve out");
         return "redirect:/requestPage";
     }
 
