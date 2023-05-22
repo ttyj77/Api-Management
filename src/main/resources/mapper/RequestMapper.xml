@@ -47,4 +47,9 @@
         status = #{status}
         where "userId" = #{userId}
     </update>
+    <select id="requestSearch" parameterType="string" resultType="com.ipa.openapi_inzent.model.RequestDTO">
+        select * from public."userReqList"
+        where title ILIKE CONCAT('%', #{keyword}, '%')
+        or content ILIKE CONCAT('%', #{keyword}, '%');
+    </select>
 </mapper>

@@ -51,11 +51,6 @@ public class IndexController {
         return "modalTest";
     }
 
-    @GetMapping("/accountList")
-    public String accountList() {
-        return "accountList";
-    }
-
     @GetMapping("/authorization")
     public String authorization() {
         return "authorization";

@@ -401,23 +401,18 @@ public class ApiController {
 
     @GetMapping("/completeDelete/{id}")
     public String completeDetele(@PathVariable int id) {
-        System.out.println("id = " + id);
-        System.out.println("ApiController.completeDetele");
         apiDetailsService.completeDelete(id);
         return "redirect:/api/trash";
     }
 
     @GetMapping("/resourceDelete/{id}")
     public String resourceDetele(@PathVariable int id) {
-        System.out.println("id = " + id);
-        System.out.println("ApiController.resourceDetele");
         apiDetailsService.resourceDelete(id);
         return "redirect:/api/trash";
     }
 
     @GetMapping("/return/{id}")
     public String goReturn(@PathVariable int id) {
-        System.out.println("ApiController.goReturn");
         ApiDetailsDTO a = apiDetailsService.selectOne(id);
         a.setTrash(false);
         apiDetailsService.updateDetail(a);
@@ -451,9 +446,7 @@ public class ApiController {
 
     @GetMapping("/trashSearch")
     public String trashSearch(Model model, String keyword) {
-        System.out.println("keyword = " + keyword);
         model.addAttribute("list", apiDetailsService.trashSearch(keyword));
-        System.out.println("apiDetailsService.trashSearch(keyword) = " + apiDetailsService.trashSearch(keyword));
         return "/apis/trash";
     }
 

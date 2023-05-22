@@ -44,21 +44,22 @@
                 integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
                 crossorigin="anonymous"></script>
         <script>
-            function removeAlert() {
-                console.log("alert")
+            function removeAlert(user) {
+                let id = user.getAttribute("id");
+                let name = user.getAttribute("nickname");
                 Swal.fire({
                     showCancelButton: true,
                     cancelButtonText: "취소",
                     confirmButtonText: "확인",
                     icon: 'warning',
-                    text: "리소스 권한 요청을 삭제하시겠습니까?"
+                    text: name+" 계정을 삭제하시겠습니까?"
                 }).then((result) => {
                     if (result.isConfirmed) {
                         Swal.fire({
                             title: '삭제 완료',
                             icon: 'success'
                         }).then(() => {
-
+                            location.href = '/user/delete/'+id;
                         })
                     }
                 });
@@ -200,18 +201,16 @@
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <!-- Topbar Search -->
-                        <div class="col input-group mt-3" style="width: 25%; align-self: end;">
-                            <input type="text" class="form-control"
+                        <form action="/accountSearch" method="get" class="col input-group mt-3" style="width: 40%; align-self: end;">
+                            <input type="text" class="form-control m-0"
                                    placeholder="검색어를 입력해주세요"
-                                   aria-label="Search" aria-describedby="basic-addon2">
+                                   aria-label="Search" name="keyword">
                             <div class="input-group-append">
-                                <button class="btn btn-primary" type="button"
-                                        style="height: 38px;">
+                                <button class="btn btn-primary" type="submit">
                                     <i class="fas fa-search fa-sm"></i>
                                 </button>
                             </div>
-                        </div>
-                        <!--                        </div>-->
+                        </form>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-hover" id="dataTable"
@@ -224,45 +223,20 @@
                                         <th>비고</th>
                                     </tr>
                                     </thead>
-
                                     <tbody>
-                                    <tr>
-
-                                        <td id="tableId" data-bs-toggle="modal" data-bs-target="#exampleModal">yonghun
+                                    <tr th:each="user:${list}">
+                                        <td id="tableId" data-bs-toggle="modal" data-bs-target="#exampleModal" th:text="${user.username}">
                                         </td>
-                                        <td id="tableName" data-bs-toggle="modal" data-bs-target="#exampleModal">최용훈
+                                        <td id="tableName" data-bs-toggle="modal" data-bs-target="#exampleModal" th:text="${user.nickname}">
                                         </td>
-                                        <td>
-                                            <!--                                            <button class="btn btn-danger" id="deactivate" onclick="deactivate();">비활성화-->
-                                            <!--                                            </button>-->
-                                            <button id="activateBtn" class="btn btn-primary" onclick="activate(this);">
-                                                활성화
+                                        <td style="width: 20%">
+                                            <button id="activateBtn" onclick="activate(this);">
                                             </button>
                                         </td>
                                         <!--삭제 활동 시작-->
                                         <td>
-                                            <i class="fa-solid fa-trash-can" style="color: #797a7c; cursor: pointer"
-                                               onclick="removeAlert()"/>
-                                        </td>
-                                        <!--삭제 활동 끝-->
-                                    </tr>
-                                    <tr>
-
-                                        <td data-bs-toggle="modal" data-bs-target="#exampleModal">yonghun
-                                        </td>
-                                        <td data-bs-toggle="modal" data-bs-target="#exampleModal">김진우
-                                        </td>
-                                        <td>
-                                            <button class="btn btn-danger"
-                                                    id="activate"
-                                                    onclick="activate(this);">
-                                                비활성화
-                                            </button>
-                                        </td>
-                                        <!--삭제 활동 시작-->
-                                        <td>
-                                            <i class="fa-solid fa-trash-can" style="color: #797a7c; cursor: pointer"
-                                               onclick="removeAlert()"/>
+                                            <i class="fa-solid fa-trash-can" style="color: #797a7c; cursor: pointer" th:id ="${user.id}" th:nickname = "${user.nickname}"
+                                               onclick="removeAlert(this)"/>
                                         </td>
                                         <!--삭제 활동 끝-->
                                     </tr>
@@ -279,7 +253,7 @@
                 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
                      aria-labelledby="exampleModalLabel"
                      aria-hidden="true">
-                    <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="exampleModalLabel">요청상세정보</h5>
@@ -298,11 +272,6 @@
                                         <td class="col-4 tdContent"><input id="name" type="text"
                                                                            style="border-style: none;"
                                                                            value="username" disabled></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="tdHead">전화번호</td>
-                                        <td colspan="3"><input id="phoneNumber" type="text" style="border-style: none;"
-                                                               value="010-1234-1234" disabled></td>
                                     </tr>
                                     <tr>
                                         <td class="tdHead">비밀번호</td>
@@ -329,7 +298,6 @@
                                         <td class="tdHead">역할</td>
                                         <td colspan="3">
                                             <div id="target">
-
                                                 <button type="button"
                                                         class="btn btn-dark btn-sm"
                                                         data-bs-toggle="modal"
@@ -338,14 +306,13 @@
                                                         style="color: #f7f7f8;"></i>
                                                 </button>
                                             </div>
-
                                         </td>
                                     </tr>
                                     </tbody>
                                 </table>
                             </div>
                             <div class="modal-footer" id="btnBox">
-                                <button type="button" class="btn btn-primary" onclick="updateInfo()">수정</button>
+                                <button type="button" class="btn btn-primary" onclick=" updateInfo()">수정</button>
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
                             </div>
                         </div>

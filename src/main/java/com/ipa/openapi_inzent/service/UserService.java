@@ -2,9 +2,12 @@ package com.ipa.openapi_inzent.service;
 
 import com.ipa.openapi_inzent.dao.UserDao;
 import com.ipa.openapi_inzent.model.UserDTO;
+import com.ipa.openapi_inzent.model.UserRoleDTO;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UserService {
@@ -42,5 +45,13 @@ public class UserService {
 
     public void update(UserDTO userDTO) {
         userDao.update(userDTO);
+    }
+
+    public List<UserDTO> selectAll() {
+        return userDao.selectAll();
+    }
+
+    public void insertRole(UserRoleDTO userRoleDTO) {
+        userDao.insertRole(userRoleDTO);
     }
 }

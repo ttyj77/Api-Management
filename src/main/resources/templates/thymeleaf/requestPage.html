@@ -67,9 +67,9 @@
             // 승인
             function approve(id) {
                 Swal.fire({
-                    icon:'success',
+                    icon: 'success',
                     title: '승인 완료'
-                }).then(()=>{
+                }).then(() => {
                     location.href = '/approve/' + id;
                 })
             }
@@ -77,10 +77,10 @@
             // 거절
             function refuse(id) {
                 Swal.fire({
-                    icon:'success',
-                    title:'거절 완료'
-                }).then(()=>{
-                    location.href = '/refuse/'+id;
+                    icon: 'success',
+                    title: '거절 완료'
+                }).then(() => {
+                    location.href = '/refuse/' + id;
                 })
             }
 
@@ -114,15 +114,15 @@
                             document.getElementById('status').innerText = '거절';
                         } else if (message.status == null) {
                             document.getElementById('status').innerText = '요청';
-                            $('#approve').attr('onclick','approve('+message.userId+')').css("display","block");
-                            $('#refuse').attr('onclick','refuse('+message.userId+')').css("display","block");
+                            $('#approve').attr('onclick', 'approve(' + message.userId + ')').css("display", "block");
+                            $('#refuse').attr('onclick', 'refuse(' + message.userId + ')').css("display", "block");
                         }
                         if (message.status != null) {
                             document.getElementById('statusNotNull').innerText = '성공';
                             document.getElementById('reqProcDate').innerText = message.procDate;
                             document.getElementById('reqProcUsername').innerText = message.procUsername;
-                            $('#approve').css("display","none");
-                            $('#refuse').css("display","none");
+                            $('#approve').css("display", "none");
+                            $('#refuse').css("display", "none");
                         }
 
                     }
@@ -148,17 +148,16 @@
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <!-- Topbar Search -->
-                        <div class="col input-group mt-3" style="width: 25%; align-self: end;">
-                            <input type="text" class="form-control"
+                        <form action="/requestSearch" method="get" class="col input-group mt-3" style="width: 40%; align-self: end;">
+                            <input type="text" class="form-control m-0"
                                    placeholder="검색어를 입력해주세요"
-                                   aria-label="Search" aria-describedby="basic-addon2">
+                                   aria-label="Search" name="keyword">
                             <div class="input-group-append">
-                                <button class="btn btn-primary" type="button"
-                                        style="height: 38px;">
+                                <button class="btn btn-primary" type="submit">
                                     <i class="fas fa-search fa-sm"></i>
                                 </button>
                             </div>
-                        </div>
+                        </form>
                         <!--</div>-->
                         <div class="card-body">
                             <div class="table-responsive">
@@ -216,7 +215,8 @@
                                             th:text="${reqList.procDate}">
                                         </td>
                                         <td id="requestDeletion">
-                                            <i class="fa-solid fa-trash-can" style="color: #797a7c; cursor: pointer;" th:req_id="${reqList.id}"
+                                            <i class="fa-solid fa-trash-can" style="color: #797a7c; cursor: pointer;"
+                                               th:req_id="${reqList.id}"
                                                onclick="removeAlert(this)"/>
                                         </td>
                                     </tr>
@@ -289,18 +289,20 @@
                                 </table>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-success" id="approve" style="display: none">승인</button>
-                                <button type="button" class="btn btn-danger ml-2" id="refuse" style="display: none">거절</button>
+                                <button type="button" class="btn btn-success" id="approve" style="display: none">승인
+                                </button>
+                                <button type="button" class="btn btn-danger ml-2" id="refuse" style="display: none">거절
+                                </button>
                                 <button type="button" class="btn btn-secondary ml-2" data-dismiss="modal">닫기</button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-                <!--유저정보 모달 끝-->
-            </div>
-
+            <!--유저정보 모달 끝-->
         </div>
+
     </div>
+</div>
 </body>
 </html>

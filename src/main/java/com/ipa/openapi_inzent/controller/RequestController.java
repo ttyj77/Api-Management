@@ -45,7 +45,7 @@ public class RequestController {
         String entryDate = sdf.format(requestDTO.getEntryDate());
         String procDate = null;
         if (requestDTO.getProcDate() != null) {
-            procDate = sdf.format(requestDTO.getProcDate());
+            procDate = requestDTO.getProcDate();
         }
 
         object.addProperty("id", id);
@@ -113,6 +113,11 @@ public class RequestController {
         return "redirect:/requestPage";
     }
 
-
+    @GetMapping("/requestSearch")
+    public String requestSearch(Model model, String keyword) {
+        model.addAttribute("list", requestService.requestSearch(keyword));
+        System.out.println("requestService.requestS earch(keyword) = " + requestService.requestSearch(keyword));
+        return "requestPage";
+    }
 
 }

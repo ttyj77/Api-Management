@@ -14,6 +14,12 @@ public class UserDTO {
     private String email;
     private boolean activate;
     private Date createDate;
-    private String role;
-//    private int reqId;
+
+    // UserRole
+    private int userId;
+    private int roleId;
+
+    // role
+    private String code;
+    private String name;
 }

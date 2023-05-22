@@ -20,4 +20,6 @@ public interface RequestDao {
     RequestDTO selectUserId(int userId) throws DataAccessException;
 
     void updateRequest(RequestDTO requestDTO) throws DataAccessException;
+
+    List<RequestDTO> requestSearch(String keyword) throws DataAccessException;
 }

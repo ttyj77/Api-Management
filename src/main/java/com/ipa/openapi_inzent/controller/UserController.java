@@ -3,8 +3,10 @@ package com.ipa.openapi_inzent.controller;
 import com.google.gson.JsonObject;
 import com.ipa.openapi_inzent.model.RequestDTO;
 import com.ipa.openapi_inzent.model.UserDTO;
+import com.ipa.openapi_inzent.model.UserRoleDTO;
 import com.ipa.openapi_inzent.service.RequestService;
 import com.ipa.openapi_inzent.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,9 +39,14 @@ public class UserController {
 
     @PostMapping("/register")
     public String register(UserDTO userDTO) {
-        userDTO.setRole("ROLE_USER");
         // 회원 리스트에 넣기
         int id = userService.register(userDTO);
+
+        // 역할 넣기 (일반 사용자 2)
+        UserRoleDTO userRoleDTO = new UserRoleDTO();
+        userRoleDTO.setUserId(id);
+        userRoleDTO.setRoleId(2); // 일반 사용자 ( ROLE_USER )
+        userService.insertRole(userRoleDTO);
 
         RequestDTO requestDTO = new RequestDTO();
 
@@ -88,10 +95,17 @@ public class UserController {
     }
 
     @GetMapping("/delete/{id}")
-    public String delete(@PathVariable int id) {
+    public String delete(@PathVariable int id, HttpSession session) {
+        UserDTO logIn = (UserDTO) session.getAttribute("logIn");
         System.out.println("UserController.delete");
         userService.delete(id);
-        return "redirect:/";
+        if (logIn.getId() == id) {
+            // 회원탈퇴
+            return "redirect:/";
+        } else {
+            // 강제탈퇴
+            return "redirect:/accountList";
+        }
     }
 
 }

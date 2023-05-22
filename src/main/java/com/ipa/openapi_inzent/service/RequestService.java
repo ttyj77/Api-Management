@@ -42,4 +42,8 @@ public class RequestService {
     public void updateRequest(RequestDTO requestDTO) {
         requestDao.updateRequest(requestDTO);
     }
+
+    public List<RequestDTO> requestSearch(String keyword) {
+        return requestDao.requestSearch(keyword);
+    }
 }

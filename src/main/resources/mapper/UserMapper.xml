@@ -3,9 +3,15 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ipa.openapi_inzent.dao.UserDao">
+    <resultMap id="userRole" type="com.ipa.openapi_inzent.model.UserDTO">
+        <result property="userId" column="userId"/>
+        <result property="roleId" column="roleId"/>
+        <result property="code" column="code"/>
+        <result property="name" column="name"/>
+    </resultMap>
     <insert id="register" parameterType="com.ipa.openapi_inzent.model.UserDTO" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO public."user"(username,nickname, password, activate ,"createDate", email, role)
-        VALUES (#{username},#{nickname} , #{password}, false ,NOW(),#{email} ,#{role})
+        INSERT INTO public."user"(username,nickname, password, activate ,"createDate", email)
+        VALUES (#{username},#{nickname} , #{password}, false ,NOW(),#{email})
     </insert>
     <select id="findByUsername" parameterType="String" resultType="com.ipa.openapi_inzent.model.UserDTO">
         SELECT *
@@ -15,9 +21,11 @@
         SELECT *
         FROM public."user" where nickname = #{nickname};
     </select>
-    <select id="selectOne" parameterType="int" resultType="com.ipa.openapi_inzent.model.UserDTO">
-        select *
-        from public.user where id = #{id};
+    <select id="selectOne" parameterType="int" resultMap="userRole">
+        select * from public.user as us
+        join public."userRole" as ur on ur."userId" = us.id
+        join public.role as ro on ro.id = ur."roleId"
+        where us.id = #{id};
     </select>
     <delete id="delete" parameterType="int">
         DELETE FROM public."user"
@@ -29,9 +37,20 @@
         nickname = #{nickname},
         token = #{token},
         activate = #{activate},
-        role = #{role},
         email = #{email}
         WHERE id = #{id}
     </update>
+
+    <!-- ROLE -->
+    <insert id="insertRole" parameterType="com.ipa.openapi_inzent.model.UserRoleDTO">
+        INSERT INTO public."userRole"("userId", "roleId")
+        VALUES (#{userId}, #{roleId})
+    </insert>
+
+    <select id="selectAll" resultMap="userRole">
+        select * from public.user as us
+        join public."userRole" as ur on ur."userId" = us.id
+        join public.role as ro on ro.id = ur."roleId";
+    </select>
 </mapper>
 
