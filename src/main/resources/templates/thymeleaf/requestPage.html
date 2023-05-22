@@ -46,7 +46,6 @@
         <script>
             function removeAlert(reqId) {
                 let id = reqId.getAttribute("req_id");
-                console.log("alert")
                 Swal.fire({
                     showCancelButton: true,
                     cancelButtonText: "취소",
@@ -67,7 +66,6 @@
 
             // 승인
             function approve(id) {
-                console.log(id);
                 Swal.fire({
                     icon:'success',
                     title: '승인 완료'
@@ -78,7 +76,6 @@
 
             // 거절
             function refuse(id) {
-                console.log(id);
                 Swal.fire({
                     icon:'success',
                     title:'거절 완료'

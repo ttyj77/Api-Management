@@ -59,8 +59,6 @@ public class RequestController {
         object.addProperty("reqUsername", requestDTO.getReqUsername());
         object.addProperty("reqNickname", requestDTO.getReqNickname());
 
-        System.out.println("object = " + object);
-
         return object;
     }
 
@@ -93,7 +91,6 @@ public class RequestController {
     @GetMapping("/approve/{id}")
     public String approve(@PathVariable int id, HttpSession session) {
         UserDTO logIn = (UserDTO) session.getAttribute("logIn");
-        System.out.println("logIn = " + logIn);
         if (logIn == null) {
             return "redirect:/user/login";
         }
@@ -110,11 +107,9 @@ public class RequestController {
         // 계정 활성화
         UserDTO userDTO = userService.selectOne(requestDTO.getUserId());
         userDTO.setActivate(true);
-        System.out.println("userDTO = " + userDTO);
         userService.update(userDTO);
 
         requestService.updateRequest(requestDTO);
-        System.out.println("RequestController.approve out");
         return "redirect:/requestPage";
     }
 
