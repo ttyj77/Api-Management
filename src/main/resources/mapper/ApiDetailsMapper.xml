@@ -24,9 +24,12 @@
 
     <!-- 리소스 List  resultType: ResourceDTO-->
     <select id="resourceList" parameterType="int" resultType="com.ipa.openapi_inzent.model.ResourceDTO">
-        select * from public.resource
-        where "apisId" = #{apisId}
-        order by id asc;
+
+        select res."apisId", res.id, res.garbage, res."tagId", ad.uri,ad.summary from public.resource as res join
+        public."apiDetails" as ad on ad."resourceId" = res.id
+        where res."apisId" = #{apisId}
+        order by res.id asc;
+
     </select>
     <!-- 리소스 안에 있는 apiDetails   -->
     <select id="resourceInAdList" parameterType="int" resultType="com.ipa.openapi_inzent.model.ApiDetailsDTO">
@@ -127,10 +130,12 @@
         OR ad.summary ILIKE CONCAT('%', #{keyword},'%');
     </select>
 
-    <select id="searchPath" parameterType="string" resultType="com.ipa.openapi_inzent.model.ApiDetailsDTO">
+    <select id="searchPath" parameterType="hashmap" resultType="com.ipa.openapi_inzent.model.ApiDetailsDTO">
         <!-- uri,method 받아오면 된다. /v1/insu -->
-        SELECT id, method,uri,"resourceId"
-        FROM public."apiDetails" where uri ILIKE CONCAT('%', #{keyword},'%') and trash = false order by id;
+        SELECT ap.id, ap.method,ap.uri,ap."resourceId"
+        FROM public."apiDetails" as ap join public."resource" as res on res.id = ap."resourceId" where res."apisId" =
+        #{apisId} and ap.uri ILIKE CONCAT('%', #{keyword},'%') and ap.trash = false
+        and res."garbage" = false order by ap.id
     </select>
     <insert id="insertResource" parameterType="com.ipa.openapi_inzent.model.ResourceDTO" useGeneratedKeys="true"
             keyProperty="id" keyColumn="id">

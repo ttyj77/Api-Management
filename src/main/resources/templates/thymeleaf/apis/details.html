@@ -244,7 +244,10 @@
                         console.log(operationId.value)
                         obj.operation = operationId.value;
                         obj.summary = summary.value
+                        console.log("==============================Tag value ==========================")
+                        console.log(tag.value.toString())
                         obj.tag = tag.value.toString()
+
 
                         if (method[i] == "post" || method[i] == "put") {
                             obj.reqData = reqData.value;
@@ -273,21 +276,26 @@
                             param.code = tdList.children().eq(1).text()
                             param.explanation = tdList.children().eq(2).text()
                             param.type = tdList.children().eq(3).text()
-                            resCodeArr.push(param)
+                            param.paramKey = tdList.children().eq(5).text()
+                            param.paramValue = tdList.children().eq(6).text()
 
+                            // 여기서 리스트 하나더 돌리자. resCode parameter list
+                            resCodeArr.push(param)
                         });
                         obj.resCode = resCodeArr
                     }
                     jsonArr.push(obj)
                 }
                 // console.log(document.getElementById("searchPathTbody").children[0])
+                console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+                console.log(document.getElementById("path").value)
                 // [요청 json 데이터 선언]
                 let jsonData = { // Body에 첨부할 json 데이터
                     "idx": document.getElementById("apiId").value, //api index
                     "uriId": document.getElementById("pathid").value,
                     "resourceId": document.getElementById("resourceId").value,
                     "url": document.getElementById("url").value,
-                    "path": document.getElementById("path").name + document.getElementById("path").value,
+                    "path": document.getElementById("path").value,
                     "get": JSON.stringify(jsonArr[0]),
                     "post": JSON.stringify(jsonArr[1]),
                     "put": JSON.stringify(jsonArr[2]),
@@ -422,6 +430,49 @@
                     delUpdate.className = "delUpdate"
 
                     //여기서 응답 파라미터 추가해야됨
+                    console.log("////////////////////////////////resParameter")
+                    //그냥 하낟 추가하면 안되고
+                    let resCodeParam_tr = $("#appendJsonResCode tr");
+                    let cnt = $("#appendJsonResCode tr").length // 해당 응답코드의 파라미터 갯수
+                    let resCodeArr = new Array();
+
+                    for (let i = 0; i < cnt; i++) {
+                        // let key = do
+                    }
+
+
+                    let param;
+
+                    let key = [];
+                    let paramValue = [];
+
+                    $.each(resCodeParam_tr, function (index, value) {
+                        param = new Object();
+                        let tdList = $(value)
+                        console.log(tdList.children())
+                        key.push(tdList.children().eq(1).text())
+                        paramValue.push(tdList.children().eq(2).text())
+                    });
+
+                    console.log("9999999999999999999999999")
+
+                    // let value = resCodeArr.toString()
+
+                    let resParamKey = document.createElement("td");
+                    resParamKey.innerText = key.toString()
+                    resParamKey.style.display = "none"
+                    resParamKey.id = "resParamKey"
+
+                    //
+                    let resParamValue = document.createElement("td");
+                    resParamValue.innerText = paramValue.toString()
+                    resParamValue.style.display = "none"
+                    resParamValue.id = "resParamValue"
+                    //
+                    // let resParamType = document.createElement("td");
+                    // resParamType.innerText = document.getElementById("resParamType").innerText
+                    // resParamType.style.display = "none"
+                    // resParamType.id = "resParamType"
 
 
                     th.scope = "row";
@@ -435,7 +486,8 @@
 
                     delUpdate.innerHTML = "<i class=\"fa-solid fa-pen mr-2\" style=\"color: #797a7c;\"></i><i class=\"fa-solid fa-trash-can\" style=\"color: #797a7c; cursor: pointer\"/>"
 
-                    tr.append(th, code, explanation, type, delUpdate)
+                    tr.append(th, code, explanation, type, delUpdate, resParamKey, resParamValue)
+
                     tbody.append(tr)
 
                     $("#insertResCodeModal").modal('hide')
@@ -486,15 +538,18 @@
             //     url 실시간 검색
             function searchPath(value) {
                 let keyword = value.value
+                let apisId = document.getElementById("apiId").value
                 if (keyword.charAt(0) == "/") {
                     console.log("첫글자 슬래시")
                     keyword = keyword.slice(1)
                 }
 
+
                 console.log("keyword!! " + keyword)
 
                 let data = {
                     "keyword": keyword,
+                    "apisId": apisId,
                 };
                 $.ajax({
                     url: "/api/search/path",
@@ -661,7 +716,8 @@
             <div class="d-flex justify-content-between mb-2">
                 <div class="d-flex">
                     <h1 class="h3 mb-2 text-gray-800" th:text="${api.name}"></h1>
-                    <h3>&nbsp(&nbsp</h3><h4 th:text="${api.context}"></h4>
+                    <h3>&nbsp(&nbsp</h3>
+                    <h3 th:text="${api.context}"></h3>
                     <h3>&nbsp)</h3>
                 </div>
                 <div>
@@ -714,7 +770,7 @@
                                 <div>
                                     <i class="fa-solid fa-plus"
                                        onclick="location.href='#'; event.stopPropagation()"></i>
-                                    <span th:text="${index.id}"></span> | <span th:text="${index.id}"></span>
+                                    <span th:text="${index.id}"></span> | <span th:text="${index.uri}"></span> </span>
                                 </div>
                                 <div>
                                     <i class="fa-solid fa-arrows-rotate renew" data-toggle="tooltip"
@@ -1022,7 +1078,7 @@
                                 <div class="tab-content w-100" id="v-pills-tabContent">
                                     <div class="tab-pane fade show active" id="v-pills-get-parameter" role="tabpanel"
                                          aria-labelledby="v-pills-get-parameter-tab">
-                                        <table class="table">
+                                        <table class="table align-items-center">
                                             <thead class="thead-light">
                                             <tr>
                                                 <th scope="col">#</th>
@@ -1165,7 +1221,7 @@
                                 <div class="tab-content w-100">
                                     <div class="tab-pane fade show active" id="v-pills-post-parameter" role="tabpanel"
                                          aria-labelledby="v-pills-post-parameter-tab">
-                                        <table class="table">
+                                        <table class="table align-items-center">
                                             <thead class="thead-light">
                                             <tr>
                                                 <th scope="col">#</th>
@@ -1318,7 +1374,7 @@
                                 <div class="tab-content w-100">
                                     <div class="tab-pane fade show active" id="v-pills-put-parameter" role="tabpanel"
                                          aria-labelledby="v-pills-put-parameter-tab">
-                                        <table class="table">
+                                        <table class="table align-items-center">
                                             <thead class="thead-light">
                                             <tr>
                                                 <th scope="col">#</th>
@@ -1412,7 +1468,7 @@
                                     <h6 class="col-2" style="text-align: left;">operationId</h6>
                                     <input class="col"
                                            type="text"
-                                           placeholder="  get-v1-insu"
+                                           placeholder="  delete-v1-insu"
                                            id="deleteOperationId"
                                            style="height: 44px;border-radius: 7px;">
                                 </div>
@@ -1420,7 +1476,7 @@
                                     <h6 class="col-2" style="text-align: left;">요약</h6>
                                     <input class="col"
                                            type="text"
-                                           placeholder="  get-v1-insu"
+                                           placeholder="  delete-v1-insu"
                                            id="deleteSummary"
                                            style="height: 44px;border-radius: 7px;">
                                 </div>
@@ -1468,7 +1524,7 @@
                                 <div class="tab-content w-100">
                                     <div class="tab-pane fade show active" id="v-pills-delete-parameter" role="tabpanel"
                                          aria-labelledby="v-pills-delete-parameter-tab">
-                                        <table class="table">
+                                        <table class="table align-items-center">
                                             <thead class="thead-light">
                                             <tr>
                                                 <th scope="col">#</th>
@@ -1695,7 +1751,7 @@
                 </div>
                 <div class="modal-footer code">
                     <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
-                            data-bs-target="#resourceModal">취소
+                            data-bs-target="#insertResCodeModal">취소
                     </button>
                     <button type="button" class="btn btn-primary" onclick="insertResJson(this)">추가</button>
                 </div>
@@ -1718,6 +1774,7 @@
                     <div class="row mb-3 align-items-center flex-nowrap">
                         <div class="col-3" style="margin-left: 1%;" id="defaultUri"></div>
                         <input type="text" class="col-8 form-control" onkeyup="searchPath(this)" id="pathSearchBar"
+                               placeholder="uri를 입력해주세요"
                                style="width: 68%;"
                                autofocus>
 
@@ -1733,12 +1790,21 @@
                             </tr>
                             </thead>
                             <tbody id="searchPathTbody">
-
+                            <tr>
+                                <th colspan="4">
+                                    검색어를 입력해주세요
+                                </th>
+                            </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
+                <div class="modal-footer code">
+                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
+                            data-bs-target="#resourceModal">취소
+                    </button>
 
+                </div>
             </div>
 
         </div>

@@ -8,6 +8,7 @@ import com.ipa.openapi_inzent.model.TagDTO;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -71,8 +72,11 @@ public class ApiDetailsService {
         return apiDetailsDao.selectAllTag();
     }
 
-    public List<ApiDetailsDTO> searchPath(String keyword) {
-        return apiDetailsDao.searchPath(keyword);
+    public List<ApiDetailsDTO> searchPath(String keyword, int apisId) {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("keyword", keyword);
+        map.put("apisId", apisId);
+        return apiDetailsDao.searchPath(map);
     }
 
     public int insertResource(ResourceDTO resourceDTO) {

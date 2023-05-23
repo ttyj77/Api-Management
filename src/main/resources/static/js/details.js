@@ -20,6 +20,8 @@ function detailModal(value) {
             console.log(document.getElementById("dModal_url"))
 
             document.getElementById("dModal_url").innerText = message.url + message.uri;
+            console.log(message.url)
+            console.log(message.uri)
             document.getElementById("dModal_method").innerText = message.method
             document.getElementById("dModal_summary").innerText = message.summary.replace(/\"/gi, "");
             let operationId = document.getElementById("dModal_operationId")
@@ -143,13 +145,16 @@ function insertResJson() {
         let tr = document.createElement("tr")
         let index = document.createElement("td")
         index.innerText = tbody.childElementCount + 1
+
         let keyTd = document.createElement("td")
         keyTd.innerText = document.getElementById("json_key").value
-
+        keyTd.classname = "resParamKey"
         let valueTd = document.createElement("td")
         valueTd.innerText = document.getElementById("json_value").value
+        valueTd.classname = "resParamValue"
         let typeTd = document.createElement("td")
         typeTd.innerText = document.getElementById("json_type").value
+        typeTd.classname = "resParamType"
 
         tr.append(index, keyTd, valueTd, typeTd)
         tbody.append(tr)
@@ -192,7 +197,7 @@ function insertPath(e) {
 
 
     // resouce modal path 값 넣음
-    input.value = defaultUri + '/' + e.target.parentNode.childNodes[1].textContent
+    input.value = e.target.parentNode.childNodes[1].textContent
     // hidden으로 기존 리소스 값 넣음
     // pathid.value
 

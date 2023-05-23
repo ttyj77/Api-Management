@@ -7,7 +7,6 @@ import com.ipa.openapi_inzent.model.*;
 import com.ipa.openapi_inzent.service.ApiDetailsService;
 import com.ipa.openapi_inzent.service.ApiService;
 import com.ipa.openapi_inzent.service.RoleService;
-import io.swagger.v3.core.util.Json;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -131,11 +130,6 @@ public class ApiController {
         List<ApiDetailsDTO> apiDetailsDTOList = apiDetailsService.detailsList(apisId);
         List<TagDTO> tagList = apiDetailsService.selectAllTag();
 
-//        System.out.println("apiDetailsDTOList = " + apiDetailsDTOList);
-//
-//        System.out.println("a = " + a);
-//        System.out.println("resourceList = " + resourceList);
-
         model.addAttribute("api", a);
         model.addAttribute("resourceIndex", resourceList);
         model.addAttribute("apiDetailsDTOList", apiDetailsDTOList);
@@ -226,7 +220,6 @@ public class ApiController {
         System.out.println("=======================================");
         System.out.println("[ModuleApiController] : [testPostBodyJson] : [start]");
         System.out.println("[request keySet] : " + String.valueOf(paramMap.keySet()));
-        System.out.println("[request idx] : " + String.valueOf(paramMap.get("idx"))); //apis id
         System.out.println("[request uriId] : " + String.valueOf(paramMap.get("uriId"))); // resource id
         System.out.println("[request url] : " + String.valueOf(paramMap.get("url"))); // https:8080
         System.out.println("[request path] : " + String.valueOf(paramMap.get("path"))); // resource  /vi/insuf/
@@ -244,18 +237,8 @@ public class ApiController {
         System.out.println("=======================================");
         System.out.println("\n");
 
-//        String uriId = String.valueOf(paramMap.get("uriId"));
         int apiId = Integer.parseInt(paramMap.get("uriId"));
-
-
-        ResourceDTO resourceDTO = new ResourceDTO();
-//        resourceDTO.setApisId(apiId);
-
-
         getTagId(paramMap, apiId);
-
-////                // 1. 리소스 등록
-
 
     }
 
@@ -263,9 +246,12 @@ public class ApiController {
         ResourceDTO resourceDTO = new ResourceDTO();
         resourceDTO.setApisId(apiId);
         int uriId = Integer.parseInt(paramMap.get("uriId"));
-        int resourceId = Integer.parseInt(paramMap.get("resourceId"));
+        System.out.println("==================================RESOURCEID");
 
-
+        System.out.println(String.valueOf(paramMap.get("resourceId")).isEmpty());
+//        int resourceId = Integer.parseInt(paramMap.get("resourceId"));
+        String resId = String.valueOf(paramMap.get("resourceId"));
+        int resourceId = 0;
         for (int i = 0; i < array.length; i++) {
 
             JsonObject obj = (JsonObject) JsonParser.parseString(paramMap.get(array[i]));
@@ -274,23 +260,21 @@ public class ApiController {
                 if (obj.get("tag") == null || obj.get("tag").toString().replaceAll("[^\\w+]", "").isEmpty()) {
                     System.out.println("태그 없음.");
                 } else {
-                    System.out.println("태그 있음..");
+                    System.out.println("태그 있음.");
                     int tagId = Integer.parseInt(obj.get("tag").toString().replaceAll("[^\\w+]", ""));
                     resourceDTO.setTagId(tagId);
                 }
                 // uri 아이디가 넘어오지 않는다면 리소스가 새롭게 등록되어야 되지만
-                System.out.println(uriId == 0);
-
-                if (resourceId == 0) { //기존의 리소스가 아니라 새로 등록이라면 apiDetails 전에 resource 먼저 등록
+                if (resId.equals("")) { //기존의 리소스가 아니라 새로 등록이라면 apiDetails 전에 resource 먼저 등록
                     System.out.println("리소스 새로등록");
                     resourceDTO.setApisId(Integer.parseInt(paramMap.get("idx"))); // apis 아이디
                     System.out.println("resourceDTO = " + resourceDTO);
 
                     resourceId = apiDetailsService.insertResource(resourceDTO); // 리소스 생성
-                    System.out.println("uriId = " + uriId);
+                    System.out.println("resourceId = " + resourceId);
+                } else { ///있는 리소스라면 받아온 리소스 아이디 입력
+                    resourceId = Integer.parseInt(paramMap.get("resourceId"));
                 }
-                ///있는 리소스라면
-                resourceId = Integer.parseInt(paramMap.get("resourceId"));
                 System.out.println("++++++++++++++++++++++++++++++");
                 ApiDetailsDTO apiDetailsDTO = new ApiDetailsDTO();
 
@@ -343,6 +327,12 @@ public class ApiController {
                 } else {
                     System.out.println("parma size == 0");
                 }
+
+
+                System.out.println("//////////////////resCode/////////////////////");
+
+
+
                 System.out.println("++++++++++++++++++++++++++++++");
                 System.out.println();
 
@@ -403,8 +393,8 @@ public class ApiController {
 
     @GetMapping("/search/path")
     @ResponseBody
-    public JsonObject searchKeyword(String keyword) {
-        List<ApiDetailsDTO> searchList = apiDetailsService.searchPath(keyword);
+    public JsonObject searchKeyword(String keyword, int apisId) {
+        List<ApiDetailsDTO> searchList = apiDetailsService.searchPath(keyword, apisId);
         JsonArray array = new JsonArray();
         for (ApiDetailsDTO a : searchList) {
             JsonObject object = new JsonObject();

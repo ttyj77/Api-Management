@@ -8,6 +8,7 @@ import io.swagger.annotations.Api;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.dao.DataAccessException;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Mapper
@@ -39,7 +40,7 @@ public interface ApiDetailsDao {
 
     List<TagDTO> selectAllTag() throws DataAccessException;
 
-    List<ApiDetailsDTO> searchPath(String keyword) throws DataAccessException;
+    List<ApiDetailsDTO> searchPath(HashMap<String, Object> map) throws DataAccessException;
 
     void insertResource(ResourceDTO resourceDTO) throws DataAccessException;
 
