@@ -9,35 +9,50 @@
         <result property="code" column="code"/>
         <result property="name" column="name"/>
     </resultMap>
+    <parameterMap id="userRole" type="com.ipa.openapi_inzent.model.UserDTO">
+        <parameter property="userId"/>
+        <parameter property="roleId"/>
+        <parameter property="code"/>
+        <parameter property="name"/>
+    </parameterMap>
+    <select id="userList" resultMap="userRole">
+        select * from public.user
+        order by id asc;
+    </select>
     <insert id="register" parameterType="com.ipa.openapi_inzent.model.UserDTO" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO public."user"(username,nickname, password, activate ,"createDate", email)
-        VALUES (#{username},#{nickname} , #{password}, false ,NOW(),#{email})
+        INSERT INTO public."user"(username,nickname, password, activate ,"createDate", email,approve)
+        VALUES (#{username},#{nickname} , #{password}, false ,NOW(),#{email}, false)
     </insert>
     <select id="findByUsername" parameterType="String" resultType="com.ipa.openapi_inzent.model.UserDTO">
-        SELECT *
-        FROM public."user" where username = #{username};
+        SELECT
+        us.id,us.username,us.password,us.nickname,us.token,us.activate,us."createDate",us.email,us.approve,ro.code as
+        "role"
+        FROM public."user" as us
+        join public."userRole" as ur on ur."userId" = us.id
+        join public.role as ro on ro.id = ur."roleId"
+        where username = #{username} order by us.id asc;
     </select>
     <select id="findByNickname" parameterType="String" resultType="com.ipa.openapi_inzent.model.UserDTO">
         SELECT *
         FROM public."user" where nickname = #{nickname};
     </select>
-    <select id="selectOne" parameterType="int" resultMap="userRole">
-        select * from public.user as us
-        join public."userRole" as ur on ur."userId" = us.id
-        join public.role as ro on ro.id = ur."roleId"
-        where us.id = #{id};
+    <select id="userOne" parameterType="int" resultType="com.ipa.openapi_inzent.model.UserDTO">
+        select *
+        from public.user where id = #{id};
     </select>
+
     <delete id="delete" parameterType="int">
         DELETE FROM public."user"
         WHERE id = #{id};
     </delete>
-    <update id="update" parameterType="com.ipa.openapi_inzent.model.UserDTO">
+    <update id="update" parameterType="com.ipa.openapi_inzent.model.UserRoleDTO">
         UPDATE public.user SET
         password = #{password},
         nickname = #{nickname},
         token = #{token},
         activate = #{activate},
-        email = #{email}
+        email = #{email},
+        approve = #{approve}
         WHERE id = #{id}
     </update>
 
@@ -46,11 +61,23 @@
         INSERT INTO public."userRole"("userId", "roleId")
         VALUES (#{userId}, #{roleId})
     </insert>
+    <select id="selectOne" parameterType="int" resultMap="userRole">
+        select * from public.user as us
+        join public."userRole" as ur on ur."userId" = us.id
+        join public.role as ro on ro.id = ur."roleId"
+        where us.id = #{id};
+    </select>
 
     <select id="selectAll" resultMap="userRole">
         select * from public.user as us
         join public."userRole" as ur on ur."userId" = us.id
-        join public.role as ro on ro.id = ur."roleId";
+        join public.role as ro on ro.id = ur."roleId"
+        order by us.id asc;
+    </select>
+
+    <select id="userRoles" resultType="com.ipa.openapi_inzent.model.UserRoleDTO" parameterType="int">
+        select * from public."userRole"
+        where "userId" = #{userId}
     </select>
 </mapper>
 

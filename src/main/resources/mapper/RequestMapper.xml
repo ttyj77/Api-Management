@@ -30,7 +30,7 @@
         select * from public."userReqList"
         where id = #{id}
     </select>
-    <delete id="delete" parameterType="int" >
+    <delete id="delete" parameterType="int">
         delete from public."userReqList"
         where id = #{id}
     </delete>
@@ -52,4 +52,6 @@
         where title ILIKE CONCAT('%', #{keyword}, '%')
         or content ILIKE CONCAT('%', #{keyword}, '%');
     </select>
+
+    <!--    -->
 </mapper>

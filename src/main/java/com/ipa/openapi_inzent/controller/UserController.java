@@ -8,20 +8,25 @@ import com.ipa.openapi_inzent.service.RequestService;
 import com.ipa.openapi_inzent.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/user")
 public class UserController {
     private UserService userService;
     private RequestService requestService;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserController(UserService userService, RequestService requestService) {
+    public UserController(UserService userService, RequestService requestService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.requestService = requestService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping("/login")
@@ -106,6 +111,36 @@ public class UserController {
             // 강제탈퇴
             return "redirect:/accountList";
         }
+    }
+
+    @GetMapping("/userOne/{id}")
+    @ResponseBody
+    public JsonObject userOne(@PathVariable int id) {
+        JsonObject object = new JsonObject();
+        UserDTO userDTO = userService.userOne(id);
+        List<UserRoleDTO> list = userService.userRoles(id);
+        System.out.println("list = " + list);
+        System.out.println("userDTO = " + userDTO);
+        object.addProperty("username", userDTO.getUsername());
+        object.addProperty("nickname", userDTO.getNickname());
+        object.addProperty("email", userDTO.getEmail());
+        object.addProperty("activate", userDTO.isActivate());
+
+        return object;
+    }
+
+    @PostMapping("updatePwd/{id}")
+    public String updatePw(@PathVariable int id, String password) {
+        System.out.println("password = " + password);
+        System.out.println("id = " + id);
+        UserDTO userDTO = userService.userOne(id);
+        System.out.println("userDTO = " + userDTO);
+
+        userDTO.setPassword(passwordEncoder.encode(password));
+
+        userService.update(userDTO);
+
+        return "redirect:/accountList";
     }
 
 }

@@ -26,4 +26,10 @@ public interface UserDao {
 
     void insertRole(UserRoleDTO userRoleDTO) throws DataAccessException;
 
+    List<UserDTO> userList() throws DataAccessException;
+
+    UserDTO userOne(int id) throws DataAccessException;
+
+    List<UserRoleDTO> userRoles(int id) throws DataAccessException;
+
 }

@@ -54,4 +54,16 @@ public class UserService {
     public void insertRole(UserRoleDTO userRoleDTO) {
         userDao.insertRole(userRoleDTO);
     }
+
+    public List<UserDTO> userList() {
+        return userDao.userList();
+    }
+
+    public UserDTO userOne(int id) {
+        return userDao.userOne(id);
+    }
+
+    public List<UserRoleDTO> userRoles(int id) {
+        return userDao.userRoles(id);
+    }
 }

@@ -107,6 +107,7 @@ public class RequestController {
         // 계정 활성화
         UserDTO userDTO = userService.selectOne(requestDTO.getUserId());
         userDTO.setActivate(true);
+        userDTO.setApprove(true);
         userService.update(userDTO);
 
         requestService.updateRequest(requestDTO);

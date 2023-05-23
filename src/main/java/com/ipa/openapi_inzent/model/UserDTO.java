@@ -14,10 +14,13 @@ public class UserDTO {
     private String email;
     private boolean activate;
     private Date createDate;
+    private boolean approve; // false : 요청 상태 / true : 승인 완료
 
     // UserRole
     private int userId;
     private int roleId;
+
+    private String role;
 
     // role
     private String code;
