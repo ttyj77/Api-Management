@@ -1,6 +1,7 @@
 package com.ipa.openapi_inzent.dao;
 
 import com.ipa.openapi_inzent.model.ApiDetailsDTO;
+import com.ipa.openapi_inzent.model.ParameterDTO;
 import com.ipa.openapi_inzent.model.ResourceDTO;
 import com.ipa.openapi_inzent.model.TagDTO;
 import io.swagger.annotations.Api;
@@ -28,9 +29,9 @@ public interface ApiDetailsDao {
 
     void completeDelete(int id) throws DataAccessException;
 
-    void updateDetail(ApiDetailsDTO apiDetailsDTO)throws DataAccessException;
+    void updateDetail(ApiDetailsDTO apiDetailsDTO) throws DataAccessException;
 
-    void updateResource(ResourceDTO resourceDTO)throws DataAccessException;
+    void updateResource(ResourceDTO resourceDTO) throws DataAccessException;
 
     ResourceDTO resourceOne(int id) throws DataAccessException;
 
@@ -47,4 +48,8 @@ public interface ApiDetailsDao {
     ApiDetailsDTO searchDetail(int id) throws DataAccessException;
 
     List<ApiDetailsDTO> trashSearch(String keyword) throws DataAccessException;
+
+    void insertParameter(ParameterDTO parameterDTO) throws DataAccessException;
+
+    List<ParameterDTO> searchParameter(int id) throws DataAccessException;
 }

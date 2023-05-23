@@ -7,6 +7,7 @@ import com.ipa.openapi_inzent.model.*;
 import com.ipa.openapi_inzent.service.ApiDetailsService;
 import com.ipa.openapi_inzent.service.ApiService;
 import com.ipa.openapi_inzent.service.RoleService;
+import io.swagger.v3.core.util.Json;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -252,32 +253,8 @@ public class ApiController {
 
 
         getTagId(paramMap, apiId);
-        // 이미 있는 리소스에 메소드만 추가 한 것인지
 
-
-        // tag가 있는지 없는지
-
-
-//        1 ) 존재하는 리소스 인지 새로 생성해야되는 리소스 인지 판별
-//            1-1) 존재한다면 중복 메소드는 막아야된다.
-//        if (uriId.equals("0")) {
-////            신규 리소스 생성
-//            System.out.println("신규 리소스 생성");
-//
-////
 ////                // 1. 리소스 등록
-//////                apiDetailsService.insertResource(resourceDTO);
-////
-////            }
-//        } else {
-////            기존 리소스에 추가 등록
-//            System.out.println("기존 리소스에 추가 등록");
-//
-//        }
-////        2) 존재하지 않는다면 리소스를 등록해야 된다.
-////            2-1) resource 등록
-////            2-2) apiDetails 등록
-////            2-3) parameters/ body/ response 등록
 
 
     }
@@ -285,41 +262,41 @@ public class ApiController {
     private void getTagId(Map<String, String> paramMap, int apiId) {
         ResourceDTO resourceDTO = new ResourceDTO();
         resourceDTO.setApisId(apiId);
+        int uriId = Integer.parseInt(paramMap.get("uriId"));
+        int resourceId = Integer.parseInt(paramMap.get("resourceId"));
+
+
         for (int i = 0; i < array.length; i++) {
 
             JsonObject obj = (JsonObject) JsonParser.parseString(paramMap.get(array[i]));
             if (!obj.isEmpty()) {
-
-
                 System.out.println(obj.isEmpty());
-
-
                 if (obj.get("tag") == null || obj.get("tag").toString().replaceAll("[^\\w+]", "").isEmpty()) {
                     System.out.println("태그 없음.");
                 } else {
                     System.out.println("태그 있음..");
                     int tagId = Integer.parseInt(obj.get("tag").toString().replaceAll("[^\\w+]", ""));
                     resourceDTO.setTagId(tagId);
-
-
                 }
-
-                int uriId = Integer.parseInt(paramMap.get("uriId"));
+                // uri 아이디가 넘어오지 않는다면 리소스가 새롭게 등록되어야 되지만
                 System.out.println(uriId == 0);
-                if (uriId == 0) { //기존의 리소스가 아니라 새로 등록이라면 apiDetails 전에 resource 먼저 등록
+
+                if (resourceId == 0) { //기존의 리소스가 아니라 새로 등록이라면 apiDetails 전에 resource 먼저 등록
                     System.out.println("리소스 새로등록");
                     resourceDTO.setApisId(Integer.parseInt(paramMap.get("idx"))); // apis 아이디
                     System.out.println("resourceDTO = " + resourceDTO);
 
-                    uriId = apiDetailsService.insertResource(resourceDTO); // 리소스 생성
+                    resourceId = apiDetailsService.insertResource(resourceDTO); // 리소스 생성
                     System.out.println("uriId = " + uriId);
                 }
                 ///있는 리소스라면
+                resourceId = Integer.parseInt(paramMap.get("resourceId"));
                 System.out.println("++++++++++++++++++++++++++++++");
                 ApiDetailsDTO apiDetailsDTO = new ApiDetailsDTO();
+
                 System.out.println(obj.get("operation"));
                 System.out.println(obj.get("summary"));
-                System.out.println(obj.get("param"));
+
                 System.out.println(obj.get("resCode"));
 
                 apiDetailsDTO.setOperationId(obj.get("operation").toString());
@@ -327,11 +304,45 @@ public class ApiController {
                 apiDetailsDTO.setUrl(paramMap.get("url"));
                 apiDetailsDTO.setUri(paramMap.get("path"));
                 apiDetailsDTO.setMethod(array[i].toUpperCase());
-                apiDetailsDTO.setResourceId(uriId);
+                apiDetailsDTO.setResourceId(resourceId); //여기가 오류
                 apiDetailsDTO.setApisId(apiId);
                 System.out.println("apiDetailsDTO = " + apiDetailsDTO);
 
-                apiDetailsService.insertApiDetail(apiDetailsDTO);
+
+                int apiDetailsId = apiDetailsService.insertApiDetail(apiDetailsDTO);
+                System.out.println("//////////////////param/////////////////////");
+
+                System.out.println(obj.get("param"));
+                JsonArray paramArr = (JsonArray) obj.get("param");
+                System.out.println(paramArr.size());
+                // 파라미터가 있다면 등록
+                if (paramArr.size() != 0) {
+                    for (int k = 0; k < paramArr.size(); k++) {
+                        System.out.println(paramArr.get(k).getClass());
+                        System.out.println();
+                        JsonObject param = (JsonObject) paramArr.get(k);
+                        System.out.println(param.get("name"));
+                        System.out.println(param.get("transferMethod"));
+                        System.out.println(param.get("explanation"));
+                        System.out.println(param.get("required"));
+                        System.out.println(param.get("type"));
+                        System.out.println(param.get("sample"));
+
+                        ParameterDTO parameterDTO = new ParameterDTO();
+                        parameterDTO.setApiDetailsId(apiDetailsId);
+                        parameterDTO.setName(String.valueOf(param.get("name")));
+                        parameterDTO.setTransferMethod(String.valueOf(param.get("transferMethod")));
+                        parameterDTO.setExplanation(String.valueOf(param.get("explanation")));
+                        Boolean b = Boolean.valueOf(String.valueOf(param.get("required")));
+                        parameterDTO.setRequired(b);
+                        parameterDTO.setType(String.valueOf(param.get("type")));
+                        parameterDTO.setSample(String.valueOf(param.get("sample")));
+
+                        apiDetailsService.insertParameter(parameterDTO);
+                    }
+                } else {
+                    System.out.println("parma size == 0");
+                }
                 System.out.println("++++++++++++++++++++++++++++++");
                 System.out.println();
 
@@ -345,15 +356,46 @@ public class ApiController {
         JsonObject object = new JsonObject();
         ApiDetailsDTO detailList = apiDetailsService.searchDetail(id);
 
+        System.out.println("detailList = " + detailList);
         object.addProperty("id", detailList.getId());
-        object.addProperty("id", detailList.getId());
-        object.addProperty("id", detailList.getId());
-        object.addProperty("id", detailList.getId());
-        object.addProperty("id", detailList.getId());
-        object.addProperty("id", detailList.getId());
-        object.addProperty("id", detailList.getId());
-        object.addProperty("id", detailList.getId());
-        object.addProperty("id", detailList.getId());
+        object.addProperty("resourceId", detailList.getResourceId());
+        object.addProperty("method", detailList.getMethod());
+        object.addProperty("url", detailList.getUrl());
+        object.addProperty("uri", detailList.getUri());
+        object.addProperty("summary", detailList.getSummary());
+        object.addProperty("security", detailList.getSecurity());
+        object.addProperty("scope", detailList.getScope());
+        object.addProperty("version", detailList.getVersion());
+        object.addProperty("operationId", detailList.getOperationId());
+
+        object.addProperty("status", detailList.getStatus());
+        object.addProperty("authorization", detailList.getAuthorization());
+        object.addProperty("resource_id", detailList.getResourceId());
+        object.addProperty("apisId", detailList.getApisId());
+
+//        parameter jsonArray
+        JsonArray paramArray = new JsonArray();
+        List<ParameterDTO> list = apiDetailsService.searchParameter(id);
+        System.out.println("id" + id);
+        System.out.println("list = " + list);
+        for (int i = 0; i < list.size(); i++) {
+            JsonObject param = new JsonObject();
+            param.addProperty("id", list.get(i).getId());
+            param.addProperty("apiDetailsId", list.get(i).getApiDetailsId());
+            param.addProperty("name", list.get(i).getName());
+            param.addProperty("transferMethod", list.get(i).getTransferMethod());
+            param.addProperty("explanation", list.get(i).getExplanation());
+            param.addProperty("type", list.get(i).getType());
+            param.addProperty("required", list.get(i).getRequired());
+            param.addProperty("sample", list.get(i).getSample());
+            paramArray.add(param);
+        }
+
+//       resCode JsonArray
+        JsonArray resCodeArray = new JsonArray();
+//        List<>
+
+        object.addProperty("parameterList", paramArray.toString());
 
         return object;
     }
@@ -369,6 +411,7 @@ public class ApiController {
             object.addProperty("id", a.getId());
             object.addProperty("uri", a.getUri());
             object.addProperty("method", a.getMethod());
+            object.addProperty("resourceId", a.getResourceId());
             array.add(object);
         }
         JsonObject result = new JsonObject();

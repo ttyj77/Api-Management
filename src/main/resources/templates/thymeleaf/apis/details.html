@@ -214,8 +214,6 @@
 
             function insertResource() {
                 const searchParams = new URLSearchParams(location.search);
-                console.log(window.location.href)
-                console.log(window.location.href.split("/").slice(-1)[0]) //페이지 아이디 = apis 아이디
 
                 let method = ['get', 'post', 'put', 'delete']
                 let jsonArr = new Array();
@@ -241,8 +239,6 @@
                     // 응답코드 tr
                     let resCode_tr = $('#' + method[i] + "ResCodeItemBody tr");
 
-                    console.log("resCode_tr : " + resCode_tr)
-                    console.log(resCode_tr)
                     if (operationId.value != "" && display == "block") {
 
                         console.log(operationId.value)
@@ -272,7 +268,7 @@
                         $.each(resCode_tr, function (index, value) {
                             param = new Object();
                             let tdList = $(value)
-                            console.log("==========================")
+                            console.log("8888888888888888888888888888")
                             console.log(tdList.children())
                             param.code = tdList.children().eq(1).text()
                             param.explanation = tdList.children().eq(2).text()
@@ -281,27 +277,21 @@
 
                         });
                         obj.resCode = resCodeArr
-
-
                     }
                     jsonArr.push(obj)
                 }
-                //
-                console.log("uri index +++++++++++++++++++++++++++++++++++++++++++++")
-                console.log($("#searchPathTbody tr"))
-                console.log($("#searchPathTbody tr").id)
                 // console.log(document.getElementById("searchPathTbody").children[0])
                 // [요청 json 데이터 선언]
                 let jsonData = { // Body에 첨부할 json 데이터
                     "idx": document.getElementById("apiId").value, //api index
                     "uriId": document.getElementById("pathid").value,
+                    "resourceId": document.getElementById("resourceId").value,
                     "url": document.getElementById("url").value,
                     "path": document.getElementById("path").name + document.getElementById("path").value,
                     "get": JSON.stringify(jsonArr[0]),
                     "post": JSON.stringify(jsonArr[1]),
                     "put": JSON.stringify(jsonArr[2]),
                     "delete": JSON.stringify(jsonArr[3]),
-
                 }
 
 
@@ -322,9 +312,6 @@
                 })
 
                 // 추가 버튼 누르면 모달안의 input value 삭제
-                // for (let i = 0; i < method.length; i++) {
-                //     let id = '#' + method[i] + '-content'
-                // let get_input = $(id + ' input[type=text]');
                 let get_input = $("#resourceModal input[type=text]");
 
                 $.each(get_input, function (index, value) {
@@ -416,7 +403,6 @@
 
                 if (code_val == "") {
                     document.getElementById("code-name").parentNode.children[0].style.color = "#1d61ff";
-
                     document.getElementById("code-name").focus()
                 } else if (explanation_val == "") {
                     document.getElementById("code-explanation").parentNode.children[0].style.color = "#1d61ff";
@@ -434,6 +420,9 @@
                     type.className = "type"
                     let delUpdate = document.createElement("td");
                     delUpdate.className = "delUpdate"
+
+                    //여기서 응답 파라미터 추가해야됨
+
 
                     th.scope = "row";
                     th.innerText = "1"
@@ -496,14 +485,13 @@
 
             //     url 실시간 검색
             function searchPath(value) {
-
-                console.log(value.value)
                 let keyword = value.value
                 if (keyword.charAt(0) == "/") {
                     console.log("첫글자 슬래시")
                     keyword = keyword.slice(1)
                 }
-                console.log("keyword " + keyword)
+
+                console.log("keyword!! " + keyword)
 
                 let data = {
                     "keyword": keyword,
@@ -522,10 +510,10 @@
                             // DB에 없는 경우
                             // 해당 글자를 그대로 받고 + 새로 등록하시겠습니까?
                             console.log("new!")
-                            console.log(value.value)
+                            console.log(keyword)
 
                             let defaultUri = document.getElementById("path").name
-                            let newUri = value.value
+                            let newUri = keyword
                             let h5 = document.createElement("h5")
                             h5.innerText = newUri
                             let tr = document.createElement("tr")
@@ -545,7 +533,8 @@
                             tbody.append(tr)
 
                         } else {
-                            console.log(array.length)
+                            console.log(array)
+
                             let arr = []
                             for (let i = 0; i < array.length; i++) {
                                 arr[i] = array[i].uri
@@ -560,13 +549,16 @@
                                 let tr = document.createElement("tr")
                                 let id = document.createElement("td");
                                 let path = document.createElement("td");
+
                                 let possibleMethod = document.createElement("td");
 
                                 let impossibleMethod = document.createElement("td");
                                 impossibleMethod.id = 'impossibleMethod'
                                 path.innerText = result1[i]
-                                tr.id = array[i].id
 
+
+                                tr.id = array[i].id
+                                tr.name = array[i].resourceId
                                 mt.splice(0, mt.length);
                                 let k = 0;
                                 for (let j = 0; j < array.length; j++) {
@@ -619,69 +611,6 @@
                 showAllMethod()
             }
 
-
-            // 검색 결과 표를 클릭하면 input 박스에 들어감
-            function insertPath(e) {
-                // console.log(e.target.parentNode.id) // 클릭한 uri
-                // console.log(e.target.parentNode.childNodes[0].textContent) // 클릭한 uri
-                console.log(e.target.parentNode.childNodes[1].textContent) // 클릭한 uri
-                console.log(e.target.parentNode.childNodes[3].textContent) // 클릭한 uri의 impossibleMethod
-
-                $("#searchPathModal").modal('hide')
-                $("#resourceModal").modal('show')
-
-                let input = document.getElementById("path")
-                let pathid = document.getElementById("pathid")
-                pathid.value = e.target.parentNode.id // 선택한 uri id , 새로 생성 시 0
-                let defaultUri = document.getElementById("path").name
-
-                // resouce modal path 값 넣음
-                input.value = defaultUri + '/' + e.target.parentNode.childNodes[1].textContent
-                // hidden으로 기존 리소스 값 넣음
-                // pathid.value
-
-                // + input 박스에 해당 uri가 들어가면서 자동으로 작성가능한 method만 보이도록 하는 부분
-                let buttonList = $("#nav-tab button[type=button]");
-
-
-                let impossibleMethod = e.target.parentNode.childNodes[3].textContent
-
-                const arr = impossibleMethod.split(',');
-                console.log(arr) // 작성 불가능한 메서드 리스트
-
-                // 작성 불가능한 메서드들은 disabled 처리
-                for (let i = 0; i < buttonList.length; i++) {
-                    for (let j = 0; j < arr.length; j++) {
-                        console.log("===================")
-                        console.log(arr[j])
-                        let trim = buttonList[i].innerText.trim()
-                        console.log(trim)
-                        console.log("===================")
-                        if (trim == arr[j]) {
-                            console.log("일치 = 작성불가능")
-                            buttonList[i].style.display = 'none'
-
-                            let visible = document.getElementById(trim.toLowerCase())
-                            console.log(visible)
-                            visible.style.display = "none"
-                            //     tab hidden
-                            tabHidden()
-                        }
-                    }
-                    // 버튼 누르면 모달안의 input value 삭제
-                    let id = '#' + buttonList[i].innerText.trim().toLowerCase() + '-content'
-                    let get_input = $(id + ' input[type=text]');
-                    console.log("====================get_input11122222222222222=======================")
-                    console.log(get_input)
-                    $.each(get_input, function (index, value) {
-                        console.log(index)
-                        console.log(value)
-                        $(value).val('')
-                    });
-
-                }
-
-            }
 
             // path 신규 등록 시
             function newInsertPath(uri) {
@@ -963,6 +892,7 @@
                                                th:name="${api.context}">
                                         <input type="hidden" value="0" id="pathid">
                                         <input type="hidden" th:value="${api.id}" id="apiId">
+                                        <input type="hidden" id="resourceId">
                                         <button type="button" class="btn btn-danger"
                                                 style="font-size: 16px;height: 46px;width: 130px;margin-left: 1%;"
                                                 onclick="showPathSearchModal()">
@@ -1693,12 +1623,32 @@
                         <input type="text" class="form-control" id="code-explanation">
                     </div>
                     <div class="row flex-nowrap">
-                        <div class="mb-3 col-6">
+                        <div class="mb-3 col-9">
                             <label for="type" class="col-form-label">타입</label>
                             <select class="form-control" id="contentType">
                                 <option value="application/json" selected="selected">application/json</option>
                             </select>
                         </div>
+                        <div class="mb-3 col-3" style="place-self: end">
+                            <button type="button" data-bs-toggle="modal" data-bs-target="#insertResCodeJson"
+                                    class="btn btn-dark">필드추가
+                            </button>
+                        </div>
+                    </div>
+                    <div>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">KEY</th>
+                                <th scope="col">VALUE</th>
+                                <th scope="col">TYPE</th>
+                            </tr>
+                            </thead>
+                            <tbody id="appendJsonResCode">
+
+                            </tbody>
+                        </table>
                     </div>
                 </div>
                 <div class="modal-footer code">
@@ -1711,12 +1661,53 @@
         </div>
     </div>
 
+    <!-- 응답코드 Json 추가 모달 -->
+    <div class="modal fade" id="insertResCodeJson" tabindex="-1" role="dialog"
+         aria-labelledby="insertResCodeJsonModalShowLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="insertResCodeJsonModalShowLabel">필드추가</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="parameter-name" class="col-form-label">KEY * </label>
+                        <input type="text" class="form-control" id="json_key">
+                    </div>
+                    <div class="mb-3">
+                        <label for="explanation" class="col-form-label">VALUE * </label>
+                        <input type="text" class="form-control" id="json_value">
+                    </div>
+                    <div class="row flex-nowrap">
+                        <div class="mb-3 col-9">
+                            <label for="type" class="col-form-label">타입</label>
+                            <select class="form-control" id="json_type">
+                                <option value="String" selected="selected">String</option>
+                                <option value="Integer">Integer</option>
+                                <option value="Boolean">Boolean</option>
+                                <option value="Number">Number</option>
+                                <option value="Object">Object</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer code">
+                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
+                            data-bs-target="#resourceModal">취소
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="insertResJson(this)">추가</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!--path 검색 모달-->
     <div class="modal fade" id="searchPathModal" tabindex="-1" role="dialog"
          aria-labelledby="searchPathModalLabel"
          aria-hidden="true">
-        <div class="modal-dialog modal-dialog">
+        <div class="modal-dialog modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="searchPathModalLabel">path 검색</h1>
@@ -1731,19 +1722,21 @@
                                autofocus>
 
                     </div>
-                    <table class="table table-hover">
-                        <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">path</th>
-                            <th scope="col">작성 가능</th>
-                            <th scope="col">작성 불가능</th>
-                        </tr>
-                        </thead>
-                        <tbody id="searchPathTbody">
+                    <div style="overflow-x: auto">
+                        <table class="table table-hover flex-nowrap">
+                            <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">path</th>
+                                <th scope="col">작성 가능</th>
+                                <th scope="col">작성 불가능</th>
+                            </tr>
+                            </thead>
+                            <tbody id="searchPathTbody">
 
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
             </div>
@@ -1774,76 +1767,40 @@
                         <div class="border mb-3">
 
                             <div class="border-bottom">
-                                <h5 class="text-muted p-3 m-0">기본 정보</h5>
+                                <h5 class="text-muted p-3 m-0">Routing</h5>
                             </div>
                             <div class="p-4">
                                 <table class="table table-borderless">
                                     <tbody>
                                     <tr>
                                         <td class="tdHead">
-                                            기관코드
+                                            서버 URL
                                         </td>
-                                        <td class="tdContent" id="code">
+                                        <td class="tdContent" id="dModal_url">
 
                                         </td>
                                     </tr>
                                     <tr class="borderTop">
                                         <td class="tdHead">
-                                            기관구분
+                                            Method
                                         </td>
-                                        <td class="tdContent" id="division">
+                                        <td class="tdContent" id="dModal_method">
 
                                         </td>
                                     </tr>
                                     <tr class="borderTop">
                                         <td class="tdHead">
-                                            기관명
+                                            OperationId
                                         </td>
-                                        <td class="tdContent" id="name">
+                                        <td class="tdContent" id="dModal_operationId">
 
                                         </td>
                                     </tr>
                                     <tr class="borderTop">
                                         <td class="tdHead">
-                                            업권
+                                            요약
                                         </td>
-                                        <td class="tdContent" id="industry">
-
-                                        </td>
-                                    </tr>
-                                    <tr class="borderTop">
-                                        <td class="tdHead">
-                                            주소
-                                        </td>
-                                        <td class="tdContent" id="address">
-
-                                        </td>
-                                    </tr>
-
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="border mb-3">
-                            <div class="border-bottom">
-                                <h5 class="text-muted p-3 m-0">도메인</h5>
-                            </div>
-                            <div class="p-4">
-                                <table class="table table-borderless">
-                                    <tbody>
-                                    <tr>
-                                        <td class="tdHead">
-                                            API서버 도메인명
-                                        </td>
-                                        <td class="tdContent" id="domainName">
-
-                                        </td>
-                                    </tr>
-                                    <tr class="borderTop">
-                                        <td class="tdHead">
-                                            API서버 공인IP
-                                        </td>
-                                        <td class="tdContent" id="publicApiIp">
+                                        <td class="tdContent" id="dModal_summary">
 
                                         </td>
                                     </tr>
@@ -1853,31 +1810,189 @@
                         </div>
                         <div class="border mb-3">
                             <div class="border-bottom">
-                                <h5 class="text-muted p-3 m-0">인증</h5>
+                                <h5 class="text-muted p-3 m-0">태그</h5>
                             </div>
                             <div class="p-4">
-
-                                <table class="table table-borderless">
-                                    <tbody>
+                                <h6 style="background-color: #1c294e; display:inline-block;padding: 15px;color: white;border-radius: 18px">
+                                    금융업권금융업권</h6>
+                            </div>
+                        </div>
+                        <div class="border mb-3">
+                            <div class="border-bottom">
+                                <h5 class="text-muted p-3 m-0">파라미터</h5>
+                            </div>
+                            <div class="p-4">
+                                <table class="table">
+                                    <thead>
                                     <tr>
-                                        <td class="tdHead">
-                                            제공 인증방식
-                                        </td>
-                                        <td class="tdContent" id="authenticationMethod">
-
-                                        </td>
+                                        <th scope="col">이름</th>
+                                        <th scope="col">전송방법</th>
+                                        <th scope="col">설명</th>
+                                        <th scope="col">필수여부</th>
+                                        <th scope="col">타입</th>
+                                        <th scope="col">샘플</th>
+                                        <th scope="col"></th>
                                     </tr>
-                                    <tr class="borderTop">
-                                        <td class="tdHead">
-                                            TLS 인증서 시리얼넘버
+                                    </thead>
+                                    <tbody class="table-group-divider" id="paramTbody">
+                                    <tr>
+                                        <td id="dModal_parameter_Name"></td>
+                                        <td>
+                                            <select class="form-select" aria-label="Default select example">
+                                                <option value="1">Header</option>
+                                                <option value="2">Path Variable</option>
+                                                <option value="3">Query String</option>
+                                            </select>
                                         </td>
-                                        <td class="tdContent" id="TLSNum">
-
+                                        <td id="dModal_parameter_explanation"></td>
+                                        <td id="dModal_parameter_required">
+                                            <select class="form-select" aria-label="Default select example">
+                                                <option value="1">필수</option>
+                                                <option value="2">필수아님</option>
+                                            </select>
                                         </td>
+                                        <td>
+                                            <select class="form-select" aria-label="Default select example">
+                                                <option value="1">String</option>
+                                                <option value="2">Integer</option>
+                                                <option value="3">boolean</option>
+                                                <option value="4">number</option>
+                                            </select>
+                                        </td>
+                                        <td id="dModal_parameter_sample"></td>
+                                        <td><i class="fa-solid fa-trash-can"
+                                               style="color: #797a7c;font-weight: 100;"></i></td>
                                     </tr>
 
                                     </tbody>
                                 </table>
+                            </div>
+                        </div>
+                        <div class="border mb-3">
+                            <div class="border-bottom">
+                                <h5 class="text-muted p-3 m-0">요청 Body</h5>
+                            </div>
+                            <div class="p-4">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">이름</th>
+                                        <th scope="col">전송방법</th>
+                                        <th scope="col">설명</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody class="table-group-divider">
+                                    <tr>
+                                        <td style="vertical-align: middle;">Mark</td>
+                                        <td>
+                                            <table class="table">
+                                                <thead style="background-color: #1c294e21">
+                                                <tr>
+                                                    <th scope="col">키</th>
+                                                    <th scope="col">타입</th>
+                                                    <th scope="col">샘플</th>
+                                                    <th scope="col">비고</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody class="table-group-divider">
+                                                <tr>
+                                                    <td>Mark</td>
+                                                    <td>
+                                                        <select class="form-select" aria-label="Default select example">
+                                                            <option value="1">One</option>
+                                                            <option value="2">Two</option>
+                                                            <option value="3">Three</option>
+                                                        </select>
+                                                    </td>
+
+                                                </tr>
+
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                        <td><i class="fa-solid fa-trash-can"
+                                               style="color: #797a7c;font-weight: 100;"></i></td>
+                                    </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="border mb-3">
+                            <div class="border-bottom">
+                                <h5 class="text-muted p-3 m-0">응답</h5>
+                            </div>
+                            <div class="accordion" id="accordionExample">
+                                <div class="accordion-item m-3">
+                                    <h2 class="accordion-header" id="headingThree">
+                                        <button class="accordion-button collapsed" type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#collapseThree"
+                                                aria-expanded="false" aria-controls="collapseThree">
+                                            200
+                                        </button>
+                                    </h2>
+                                    <div id="collapseThree" class="accordion-collapse collapse"
+                                         aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body">
+                                            <table class="table table-borderless">
+                                                <tbody>
+                                                <tr class="borderTop">
+                                                    <td>
+                                                        Method
+                                                    </td>
+                                                    <td class="tdContent" id="s">
+                                                        응답메세지 상세
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                            <table class="table">
+                                                <thead>
+                                                <tr>
+                                                    <th scope="col">Content-type</th>
+                                                    <th scope="col">Body</th>
+                                                    <th scope="col">비고</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody class="table-group-divider">
+                                                <tr>
+                                                    <td style="vertical-align: middle;">Mark</td>
+                                                    <td>
+                                                        <table class="table">
+                                                            <thead style="background-color: #1c294e21">
+                                                            <tr>
+                                                                <th scope="col">키</th>
+                                                                <th scope="col">타입</th>
+                                                                <th scope="col">샘플</th>
+                                                                <th scope="col">비고</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody class="table-group-divider">
+                                                            <tr>
+                                                                <td>Mark</td>
+                                                                <td>
+                                                                    <select class="form-select"
+                                                                            aria-label="Default select example">
+                                                                        <option value="1">One</option>
+                                                                        <option value="2">Two</option>
+                                                                        <option value="3">Three</option>
+                                                                    </select>
+                                                                </td>
+
+                                                            </tr>
+
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                    <td><i class="fa-solid fa-trash-can"
+                                                           style="color: #797a7c;font-weight: 100;"></i></td>
+                                                </tr>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
