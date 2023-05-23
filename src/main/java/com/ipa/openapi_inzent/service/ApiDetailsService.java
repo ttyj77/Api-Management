@@ -2,6 +2,7 @@ package com.ipa.openapi_inzent.service;
 
 import com.ipa.openapi_inzent.dao.ApiDetailsDao;
 import com.ipa.openapi_inzent.model.ApiDetailsDTO;
+import com.ipa.openapi_inzent.model.ParameterDTO;
 import com.ipa.openapi_inzent.model.ResourceDTO;
 import com.ipa.openapi_inzent.model.TagDTO;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -82,9 +83,11 @@ public class ApiDetailsService {
         return id;
     }
 
-    public void insertApiDetail(ApiDetailsDTO apiDetailsDTO) {
+    public int insertApiDetail(ApiDetailsDTO apiDetailsDTO) {
         apiDetailsDao.insertApiDetail(apiDetailsDTO);
-
+        int id = apiDetailsDTO.getId();
+        System.out.println("apiDetailsId" + id);
+        return id;
     }
 
     public ApiDetailsDTO searchDetail(int id) {
@@ -93,5 +96,13 @@ public class ApiDetailsService {
 
     public List<ApiDetailsDTO> trashSearch(String keyword) {
         return apiDetailsDao.trashSearch(keyword);
+    }
+
+    public void insertParameter(ParameterDTO parameterDTO) {
+        apiDetailsDao.insertParameter(parameterDTO);
+    }
+
+    public List<ParameterDTO> searchParameter(int id) {
+        return apiDetailsDao.searchParameter(id);
     }
 }

@@ -129,16 +129,25 @@
 
     <select id="searchPath" parameterType="string" resultType="com.ipa.openapi_inzent.model.ApiDetailsDTO">
         <!-- uri,method 받아오면 된다. /v1/insu -->
-        SELECT id, method,uri
+        SELECT id, method,uri,"resourceId"
         FROM public."apiDetails" where uri ILIKE CONCAT('%', #{keyword},'%') and trash = false order by id;
     </select>
     <insert id="insertResource" parameterType="com.ipa.openapi_inzent.model.ResourceDTO" useGeneratedKeys="true"
             keyProperty="id" keyColumn="id">
-        INSERT INTO public.resource("apisId","tagId", garbage)
-        VALUES (#{apisId},#{tagId}, #{garbage});
+        <if test='tagId > 0'>
+            INSERT INTO public.resource("apisId","tagId", garbage)
+            VALUES (#{apisId},#{tagId}, #{garbage});
+        </if>
+
+        <if test='tagId == 0'>
+            INSERT INTO public.resource("apisId", garbage)
+            VALUES (#{apisId}, #{garbage});
+        </if>
+
     </insert>
 
-    <insert id="insertApiDetail" parameterType="com.ipa.openapi_inzent.model.ApiDetailsDTO">
+    <insert id="insertApiDetail" parameterType="com.ipa.openapi_inzent.model.ApiDetailsDTO" useGeneratedKeys="true"
+            keyProperty="id" keyColumn="id">
         INSERT INTO public."apiDetails"(
         method, url, uri, summary, security, scope, "operationId", version, status, "authorization", trash,
         "resourceId")
@@ -149,5 +158,17 @@
     <!--  detail클릭 했을 떄 나오는 모달에 전송할 정보  -->
     <select id="searchDetail" parameterType="int" resultType="com.ipa.openapi_inzent.model.ApiDetailsDTO">
         select * from public."apiDetails" where id = #{id}
+    </select>
+
+    <insert id="insertParameter" parameterType="com.ipa.openapi_inzent.model.ParameterDTO" useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO public.parameters(
+        "apiDetailsId", name, "transferMethod", explanation, type, required, sample)
+        VALUES (#{apiDetailsId},#{name},#{transferMethod},#{explanation},#{type},#{required},#{sample});
+    </insert>
+
+    <select id="searchParameter" parameterType="int" resultType="com.ipa.openapi_inzent.model.ParameterDTO">
+        SELECT id, "apiDetailsId", name, "transferMethod", explanation, type, required, sample
+        FROM public.parameters where "apiDetailsId" = #{id}
     </select>
 </mapper>
