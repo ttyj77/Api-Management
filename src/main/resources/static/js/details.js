@@ -133,6 +133,8 @@ function insertResJson() {
 
     let key = document.getElementById("json_key").value
     let value = document.getElementById("json_value").value
+    let type = document.getElementById("json_type").value
+
 
     if (key == "") {
         document.getElementById("json_key").parentNode.children[0].style.color = "#1d61ff";
@@ -149,9 +151,11 @@ function insertResJson() {
         let keyTd = document.createElement("td")
         keyTd.innerText = document.getElementById("json_key").value
         keyTd.classname = "resParamKey"
+
         let valueTd = document.createElement("td")
         valueTd.innerText = document.getElementById("json_value").value
         valueTd.classname = "resParamValue"
+
         let typeTd = document.createElement("td")
         typeTd.innerText = document.getElementById("json_type").value
         typeTd.classname = "resParamType"

@@ -112,6 +112,11 @@
                 border-top: 1px solid #dee2e6 !important;
             }
 
+            .modal-body {
+                max-height: calc(100vh - 200px);
+                overflow-y: auto;
+            }
+
         </style>
     </th:block>
 
@@ -228,6 +233,7 @@
                     let operationId = document.getElementById(method[i] + "OperationId")
                     let summary = document.getElementById(method[i] + "Summary");
                     let tag = document.getElementById(method[i] + "TagBox")
+
                     let reqData = document.getElementById(method[i] + "ReqData")
 
                     // tab display 확인 none이면 값 있어도 등록 안함
@@ -245,9 +251,13 @@
                         obj.operation = operationId.value;
                         obj.summary = summary.value
                         console.log("==============================Tag value ==========================")
-                        console.log(tag.value.toString())
-                        obj.tag = tag.value.toString()
 
+                        console.log(tag == null)
+                        if (tag != null) { // 태그가 있다면,
+                            obj.tag = tag.value.toString()
+                        } else {
+                            obj.tag = ""
+                        }
 
                         if (method[i] == "post" || method[i] == "put") {
                             obj.reqData = reqData.value;
@@ -278,6 +288,7 @@
                             param.type = tdList.children().eq(3).text()
                             param.paramKey = tdList.children().eq(5).text()
                             param.paramValue = tdList.children().eq(6).text()
+                            param.paramType = tdList.children().eq(7).text()
 
                             // 여기서 리스트 하나더 돌리자. resCode parameter list
                             resCodeArr.push(param)
@@ -445,6 +456,7 @@
 
                     let key = [];
                     let paramValue = [];
+                    let paramType = [];
 
                     $.each(resCodeParam_tr, function (index, value) {
                         param = new Object();
@@ -452,6 +464,7 @@
                         console.log(tdList.children())
                         key.push(tdList.children().eq(1).text())
                         paramValue.push(tdList.children().eq(2).text())
+                        paramType.push(tdList.children().eq(3).text())
                     });
 
                     console.log("9999999999999999999999999")
@@ -468,6 +481,13 @@
                     resParamValue.innerText = paramValue.toString()
                     resParamValue.style.display = "none"
                     resParamValue.id = "resParamValue"
+
+                    let resParamType = document.createElement("td");
+                    resParamType.innerText = paramType.toString()
+                    resParamType.style.display = "none"
+                    resParamType.id = "resParamType"
+
+
                     //
                     // let resParamType = document.createElement("td");
                     // resParamType.innerText = document.getElementById("resParamType").innerText
@@ -486,7 +506,7 @@
 
                     delUpdate.innerHTML = "<i class=\"fa-solid fa-pen mr-2\" style=\"color: #797a7c;\"></i><i class=\"fa-solid fa-trash-can\" style=\"color: #797a7c; cursor: pointer\"/>"
 
-                    tr.append(th, code, explanation, type, delUpdate, resParamKey, resParamValue)
+                    tr.append(th, code, explanation, type, delUpdate, resParamKey, resParamValue, resParamType)
 
                     tbody.append(tr)
 
@@ -593,12 +613,11 @@
                             let arr = []
                             for (let i = 0; i < array.length; i++) {
                                 arr[i] = array[i].uri
-                                console.log(arr)
                             }
 
                             let result1 = [...new Set(arr)];
 
-                            console.log(result1); //중복 제거됨
+                            // console.log(result1); //중복 제거됨
                             let mt = []
                             for (let i = 0; i < result1.length; i++) {
                                 let tr = document.createElement("tr")
@@ -622,21 +641,44 @@
                                         // method.innerHTML = array[j].method;
                                         k++
                                     }
+                                    console.log(mt)
                                     impossibleMethod.innerHTML = mt;
                                 }
 
-                                let http = ["GET", "POST", "PUT", "DELETE"]
-                                for (let j = 0; j < http.length; j++) {
-                                    for (let l = 0; l < mt.length; l++) {
+                                mt = mt.sort();
+                                console.log("mt sort = ", mt);
 
+                                let http = ["GET", "POST", "PUT", "DELETE"]
+
+                                http = http.sort();
+
+                                let http2 = ["GET", "POST", "PUT", "DELETE"]
+
+                                http2 = http2.sort();
+                                // console.log(http.length)
+                                // console.log(mt.length)
+                                for (let j = http.length; j >= 0; j--) {
+                                    for (let l = mt.length; l >= 0; l--) {
+                                        console.log("====================================")
+                                        console.log(j);
+                                        console.log(l)
+
+                                        console.log(mt[l])
+                                        console.log(http[j])
+                                        console.log(mt[l] == http[j])
+                                        console.log("====================================")
                                         if (mt[l] == http[j]) {
-                                            http.splice(j, 1)
+                                            console.log("j = ", j);
+                                            http2.splice(j, 1)
+                                            console.log(http2)
+                                            // result.push(m)
+
                                         }
                                     }
-
                                 }
-                                console.log(http)
-                                possibleMethod.innerHTML = http
+                                console.log("http2")
+                                console.log(http2)
+                                possibleMethod.innerHTML = http2
                                 impossibleMethod.style.backgroundColor = "rgb(224 0 0 / 22%)"
                                 possibleMethod.style.backgroundColor = "rgb(37 224 0 / 22%)"
                                 id.innerText = array[i].id
@@ -1993,8 +2035,7 @@
                                     <h2 class="accordion-header" id="headingThree">
                                         <button class="accordion-button collapsed" type="button"
                                                 data-bs-toggle="collapse" data-bs-target="#collapseThree"
-                                                aria-expanded="false" aria-controls="collapseThree">
-                                            200
+                                                aria-expanded="false" aria-controls="collapseThree" id="resCode">
                                         </button>
                                     </h2>
                                     <div id="collapseThree" class="accordion-collapse collapse"
@@ -2060,14 +2101,16 @@
                                     </div>
                                 </div>
                             </div>
+
                         </div>
 
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                            닫기
-                        </button>
-                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        닫기
+                    </button>
                 </div>
             </div>
         </div>

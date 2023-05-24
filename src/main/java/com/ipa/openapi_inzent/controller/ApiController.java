@@ -246,6 +246,7 @@ public class ApiController {
         ResourceDTO resourceDTO = new ResourceDTO();
         resourceDTO.setApisId(apiId);
         int uriId = Integer.parseInt(paramMap.get("uriId"));
+        System.out.println("uriId = " + uriId);
         System.out.println("==================================RESOURCEID");
 
         System.out.println(String.valueOf(paramMap.get("resourceId")).isEmpty());
@@ -281,7 +282,6 @@ public class ApiController {
                 System.out.println(obj.get("operation"));
                 System.out.println(obj.get("summary"));
 
-                System.out.println(obj.get("resCode"));
 
                 apiDetailsDTO.setOperationId(obj.get("operation").toString());
                 apiDetailsDTO.setSummary(obj.get("summary").toString());
@@ -330,12 +330,44 @@ public class ApiController {
 
 
                 System.out.println("//////////////////resCode/////////////////////");
+                System.out.println(obj.get("resCode"));
+                JsonArray resParamArr = (JsonArray) obj.get("resCode");
+                System.out.println("resParamArr = " + resParamArr);
 
+                JsonObject resParam = (JsonObject) resParamArr.get(0);
+                System.out.println("resParam = " + resParam.get("paramKey"));
+                System.out.println("resParam = " + resParam.get("paramValue"));
+                System.out.println("resParam = " + resParam.get("paramType"));
 
+                String[] paramKeyList = String.valueOf(resParam.get("paramKey")).split(",");
+                String[] paramValueList = String.valueOf(resParam.get("paramValue")).split(",");
+                String[] paramTypeList = String.valueOf(resParam.get("paramType")).split(",");
 
                 System.out.println("++++++++++++++++++++++++++++++");
-                System.out.println();
 
+//                2. 분리 후 FOR문을 통해  DB에 넣는다.
+//                2-1. response 에 넣기 위해서는 apiDetails id 필요
+                ResponseDTO responseDTO = new ResponseDTO();
+                responseDTO.setApiDetailsId(uriId);
+                responseDTO.setRespCode(String.valueOf(resParam.get("code")));
+                responseDTO.setRespMsg(String.valueOf(resParam.get("explanation")));
+                System.out.println("responseDTO = " + responseDTO);
+                int responsId = apiDetailsService.insertResponse(responseDTO);
+//                2-2. 키와 VALUE 값을 콤마를 기준으로 분리한다.
+                for (int j = 0; j < paramKeyList.length; j++) {
+                    ResParamDTO resParamDTO = new ResParamDTO();
+                    resParamDTO.setResId(responsId);
+                    resParamDTO.setKey(paramKeyList[j]);
+                    resParamDTO.setValue(paramValueList[j]);
+                    resParamDTO.setType(paramTypeList[j]);
+                    System.out.println("j = " + j);
+                    System.out.println("resParamDTO = " + resParamDTO);
+
+                    // 응답 파라미터 등록
+                    apiDetailsService.insertResParam(resParamDTO);
+                }
+
+//                2-3. resParam 넣으려면 response table id값 필요
             }
         }
     }

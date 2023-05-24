@@ -1,9 +1,6 @@
 package com.ipa.openapi_inzent.dao;
 
-import com.ipa.openapi_inzent.model.ApiDetailsDTO;
-import com.ipa.openapi_inzent.model.ParameterDTO;
-import com.ipa.openapi_inzent.model.ResourceDTO;
-import com.ipa.openapi_inzent.model.TagDTO;
+import com.ipa.openapi_inzent.model.*;
 import io.swagger.annotations.Api;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.dao.DataAccessException;
@@ -53,4 +50,8 @@ public interface ApiDetailsDao {
     void insertParameter(ParameterDTO parameterDTO) throws DataAccessException;
 
     List<ParameterDTO> searchParameter(int id) throws DataAccessException;
+
+    void insertResponse(ResponseDTO responseDTO) throws DataAccessException;
+
+    void insertResParam(ResParamDTO resParamDTO) throws DataAccessException;
 }

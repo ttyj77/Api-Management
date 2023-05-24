@@ -24,8 +24,7 @@
 
     <!-- 리소스 List  resultType: ResourceDTO-->
     <select id="resourceList" parameterType="int" resultType="com.ipa.openapi_inzent.model.ResourceDTO">
-
-        select res."apisId", res.id, res.garbage, res."tagId", ad.uri,ad.summary from public.resource as res join
+        select DISTINCT res."apisId", res.id, res.garbage, res."tagId", ad.uri from public.resource as res join
         public."apiDetails" as ad on ad."resourceId" = res.id
         where res."apisId" = #{apisId}
         order by res.id asc;
@@ -129,7 +128,7 @@
         where ad.uri ILIKE CONCAT('%', #{keyword},'%')
         OR ad.summary ILIKE CONCAT('%', #{keyword},'%');
     </select>
-
+    <!--현재 들어온 api에 해당하는 resource 리스트 출력-->
     <select id="searchPath" parameterType="hashmap" resultType="com.ipa.openapi_inzent.model.ApiDetailsDTO">
         <!-- uri,method 받아오면 된다. /v1/insu -->
         SELECT ap.id, ap.method,ap.uri,ap."resourceId"
@@ -137,6 +136,7 @@
         #{apisId} and ap.uri ILIKE CONCAT('%', #{keyword},'%') and ap.trash = false
         and res."garbage" = false order by ap.id
     </select>
+    <!-- 신규 리소스 등록   -->
     <insert id="insertResource" parameterType="com.ipa.openapi_inzent.model.ResourceDTO" useGeneratedKeys="true"
             keyProperty="id" keyColumn="id">
         <if test='tagId > 0'>
@@ -150,7 +150,7 @@
         </if>
 
     </insert>
-
+    <!--insertApiDetail 등록-->
     <insert id="insertApiDetail" parameterType="com.ipa.openapi_inzent.model.ApiDetailsDTO" useGeneratedKeys="true"
             keyProperty="id" keyColumn="id">
         INSERT INTO public."apiDetails"(
@@ -164,16 +164,30 @@
     <select id="searchDetail" parameterType="int" resultType="com.ipa.openapi_inzent.model.ApiDetailsDTO">
         select * from public."apiDetails" where id = #{id}
     </select>
-
+    <!--파라미터 등록-->
     <insert id="insertParameter" parameterType="com.ipa.openapi_inzent.model.ParameterDTO" useGeneratedKeys="true"
             keyProperty="id">
         INSERT INTO public.parameters(
         "apiDetailsId", name, "transferMethod", explanation, type, required, sample)
         VALUES (#{apiDetailsId},#{name},#{transferMethod},#{explanation},#{type},#{required},#{sample});
     </insert>
-
+    <!-- apiDetails 모달에 넣을 파라미터 값 -->
     <select id="searchParameter" parameterType="int" resultType="com.ipa.openapi_inzent.model.ParameterDTO">
         SELECT id, "apiDetailsId", name, "transferMethod", explanation, type, required, sample
         FROM public.parameters where "apiDetailsId" = #{id}
     </select>
+    <!--응답 코드 설명 등록 쿼리-->
+    <insert id="insertResponse" parameterType="com.ipa.openapi_inzent.model.ResponseDTO" useGeneratedKeys="true"
+            keyColumn="id" keyProperty="id">
+        INSERT INTO public.response(
+        "apiDetailsId","respCode", "respMsg")
+        VALUES (#{apiDetailsId},#{respCode},#{respMsg});
+    </insert>
+
+    <!-- 응답코드 상세 파라미터 등록 쿼리   -->
+    <insert id="insertResParam" parameterType="com.ipa.openapi_inzent.model.ResParamDTO">
+        INSERT INTO public."resParam"(
+        "resId", key,value, type, sample)
+        VALUES (#{resId},#{key},#{value},#{type},#{sample});
+    </insert>
 </mapper>

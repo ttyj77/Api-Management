@@ -1,10 +1,7 @@
 package com.ipa.openapi_inzent.service;
 
 import com.ipa.openapi_inzent.dao.ApiDetailsDao;
-import com.ipa.openapi_inzent.model.ApiDetailsDTO;
-import com.ipa.openapi_inzent.model.ParameterDTO;
-import com.ipa.openapi_inzent.model.ResourceDTO;
-import com.ipa.openapi_inzent.model.TagDTO;
+import com.ipa.openapi_inzent.model.*;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
@@ -108,5 +105,14 @@ public class ApiDetailsService {
 
     public List<ParameterDTO> searchParameter(int id) {
         return apiDetailsDao.searchParameter(id);
+    }
+
+    public int insertResponse(ResponseDTO responseDTO) {
+        apiDetailsDao.insertResponse(responseDTO);
+        return responseDTO.getId();
+    }
+
+    public void insertResParam(ResParamDTO resParamDTO) {
+        apiDetailsDao.insertResParam(resParamDTO);
     }
 }

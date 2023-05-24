@@ -5,6 +5,6 @@ toggle = () => {
     container.classList.toggle('sign-up')
 }
 
-setTimeout(() => {
+// setTimeout(() => {
     container.classList.add('sign-in')
-}, 200)
+// }, 0)
