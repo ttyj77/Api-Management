@@ -23,7 +23,6 @@ function updateApi(apiOne) {
     // 모달 내용
     let id = apiOne.getAttribute("user_id");
 
-
     let d = {
         "id": id,
     }
@@ -46,7 +45,6 @@ function updateApi(apiOne) {
     })
 
 
-    console.log("update Api : 연필 모달")
     let context = document.getElementById('contextApi');
     let name = document.getElementById('nameApi');
     let explanation = document.getElementById('explanationApi');
@@ -68,6 +66,7 @@ function updateApi(apiOne) {
             let selectedRoleList = JSON.parse(message.selectedRoleList);
             let target2 = document.getElementById("target2")
             target2.innerHTML = ""
+            console.log("뱃지 들어가유!!!!!!!!!!!!!!!!!!!");
             for (let i = 0; i < selectedRoleList.length; i++) {
                 let h5 = document.createElement("h5")
                 let badge = document.createElement("span")
@@ -76,6 +75,8 @@ function updateApi(apiOne) {
                 badge.className = "badge badge-secondary"
                 badge.innerText = selectedRoleList[i].name
                 badge.id = "BADGE_" + selectedRoleList[i].code
+
+                console.log("id = ", selectedRoleList[i].id);
 
                 inputHidden.name = "roleId"
                 inputHidden.value = selectedRoleList[i].id
@@ -143,6 +144,7 @@ function apisModalRoleList() {
             let parent = document.getElementById("target2").childNodes
 
 
+            console.log(cnt)
             console.log(parent)
             console.log(parent[0])
             console.log(parent[1])
@@ -176,6 +178,7 @@ function drawRole(value) {
     let target;
     let parent;
     if (value.id == "userRoleModal") { //서비스 등록모달
+        console.log("?????????????????")
         target = document.getElementById("target2")
         parent = document.getElementById("apiRoleModalBody")
     }
@@ -211,7 +214,8 @@ function drawRole(value) {
             inputHidden.name = "roleId"
             inputHidden.value = check.name
             inputHidden.type = "hidden"
-            if (value.id == "updateApisModal") {
+            console.log(value.id)
+            if (value.id == "userRoleModal") {
                 console.log("update Api modal span id BADGE_ 추가")
                 let id = check.id.substr(4,)
                 console.log(id)
@@ -221,5 +225,19 @@ function drawRole(value) {
             h5.append(badge, inputHidden)
             target.append(h5)
         }
+    }
+}
+
+
+/* 체크박스 체크 시 input 안에 checkd 넣기*/
+function is_checked(value) {
+    console.log(value.id)
+
+    console.log($('#' + value.id).prop("checked"))
+
+    if ($('#' + value.id).prop("checked")) {
+        $('#' + value.id).prop("checked", true);
+    } else {
+        $('#' + value.id).prop("checked", false);
     }
 }

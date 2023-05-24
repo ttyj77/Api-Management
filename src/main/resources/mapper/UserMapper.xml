@@ -45,7 +45,7 @@
         DELETE FROM public."user"
         WHERE id = #{id};
     </delete>
-    <update id="update" parameterType="com.ipa.openapi_inzent.model.UserRoleDTO">
+    <update id="update" parameterType="com.ipa.openapi_inzent.model.UserDTO">
         UPDATE public.user SET
         password = #{password},
         nickname = #{nickname},
@@ -61,6 +61,10 @@
         INSERT INTO public."userRole"("userId", "roleId")
         VALUES (#{userId}, #{roleId})
     </insert>
+    <delete id="deleteRole" parameterType="int">
+        delete from public."userRole"
+        where "userId" = #{userId};
+    </delete>
     <select id="selectOne" parameterType="int" resultMap="userRole">
         select * from public.user as us
         join public."userRole" as ur on ur."userId" = us.id

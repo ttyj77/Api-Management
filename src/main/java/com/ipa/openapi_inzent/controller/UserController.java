@@ -12,12 +12,10 @@ import com.ipa.openapi_inzent.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -138,7 +136,7 @@ public class UserController {
         return object;
     }
 
-    @PostMapping("updatePwd/{id}")
+    @PostMapping("/updatePwd/{id}")
     public String updatePw(@PathVariable int id, String password) {
         UserDTO userDTO = userService.userOne(id);
 
@@ -149,7 +147,7 @@ public class UserController {
         return "redirect:/accountList";
     }
 
-    @GetMapping("selectOneRole")
+    @GetMapping("/selectOneRole")
     @ResponseBody
     public JsonObject selectOneRole(int userId) {
         JsonObject object = new JsonObject();
@@ -158,7 +156,7 @@ public class UserController {
         JsonArray selectRoleArray = new JsonArray();
         for (UserDTO role : userRoleList) {
             JsonObject r = new JsonObject();
-            r.addProperty("id", role.getId());
+            r.addProperty("id", role.getRoleId());
             r.addProperty("code", role.getCode());
             r.addProperty("name", role.getName());
             selectRoleArray.add(r);
@@ -166,6 +164,26 @@ public class UserController {
         object.addProperty("selectedRoleList", selectRoleArray.toString());
         System.out.println("selectRoleArray = " + selectRoleArray);
         return object;
+    }
+
+    @PostMapping("/updateAccount")
+    public String updateAccount(int id ,String nickname, String email, String[] roleId ) {
+
+        System.out.println("UserController.updateAccount");
+        System.out.println("role = " + roleId);
+//        System.out.println("userDTO = " + userDTO);
+        System.out.println("id = " + id);
+        System.out.println("nickname = " + nickname);
+        System.out.println("email = " + email);
+
+        UserDTO temp = userService.userOne(id);
+        temp.setNickname(nickname);
+        temp.setEmail(email);
+
+        userService.update(temp);
+        System.out.println("temp = " + temp);
+
+        return "redirect:/accountList";
     }
 
 //    @PostMapping("updatePw/{id}")

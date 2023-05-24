@@ -24,4 +24,5 @@
         ON public.role.id = public."apisRole"."roleId"
         WHERE public."apisRole"."apisId" = #{id}
     </select>
+
 </mapper>
