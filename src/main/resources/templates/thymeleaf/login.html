@@ -143,8 +143,7 @@
                 <form
                         th:action="@{/login-proc}"
                         class="form-signin"
-                        method="post"
-                >
+                        method="post">
                     <div class="form sign-in">
                         <div class="input-group">
                             <i class='bx bxs-user'></i>
@@ -160,7 +159,7 @@
                         </button>
 <!--                        <p th:if="${LoginFailMessage!=null}" th:text="|Error : ${LoginFailMessage}|"-->
 <!--                           style="color: #E23137; font-size: small"></p>-->
-                        <p th:if="${error != null}" th:text="|Error : ${exception}|"
+                        <p th:if="${error != null}" th:text="|${exception}|"
                            style="color: #E23137; font-size: small"></p>
                         <hr style="margin: 2rem 0;"/>
                         <p class="help-text">

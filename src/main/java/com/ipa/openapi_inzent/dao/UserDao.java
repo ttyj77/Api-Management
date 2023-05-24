@@ -16,7 +16,7 @@ public interface UserDao {
 
     UserDTO findByNickname(String nickname) throws DataAccessException;
 
-    UserDTO selectOne(int id) throws DataAccessException;
+    List<UserDTO> selectOne(int id) throws DataAccessException;
 
     void delete(int id) throws DataAccessException;
 
@@ -31,5 +31,8 @@ public interface UserDao {
     UserDTO userOne(int id) throws DataAccessException;
 
     List<UserRoleDTO> userRoles(int id) throws DataAccessException;
+
+
+    List<UserRoleDTO> roleName(int id) throws DataAccessException;
 
 }

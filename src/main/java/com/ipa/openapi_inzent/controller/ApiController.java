@@ -64,6 +64,7 @@ public class ApiController {
             r.addProperty("name", role.getName());
             selectRoleArray.add(r);
         }
+
         object.addProperty("selectedRoleList", selectRoleArray.toString());
 
 //        System.out.println("roleAll = " + roleAll);
@@ -102,7 +103,7 @@ public class ApiController {
     //api별  role 출력
     @GetMapping("/apiRoleList")
     @ResponseBody
-    public JsonObject apiRoleList(int apiId) {
+    public JsonObject apiRoleList() {
 
         JsonObject result = new JsonObject();
         List<RoleDTO> roleAll = roleService.selectAll();

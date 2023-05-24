@@ -1,72 +1,84 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+>
 <head>
-  <meta charset="UTF-8">
-  <title>INFINITY</title>
-  <link href="/images/logo_img.png" rel="shortcut icon" type="image/x-icon">
+    <meta charset="UTF-8">
+    <title>Mypage</title>
+    <link href="/images/logo_img.png" rel="shortcut icon" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/24311b556d.js" crossorigin="anonymous"></script>
 
-  <link
-          href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-          rel="stylesheet">
-  <link href="/css/sb-admin-2.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+            crossorigin="anonymous"></script>
+    <script src="/js/sb-admin-2.min.js"></script>
+    <script src="/js/details.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-  <script src="https://kit.fontawesome.com/24311b556d.js" crossorigin="anonymous"></script>
-  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-          integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
-          crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-          integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-          crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js"
-          integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
-          crossorigin="anonymous"></script>
-  <script src="/js/main.js"></script>
-  <!-- Template Main CSS File -->
-  <link href="/css/style.css" rel="stylesheet">
+    <!-- Bootstrap core JavaScript-->
+    <script src="/vendor/jquery/jquery.min.js"></script>
+    <script src="/vendor/bootstrap2/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-  <!-- Vendor CSS Files -->
-  <link href="/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-
-  <!-- Bootstrap core JavaScript-->
-  <script src="/vendor/jquery/jquery.min.js"></script>
-  <script src="/vendor/bootstrap2/js/bootstrap.bundle.min.js"></script>
-
-  <style>
-    * {
-      margin: 0;
-    }
-
-    body {
-      background-color: white;
-      position: absolute;
-    }
-  </style>
 </head>
 <body>
-<div class="container-fluid" style="padding-left: 0px !important; padding-right: 0px !important; height: 100%">
-  <div style="width: 100vw; height:11%; background-color: #fafafa">
-    <div style="display: flex; justify-content: space-between;">
-      <div>
-        <img src="../images/logo4.png" style="width: 200px; margin-left: 1%; cursor: pointer;"
-             onclick="javascript:location.href='/api'">
-      </div>
-      <div style="margin-top: 30px; margin-right: 30px" onclick="location.href='/user/login'"><span
-              style="cursor: pointer">로그인</span>
-        <i style="width: 20px; margin-right:10px; cursor: pointer" class="fa-solid fa-user fa-bounce"></i>
-        <i class="fa-solid fa-arrow-right-from-bracket"></i>
-      </div>
-    </div>
-  </div>
+<div class="container vh-100">
+    <div class="row h-100 align-items-center">
+        <div class="row">
+            <div class="col-10 align-items-center">
+                <form method="post" action="/user/update" style="text-align: -webkit-center">
+                    <label for="input-username">아이디</label>
+                    <input id="input-username" th:value="${user.username}" type="text" name="username"
+                           class="form-control w-50" disabled>
+                    <label for="input-nickname">닉네임</label>
+                    <input type="text" th:value="${user.nickname}" name="password" class="form-control w-50"
+                           id="input-nickname" disabled>
+                    <label for="input-email">이메일</label>
+                    <input type="email" th:value="${user.email}" name="password" class="form-control w-50"
+                           id="input-email" disabled>
+                    <label for="input-password">비밀번호</label>
+                    <div class="accordion w-50" id="input-password">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="panelsStayOpen-headingOne">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true"
+                                        aria-controls="panelsStayOpen-collapseOne">
+                                    비밀번호 변경하기
+                                </button>
+                            </h2>
+                            <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse"
+                                 aria-labelledby="panelsStayOpen-headingOne">
+                                <div class="accordion-body">
+                                    <form action="/user/updatePw/${userDTO.id}" method="post">
+                                        <span class="span-1">현재 비밀번호</span> <input type="password" name="oldPw"
+                                                                                   class="mb-2"><br>
+                                        <span class="span-2">새 비밀번호</span> <input type="password" name="newPw"
+                                                                                  class="mb-2"><br>
+                                        <span class="span-3">비밀번호 다시 입력 </span> <input type="password" name="newPw2"
+                                                                                       class="mb-2"><br>
+                                        <span class="text-danger">${message}</span><br>
+                                        <button type="submit" class="badge text-bg-secondary">비밀번호 변경</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary align-items-center m-2"> 로그인</button>
 
-  <div id="aniBox">
-    <span id="animation">WELCOME TO INFINITY OPEN API MANAGEMENT</span>
-  </div>
-  <div>
-    <button class="btn btn-danger" type="button" th:onclick="|location.href='/user/delete/'+${user.id}|">
-      회원 탈퇴
-    </button>
-  </div>
-  <h1 th:text="|나는 ${user.nickname} 이다!!!!!!!|"></h1>
+                    <a href="/user/register" class="btn btn-danger">회원 가입하기</a>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
+
 </body>
 </html>

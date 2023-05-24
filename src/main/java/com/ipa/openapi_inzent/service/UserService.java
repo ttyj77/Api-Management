@@ -35,7 +35,7 @@ public class UserService {
         return userDao.findByNickname(nickname);
     }
 
-    public UserDTO selectOne(int id) {
+    public List<UserDTO> selectOne(int id) {
         return userDao.selectOne(id);
     }
 
@@ -65,5 +65,9 @@ public class UserService {
 
     public List<UserRoleDTO> userRoles(int id) {
         return userDao.userRoles(id);
+    }
+
+    public List<UserRoleDTO> roleName(int id) {
+        return userDao.roleName(id);
     }
 }

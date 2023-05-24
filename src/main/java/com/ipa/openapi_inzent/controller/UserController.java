@@ -1,17 +1,23 @@
 package com.ipa.openapi_inzent.controller;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.ipa.openapi_inzent.config.auth.UserCustomDetails;
 import com.ipa.openapi_inzent.model.RequestDTO;
 import com.ipa.openapi_inzent.model.UserDTO;
 import com.ipa.openapi_inzent.model.UserRoleDTO;
 import com.ipa.openapi_inzent.service.RequestService;
+import com.ipa.openapi_inzent.service.RoleService;
 import com.ipa.openapi_inzent.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -20,12 +26,14 @@ import java.util.List;
 public class UserController {
     private UserService userService;
     private RequestService requestService;
+    private RoleService roleService;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserController(UserService userService, RequestService requestService, PasswordEncoder passwordEncoder) {
+    public UserController(UserService userService, RequestService requestService, PasswordEncoder passwordEncoder, RoleService roleService) {
         this.userService = userService;
         this.requestService = requestService;
+        this.roleService = roleService;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -91,11 +99,14 @@ public class UserController {
         return object;
     }
 
-    @GetMapping("/mypage/{id}")
-    public String mypage(Model model, @PathVariable int id) {
-        UserDTO userDTO = userService.selectOne(id);
+    @GetMapping("/mypage")
+    public String mypage(@AuthenticationPrincipal UserCustomDetails userDetails, Model model) {
+        System.out.println("userDetails");
+        System.out.println(userDetails.getUsername());
+        System.out.println(userDetails.getUserDTO());
+        System.out.println(userDetails.getUserDTO().getId());
 
-        model.addAttribute("user", userDTO);
+        model.addAttribute("user", userDetails.getUserDTO());
         return "mypage";
     }
 
@@ -118,9 +129,7 @@ public class UserController {
     public JsonObject userOne(@PathVariable int id) {
         JsonObject object = new JsonObject();
         UserDTO userDTO = userService.userOne(id);
-        List<UserRoleDTO> list = userService.userRoles(id);
-        System.out.println("list = " + list);
-        System.out.println("userDTO = " + userDTO);
+
         object.addProperty("username", userDTO.getUsername());
         object.addProperty("nickname", userDTO.getNickname());
         object.addProperty("email", userDTO.getEmail());
@@ -131,10 +140,7 @@ public class UserController {
 
     @PostMapping("updatePwd/{id}")
     public String updatePw(@PathVariable int id, String password) {
-        System.out.println("password = " + password);
-        System.out.println("id = " + id);
         UserDTO userDTO = userService.userOne(id);
-        System.out.println("userDTO = " + userDTO);
 
         userDTO.setPassword(passwordEncoder.encode(password));
 
@@ -142,5 +148,42 @@ public class UserController {
 
         return "redirect:/accountList";
     }
+
+    @GetMapping("selectOneRole")
+    @ResponseBody
+    public JsonObject selectOneRole(int userId) {
+        JsonObject object = new JsonObject();
+        List<UserDTO> userRoleList = userService.selectOne(userId);
+        System.out.println("userRoleList = " + userRoleList);
+        JsonArray selectRoleArray = new JsonArray();
+        for (UserDTO role : userRoleList) {
+            JsonObject r = new JsonObject();
+            r.addProperty("id", role.getId());
+            r.addProperty("code", role.getCode());
+            r.addProperty("name", role.getName());
+            selectRoleArray.add(r);
+        }
+        object.addProperty("selectedRoleList", selectRoleArray.toString());
+        System.out.println("selectRoleArray = " + selectRoleArray);
+        return object;
+    }
+
+//    @PostMapping("updatePw/{id}")
+//    public void updatePw(Model model, RedirectAttributes redirectAttributes, @PathVariable int id, String oldPw, String newPw, String newPw2) {
+//        UserDTO userDTO = userService.selectOne(id);
+//        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+//
+//        if (!passwordEncoder.matches(oldPw, userDTO.getPassword())) {
+//            redirectAttributes.addFlashAttribute("message", "기존 비밀번호를 확인해주세요.");
+//        } else if (!newPw.equals(newPw2)) {
+//            redirectAttributes.addFlashAttribute("message", "새 비밀번호가 서로 일치하지 않습니다.");
+//        } else {
+//            redirectAttributes.addFlashAttribute("message", "비밀번호 변경 성공!");
+//            userDTO.setPassword(passwordEncoder.encode(newPw));
+//            userService.update(userDTO);
+//        }
+//
+////        return "redirect:/user/mypage/" + id;
+//    }
 
 }
