@@ -114,7 +114,7 @@
                             <input type="password" id="doubleCheckPwd" placeholder="비밀번호 확인" onkeydown="checkSpacebar()"
                                    oninput="overlapCheck()" required>
                         </div>
-                        <div id="pwdCheck" style="display: none" >
+                        <div id="pwdCheck" style="display: none">
                             ❌ 비밀번호가 같지 않습니다. ❌
                         </div>
                         <button type="submit" style="margin-top: 12px">
@@ -143,7 +143,8 @@
                 <form
                         th:action="@{/login-proc}"
                         class="form-signin"
-                        method="post">
+                        method="post"
+                >
                     <div class="form sign-in">
                         <div class="input-group">
                             <i class='bx bxs-user'></i>
@@ -157,15 +158,11 @@
                         <button type="submit" class="btn btn-danger mb-6">
                             로 그 인
                         </button>
-<!--                        <p th:if="${LoginFailMessage!=null}" th:text="|Error : ${LoginFailMessage}|"-->
-<!--                           style="color: #E23137; font-size: small"></p>-->
-                        <div class="d-flex mt-2">
-                        <input type="checkbox" class="form-check-input" name="remember-me">
-                            &nbsp;&nbsp;로그인 유지
-                        </div>
-                        <p th:if="${error != null}" th:text="|${exception}|"
+                        <!--                        <p th:if="${LoginFailMessage!=null}" th:text="|Error : ${LoginFailMessage}|"-->
+                        <!--                           style="color: #E23137; font-size: small"></p>-->
+                        <p th:if="${error != null}" th:text="|Error : ${exception}|"
                            style="color: #E23137; font-size: small"></p>
-                        <hr style="margin: 1rem 0;"/>
+                        <hr style="margin: 2rem 0;"/>
                         <p class="help-text">
                             <span style="font-size: 12px; margin-right: 40px;">
                                 비밀번호를 잊어버리셨나요?
@@ -175,6 +172,10 @@
                             </span>
                         </p>
                     </div>
+                    <p>
+                        <label for="remember-me" style>로그인 유지</label>
+                        <input type="checkbox" id="remember-me" name="remember-me"/>
+                    </p>
                 </form>
             </div>
             <div class="form-wrapper">
@@ -212,5 +213,5 @@
     </div>
     <!-- END CONTENT SECTION -->
 </div>
-<script src="/js/test.js"></script>
+<script src="/js/login.js"></script>
 </body>
