@@ -90,5 +90,16 @@
         where ur."userId" = #{userId};
     </select>
 
+    <!-- AccountList search  -->
+    <select id="accountListSearch" parameterType="string" resultType="com.ipa.openapi_inzent.model.UserDTO">
+        select * from public."user"
+        where nickname ILIKE CONCAT('%', #{keyword}, '%')
+        or username ILIKE CONCAT('%', #{keyword}, '%')
+        or email ILiKE CONCAT('%', #{keyword}, '%');
+    </select>
+    <select id="choiceActivate" parameterType="boolean" resultType="com.ipa.openapi_inzent.model.UserDTO">
+        select * from public.user
+        where activate = #{b};
+    </select>
 </mapper>
 

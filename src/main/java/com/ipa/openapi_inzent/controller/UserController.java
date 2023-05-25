@@ -17,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -167,24 +168,37 @@ public class UserController {
     }
 
     @PostMapping("/updateAccount")
-    public String updateAccount(int id ,String nickname, String email, String[] roleId ) {
+    public String updateAccount(int id, String nickname, String email, String[] roleId) {
 
         System.out.println("UserController.updateAccount");
-        System.out.println("role = " + roleId);
-//        System.out.println("userDTO = " + userDTO);
         System.out.println("id = " + id);
         System.out.println("nickname = " + nickname);
         System.out.println("email = " + email);
 
+        for (String role : roleId){
+            System.out.println("role = " + role);
+        }
+        // 유저 정보 갱신
         UserDTO temp = userService.userOne(id);
         temp.setNickname(nickname);
         temp.setEmail(email);
 
         userService.update(temp);
-        System.out.println("temp = " + temp);
+
+        // 유저 role 정보 갱신
+        userService.deleteRole(id); // 기존 role 다 삭제하고
+        for (int i = 0; i < roleId.length; i++) {
+            UserRoleDTO userRoleDTO = new UserRoleDTO();
+            userRoleDTO.setUserId(id);
+            userRoleDTO.setRoleId(Integer.parseInt(roleId[i]));
+            userService.insertRole(userRoleDTO);
+        }
+
+        System.out.println(id+"의 갱신한 역할들"+ userService.userRoles(id));
 
         return "redirect:/accountList";
     }
+
 
 //    @PostMapping("updatePw/{id}")
 //    public void updatePw(Model model, RedirectAttributes redirectAttributes, @PathVariable int id, String oldPw, String newPw, String newPw2) {

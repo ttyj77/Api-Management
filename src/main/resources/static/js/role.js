@@ -3,6 +3,7 @@ function updateApi(apiOne) {
     document.getElementById("passwordChange").disabled = true;
     document.getElementById("name").disabled = true;
     document.getElementById("email").disabled = true;
+    document.getElementById("updateRoleBtn").disabled = true;
 
     let div = document.getElementById("btnBox")
     div.innerHTML = ""
@@ -16,7 +17,8 @@ function updateApi(apiOne) {
     saveBtn.type = "button"
     saveBtn.className = "btn btn-dark"
     saveBtn.innerText = "수정"
-    saveBtn.addEventListener("click", updateInfo)
+    $(saveBtn).attr("onclick", "updateInfo()");
+    // saveBtn.addEventListener("click", updateInfo)
     div.append(saveBtn);
     div.append(cancelBtn);
 
@@ -72,9 +74,9 @@ function updateApi(apiOne) {
                 let badge = document.createElement("span")
                 let inputHidden = document.createElement("input")
 
-                badge.className = "badge badge-secondary"
-                badge.innerText = selectedRoleList[i].name
-                badge.id = "BADGE_" + selectedRoleList[i].code
+                badge.className = "badge badge-secondary";
+                badge.innerText = selectedRoleList[i].name;
+                badge.id = "BADGE_" + selectedRoleList[i].code;
 
                 console.log("id = ", selectedRoleList[i].id);
 
@@ -111,12 +113,14 @@ function apisModalRoleList() {
 
             let array = JSON.parse(message.responseText);
             console.log("array : " + array)
+            console.log(array)
+
 
             let roleBody = document.getElementById("apiRoleModalBody")
             roleBody.innerHTML = ""
-            // roleBody.id
             for (let i = 0; i < array.length; i++) {
-                let roleBox = document.createElement("div")
+                console.log(array[i].id)
+                let roleBox = document.createElement("div");
                 roleBox.className = "form-check"
 
                 let roleInput = document.createElement("input")
@@ -124,7 +128,7 @@ function apisModalRoleList() {
                 roleInput.type = "checkbox"
                 roleInput.value = array[i].name
                 roleInput.id = "API_" + array[i].code
-                roleInput.name = 'roleId'
+                roleInput.name = array[i].id
                 roleInput.onclick = function () {
                     is_checked(this);
                 }
@@ -190,17 +194,13 @@ function drawRole(value) {
 
     let childNodes = parent.childNodes;
 
-    console.log(parent)
-    console.log(parent.length)
-    console.log()
-    console.log(childNodes)
-
-    console.log(childNodes.length)
     let cnt = childNodes.length;
 
     for (let i = 0; i < cnt; i++) {
 
         let check = childNodes[i].childNodes[0];
+
+        console.log("check : " + check)
         console.log("check : " + check.id)
         let isChecked = $('#' + check.id).is(':checked');
         console.log(isChecked)
@@ -214,13 +214,18 @@ function drawRole(value) {
             inputHidden.name = "roleId"
             inputHidden.value = check.name
             inputHidden.type = "hidden"
-            console.log(value.id)
+
             if (value.id == "userRoleModal") {
                 console.log("update Api modal span id BADGE_ 추가")
                 let id = check.id.substr(4,)
                 console.log(id)
                 badge.id = "BADGE_" + id
 
+                let inputHidden = document.createElement("input")
+
+                // inputHidden.name = "roleId"
+                // inputHidden.value = selectedRoleList[i].id
+                // inputHidden.type = "hidden"
             }
             h5.append(badge, inputHidden)
             target.append(h5)

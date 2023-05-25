@@ -40,4 +40,23 @@ public class AccountController {
         System.out.println("userDTO.isActivate() after = " + userDTO.isActivate());
         userService.update(userDTO);
     }
+
+    @GetMapping("/accountSearch")
+    public String requestSearch(Model model, String keyword) {
+        model.addAttribute("userList", userService.accountListSearch(keyword));
+        return "accountList";
+    }
+
+    // 활성화 비활성화 버튼 누를시
+    @GetMapping("/showUnactivate")
+    public String showUnactivate(Model model) {
+        model.addAttribute("userList", userService.choiceActivate(false));
+        return "accountList";
+    }
+
+    @GetMapping("/showActivate")
+    public String showActivate(Model model) {
+        model.addAttribute("userList", userService.choiceActivate(true));
+        return "accountList";
+    }
 }

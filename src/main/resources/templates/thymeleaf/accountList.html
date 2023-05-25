@@ -103,6 +103,8 @@
                 // document.getElementById("userId").style.borderColor = "#0982f0";
                 document.getElementById("name").disabled = false;
                 document.getElementById("email").disabled = false;
+                document.getElementById("updateRoleBtn").disabled = false;
+
 
                 let div = document.getElementById("btnBox")
                 div.innerHTML = ""
@@ -117,13 +119,17 @@
                 saveBtn.className = "btn btn-primary"
                 saveBtn.innerText = "저장"
                 // saveBtn.addEventListener("click", saveAlert)
+                $(saveBtn).attr("onclick", "saveAlert()");
+
                 div.append(saveBtn)
                 div.append(cancelBtn)
+
+
             }
 
+            // 수정 확인 SA(Sweet Alert)
             // 변경내용 저장 확인
             function saveAlert() {
-                let saveBtn = document.createElement("button");
                 Swal.fire({
                     showCancelButton: true,
                     cancelButtonText: "취소",
@@ -192,17 +198,33 @@
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <!-- Topbar Search -->
-                        <form action="/accountSearch" method="get" class="col input-group mt-3"
-                              style="width: 40%; align-self: end;">
-                            <input type="text" class="form-control m-0"
-                                   placeholder="검색어를 입력해주세요"
-                                   aria-label="Search" name="keyword">
-                            <div class="input-group-append">
-                                <button class="btn btn-primary" type="submit">
-                                    <i class="fas fa-search fa-sm"></i>
-                                </button>
+                        <div class="d-flex justify-content-between">
+                            <div class="d-flex" style="padding-top: 18px; margin-left: 20px;">
+                                <form action="/showActivate" method="get" class="mr-2">
+                                    <button type="submit" class="btn btn-outline-primary" onclick="showActivate()">
+                                        활성화
+                                    </button>
+                                </form>
+                                <form action="/showUnactivate" method="get" class="mr-4">
+                                    <button type="submit" class="btn btn-outline-danger " onclick="showUnactivate()">
+                                        비활성화
+                                    </button>
+                                </form>
                             </div>
-                        </form>
+                            <div>
+                                <form action="/accountSearch" method="get" class="col input-group mt-3"
+                                      style="width: 100%; align-self: end;">
+                                    <input type="text" class="form-control m-0"
+                                           placeholder="검색어를 입력해주세요"
+                                           aria-label="Search" name="keyword">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-primary" type="submit">
+                                            <i class="fas fa-search fa-sm"></i>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-hover" id="dataTable"
@@ -308,9 +330,10 @@
                                                     <!-- 역할 뱃지 쌓이는 곳  -->
                                                 </div>
                                                 <button type="button"
+                                                        id="updateRoleBtn"
                                                         class="btn btn-dark btn-sm api"
                                                         data-bs-toggle="modal"
-                                                        onclick="apisModalRoleList(this)"
+                                                        onclick="apisModalRoleList(this)" disabled
                                                 ><i
                                                         class="fa-solid fa-plus"
                                                         style="color: #f7f7f8;"></i>

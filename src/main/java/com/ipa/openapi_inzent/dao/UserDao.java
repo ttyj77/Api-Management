@@ -35,4 +35,10 @@ public interface UserDao {
 
     List<UserRoleDTO> roleName(int id) throws DataAccessException;
 
+    void deleteRole(int userId) throws DataAccessException;
+
+    List<UserDTO> accountListSearch(String keyword) throws DataAccessException;
+
+    List<UserDTO> choiceActivate(boolean b) throws DataAccessException;
+
 }
