@@ -190,4 +190,23 @@
         "resId", key,value, type, sample)
         VALUES (#{resId},#{key},#{value},#{type},#{sample});
     </insert>
+
+    <!--    // details 아이디로 해당 응답 코드 출력-->
+    <select id="selectResponseList" parameterType="int" resultType="com.ipa.openapi_inzent.model.ResponseDTO">
+        select * from public."response" where "apiDetailsId" = #{id}
+    </select>
+
+    <!--    // 응답코드 아이디로 해당하는 파라미터들 출력-->
+    <select id="selectResParamList" parameterType="int" resultType="com.ipa.openapi_inzent.model.ResParamDTO">
+        select * from public."resParam" where "resId" = #{id}
+    </select>
+
+    <!-- 응답코드 삭제   -->
+    <select id="removeResCode" parameterType="int">
+        delete from public."response" where id = #{id}
+    </select>
+    <!-- 응답코드파라미터 삭제   -->
+    <select id="removeResParam" parameterType="int">
+        delete from public."resParam" where id = #{id}
+    </select>
 </mapper>

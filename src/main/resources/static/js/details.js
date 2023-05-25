@@ -1,11 +1,12 @@
 function detailModal(value) {
     // console.log(value.children())
-    $("#detailModal").modal('show')
-    let details = value.lastElementChild.lastElementChild;
+    // $("#detailModal").modal('show')
+    // let details = value.lastElementChild.lastElementChild;
 
-    let id = details.getAttribute("detailid")
+    // let id = details.getAttribute("detailid")
+    console.log(value)
     let data = {
-        "id": id,
+        "id": value,
     }
 
     $.ajax({
@@ -66,7 +67,236 @@ function detailModal(value) {
             console.log("출력실패", e)
         }
     })
+
+    showResData(value)
 }
+
+function showResData(id) {
+
+    let data = {
+        "id": id
+    }
+
+    $.ajax({
+        url: "/api/resCode/selectOne",
+        data: data,
+        method: "get",
+
+        success: (message) => {
+            console.log("================message===================")
+            console.log(message)
+            console.log("================message===================")
+            console.log(message.responseList)
+
+            let resList = JSON.parse(message.responseList)
+            let temp = null;
+            console.log("길이 : " + resList.length);
+            for (let i = 0; i < resList.length; i++) {
+                let id = resList[i].id;
+                console.log("id = " + id);
+            }
+
+            let resParamList = JSON.parse(message.resParamList)
+            console.log("????????????")
+            console.log(resList)
+            console.log(resParamList)
+
+            document.getElementById("accordionExample").innerHTML = ""
+            for (let d = 0; d < resList.length; d++) {
+                $("#accordionExample").append(`
+                    <div class="accordion-item m-3">
+                        <h2 class="accordion-header" id="heading` + resList[d].id + `">
+                            <button class="accordion-button collapsed" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#collapse` + resList[d].id + `"
+                                aria-expanded="false" aria-controls="collapse` + resList[d].id + `">
+                                ` + resList[d].respCode.replace(/\"/gi, "") +
+                    `</button>
+                        </h2>
+                        <div id="collapse` + resList[d].id + `" class="accordion-collapse collapse"
+                            aria-labelledby="heading` + resList[d].id + `">
+                            <div class="accordion-body">
+                                <table class="table table-borderless">
+                                    <tbody>
+                                    <tr class="borderTop">
+                                        <td>
+                                            설명
+                                        </td>
+                                        <td class="tdContent" id="s">
+                                           ` + resList[d].respMsg.replace(/\"/gi, "") + `
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <table class="table">
+                                    <thead>
+                                     <tr style="text-align: -webkit-center;">
+                                        <th scope="col">Content-type</th>
+                                        <th scope="col">Body</th>
+                                        <th scope="col">비고</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody class="table-group-divider">
+                                    <tr class="detailModal_ResouceId" style="text-align: center" id=` + resList[d].apiDetailsId + `>
+                                        <td style="vertical-align: middle;">` + resList[d].type + `</td>
+                                        <td>
+                                            <table class="table">
+                                                <thead style="background-color: #1c294e21">
+                                                <tr>
+                                                    <th scope="col">키</th>
+                                                    <th scope="col">타입</th>
+                                                    <th scope="col">샘플</th>
+                                                    <th scope="col">비고</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody class="table-group-divider" id="resParamTbody` + resList[d].id + `">
+                                                <!-- res paramter for문 시작  -->
+                                                <!-- res의 id 와 resparam 의 resId 와 같으면 출력 -->
+
+                                                <!-- res paramter for문 끝 -->
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                        <td onclick="removeResCode(this)" id=` + resList[d].id + `><i class="fa-solid fa-trash-can"
+                                               style="color: #797a7c;font-weight: 100;"></i></td>
+                                    </tr>
+        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>`
+                )
+
+                //      <!-- res paramter for문 시작  -->
+                //                                                 <!-- res의 id 와 resparam 의 resId 와 같으면 출력 -->
+                for (let i = 0; i < resParamList.length; i++) {
+
+                    if (resList[d].id == resParamList[i].resId) {
+                        console.log(resParamList[i].resId)
+                        console.log(resList[d].id)
+                        let id = resList[d].id
+                        console.log(document.getElementById("resParamTbody" + id))
+                        $('#' + 'resParamTbody' + id).append(`
+                         <tr id=` + resParamList[i].id + `>
+                            <td>` + resParamList[i].key.replace(/\"/gi, "") + `</td>
+                            <td>
+                                <select class="form-select"
+                                        aria-label="Default select example">
+                                    <option value="1" selected>` + resParamList[i].type.replace(/\"/gi, "") + `</option>
+                                </select>
+                            </td>
+                            <td>
+                                
+</td>
+  <td onclick="removeResCodeParam(this)"><i class="fa-solid fa-trash-can"
+                                               style="color: #797a7c;font-weight: 100;"></i></td>
+                        </tr>
+
+                `)
+                    }
+                }
+            }
+
+
+        }, error: (e) => {
+            console.log("출력실패", e)
+        }
+
+
+    })
+}
+
+// 응답파라미터 삭제
+function removeResCodeParam(value) {
+    console.log("removeResCode")
+    console.log(value)
+    console.log(value.closest(".detailModal_ResouceId").id)
+    let apiDetailsId = value.closest(".detailModal_ResouceId").id
+
+    console.log(value.parentNode.parentNode.parentNode.parentNode.parentNode)
+
+    let id = value.parentNode.id
+
+
+    Swal.fire({
+        showCancelButton: true,
+        cancelButtonText: "취소",
+        confirmButtonText: "삭제",
+        icon: 'warning',
+        text: "응답파라미터를 삭제하시겠습니까?"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Swal.fire({
+                title: '삭제 성공',
+                icon: 'success'
+            }).then(() => {
+                resParamDelete(id, apiDetailsId)
+                setTimeout(() => detailModal(apiDetailsId), 80);
+            })
+        }
+    });
+}
+
+// 응답 삭제
+function removeResCode(value) {
+    console.log(value.id)
+    console.log(value.parentNode.id)
+    let id = value.id
+    let apiDetailsId = value.parentNode.id
+    Swal.fire({
+        showCancelButton: true,
+        cancelButtonText: "취소",
+        confirmButtonText: "삭제",
+        icon: 'warning',
+        text: "응답데이터를 삭제하시겠습니까?"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Swal.fire({
+                title: '삭제 성공',
+                icon: 'success'
+            }).then(() => {
+                resDelete(id)
+                setTimeout(() => detailModal(apiDetailsId), 80);
+            })
+        }
+    });
+}
+
+function resParamDelete(id, apiDetailsId) {
+    let data = {
+        "id": id
+    }
+    $.ajax({
+        url: "/api/remove/resParam",
+        data: data,
+        method: "get",
+
+        success: (message) => {
+        }, error: (e) => {
+            console.log("출력실패", e)
+        }
+    })
+
+
+}
+
+function resDelete(id) {
+    let data = {
+        "id": id
+    }
+    $.ajax({
+        url: "/api/remove/resCode",
+        data: data,
+        method: "get",
+
+        success: (message) => {
+        }, error: (e) => {
+            console.log("출력실패", e)
+        }
+    })
+
+}
+
 
 // 전송방법 selectBox
 function transferMethod_select() {
@@ -247,3 +477,5 @@ function insertPath(e) {
     }
 
 }
+
+

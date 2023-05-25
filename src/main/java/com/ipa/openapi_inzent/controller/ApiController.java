@@ -135,6 +135,7 @@ public class ApiController {
         model.addAttribute("apiDetailsDTOList", apiDetailsDTOList);
         model.addAttribute("tagList", tagList);
 
+
         return "/apis/details";
     }
 
@@ -288,7 +289,7 @@ public class ApiController {
                 apiDetailsDTO.setUrl(paramMap.get("url"));
                 apiDetailsDTO.setUri(paramMap.get("path"));
                 apiDetailsDTO.setMethod(array[i].toUpperCase());
-                apiDetailsDTO.setResourceId(resourceId); //여기가 오류
+                apiDetailsDTO.setResourceId(resourceId);
                 apiDetailsDTO.setApisId(apiId);
                 System.out.println("apiDetailsDTO = " + apiDetailsDTO);
 
@@ -328,7 +329,6 @@ public class ApiController {
                     System.out.println("parma size == 0");
                 }
 
-
                 System.out.println("//////////////////resCode/////////////////////");
                 System.out.println(obj.get("resCode"));
                 JsonArray resParamArr = (JsonArray) obj.get("resCode");
@@ -345,12 +345,14 @@ public class ApiController {
 
                 System.out.println("++++++++++++++++++++++++++++++");
 
+
 //                2. 분리 후 FOR문을 통해  DB에 넣는다.
 //                2-1. response 에 넣기 위해서는 apiDetails id 필요
                 ResponseDTO responseDTO = new ResponseDTO();
-                responseDTO.setApiDetailsId(uriId);
+                responseDTO.setApiDetailsId(apiDetailsId);
                 responseDTO.setRespCode(String.valueOf(resParam.get("code")));
                 responseDTO.setRespMsg(String.valueOf(resParam.get("explanation")));
+                responseDTO.setType(String.valueOf(resParam.get("type")));
                 System.out.println("responseDTO = " + responseDTO);
                 int responsId = apiDetailsService.insertResponse(responseDTO);
 //                2-2. 키와 VALUE 값을 콤마를 기준으로 분리한다.
@@ -515,4 +517,67 @@ public class ApiController {
         return "/apis/trash";
     }
 
+    @GetMapping("/resCode/selectOne")
+    @ResponseBody
+    public JsonObject selectRescode(int id) {
+        JsonObject object = new JsonObject();
+        JsonArray resArr = new JsonArray();
+        JsonArray resParamArr = new JsonArray();
+
+        List<ResponseDTO> responseList = apiDetailsService.selectResponseList(id); // details 아이디
+        System.out.println("responseList = " + responseList);
+
+
+        if (responseList.size() > 0) {
+            System.out.println("응답코드 존재");
+
+
+            for (ResponseDTO res : responseList) {
+                JsonObject response = new JsonObject();
+                System.out.println("res.getId() = " + res.getId());
+                response.addProperty("id", res.getId());
+                response.addProperty("apiDetailsId", res.getApiDetailsId());
+                response.addProperty("respCode", res.getRespCode());
+                response.addProperty("respMsg", res.getRespMsg());
+                response.addProperty("type", res.getType());
+                resArr.add(response);
+
+                int resId = res.getId(); // responseID
+                List<ResParamDTO> resParamList = apiDetailsService.selectResParamList(resId); // response id
+                for (ResParamDTO param : resParamList) {
+                    JsonObject resParam = new JsonObject();
+                    resParam.addProperty("id", param.getId());
+                    resParam.addProperty("resId", param.getResId());
+                    resParam.addProperty("key", param.getKey());
+                    resParam.addProperty("value", param.getValue());
+                    resParam.addProperty("type", param.getType());
+                    resParam.addProperty("sample", param.getSample());
+                    resParamArr.add(resParam);
+                }
+            }
+        }
+
+        object.addProperty("responseList", resArr.toString());
+        object.addProperty("resParamList", resParamArr.toString());
+        System.out.println("object = " + object);
+        return object;
+    }
+
+
+    @GetMapping("/remove/resCode")
+    @ResponseBody
+    public void removeResCode(int id) {
+        System.out.println("ApiController.removeResCode");
+        System.out.println("id   " + id);
+        apiDetailsService.removeResCode(id);
+    }
+
+    @GetMapping("/remove/resParam")
+    @ResponseBody
+    public void removeResParam(int id) {
+        System.out.println("ApiController.removeResParam");
+        System.out.println("id   " + id);
+        apiDetailsService.removeResParam(id);
+    }
 }
+

@@ -54,4 +54,14 @@ public interface ApiDetailsDao {
     void insertResponse(ResponseDTO responseDTO) throws DataAccessException;
 
     void insertResParam(ResParamDTO resParamDTO) throws DataAccessException;
+
+    // details 아이디로 해당 응답 코드 출력
+    List<ResponseDTO> selectResponseList(int id) throws DataAccessException;
+
+    // 응답코드 아이디로 해당하는 파라미터들 출력
+    List<ResParamDTO> selectResParamList(int id) throws DataAccessException;
+
+    void removeResCode(int id) throws DataAccessException;
+
+    void removeResParam(int id) throws DataAccessException;
 }

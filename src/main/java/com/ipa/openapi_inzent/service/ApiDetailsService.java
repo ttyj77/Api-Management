@@ -115,4 +115,20 @@ public class ApiDetailsService {
     public void insertResParam(ResParamDTO resParamDTO) {
         apiDetailsDao.insertResParam(resParamDTO);
     }
+
+    public List<ResponseDTO> selectResponseList(int id) {
+        return apiDetailsDao.selectResponseList(id);
+    }
+
+    public List<ResParamDTO> selectResParamList(int id) {
+        return apiDetailsDao.selectResParamList(id);
+    }
+
+    public void removeResCode(int id) {
+        apiDetailsDao.removeResCode(id);
+    }
+
+    public void removeResParam(int id) {
+        apiDetailsDao.removeResParam(id);
+    }
 }

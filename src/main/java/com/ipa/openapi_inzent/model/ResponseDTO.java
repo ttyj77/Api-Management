@@ -9,5 +9,7 @@ public class ResponseDTO {
     private String respCode;
     private String respMsg;
 
+    private String type;
+
 
 }
