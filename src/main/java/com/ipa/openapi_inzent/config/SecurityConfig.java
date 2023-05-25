@@ -1,8 +1,8 @@
 package com.ipa.openapi_inzent.config;
 
+import com.ipa.openapi_inzent.config.auth.UserCustomDetailsService;
 import com.ipa.openapi_inzent.handler.UserAuthFailHandler;
 import com.ipa.openapi_inzent.handler.UserAuthSuccessHandler;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -12,7 +12,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -27,8 +26,12 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Autowired
-//    private UserDetailsService userDetailsService
+    private UserCustomDetailsService userDetailsService;
+
+    public SecurityConfig(UserCustomDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfiguration) throws Exception {
         return authConfiguration.getAuthenticationManager();
@@ -39,18 +42,20 @@ public class SecurityConfig {
         return new UserAuthSuccessHandler();
     }
 
+
     @Bean
     public AuthenticationFailureHandler userAuthFailureHandler() {
         return new UserAuthFailHandler();
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    public static PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
         http.csrf().disable();
         http.authorizeRequests()
                 .requestMatchers(HttpMethod.GET, "/error/*", "/login.html", "/login_proc", "/user/login", "/user/register").permitAll() // 설정된 url은 인증되지 않더라도 누구든 접근 가능
@@ -70,6 +75,14 @@ public class SecurityConfig {
                 .logoutUrl("/user/logout") // 로그아웃시 맵핑되는 url
                 .logoutSuccessUrl("/") // 로그아웃 성공시 리다이렉트 주소
                 .invalidateHttpSession(true); // 세션 clear
+
+        http.rememberMe() // rememberMe 기능 작동함
+                .key("sampleKey") // 필수값
+                .rememberMeParameter("remember-me") // default: remember-me, checkbox 등의 이름과 맞춰야함
+                .tokenValiditySeconds(36000) // 쿠키의 만료시간 설정(초), default: 14일
+                .alwaysRemember(false) // 사용자가 체크박스를 활성화하지 않아도 항상 실행, default: false
+                .userDetailsService(userDetailsService); // 기능을 사용할 때 사용자 정보가 필요함. 반드시 이 설정 필요함.
+
         return http.build();
     }
 

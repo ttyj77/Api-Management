@@ -159,9 +159,13 @@
                         </button>
 <!--                        <p th:if="${LoginFailMessage!=null}" th:text="|Error : ${LoginFailMessage}|"-->
 <!--                           style="color: #E23137; font-size: small"></p>-->
+                        <div class="d-flex mt-2">
+                        <input type="checkbox" class="form-check-input" name="remember-me">
+                            &nbsp;&nbsp;로그인 유지
+                        </div>
                         <p th:if="${error != null}" th:text="|${exception}|"
                            style="color: #E23137; font-size: small"></p>
-                        <hr style="margin: 2rem 0;"/>
+                        <hr style="margin: 1rem 0;"/>
                         <p class="help-text">
                             <span style="font-size: 12px; margin-right: 40px;">
                                 비밀번호를 잊어버리셨나요?
