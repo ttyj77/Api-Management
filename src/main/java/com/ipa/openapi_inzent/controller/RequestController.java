@@ -38,7 +38,7 @@ public class RequestController {
 
     @GetMapping("/selectOne/{id}")
     @ResponseBody
-    public JsonObject selectOne(@PathVariable int id){
+    public JsonObject selectOne(@PathVariable int id) {
         JsonObject object = new JsonObject();
         RequestDTO requestDTO = requestService.selectOne(id);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -67,6 +67,7 @@ public class RequestController {
         requestService.delete(id);
         return "redirect:/requestPage";
     }
+
     @GetMapping("/refuse/{id}")
     public String refuse(@PathVariable int id, HttpSession session) {
         UserDTO logIn = (UserDTO) session.getAttribute("logIn");
@@ -105,7 +106,7 @@ public class RequestController {
         requestDTO.setProcUsername(logIn.getUsername());
 
         // 계정 활성화
-        UserDTO userDTO = userService.selectOne(requestDTO.getUserId());
+        UserDTO userDTO = userService.userOne(requestDTO.getUserId());
         userDTO.setActivate(true);
         userDTO.setApprove(true);
         userService.update(userDTO);

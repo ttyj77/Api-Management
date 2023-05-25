@@ -48,7 +48,7 @@ function removeApi(apiOne) {
         cancelButtonText: "취소",
         confirmButtonText: "삭제",
         icon: 'warning',
-        text: "\'"+name+"업권\' API 그룹을 삭제하시겠습니까?"
+        text: "\'" + name + "업권\' API 그룹을 삭제하시겠습니까?"
     }).then((result) => {
         if (result.isConfirmed) {
             Swal.fire({
@@ -77,7 +77,8 @@ function updateApi(apiOne) {
     let explanation = document.getElementById('explanationApi');
     let buttonApi = document.getElementsByClassName("btn btn-dark btn-sm api")
 
-    let apiId = apiOne.getAttribute("apiid");
+    let apiId = apiOne.getAttribute("apiId");
+    console.log(apiId)
     let data = {
         "apiId": apiId,
     };
@@ -93,6 +94,7 @@ function updateApi(apiOne) {
             explanation.textContent = message.apiExplanation;
             buttonApi.id = message.apiId;
             console.log("message !!! " + message)
+
             let selectedRoleList = JSON.parse(message.selectedRoleList);
             console.log(selectedRoleList)
             let target2 = document.getElementById("target2")
@@ -241,7 +243,9 @@ function drawRole(value) {
 
 // 기존 Apis 역할 모달 리스트  기존 Apis 는 기존의 역할을 가지고 있어야 된다.
 function apisModalRoleList() {
+    console.log("apiModalRoleList")
     let api = document.getElementsByClassName("btn btn-dark btn-sm api")
+    console.log(api)
     console.log(api.id)
 
     let data = {

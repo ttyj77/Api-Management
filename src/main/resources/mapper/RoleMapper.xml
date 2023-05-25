@@ -10,6 +10,7 @@
     <select id="selectAll" resultType="com.ipa.openapi_inzent.model.RoleDTO">
         SELECT *
         FROM public.role
+        order by id asc;
     </select>
     <select id="selectOne" parameterType="int" resultType="com.ipa.openapi_inzent.model.RoleDTO">
         SELECT *
@@ -23,4 +24,5 @@
         ON public.role.id = public."apisRole"."roleId"
         WHERE public."apisRole"."apisId" = #{id}
     </select>
+
 </mapper>

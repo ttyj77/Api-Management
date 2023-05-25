@@ -35,7 +35,7 @@ public class UserService {
         return userDao.findByNickname(nickname);
     }
 
-    public UserDTO selectOne(int id) {
+    public List<UserDTO> selectOne(int id) {
         return userDao.selectOne(id);
     }
 
@@ -55,6 +55,10 @@ public class UserService {
         userDao.insertRole(userRoleDTO);
     }
 
+    public void deleteRole(int userId) {
+        userDao.deleteRole(userId);
+    }
+
     public List<UserDTO> userList() {
         return userDao.userList();
     }
@@ -65,5 +69,17 @@ public class UserService {
 
     public List<UserRoleDTO> userRoles(int id) {
         return userDao.userRoles(id);
+    }
+
+    public List<UserRoleDTO> roleName(int id) {
+        return userDao.roleName(id);
+    }
+
+    public List<UserDTO> accountListSearch(String keyword) {
+        return userDao.accountListSearch(keyword);
+    }
+
+    public List<UserDTO> choiceActivate(boolean b) {
+        return userDao.choiceActivate(b);
     }
 }

@@ -18,6 +18,10 @@
         .tdHead {
             background-color: #f5f5f5;
         }
+
+        input:disabled {
+            background-color: white;
+        }
     </style>
 
     <title>계정 목록</title>
@@ -44,6 +48,7 @@
                 integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
                 crossorigin="anonymous"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="/js/role.js"></script>
         <script>
             // 스페이스바 금지
             function checkSpacebar() {
@@ -67,7 +72,6 @@
                 }
             }
 
-
             function removeAlert(user) {
                 let id = user.getAttribute("id");
                 let name = user.getAttribute("nickname");
@@ -89,49 +93,9 @@
                 });
             }
 
-            function checkRole() {
-                let admin = document.getElementById('admin');
-                let normal = document.getElementById('normal');
-                let api = document.getElementById('api');
-                let md = document.getElementById('md');
 
-                let adminBadge = $(document.createElement("span")).addClass("badge badge-secondary admin").attr('style', "margin-right:2px").text(admin.value);
-                let normalBadge = $(document.createElement("span")).addClass("badge badge-secondary normal").attr('style', "margin-right:2px").text(normal.value);
-                let apiBadge = $(document.createElement("span")).addClass("badge badge-secondary api").attr('style', "margin-right:2px").text(api.value);
-                let mdBadge = $(document.createElement("span")).addClass("badge badge-secondary md").attr('style', "margin-right:2px").text(md.value);
-
-                let radimin = document.querySelector('.admin');
-                let rnormal = document.querySelector('.normal');
-                let rapi = document.querySelector('.api');
-                let rmd = document.querySelector('.md');
-
-                if (admin.checked && radimin == null) {
-                    $('#target').append(adminBadge);
-                } else if (radimin != null && !admin.checked) {
-                    $('.admin').remove();
-                }
-
-                if (normal.checked && rnormal == null) {
-                    $('#target').append(normalBadge);
-                } else if (rnormal != null && !normal.checked) {
-                    $('.normal').remove();
-                }
-
-                if (api.checked && rapi == null) {
-                    $('#target').append(apiBadge);
-                } else if (rapi != null && !api.checked) {
-                    $('.api').remove();
-                }
-
-                if (md.checked && rmd == null) {
-                    $('#target').append(mdBadge);
-                } else if (rmd != null && !md.checked) {
-                    $('.md').remove();
-                }
-            }
-
-            //     수정버튼 클릭시
-            //     1. 수정 버튼 -> 취소 / 저장 버튼으로
+            //  수정버튼 클릭시
+            //  1. 수정 버튼 -> 취소 / 저장 버튼으로
             function updateInfo() {
 
                 document.getElementById("passwordChange").disabled = false;
@@ -139,6 +103,8 @@
                 // document.getElementById("userId").style.borderColor = "#0982f0";
                 document.getElementById("name").disabled = false;
                 document.getElementById("email").disabled = false;
+                document.getElementById("updateRoleBtn").disabled = false;
+
 
                 let div = document.getElementById("btnBox")
                 div.innerHTML = ""
@@ -149,17 +115,24 @@
                 cancelBtn.setAttribute("data-bs-dismiss", "modal");
 
                 let saveBtn = document.createElement("button")
-                saveBtn.type = "button"
+                saveBtn.type = "submit"
                 saveBtn.className = "btn btn-primary"
                 saveBtn.innerText = "저장"
+                saveBtn.id = "saveUpdate"
                 saveBtn.addEventListener("click", saveAlert)
+                // $(saveBtn).attr("onclick", "saveAlert()");
+
                 div.append(saveBtn)
                 div.append(cancelBtn)
+
+
             }
 
+            // 수정 확인 SA(Sweet Alert)
             // 변경내용 저장 확인
-            function saveAlert() {
-
+            function saveAlert(e) {
+                let saveBtn = document.getElementById("saveUpdate");
+                e.preventDefault();
                 Swal.fire({
                     showCancelButton: true,
                     cancelButtonText: "취소",
@@ -171,9 +144,8 @@
                         Swal.fire({
                             title: '저장 완료',
                             icon: 'success',
-
                         }).then(() => {
-
+                            document.getElementById("updateAccount").submit();
                         })
                     }
 
@@ -200,55 +172,204 @@
 
             function makeAction() {
                 let id = document.getElementById('saveId').value;
+                console.log(id);
                 $('#makeAction').attr('action', '/user/updatePwd/' + id);
             }
 
-            function userDetail(value) {
+            // 활성화 선택
+            function showActivate(value) {
+                console.log(value);
+                console.log(value.id);
+
+                let on = document.getElementById("true");
+                let off = document.getElementById("false");
+                let whole = document.getElementById("whole");
+
+                console.log(on);
+                console.log(off);
+                console.log(whole);
+
                 // 버튼 초기화
-                document.getElementById("passwordChange").disabled = true;
-                document.getElementById("name").disabled = true;
-                document.getElementById("email").disabled = true;
+                on.className = "btn btn-outline-primary mr-2";
+                off.className = "btn btn-outline-danger mr-2";
+                whole.className = "btn btn-outline-secondary mr-2";
 
-                let div = document.getElementById("btnBox")
-                div.innerHTML = ""
-                let cancelBtn = document.createElement("button")
-                cancelBtn.type = "button"
-                cancelBtn.className = "btn btn-secondary"
-                cancelBtn.innerText = "닫기"
-                cancelBtn.setAttribute("data-bs-dismiss", "modal");
+                if (value.id == "whole") {
+                    console.log("whole조건");
+                    whole.className = "btn btn-secondary mr-2";
+                } else if (value.id == "true") {
+                    console.log("on조건");
+                    on.className = "btn btn-primary mr-2";
+                } else if (value.id == "false") {
+                    console.log("off조건");
+                    off.className = "btn btn-danger mr-2";
+                }
 
+                let tbody = document.getElementById("tbody");
+                tbody.innerHTML = "";
 
-                let saveBtn = document.createElement("button")
-                saveBtn.type = "button"
-                saveBtn.className = "btn btn-dark"
-                saveBtn.innerText = "수정"
-                saveBtn.addEventListener("click", updateInfo)
-                div.append(saveBtn);
-                div.append(cancelBtn);
-
-
-                // 모달 내용
-                let id = value.getAttribute("user_id");
+                console.log("==================================");
+                let activate = value.id;
                 let data = {
-                    "id": id,
+                    "activate": activate,
                 }
                 $.ajax({
-                    url: "/user/userOne/" + id,
-                    data: data,
-                    method: "get",
+                    url: "/showActivate",
+                    data : data,
+                    type : "get",
+                    success : (message) =>{
+                        console.log(message);
+                        console.log(message.userList);
+                        let userList = JSON.parse(message.userList);
+                        console.log(userList.length);
+                        for (let i = 0; i < userList.length; i++) {
 
-                    success: (message) => {
-                        document.getElementById('userId').innerText = message.username;
-                        document.getElementById('name').value = message.nickname;
-                        document.getElementById('email').value = message.email;
-                        document.getElementById('saveId').value = id;
-                        if (message.activate) {
-                            document.getElementById('activate').innerText = '활성화';
-                        } else if (!message.activate) {
-                            document.getElementById('activate').innerText = '비활성화';
+                            //tr
+                            let tr = document.createElement("tr");
+                            $(tr).attr({"user_id":userList[i].id, "onclick": "updateApi(this)"})
+
+                            // ID td
+                            let tdUsername = document.createElement("td");
+                            tdUsername.id = "tableId";
+                            tdUsername.innerText = userList[i].username;
+                            $(tdUsername).attr({"data-bs-toggle":"modal", "data-bs-target":"#exampleModal"})
+
+                            // 이름 td
+                            let tdNickname = document.createElement("td");
+                            tdNickname.id = "tableName";
+                            tdNickname.innerText = userList[i].nickname;
+                            $(tdNickname).attr({"data-bs-toggle":"modal", "data-bs-target":"#exampleModal"})
+
+                            // 활성 비활성 td
+                            let tdAct = document.createElement("td");
+                            let onBtn = document.createElement("button");
+                            onBtn.type = "button";
+                            $(onBtn).attr({"userid": userList[i].id, "onclick": "activate(this)"});
+                            if (userList[i].activate) {
+                                onBtn.className = "btn btn-primary";
+                                onBtn.innerText = "활성화";
+                            } else if (!userList[i].activate) {
+                                onBtn.className = "btn btn-danger";
+                                onBtn.innerText = "비활성화";
+                            }
+
+                            tdAct.append(onBtn);
+
+                            // 비고 td
+                            let tdI = document.createElement("td");
+                            let iTag = document.createElement("i");
+                            iTag.className = "fa-solid fa-trash-can";
+                            iTag.style = "color: #797a7c; cursor: pointer";
+                            $(iTag).attr({"id":userList[i].id,"nickname":userList[i].nickname,"onclick":"removeAlert(this)"})
+
+                            tdI.append(iTag);
+
+                            // 합치기
+                            tr.append(tdUsername);
+                            tr.append(tdNickname);
+                            tr.append(tdAct);
+                            tr.append(tdI);
+
+                            tbody.append(tr);
+
                         }
+
+
                     }
                 })
+
+
+
+            }
+
+            function showSearch() {
+
+                let on = document.getElementById("true");
+                let off = document.getElementById("false");
+                let whole = document.getElementById("whole");
+
+                let keyword = document.getElementById("keyword").value;
+                console.log("keyword = " + keyword);
+
+                // 버튼 초기화
+                on.className = "btn btn-outline-primary mr-2";
+                off.className = "btn btn-outline-danger mr-2";
+                whole.className = "btn btn-outline-secondary mr-2";
+
+                let tbody = document.getElementById("tbody");
+                tbody.innerHTML = "";
+
+                console.log("==================================");
+                let data = {
+                    "keyword": keyword,
+                }
+                $.ajax({
+                    url: "/accountSearch",
+                    data : data,
+                    type : "get",
+                    success : (message) =>{
+                        console.log(message);
+                        console.log(message.userList);
+                        let userList = JSON.parse(message.userList);
+                        console.log(userList.length);
+                        for (let i = 0; i < userList.length; i++) {
+
+                            //tr
+                            let tr = document.createElement("tr");
+                            $(tr).attr({"user_id":userList[i].id, "onclick": "updateApi(this)"})
+
+                            // ID td
+                            let tdUsername = document.createElement("td");
+                            tdUsername.id = "tableId";
+                            tdUsername.innerText = userList[i].username;
+                            $(tdUsername).attr({"data-bs-toggle":"modal", "data-bs-target":"#exampleModal"})
+
+                            // 이름 td
+                            let tdNickname = document.createElement("td");
+                            tdNickname.id = "tableName";
+                            tdNickname.innerText = userList[i].nickname;
+                            $(tdNickname).attr({"data-bs-toggle":"modal", "data-bs-target":"#exampleModal"})
+
+                            // 활성 비활성 td
+                            let tdAct = document.createElement("td");
+                            let onBtn = document.createElement("button");
+                            onBtn.type = "button";
+                            $(onBtn).attr({"userid": userList[i].id, "onclick": "activate(this)"});
+                            if (userList[i].activate) {
+                                onBtn.className = "btn btn-primary";
+                                onBtn.innerText = "활성화";
+                            } else if (!userList[i].activate) {
+                                onBtn.className = "btn btn-danger";
+                                onBtn.innerText = "비활성화";
+                            }
+
+                            tdAct.append(onBtn);
+
+                            // 비고 td
+                            let tdI = document.createElement("td");
+                            let iTag = document.createElement("i");
+                            iTag.className = "fa-solid fa-trash-can";
+                            iTag.style = "color: #797a7c; cursor: pointer";
+                            $(iTag).attr({"id":userList[i].id,"nickname":userList[i].nickname,"onclick":"removeAlert(this)"})
+
+                            tdI.append(iTag);
+
+                            // 합치기
+                            tr.append(tdUsername);
+                            tr.append(tdNickname);
+                            tr.append(tdAct);
+                            tr.append(tdI);
+
+                            tbody.append(tr);
+
+                        }
+
+
+                    }
+                })
+
+
+
             }
 
         </script>
@@ -276,17 +397,32 @@
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <!-- Topbar Search -->
-                        <form action="/accountSearch" method="get" class="col input-group mt-3"
-                              style="width: 40%; align-self: end;">
-                            <input type="text" class="form-control m-0"
-                                   placeholder="검색어를 입력해주세요"
-                                   aria-label="Search" name="keyword">
-                            <div class="input-group-append">
-                                <button class="btn btn-primary" type="submit">
-                                    <i class="fas fa-search fa-sm"></i>
+                        <div class="d-flex justify-content-between">
+                            <div class="d-flex" style="padding-top: 18px; margin-left: 20px;">
+                                <button type="button" class="btn btn-outline-secondary mr-2" id="whole" onclick="showActivate(this)">
+                                    전체
+                                </button>
+                                <button type="button" class="btn btn-outline-primary mr-2" id="true" onclick="showActivate(this)">
+                                    활성화
+                                </button>
+                                <button type="button" class="btn btn-outline-danger " id="false" onclick="showActivate(this)">
+                                    비활성화
                                 </button>
                             </div>
-                        </form>
+                            <div>
+                                <div class="col input-group mt-3"
+                                      style="width: 100%; align-self: end;">
+                                    <input type="text" class="form-control m-0" id="keyword"
+                                           placeholder="검색어를 입력해주세요"
+                                           aria-label="Search" name="keyword">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-primary" type="button" onclick="showSearch()">
+                                            <i class="fas fa-search fa-sm"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-hover" id="dataTable"
@@ -299,9 +435,9 @@
                                         <th style="width: 10%">비고</th>
                                     </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody id="tbody">
                                     <tr th:each="user:${userList}" th:if="${user.approve}" th:user_id="${user.id}"
-                                        onclick="userDetail(this)">
+                                        onclick="updateApi(this)">
                                         <td id="tableId" data-bs-toggle="modal" data-bs-target="#exampleModal"
                                             th:text="${user.username}">
                                         </td>
@@ -336,176 +472,159 @@
                 </div>
                 <!-- /.container-fluid -->
 
-
                 <!--요청정보 모달 시작-->
                 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
                      aria-labelledby="exampleModalLabel"
                      aria-hidden="true">
-                    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h4 class="modal-title" id="exampleModalLabel">요청상세정보</h4>
-                            </div>
-                            <input type="hidden" id="saveId">
-                            <div class="modal-body" id="modalDark" style="overflow-x: hidden">
-                                <table class="table table-bordered align-middle"
-                                       style="width: -webkit-fill-available; font-size: 15px">
-                                    <tbody>
-                                    <tr>
-                                        <td class="col-2 tdHead">ID</td>
-                                        <td class="col-4 tdContent" id="userId"></td>
-                                        <td class="col-2 tdHead">이름</td>
-                                        <td class="col-4 tdContent"><input id="name" type="text" class="form-control-sm"
-                                                                           style="border-style: none;" disabled></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="tdHead">비밀번호</td>
-                                        <td colspan="3">
-                                            <!--                                            <button class="btn btn-dark" type="button" onclick="updatePwd()" disabled id="passwordChange">-->
-                                            <!--                                                비밀번호 변경-->
-                                            <!--                                            </button>-->
-                                            <button class="btn btn-dark" type="button" data-bs-toggle="modal"
-                                                    onclick="makeAction()"
-                                                    data-bs-target="#exampleModalCenter" disabled id="passwordChange">
-                                                비밀번호 변경
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="tdHead">이메일</td>
-                                        <td colspan="3">
-                                            <input class="form-control-sm" id="email" type="text"
-                                                   style="border-style: none;"
-                                                   disabled></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="tdHead">활성화</td>
-                                        <td colspan="3" id="activate">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="tdHead">역할</td>
-                                        <td colspan="3">
-                                            <div id="target">
+                    <form method="post" action="/user/updateAccount" id="updateAccount">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title" id="exampleModalLabel">요청상세정보</h4>
+                                </div>
+                                <input type="hidden" id="saveId" name="id">
+                                <div class="modal-body" id="modalDark" style="overflow-x: hidden">
+                                    <table class="table table-bordered align-middle"
+                                           style="width: -webkit-fill-available; font-size: 15px">
+                                        <tbody>
+                                        <tr>
+                                            <td class="col-2 tdHead">ID</td>
+                                            <td class="col-4 tdContent" id="userId" name="username"></td>
+                                            <td class="col-2 tdHead">이름</td>
+                                            <td class="col-4 tdContent"><input id="name" type="text"
+                                                                               class="form-control" name="nickname"
+                                                                               style="border-style: none;"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="tdHead">비밀번호</td>
+                                            <td colspan="3">
+                                                <!--  <button class="btn btn-dark" type="button" onclick="updatePwd()" disabled id="passwordChange">-->
+                                                <!--      비밀번호 변경   -->
+                                                <!--  </button>-->
+                                                <button class="btn btn-dark" type="button" data-bs-toggle="modal"
+                                                        onclick="makeAction()"
+                                                        data-bs-target="#exampleModalCenter" disabled
+                                                        id="passwordChange">
+                                                    비밀번호 변경
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="tdHead">이메일</td>
+                                            <td colspan="3" class="tdContent">
+                                                <input class="form-control" id="email" type="email" name="email"
+                                                       style="border-style: none;"
+                                                       disabled></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="tdHead">활성화</td>
+                                            <td colspan="3" id="activate" class="tdContent">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="tdHead">역할</td>
+                                            <td colspan="3">
+                                                <div id="target2">
+                                                    <!-- 역할 뱃지 쌓이는 곳  -->
+                                                </div>
                                                 <button type="button"
-                                                        class="btn btn-dark btn-sm"
+                                                        id="updateRoleBtn"
+                                                        class="btn btn-dark btn-sm api"
                                                         data-bs-toggle="modal"
-                                                        data-bs-target="#roleModal"><i
+                                                        onclick="apisModalRoleList(this)" disabled
+                                                ><i
                                                         class="fa-solid fa-plus"
                                                         style="color: #f7f7f8;"></i>
                                                 </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="modal-footer" id="btnBox">
-                                <!--                                <button type="button" class="btn btn-primary" onclick=" updateInfo()">수정</button>-->
-                                <!--                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>-->
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="modal-footer" id="btnBox">
+                                    <!--   <button type="button" class="btn btn-primary" onclick=" updateInfo()">수정</button>-->
+                                    <!--   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>-->
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
-
+                <!--유저정보 모달 끝-->
             </div>
             <!-- End of Content Wrapper -->
         </div>
-        <!--유저정보 모달 끝-->
-
-        <!-- Password 변경 Modal -->
-        <div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="exampleModalCenter" tabindex="-1"
-             role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-                <form method="post" id="makeAction">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLongTitle">비밀번호 변경</h5>
-                            <button type="button" class="close" data-bs-toggle="modal" data-bs-target="#exampleModal"
-                                    aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-
-                            <table class="w-100">
-                                <tbody>
-                                <tr>
-                                    <td class="tdHead col-5">새 비밀번호</td>
-                                    <td><input id="password" class="form-control" type="password"
-                                               onkeydown="checkSpacebar()" oninput="overlapCheck()" name="password">
-                                    </td>
-                                </tr>
-                                <tr>
-                                </tr>
-                                <td></td>
-                                </tr>
-                                <tr>
-                                    <td class="tdHead col-5 mt-3">새 비밀번호 확인</td>
-                                    <td><input id="doubleCheckPwd" class="form-control" type="password"
-                                               onkeydown="checkSpacebar()" oninput="overlapCheck()"></td>
-                                </tr>
-                                </tbody>
-                            </table>
-                            <p id="pwdCheck" style="display:none; color: #E23137; font-size: small">비밀번호가 같지
-                                않습니다.</p>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-secondary" data-bs-toggle="modal"
-                                    data-bs-target="#exampleModal">저장
-                            </button>
-                        </div>
+    </div>
+    <!-- Password 변경 Modal -->
+    <div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="exampleModalCenter" tabindex="-1"
+         role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg" role="document">
+            <form method="post" id="makeAction">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">비밀번호 변경</h5>
+                        <button type="button" class="close" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                                aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
-                </form>
-            </div>
+                    <div class="modal-body">
+                        <table class="w-100">
+                            <tbody>
+                            <tr>
+                                <td class="tdHead">새 비밀번호</td>
+                                <td><input id="password" class="form-control" type="password"
+                                           onkeydown="checkSpacebar()" oninput="overlapCheck()" name="password">
+                                </td>
+                            </tr>
+                            <tr>
+                            </tr>
+                            <td></td>
+                            </tr>
+                            <tr>
+                                <td class="tdHead">새 비밀번호 확인</td>
+                                <td><input id="doubleCheckPwd" class="form-control" type="password"
+                                           onkeydown="checkSpacebar()" oninput="overlapCheck()"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <p id="pwdCheck" style="display:none; color: #E23137; font-size: small">비밀번호가 같지
+                            않습니다.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">저장
+                        </button>
+                        <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
+                                data-bs-target="#exampleModal">닫기
+                        </button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
     <!-- 역할 Modal -->
-    <div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="roleModal" tabindex="-1"
-         aria-labelledby="roleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
+    <div class="modal fade" id="roleUpdateModal" tabindex="-1" aria-labelledby="roleUpdateModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="roleModalLabel">역할 추가 / 삭제</h5>
-                    <div class="" style="cursor: pointer" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                    <h5 class="modal-title" id="roleUpdateModalLabel">역할 추가 / 삭제</h5>
+                    <div class="" style="cursor: pointer" data-bs-dismiss="modal"
                     ><i class="fa-solid fa-xmark" style="color: #7f7f7f;"></i></div>
                 </div>
-                <div class="modal-body">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="운영자" name="normal" id="admin">
-                        <label class="form-check-label" for="admin">
-                            운영자
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="일반사용자" name="normal" id="normal">
-                        <label class="form-check-label" for="normal">
-                            일반사용자
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="API제공자" name="api" id="api">
-                        <label class="form-check-label" for="api">
-                            API제공자
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="마이데이터 사업자" name="md" id="md">
-                        <label class="form-check-label" for="md">
-                            마이데이터 사업자
-                        </label>
-                    </div>
+                <div class="modal-body" id="apiRoleModalBody">
+
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary btn-sm" onclick="checkRole()"
-                            id="roleBtn"
+                    <button type="button" class="btn btn-outline-secondary btn-sm" onclick="drawRole(this)"
                             data-bs-toggle="modal"
-                            data-bs-target="#exampleModal">닫기
+                            data-bs-target="#exampleModal"
+                            id="userRoleModal">닫기
                     </button>
                 </div>
             </div>
         </div>
     </div>
+
 </div>
 </body>
 

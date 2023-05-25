@@ -45,7 +45,7 @@
         DELETE FROM public."user"
         WHERE id = #{id};
     </delete>
-    <update id="update" parameterType="com.ipa.openapi_inzent.model.UserRoleDTO">
+    <update id="update" parameterType="com.ipa.openapi_inzent.model.UserDTO">
         UPDATE public.user SET
         password = #{password},
         nickname = #{nickname},
@@ -56,11 +56,15 @@
         WHERE id = #{id}
     </update>
 
-    <!-- ROLE -->
+    <!-- userROLE -->
     <insert id="insertRole" parameterType="com.ipa.openapi_inzent.model.UserRoleDTO">
         INSERT INTO public."userRole"("userId", "roleId")
         VALUES (#{userId}, #{roleId})
     </insert>
+    <delete id="deleteRole" parameterType="int">
+        delete from public."userRole"
+        where "userId" = #{userId};
+    </delete>
     <select id="selectOne" parameterType="int" resultMap="userRole">
         select * from public.user as us
         join public."userRole" as ur on ur."userId" = us.id
@@ -78,6 +82,24 @@
     <select id="userRoles" resultType="com.ipa.openapi_inzent.model.UserRoleDTO" parameterType="int">
         select * from public."userRole"
         where "userId" = #{userId}
+    </select>
+
+    <select id="roleName" resultType="com.ipa.openapi_inzent.model.UserRoleDTO" parameterType="int">
+        select * from public."userRole" as ur
+        join public.role as r on r.id = ur."roleId"
+        where ur."userId" = #{userId};
+    </select>
+
+    <!-- AccountList search  -->
+    <select id="accountListSearch" parameterType="string" resultType="com.ipa.openapi_inzent.model.UserDTO">
+        select * from public."user"
+        where nickname ILIKE CONCAT('%', #{keyword}, '%')
+        or username ILIKE CONCAT('%', #{keyword}, '%')
+        or email ILiKE CONCAT('%', #{keyword}, '%');
+    </select>
+    <select id="choiceActivate" parameterType="boolean" resultType="com.ipa.openapi_inzent.model.UserDTO">
+        select * from public.user
+        where activate = #{b};
     </select>
 </mapper>
 

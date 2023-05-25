@@ -78,13 +78,9 @@
         <script href="/js/details.js" rel="script"></script>
         <script>
             function goReturn(one) {
-                console.log(one);
                 let id = one.getAttribute('id');
                 let resource = one.getAttribute('resource');
                 let detail = one.getAttribute('detail');
-                console.log(resource);
-                console.log(detail);
-                console.log(id);
                 if (resource == null) {
                     Swal.fire({
                         showCancelButton: true,
@@ -178,13 +174,13 @@
 </head>
 
 <body>
-<div layout:fragment="content">
+<div layout:fragment="content" style="padding: 0 20px;">
     <!-- Page Wrapper -->
-    <div id="wrapper" class="flex-wrap">
+    <div id="wrapper" class="flex-wrap" >
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
             <div id="content">
-                <div class="container-fluid">
+                <div class="container-fluid" style="padding: 0">
                     <!-- Page Heading -->
                     <div class="d-flex justify-content-between mb-3">
                         <h1 class="h3 mb-2 text-gray-800">API 휴지통</h1>
