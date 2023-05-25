@@ -296,3 +296,7 @@ body {
     }
 
 }
+
+.form-check-input:checked{
+    background-color: #bb2d3b !important;
+}
