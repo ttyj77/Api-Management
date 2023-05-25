@@ -17,7 +17,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -175,7 +174,7 @@ public class UserController {
         System.out.println("nickname = " + nickname);
         System.out.println("email = " + email);
 
-        for (String role : roleId){
+        for (String role : roleId) {
             System.out.println("role = " + role);
         }
         // 유저 정보 갱신
@@ -194,7 +193,7 @@ public class UserController {
             userService.insertRole(userRoleDTO);
         }
 
-        System.out.println(id+"의 갱신한 역할들"+ userService.userRoles(id));
+        System.out.println(id + "의 갱신한 역할들" + userService.userRoles(id));
 
         return "redirect:/accountList";
     }

@@ -118,8 +118,9 @@
                 saveBtn.type = "submit"
                 saveBtn.className = "btn btn-primary"
                 saveBtn.innerText = "저장"
-                // saveBtn.addEventListener("click", saveAlert)
-                $(saveBtn).attr("onclick", "saveAlert()");
+                saveBtn.id = "saveUpdate"
+                saveBtn.addEventListener("click", saveAlert)
+                // $(saveBtn).attr("onclick", "saveAlert()");
 
                 div.append(saveBtn)
                 div.append(cancelBtn)
@@ -129,7 +130,9 @@
 
             // 수정 확인 SA(Sweet Alert)
             // 변경내용 저장 확인
-            function saveAlert() {
+            function saveAlert(e) {
+                let saveBtn = document.getElementById("saveUpdate");
+                e.preventDefault();
                 Swal.fire({
                     showCancelButton: true,
                     cancelButtonText: "취소",
@@ -142,7 +145,7 @@
                             title: '저장 완료',
                             icon: 'success',
                         }).then(() => {
-                            saveBtn.onclick;
+                            document.getElementById("updateAccount").submit();
                         })
                     }
 
@@ -173,6 +176,202 @@
                 $('#makeAction').attr('action', '/user/updatePwd/' + id);
             }
 
+            // 활성화 선택
+            function showActivate(value) {
+                console.log(value);
+                console.log(value.id);
+
+                let on = document.getElementById("true");
+                let off = document.getElementById("false");
+                let whole = document.getElementById("whole");
+
+                console.log(on);
+                console.log(off);
+                console.log(whole);
+
+                // 버튼 초기화
+                on.className = "btn btn-outline-primary mr-2";
+                off.className = "btn btn-outline-danger mr-2";
+                whole.className = "btn btn-outline-secondary mr-2";
+
+                if (value.id == "whole") {
+                    console.log("whole조건");
+                    whole.className = "btn btn-secondary mr-2";
+                } else if (value.id == "true") {
+                    console.log("on조건");
+                    on.className = "btn btn-primary mr-2";
+                } else if (value.id == "false") {
+                    console.log("off조건");
+                    off.className = "btn btn-danger mr-2";
+                }
+
+                let tbody = document.getElementById("tbody");
+                tbody.innerHTML = "";
+
+                console.log("==================================");
+                let activate = value.id;
+                let data = {
+                    "activate": activate,
+                }
+                $.ajax({
+                    url: "/showActivate",
+                    data : data,
+                    type : "get",
+                    success : (message) =>{
+                        console.log(message);
+                        console.log(message.userList);
+                        let userList = JSON.parse(message.userList);
+                        console.log(userList.length);
+                        for (let i = 0; i < userList.length; i++) {
+
+                            //tr
+                            let tr = document.createElement("tr");
+                            $(tr).attr({"user_id":userList[i].id, "onclick": "updateApi(this)"})
+
+                            // ID td
+                            let tdUsername = document.createElement("td");
+                            tdUsername.id = "tableId";
+                            tdUsername.innerText = userList[i].username;
+                            $(tdUsername).attr({"data-bs-toggle":"modal", "data-bs-target":"#exampleModal"})
+
+                            // 이름 td
+                            let tdNickname = document.createElement("td");
+                            tdNickname.id = "tableName";
+                            tdNickname.innerText = userList[i].nickname;
+                            $(tdNickname).attr({"data-bs-toggle":"modal", "data-bs-target":"#exampleModal"})
+
+                            // 활성 비활성 td
+                            let tdAct = document.createElement("td");
+                            let onBtn = document.createElement("button");
+                            onBtn.type = "button";
+                            $(onBtn).attr({"userid": userList[i].id, "onclick": "activate(this)"});
+                            if (userList[i].activate) {
+                                onBtn.className = "btn btn-primary";
+                                onBtn.innerText = "활성화";
+                            } else if (!userList[i].activate) {
+                                onBtn.className = "btn btn-danger";
+                                onBtn.innerText = "비활성화";
+                            }
+
+                            tdAct.append(onBtn);
+
+                            // 비고 td
+                            let tdI = document.createElement("td");
+                            let iTag = document.createElement("i");
+                            iTag.className = "fa-solid fa-trash-can";
+                            iTag.style = "color: #797a7c; cursor: pointer";
+                            $(iTag).attr({"id":userList[i].id,"nickname":userList[i].nickname,"onclick":"removeAlert(this)"})
+
+                            tdI.append(iTag);
+
+                            // 합치기
+                            tr.append(tdUsername);
+                            tr.append(tdNickname);
+                            tr.append(tdAct);
+                            tr.append(tdI);
+
+                            tbody.append(tr);
+
+                        }
+
+
+                    }
+                })
+
+
+
+            }
+
+            function showSearch() {
+
+                let on = document.getElementById("true");
+                let off = document.getElementById("false");
+                let whole = document.getElementById("whole");
+
+                let keyword = document.getElementById("keyword").value;
+                console.log("keyword = " + keyword);
+
+                // 버튼 초기화
+                on.className = "btn btn-outline-primary mr-2";
+                off.className = "btn btn-outline-danger mr-2";
+                whole.className = "btn btn-outline-secondary mr-2";
+
+                let tbody = document.getElementById("tbody");
+                tbody.innerHTML = "";
+
+                console.log("==================================");
+                let data = {
+                    "keyword": keyword,
+                }
+                $.ajax({
+                    url: "/accountSearch",
+                    data : data,
+                    type : "get",
+                    success : (message) =>{
+                        console.log(message);
+                        console.log(message.userList);
+                        let userList = JSON.parse(message.userList);
+                        console.log(userList.length);
+                        for (let i = 0; i < userList.length; i++) {
+
+                            //tr
+                            let tr = document.createElement("tr");
+                            $(tr).attr({"user_id":userList[i].id, "onclick": "updateApi(this)"})
+
+                            // ID td
+                            let tdUsername = document.createElement("td");
+                            tdUsername.id = "tableId";
+                            tdUsername.innerText = userList[i].username;
+                            $(tdUsername).attr({"data-bs-toggle":"modal", "data-bs-target":"#exampleModal"})
+
+                            // 이름 td
+                            let tdNickname = document.createElement("td");
+                            tdNickname.id = "tableName";
+                            tdNickname.innerText = userList[i].nickname;
+                            $(tdNickname).attr({"data-bs-toggle":"modal", "data-bs-target":"#exampleModal"})
+
+                            // 활성 비활성 td
+                            let tdAct = document.createElement("td");
+                            let onBtn = document.createElement("button");
+                            onBtn.type = "button";
+                            $(onBtn).attr({"userid": userList[i].id, "onclick": "activate(this)"});
+                            if (userList[i].activate) {
+                                onBtn.className = "btn btn-primary";
+                                onBtn.innerText = "활성화";
+                            } else if (!userList[i].activate) {
+                                onBtn.className = "btn btn-danger";
+                                onBtn.innerText = "비활성화";
+                            }
+
+                            tdAct.append(onBtn);
+
+                            // 비고 td
+                            let tdI = document.createElement("td");
+                            let iTag = document.createElement("i");
+                            iTag.className = "fa-solid fa-trash-can";
+                            iTag.style = "color: #797a7c; cursor: pointer";
+                            $(iTag).attr({"id":userList[i].id,"nickname":userList[i].nickname,"onclick":"removeAlert(this)"})
+
+                            tdI.append(iTag);
+
+                            // 합치기
+                            tr.append(tdUsername);
+                            tr.append(tdNickname);
+                            tr.append(tdAct);
+                            tr.append(tdI);
+
+                            tbody.append(tr);
+
+                        }
+
+
+                    }
+                })
+
+
+
+            }
+
         </script>
     </th:block>
 
@@ -200,29 +399,28 @@
                         <!-- Topbar Search -->
                         <div class="d-flex justify-content-between">
                             <div class="d-flex" style="padding-top: 18px; margin-left: 20px;">
-                                <form action="/showActivate" method="get" class="mr-2">
-                                    <button type="submit" class="btn btn-outline-primary" onclick="showActivate()">
-                                        활성화
-                                    </button>
-                                </form>
-                                <form action="/showUnactivate" method="get" class="mr-4">
-                                    <button type="submit" class="btn btn-outline-danger " onclick="showUnactivate()">
-                                        비활성화
-                                    </button>
-                                </form>
+                                <button type="button" class="btn btn-outline-secondary mr-2" id="whole" onclick="showActivate(this)">
+                                    전체
+                                </button>
+                                <button type="button" class="btn btn-outline-primary mr-2" id="true" onclick="showActivate(this)">
+                                    활성화
+                                </button>
+                                <button type="button" class="btn btn-outline-danger " id="false" onclick="showActivate(this)">
+                                    비활성화
+                                </button>
                             </div>
                             <div>
-                                <form action="/accountSearch" method="get" class="col input-group mt-3"
+                                <div class="col input-group mt-3"
                                       style="width: 100%; align-self: end;">
-                                    <input type="text" class="form-control m-0"
+                                    <input type="text" class="form-control m-0" id="keyword"
                                            placeholder="검색어를 입력해주세요"
                                            aria-label="Search" name="keyword">
                                     <div class="input-group-append">
-                                        <button class="btn btn-primary" type="submit">
+                                        <button class="btn btn-primary" type="button" onclick="showSearch()">
                                             <i class="fas fa-search fa-sm"></i>
                                         </button>
                                     </div>
-                                </form>
+                                </div>
                             </div>
                         </div>
                         <div class="card-body">
@@ -237,7 +435,7 @@
                                         <th style="width: 10%">비고</th>
                                     </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody id="tbody">
                                     <tr th:each="user:${userList}" th:if="${user.approve}" th:user_id="${user.id}"
                                         onclick="updateApi(this)">
                                         <td id="tableId" data-bs-toggle="modal" data-bs-target="#exampleModal"
@@ -278,7 +476,7 @@
                 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
                      aria-labelledby="exampleModalLabel"
                      aria-hidden="true">
-                    <form action="/user/updateAccount" method="post">
+                    <form method="post" action="/user/updateAccount" id="updateAccount">
                         <div class="modal-dialog modal-dialog-centered" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
