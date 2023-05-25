@@ -10,6 +10,10 @@
             integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
             crossorigin="anonymous"></script>
     <link href="/css/login.css" rel="stylesheet"/>
+    <style>
+
+    </style>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <script>
@@ -114,7 +118,7 @@
                             <input type="password" id="doubleCheckPwd" placeholder="비밀번호 확인" onkeydown="checkSpacebar()"
                                    oninput="overlapCheck()" required>
                         </div>
-                        <div id="pwdCheck" style="display: none" >
+                        <div id="pwdCheck" style="display: none">
                             ❌ 비밀번호가 같지 않습니다. ❌
                         </div>
                         <button type="submit" style="margin-top: 12px">
@@ -158,10 +162,11 @@
                         <button type="submit" class="btn btn-danger mb-6">
                             로 그 인
                         </button>
-<!--                        <p th:if="${LoginFailMessage!=null}" th:text="|Error : ${LoginFailMessage}|"-->
-<!--                           style="color: #E23137; font-size: small"></p>-->
+                        <!--                        <p th:if="${LoginFailMessage!=null}" th:text="|Error : ${LoginFailMessage}|"-->
+                        <!--                           style="color: #E23137; font-size: small"></p>-->
                         <div class="d-flex mt-2">
-                        <input type="checkbox" class="form-check-input" name="remember-me">
+                            <input type="checkbox" class="form-check-input" name="remember-me"
+                                   style="border: 1.5px solid #bb2d3b">
                             &nbsp;&nbsp;로그인 유지
                         </div>
                         <p th:if="${error != null}" th:text="|${exception}|"
