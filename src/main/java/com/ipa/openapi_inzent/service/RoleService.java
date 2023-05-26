@@ -30,4 +30,8 @@ public class RoleService {
     public List<RoleDTO> selectApisRoleList(int id) {
         return roleDao.selectApisRoleList(id);
     }
+
+    public void deleteRole(int id) {
+        roleDao.deleteRole(id);
+    }
 }
