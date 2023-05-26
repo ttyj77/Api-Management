@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.sql.ClientInfoStatus;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,12 +61,14 @@ public class MydataController {
             object.addProperty("mdServiceName", list.get(i).getMdServiceName());
             object.addProperty("domainName", list.get(i).getDomainName());
 
-            JsonElement element = JsonParser.parseString(list.get(i).getCallbackUrl()).getAsJsonObject().get("url");
+            JsonElement element = JsonParser.parseString(list.get(i).getCallbackUrl()).getAsJsonObject().get("callbackURL");
 
             object.add("callbackUrl", element);
             array.add(object);
 
         }
+        System.out.println("MydataController.mdServiceTableModal");
+        System.out.println("array = " + array);
 
         JsonObject result = new JsonObject();
 
@@ -161,7 +162,7 @@ public class MydataController {
     @ResponseBody
     public void agencyTableDeleteRow(int id) {
         System.out.println("id = " + id);
-        mydataService.mdAgencyDelete(id);
+//        mydataService.mdAgencyDelete(id);
     }
 
 
@@ -198,7 +199,7 @@ public class MydataController {
         object.addProperty("mdServiceName", mdServiceDTO.getMdServiceName());
         object.addProperty("domainName", mdServiceDTO.getDomainName());
 
-        JsonElement element = JsonParser.parseString(mdServiceDTO.getCallbackUrl()).getAsJsonObject().get("url");
+        JsonElement element = JsonParser.parseString(mdServiceDTO.getCallbackUrl()).getAsJsonObject().get("callbackURL");
 
         object.add("callbackUrl", element);
 
@@ -233,8 +234,10 @@ public class MydataController {
     @GetMapping("/provider/selectOne")
     @ResponseBody
     public JsonObject mdProviderSelectAll(int id) {
+        System.out.println("id = " + id);
 //        null 처리
         MdProviderDTO mdProviderDTO = mydataService.mdProviderSelectOne(id);
+        System.out.println("mdProviderDTO = " + mdProviderDTO);
         JsonObject object = new JsonObject();
         object.addProperty("id", mdProviderDTO.getId());
         object.addProperty("reqSEQ", mdProviderDTO.getMdReqInfoDTO().getReqSEQ());

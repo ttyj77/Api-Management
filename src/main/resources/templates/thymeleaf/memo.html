@@ -5,33 +5,7 @@
     <title>Title</title>
 </head>
 <body>
-<tr th:each="user:${userList}" th:if="${user.approve}" th:user_id="${user.id}"
-    onclick="updateApi(this)">
-  <td id="tableId" data-bs-toggle="modal" data-bs-target="#exampleModal"
-      th:text="${user.username}">
-  </td>
-  <td id="tableName" data-bs-toggle="modal" data-bs-target="#exampleModal"
-      th:text="${user.nickname}">
-  </td>
-  <td>
-    <button class="btn btn-primary" th:if="${user.activate}"
-            th:userId="${user.id}"
-            onclick="activate(this);">
-      활성화
-    </button>
-    <button class="btn btn-danger" th:if="${!user.activate}"
-            th:userId="${user.id}"
-            onclick="activate(this);">
-      비활성화
-    </button>
-  </td>
-  <!--삭제 활동 시작-->
-  <td>
-    <i class="fa-solid fa-trash-can" style="color: #797a7c; cursor: pointer"
-       th:id="${user.id}" th:nickname="${user.nickname}"
-       onclick="removeAlert(this)"/>
-  </td>
-</tr>
+<button class="btn-sm btn-danger rounded-pill" onclick="deleteRow(this)">삭제</button>
 
 </body>
 </html>
