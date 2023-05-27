@@ -18,6 +18,8 @@ public class MdAgencyDTO {
     private String agencyIp;
     private String agencyPort;
 
+    // +
     private MdServiceDTO mdServiceDTO;
+    private MdTokenDTO mdTokenDTO;
 
 }

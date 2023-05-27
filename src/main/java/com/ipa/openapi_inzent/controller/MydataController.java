@@ -8,6 +8,7 @@ import com.ipa.openapi_inzent.model.MdAgencyDTO;
 import com.ipa.openapi_inzent.model.MdProviderDTO;
 import com.ipa.openapi_inzent.model.MdServiceDTO;
 import com.ipa.openapi_inzent.service.MydataService;
+import io.swagger.v3.core.util.Json;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -177,8 +179,78 @@ public class MydataController {
     }
 
     @GetMapping("/mydataToken")
-    public String mydataToken() {
+    public String mydataToken(Model model) {
+        model.addAttribute("astList", mydataService.mdAstList());
+        System.out.println("========================");
+        System.out.println(mydataService.mdAstList());
+        System.out.println("========================");
         return "/mydata/mydataToken";
+    }
+
+    // mdToken 검색
+    @GetMapping("/tokenSearch")
+    public String mydataSearch(Model model, String keyword) {
+        System.out.println("keyword = " + keyword);
+        model.addAttribute("astList", mydataService.mdTokenSearch(keyword));
+
+        return "/mydata/mydataToken";
+    }
+
+    @GetMapping("/token/modal")
+    @ResponseBody
+    public JsonObject tokenDetail(int id) {
+
+        System.out.println("MydataController.tokenDetail");
+
+        System.out.println("id = " + id);
+
+        MdAgencyDTO mdOne = mydataService.mdAstOne(id);
+        JsonObject object = new JsonObject();
+
+        System.out.println("mdOne = " + mdOne);
+
+        // mdService
+        object.addProperty("clientId", mdOne.getMdServiceDTO().getClientId());
+        object.addProperty("mdServiceName", mdOne.getMdServiceDTO().getMdServiceName());
+        object.addProperty("domainName", mdOne.getMdServiceDTO().getDomainName());
+
+        JsonElement element = JsonParser.parseString(mdOne.getMdServiceDTO().getCallbackUrl()).getAsJsonObject().get("callbackURL");
+
+        object.add("callbackUrl", element);
+
+        // mdAgency
+        object.addProperty("agencyId", mdOne.getId());
+        object.addProperty("code", mdOne.getCode());
+        object.addProperty("division", mdOne.getDivision());
+        object.addProperty("agencyName", mdOne.getName());
+        object.addProperty("industry", mdOne.getIndustry());
+
+        object.addProperty("address", mdOne.getAddress());
+        object.addProperty("domainName", mdOne.getDomainName());
+        object.addProperty("publicApiIp", mdOne.getPublicApiIp());
+        object.addProperty("authenticationMethod", mdOne.getAuthenticationMethod());
+
+        object.addProperty("TLSNum", mdOne.getTLSNum());
+        object.addProperty("agencyIp", mdOne.getAgencyIp());
+        object.addProperty("agencyPort", mdOne.getAgencyPort());
+
+        // mdToken
+        // date 시간 변환
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        String entryDate = sdf.format(mdOne.getMdTokenDTO().getCreateDate());
+        String endDate = sdf.format(mdOne.getMdTokenDTO().getEndDate());
+
+
+        object.addProperty("tokenId",mdOne.getMdTokenDTO().getTokenId());
+        object.addProperty("consumerNum",mdOne.getMdTokenDTO().getConsumerNum());
+        object.addProperty("createDate", entryDate);
+        object.addProperty("endDate", endDate);
+        object.addProperty("accessToken",mdOne.getMdTokenDTO().getAccessToken());
+
+
+        System.out.println("object = " + object);
+
+        return object;
     }
 
     @GetMapping("/serviceTable")

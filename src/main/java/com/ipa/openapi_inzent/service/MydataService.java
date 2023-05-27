@@ -4,6 +4,7 @@ import com.ipa.openapi_inzent.dao.MydataDao;
 import com.ipa.openapi_inzent.model.MdAgencyDTO;
 import com.ipa.openapi_inzent.model.MdProviderDTO;
 import com.ipa.openapi_inzent.model.MdServiceDTO;
+import com.ipa.openapi_inzent.model.MdTokenDTO;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
@@ -88,6 +89,18 @@ public class MydataService {
 
     public MdProviderDTO mdProviderSelectOne(int id) {
         return mydataDao.mdProviderSelectOne(id);
+    }
+
+    public List<MdTokenDTO> mdAstList() {
+        return mydataDao.mdAstList();
+    }
+
+    public MdAgencyDTO mdAstOne(int id) {
+        return mydataDao.mdAstOne(id);
+    }
+
+    public List<MdTokenDTO> mdTokenSearch(String keyword) {
+        return mydataDao.mdTokenSearch(keyword);
     }
 }
 

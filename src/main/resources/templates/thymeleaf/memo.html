@@ -5,7 +5,115 @@
     <title>Title</title>
 </head>
 <body>
-<button class="btn-sm btn-danger rounded-pill" onclick="deleteRow(this)">삭제</button>
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">요청상세정보</h5>
+
+            </div>
+
+            <div class="modal-body" style="overflow-x: hidden">
+                <div class="w-100 p-2">
+                    <div class="border mb-3">
+                        <div class="border-bottom">
+                            <h5 class="text-muted p-3 m-0">기본 정보</h5>
+                        </div>
+                        <div class="p-4">
+                            <table class="table table-borderless">
+                                <tbody>
+                                <tr>
+                                    <td class="tdHead">
+                                        클라이언트 ID
+                                    </td>
+                                    <td class="tdContent" id="clientId">
+
+                                    </td>
+                                </tr>
+                                <tr style="border-top: 1px solid #dee2e6">
+                                    <td class="tdHead">
+                                        사용자 정보(CI)
+                                    </td>
+                                    <td class="tdContent" id="userInfo">
+
+                                    </td>
+                                </tr>
+                                <tr style="border-top: 1px solid #dee2e6">
+                                    <td class="tdHead">
+                                        서비스명
+                                    </td>
+                                    <td class="tdContent" id="mdServiceName">
+
+                                    </td>
+                                </tr>
+
+                                <tr style="border-top: 1px solid #dee2e6">
+                                    <td class="tdHead">
+                                        기관명
+                                    </td>
+                                    <td class="tdContent" id="agencyName">
+
+                                    </td>
+                                </tr>
+
+                                <tr style="border-top: 1px solid #dee2e6">
+                                    <td class="tdHead">
+                                        기관코드
+                                    </td>
+                                    <td class="tdContent" id="agencyCode">
+
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="border mb-3">
+                        <div class="border-bottom">
+                            <h5 class="text-muted p-3 m-0">Access Token</h5>
+                        </div>
+                        <div class="p-4">
+                            <table class="table table-borderless">
+                                <tbody>
+                                <tr>
+                                    <td class="tdHead">
+                                        발급한 Access Token
+                                    </td>
+                                    <td class="tdContent" id="accessToken"
+                                        style="overflow:auto; word-break: break-all">
+
+                                    </td>
+                                </tr>
+                                <tr style="border-top: 1px solid #dee2e6">
+                                    <td class="tdHead">
+                                        발급시간
+                                    </td>
+                                    <td class="tdContent" id="entryTime">
+
+                                    </td>
+                                </tr>
+                                <tr style="border-top: 1px solid #dee2e6">
+                                    <td class="tdHead">
+                                        Access Token 폐기일
+                                    </td>
+                                    <td class="tdContent" id="endTime">
+
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>

@@ -3,6 +3,7 @@ package com.ipa.openapi_inzent.dao;
 import com.ipa.openapi_inzent.model.MdAgencyDTO;
 import com.ipa.openapi_inzent.model.MdProviderDTO;
 import com.ipa.openapi_inzent.model.MdServiceDTO;
+import com.ipa.openapi_inzent.model.MdTokenDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.dao.DataAccessException;
 
@@ -33,4 +34,10 @@ public interface MydataDao {
     List<MdProviderDTO> mdProviderSelectAll() throws DataAccessException;
 
     MdProviderDTO mdProviderSelectOne(int id) throws DataAccessException;
+
+    List<MdTokenDTO> mdAstList() throws DataAccessException;
+
+    MdAgencyDTO mdAstOne(int id) throws DataAccessException;
+
+    List<MdTokenDTO> mdTokenSearch(String keyword) throws DataAccessException;
 }
