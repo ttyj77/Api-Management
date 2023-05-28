@@ -200,7 +200,7 @@
         from public."mdToken" as mt inner join public."mdService" as ms
         on ms.id = mt."mdServiceId" inner join public."mdAgency" as ma on ma.id = ms."agencyId"
         where mt."consumerNum" ILIKE CONCAT('%', #{keyword},'%')
-<!--        OR  ms."mdServiceName" ILIKE CONCAT('%', #{keyword},'%')-->
+        OR  ms.name ILIKE CONCAT('%', #{keyword},'%')
         OR ma.code ILIKE CONCAT('%', #{keyword},'%')
         OR ma.name ILIKE CONCAT('%', #{keyword},'%') ;
     </select>
