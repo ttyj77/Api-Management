@@ -12,14 +12,12 @@
 </head>
 
 <body>
-
+<!--style="overflow-y: hidden"-->
 <div>
     <th:block th:replace="~{fragment/headSideBar :: headerFragment}"></th:block>
-    <div class="d-flex">
-        <div style="margin-right: 22px">
-            <th:block th:replace="~{fragment/headSideBar :: sideBarFragment}"></th:block>
-        </div>
-        <div class="mt-4" style="width: 88%;">
+    <div id="body-pd" style="display: flex">
+        <th:block th:replace="~{fragment/headSideBar :: sideBarFragment}"></th:block>
+        <div class="mt-5 col-10" >
             <th:block layout:fragment="content"></th:block>
         </div>
     </div>

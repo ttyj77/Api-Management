@@ -475,6 +475,8 @@ public class ApiController {
 
     @GetMapping("/resourceDelete/{id}")
     public String resourceDetele(@PathVariable int id) {
+        System.out.println("ApiController.resourceDetele");
+        System.out.println("id = " + id);
         apiDetailsService.resourceDelete(id);
         return "redirect:/api/trash";
     }

@@ -28,7 +28,8 @@
     padding: 0;
     box-sizing: border-box;
 }
-.img-control ,.last-form{
+
+.img-control, .last-form {
     margin-bottom: 12px;
 }
 
@@ -65,12 +66,13 @@ body {
     width: 100%;
     max-width: 28rem;
 }
-.ani{
+
+.ani {
     /*width: 80%;*/
     /*height: 80%;*/
 }
 
-.form .ani{
+.form .ani {
     padding: 1rem;
     background-color: var(--white);
     border-radius: 1.5rem;
@@ -221,7 +223,7 @@ body {
     right: 50%;
 }
 
-.help-text{
+.help-text {
     display: flex;
     justify-content: space-between;
 }
@@ -297,6 +299,17 @@ body {
 
 }
 
-.form-check-input:checked{
+.form-check-input:checked {
     background-color: #bb2d3b !important;
+    border: 1px solid #bb2d3b;
+    -webkit-box-shadow: 0px 0px 5px rgb(187, 45, 59);
+    -moz-box-shadow: 0px 0px 5px rgb(187, 45, 59);
+    box-shadow: 0px 0px 5px rgb(187, 45, 59);
+
 }
+.form-check-input:focus {
+    border-color: #fefc86;
+    outline: 0;
+    box-shadow: 0 0 0 0.15rem rgba(187, 45, 59, 0.33);
+}
+

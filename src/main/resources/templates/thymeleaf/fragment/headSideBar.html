@@ -4,15 +4,12 @@
     <meta charset="UTF-8">
     <title>Title</title>
 
+    <!-- Custom styles for this template -->
+    <link href="/css/sidebar.css" rel="stylesheet">
 
 </head>
 <body>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-</head>
-<body>
+
 <th:block th:fragment="headerFragment">
 
     <div>
@@ -27,109 +24,133 @@
                        onclick="location.href='/user/login'"></i>
                     <i class="fa-solid fa-arrow-right-from-bracket"></i>
                 </div>
-
             </div>
         </div>
-
         <div style="width: 100vw; height: 50px; background-color: #1c294e"></div>
     </div>
 </th:block>
 
 <th:block th:fragment="sideBarFragment">
-
-    <!-- ======= Sidebar ======= -->
-    <aside id="sidebar" class="sidebar">
-
-        <ul class="sidebar-nav" id="sidebar-nav">
-
-            <li class="nav-item">
-                <a class="nav-link " href="/api">
-                    <i class="bi bi-grid"></i>
-                    <span>APIs</span>
-                </a>
-            </li><!-- End Dashboard Nav -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="/api/trash">
-                    <i class="fa-solid fa-trash-can" style="color: #797a7c;font-weight: 100;"></i>
-                    <span>휴지통 관리</span>
-                </a>
-            </li><!-- End Profile Page Nav -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="/requestPage">
-                    <i class="bi bi-person"></i>
-
-                    <span>요청 관리</span>
-                </a>
-            </li><!-- End Profile Page Nav -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="/accountList">
-                    <i class="bi bi-person"></i>
-                    <span>계정 관리</span>
-                </a>
-            </li><!-- End Profile Page Nav -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="/authorization">
-                    <i class="bi bi-person"></i>
-                    <span>권한 관리</span>
-                </a>
-            </li><!-- End Profile Page Nav -->
-
-
-            <li class="nav-item">
-                <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse"
-                   href="#">
-                    <i class="bi bi-menu-button-wide"></i><span>마이데이터</span><i
-                        class="bi bi-chevron-down ms-auto"></i>
-                </a>
-                <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                    <li>
-                        <a href="/mydata/mydataSendReq">
-                            <i class="bi bi-circle"></i><span>전송요구관리</span>
+    <div style="margin-left: 8%;transition: all 600ms ease 0s;;" id="sidebarMargin">
+        <div class="l-navbar" id="navbar">
+            <nav class="nav">
+                <div>
+                    <div class="nav__brand">
+                        <ion-icon name="menu-outline" class="nav__toggle" id="nav-toggle"></ion-icon>
+                    </div>
+                    <div class="nav__list">
+                        <a href="/api" class="nav__link active">
+                            <ion-icon name="home-outline" class="nav__icon"></ion-icon>
+                            <span class="nav_name">APIs</span>
                         </a>
-                    </li>
-                    <li>
-                        <a href="/mydata/agencyTable">
-                            <i class="bi bi-circle"></i><span>기관관리</span>
+                        <a href="/api/trash" class="nav__link">
+                            <ion-icon name="chatbubbles-outline" class="nav__icon"></ion-icon>
+                            <span class="nav_name">휴지통 관리</span>
                         </a>
-                    </li>
-                    <li>
-                        <a href="/mydata/serviceTable">
-                            <i class="bi bi-circle"></i><span>서비스관리</span>
+
+                        <a href="/requestPage" class="nav__link">
+                            <ion-icon name="folder-outline" class="nav__icon"></ion-icon>
+                            <span class="nav_name">요청 관리</span>
                         </a>
-                    </li>
-                    <li>
-                        <a href="/mydata/mydataToken">
-                            <i class="bi bi-circle"></i><span>발급토큰관리</span>
+                        <a href="/accountList" class="nav__link">
+                            <ion-icon name="pie-chart-outline" class="nav__icon"></ion-icon>
+                            <span class="nav_name">계정 관리</span>
                         </a>
-                    </li>
-                    <li>
-                        <a href="/mydata/providerTable">
-                            <i class="bi bi-circle"></i><span>거래이력(제공자)</span>
+                        <a href="/authorization" class="nav__link">
+                            <ion-icon name="log-out-outline" class="nav__icon"></ion-icon>
+                            <span class="nav_name">권한 관리</span>
                         </a>
-                    </li>
-                    <li>
-                        <a href="/mydata/collectorTable">
-                            <i class="bi bi-circle"></i><span>거래이력(사업자)</span>
+
+                        <div href="#" class="nav__link collapse2">
+                            <ion-icon name="people-outline" class="nav__icon"></ion-icon>
+                            <span class="nav_name">마이데이터</span>
+
+                            <ion-icon name="chevron-down-outline" class="collapse__link2"></ion-icon>
+
+                            <ul class="collapse__menu2">
+                                <a href="/mydata/mydataSendReq" class="collapse__sublink2">전송요구관리</a>
+                                <a href="/mydata/agencyTable" class="collapse__sublink2">기관관리</a>
+                                <a href="/mydata/serviceTable" class="collapse__sublink2">서비스관리</a>
+                                <a href="/mydata/mydataToken" class="collapse__sublink2">발급토큰관리</a>
+                                <a href="/mydata/providerTable" class="collapse__sublink2">거래이력(제공자)</a>
+                                <a href="/mydata/collectorTable" class="collapse__sublink2">거래이력(사업자)</a>
+                                <a href="/mydata/statistics-Daily" class="collapse__sublink2">통계(1일)관리</a>
+                                <a href="/mydata/statistics-7Day" class="collapse__sublink2">통계(7일)관리</a>
+                            </ul>
+                        </div>
+
+                        <a href="#" class="nav__link">
+                            <ion-icon name="settings-outline" class="nav__icon"></ion-icon>
+                            <span class="nav_name">Settings</span>
                         </a>
-                    </li>
-                    <li>
-                        <a href="/mydata/statistics-Daily">
-                            <i class="bi bi-circle"></i><span>통계(1일)관리</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/mydata/statistics-7Day">
-                            <i class="bi bi-circle"></i><span>통계(7일)관리</span>
-                        </a>
-                </ul>
-            </li><!-- End Components Nav -->
+                    </div>
+
+                </div>
+            </nav>
+        </div>
+    </div>
+    <script>
+        /* EXPANDER MENU */
+        const showMenu = (toggleId, navbarId, bodyId) => {
+            const toggle = document.getElementById(toggleId),
+                navbar = document.getElementById(navbarId),
+                bodypadding = document.getElementById(bodyId)
+
+            if (toggle && navbar) {
+                console.log("333")
+                toggle.addEventListener('click', () => {
+                    navbar.classList.toggle('expander');
+
+                    bodypadding.classList.toggle('body-pd')
+                })
+            }
+        }
+
+        showMenu('nav-toggle', 'navbar', 'body-pd')
+
+        /* LINK ACTIVE */
+        const linkColor = document.querySelectorAll('.nav__link')
+
+        function colorLink() {
+            console.log("1111111")
+            linkColor.forEach(l => l.classList.remove('active'))
+            this.classList.add('active')
+        }
+
+        linkColor.forEach(l => l.addEventListener('click', colorLink))
+
+        /* COLLAPSE MENU */
+        const linkCollapse = document.getElementsByClassName('collapse__link2')
+        var i
+
+        for (i = 0; i < linkCollapse.length; i++) {
+            console.log("22222")
+            linkCollapse[i].addEventListener('click', function () {
+                const collapseMenu = this.nextElementSibling
+                collapseMenu.classList.toggle('showCollapse2')
+
+                const rotate = collapseMenu.previousElementSibling
+                rotate.classList.toggle('rotate')
+            });
+        }
+
+        function marginValue() {
+            console.log(document.getElementById("body-pd").className)
+            let className = document.getElementById("body-pd").className
+            if (className == "body-pd") {
+                console.log("sidebar close")
+                document.getElementById("sidebarMargin").style.marginLeft = "8%"
+
+            } else {
+                console.log("sidebar open")
+                document.getElementById("sidebarMargin").style.marginLeft = "15%"
+            }
+        }
 
 
-        </ul>
-    </aside><!-- End Sidebar-->
+    </script>
 
 </th:block>
-
 
 </body>
 </html>
