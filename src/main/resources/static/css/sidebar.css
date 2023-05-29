@@ -6,10 +6,10 @@
     --nav--width: 52px;
 
     /* Colores */
-    --first-color: #0c5df4;
+    --first-color: #ffffff;
     --bg-color: #12192c;
-    --sub-color: #b6cefc;
-    --white-color: #fff;
+    --sub-color: #000000;
+    --white-color: #000000;
 
     /* Fuente y tipografia */
     --body-font: 'Poppins', sans-serif;
@@ -83,6 +83,7 @@ a {
     font-size: 1.25rem;
     padding: .75rem;
     cursor: pointer;
+    color: white;
 }
 
 .nav__logo {
@@ -101,10 +102,12 @@ a {
     margin-bottom: 1rem;
     transition: .3s;
     cursor: pointer;
+    color: white;
 }
 
 .nav__link:hover {
     background-color: var(--first-color);
+    color: black;
 }
 
 .nav__icon {
@@ -128,6 +131,7 @@ a {
 /* Active links menu */
 .active {
     background-color: var(--first-color);
+    color: black;
 }
 
 /* COLLAPSE */
@@ -148,14 +152,26 @@ a {
 .collapse__sublink2 {
     color: var(--sub-color);
     font-size: var(--small-font-size);
-    white-space:nowrap;
-
+    white-space: nowrap;
+    width: 168px;
+    height: 44px;
+    /*text-align: center;*/
+    padding: 10px 0px 0px 20px;
 }
 
+/*white-space: nowrap;*/
+/*width: 167px;*/
+/*height: 40px;*/
+/*!* text-align: center; *!*/
+/*padding: 12px 0;*/
+/*}*/
+
 .collapse__sublink2:hover {
-    color: var(--white-color);
-    background-color: white;
-    color: black;
+    background-color: #12192c;
+    color: #ffffff;
+
+    border-radius: 1px;
+    border-radius: 0.3em;
 }
 
 /* Show collapse */
@@ -188,3 +204,19 @@ a {
 
 /*white-space:nowrap;*/
 /*writing-mode: vertical-rl;*/
+
+a {
+    text-decoration-line: none !important;
+}
+
+.accordion_div {
+    /*margin-bottom: 17px;*/
+    font-size: 15px;
+    margin-top: 5px;
+}
+
+/*.accordion_div:hover {*/
+/*    background-color: #0d6efd;*/
+
+/*}*/
+

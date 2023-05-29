@@ -31,15 +31,16 @@
 </th:block>
 
 <th:block th:fragment="sideBarFragment">
-    <div style="margin-left: 8%;transition: all 600ms ease 0s;;" id="sidebarMargin">
+    <div id="sidebarMargin" style="margin-left: 4.5%">
         <div class="l-navbar" id="navbar">
             <nav class="nav">
                 <div>
                     <div class="nav__brand">
-                        <ion-icon name="menu-outline" class="nav__toggle" id="nav-toggle"></ion-icon>
+                        <ion-icon name="menu-outline" class="nav__toggle" id="nav-toggle"
+                                  onclick="divChange()"></ion-icon>
                     </div>
                     <div class="nav__list">
-                        <a href="/api" class="nav__link active">
+                        <a href="/api" class="nav__link">
                             <ion-icon name="home-outline" class="nav__icon"></ion-icon>
                             <span class="nav_name">APIs</span>
                         </a>
@@ -67,15 +68,35 @@
 
                             <ion-icon name="chevron-down-outline" class="collapse__link2"></ion-icon>
 
-                            <ul class="collapse__menu2">
-                                <a href="/mydata/mydataSendReq" class="collapse__sublink2">전송요구관리</a>
-                                <a href="/mydata/agencyTable" class="collapse__sublink2">기관관리</a>
-                                <a href="/mydata/serviceTable" class="collapse__sublink2">서비스관리</a>
-                                <a href="/mydata/mydataToken" class="collapse__sublink2">발급토큰관리</a>
-                                <a href="/mydata/providerTable" class="collapse__sublink2">거래이력(제공자)</a>
-                                <a href="/mydata/collectorTable" class="collapse__sublink2">거래이력(사업자)</a>
-                                <a href="/mydata/statistics-Daily" class="collapse__sublink2">통계(1일)관리</a>
-                                <a href="/mydata/statistics-7Day" class="collapse__sublink2">통계(7일)관리</a>
+                            <ul>
+                                <div onclick="location.href='/mydata/mydataSendReq'"
+                                     class="collapse__sublink2 accordion_div mt-3">전송요구관리
+                                </div>
+                                <div onclick="location.href='/mydata/agencyTable'"
+                                     class="collapse__sublink2 accordion_div">기관관리
+                                </div>
+                                <div onclick="location.href='/mydata/serviceTable'"
+                                     class="collapse__sublink2 accordion_div">서비스관리
+                                </div>
+                                <div onclick="location.href='/mydata/mydataToken'"
+                                     class="collapse__sublink2 accordion_div">발급토큰관리
+                                </div>
+                                <div onclick="location.href='/mydata/providerTable'"
+                                     class="collapse__sublink2 accordion_div">
+                                    거래이력(제공자)
+                                </div>
+                                <div onclick="location.href='/mydata/collectorTable'"
+                                     class="collapse__sublink2 accordion_div">
+                                    거래이력(사업자)
+                                </div>
+                                <div onclick="location.href='/mydata/statistics-Daily'"
+                                     class="collapse__sublink2 accordion_div">
+                                    통계(1일)관리
+                                </div>
+                                <div onclick="location.href='/mydata/statistics-7Day'"
+                                     class="collapse__sublink2 accordion_div">
+                                    통계(7일)관리
+                                </div>
                             </ul>
                         </div>
 
@@ -111,13 +132,34 @@
         /* LINK ACTIVE */
         const linkColor = document.querySelectorAll('.nav__link')
 
-        function colorLink() {
+        linkColor.forEach(l => l.addEventListener('click', returnId))
+
+        function colorLink(value) {
+            console.log(value)
             console.log("1111111")
             linkColor.forEach(l => l.classList.remove('active'))
-            this.classList.add('active')
+            // console.log(this)
+            value.classList.add('active')
         }
 
-        linkColor.forEach(l => l.addEventListener('click', colorLink))
+        function returnId() {
+            let docum = this
+            colorLink(docum)
+            return docum
+        }
+
+        // $(".nav__list a").on("click", function () {
+        //     $(".nav__list").find(".active").removeClass("active");
+        //     console.log($(this))
+        //     $(this).addClass("active");
+        //     console.log($(this))
+        // });
+
+        // window.onload(function () {
+        //     colorLink()
+        // })
+
+
 
         /* COLLAPSE MENU */
         const linkCollapse = document.getElementsByClassName('collapse__link2')
@@ -144,6 +186,25 @@
             } else {
                 console.log("sidebar open")
                 document.getElementById("sidebarMargin").style.marginLeft = "15%"
+            }
+        }
+
+        function divChange() {
+            let sideDiv = document.getElementById("sidebarMargin")
+            console.log(document.getElementById("navbar").className == "l-navbar")
+            if (document.getElementById("navbar").className == "l-navbar") {
+                console.log(true) // sidebar 열림
+                sideDiv.style.marginLeft = "11%"
+                sideDiv.style.transition = "all 600ms ease 0s"
+                document.getElementById("contentBody").style.maxWidth = "89%"
+                document.getElementById("contentBody").style.transition = "all 600ms ease 0s"
+            } else {
+                console.log(false)
+                sideDiv.style.marginLeft = "4.5%"
+                sideDiv.style.transition = "all 600ms ease 0s"
+                document.getElementById("contentBody").style.maxWidth = "93%"
+                document.getElementById("contentBody").style.transition = "all 600ms ease 0s"
+
             }
         }
 

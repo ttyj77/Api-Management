@@ -17,7 +17,7 @@
     <th:block th:replace="~{fragment/headSideBar :: headerFragment}"></th:block>
     <div id="body-pd" style="display: flex">
         <th:block th:replace="~{fragment/headSideBar :: sideBarFragment}"></th:block>
-        <div class="mt-5 col-10" >
+        <div class="mt-5 col-11" style="max-width: 93%" id="contentBody">
             <th:block layout:fragment="content"></th:block>
         </div>
     </div>
