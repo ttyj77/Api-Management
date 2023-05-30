@@ -131,5 +131,9 @@ public class MydataService {
     public List<MdTokenDTO> mdTokenSearch(String keyword) {
         return mydataDao.mdTokenSearch(keyword);
     }
+
+    public List<MdProviderDTO> mdReqList() {
+        return mydataDao.mdReqList();
+    }
 }
 

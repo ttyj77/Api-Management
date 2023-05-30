@@ -41,4 +41,7 @@ public interface MydataDao {
     void mdProviderInsert(MdProviderDTO mdProviderDTO) throws DataAccessException;
 
     List<MdCollectorDTO> mdCollectorSelectAll() throws DataAccessException;
+
+    List<MdProviderDTO> mdReqList() throws DataAccessException;
+
 }

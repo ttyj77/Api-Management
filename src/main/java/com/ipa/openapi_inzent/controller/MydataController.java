@@ -4,10 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.ipa.openapi_inzent.model.MdAgencyDTO;
-import com.ipa.openapi_inzent.model.MdCollectorDTO;
-import com.ipa.openapi_inzent.model.MdProviderDTO;
-import com.ipa.openapi_inzent.model.MdServiceDTO;
+import com.ipa.openapi_inzent.model.*;
 import com.ipa.openapi_inzent.service.MydataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -45,7 +42,7 @@ public class MydataController {
     public JsonObject mdServiceTableModal(int id) {
 
         List<MdServiceDTO> list = mydataService.mdServiceSelectModal(id);
-        System.out.println("id = " + id);
+        System.out.println(" " + id);
         System.out.println(list);
 
         JsonArray array = new JsonArray();
@@ -289,11 +286,6 @@ public class MydataController {
         return "/mydata/mdServiceControl";
     }
 
-    @GetMapping("/mydataSendReq")
-    public String mydataSendReq() {
-        return "/mydata/mydataSendReq";
-    }
-
 
     ///////////////////////////////////////////////////////////////////////////////////////////
     //                            (oﾟvﾟ)ノ  Provider Page  (oﾟvﾟ)ノ                           //
@@ -344,7 +336,7 @@ public class MydataController {
 
     @GetMapping("/provider/selectOne")
     @ResponseBody
-    public JsonObject mdProviderSelectAll(int id) {
+    public JsonObject mdProviderSelectOne(int id) {
         System.out.println("id = " + id);
 //        null 처리
         MdProviderDTO mdProviderDTO = mydataService.mdProviderSelectOne(id);
@@ -390,5 +382,21 @@ public class MydataController {
         return "/mydata/mdCollectorTable";
     }
 
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    //                            (oﾟvﾟ)ノ  Send Request Page  (oﾟvﾟ)ノ                       //
+    ///////////////////////////////////////////////////////////////////////////////////////////
+
+
+    @GetMapping("/mydataSendReq")
+    public String mydataSendReq(Model model) {
+        List<MdProviderDTO> list = mydataService.mdReqList();
+        System.out.println("=-=-=-=-=-=-=-=-=MydataController.mydataSendReq");
+        System.out.println("list = " + list);
+
+        model.addAttribute("list", list);
+
+        System.out.println("list.size() = " + list.size());
+        return "/mydata/mydataSendReq";
+    }
 
 }
