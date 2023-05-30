@@ -56,4 +56,9 @@ public class IndexController {
         return "register";
     }
 
+    @GetMapping("/newSideBar")
+    public String newSideBar() {
+        return "newSideBar";
+    }
+
 }

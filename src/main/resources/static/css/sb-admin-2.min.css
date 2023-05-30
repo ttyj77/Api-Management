@@ -3394,7 +3394,8 @@ input[type="submit"].btn-block {
 }
 
 .collapse:not(.show) {
-    display: none;
+    /*display: none;*/
+    /* sidebar 문제로 주석처리 함   */
 }
 
 .collapsing {
