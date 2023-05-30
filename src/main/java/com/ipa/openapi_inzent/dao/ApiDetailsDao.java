@@ -1,7 +1,6 @@
 package com.ipa.openapi_inzent.dao;
 
 import com.ipa.openapi_inzent.model.*;
-import io.swagger.annotations.Api;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.dao.DataAccessException;
 
