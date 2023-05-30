@@ -34,10 +34,10 @@
     <div id="sidebarMargin" style="margin-left: 4.5%">
         <div class="l-navbar" id="navbar">
             <nav class="nav">
-                <div>
+                <div style="overflow-y: auto;
+    overflow-x: hidden;">
                     <div class="nav__brand">
-                        <ion-icon name="menu-outline" class="nav__toggle" id="nav-toggle"
-                                  onclick="divChange()"></ion-icon>
+                        <ion-icon name="menu-outline" class="nav__toggle" id="nav-toggle"></ion-icon>
                     </div>
                     <div class="nav__list">
                         <a href="/api" class="nav__link">
@@ -113,17 +113,26 @@
     <script>
         /* EXPANDER MENU */
         const showMenu = (toggleId, navbarId, bodyId) => {
+
             const toggle = document.getElementById(toggleId),
                 navbar = document.getElementById(navbarId),
                 bodypadding = document.getElementById(bodyId)
-
+            const div_id = document.getElementById("navbar")
             if (toggle && navbar) {
                 console.log("333")
-                toggle.addEventListener('click', () => {
+                div_id.addEventListener('mouseover', () => {
+                    console.log("mouseOver")
                     navbar.classList.toggle('expander');
 
                     bodypadding.classList.toggle('body-pd')
                 })
+                div_id.addEventListener('mouseout', () => {
+                    console.log("mouseout!!!!!!!!!!!")
+                    navbar.className = "l-navbar"
+
+                    bodypadding.className = ""
+                })
+
             }
         }
 
@@ -160,7 +169,6 @@
         // })
 
 
-
         /* COLLAPSE MENU */
         const linkCollapse = document.getElementsByClassName('collapse__link2')
         var i
@@ -191,24 +199,33 @@
 
         function divChange() {
             let sideDiv = document.getElementById("sidebarMargin")
-            console.log(document.getElementById("navbar").className == "l-navbar")
+            // console.log("===============")
+            // console.log(document.getElementById("navbar").className == "l-navbar")
+            // console.log(sideDiv)
             if (document.getElementById("navbar").className == "l-navbar") {
-                console.log(true) // sidebar 열림
-                sideDiv.style.marginLeft = "11%"
-                sideDiv.style.transition = "all 600ms ease 0s"
-                document.getElementById("contentBody").style.maxWidth = "89%"
-                document.getElementById("contentBody").style.transition = "all 600ms ease 0s"
-            } else {
                 console.log(false)
                 sideDiv.style.marginLeft = "4.5%"
                 sideDiv.style.transition = "all 600ms ease 0s"
                 document.getElementById("contentBody").style.maxWidth = "93%"
                 document.getElementById("contentBody").style.transition = "all 600ms ease 0s"
-
+            } else {
+                console.log(true) // sidebar 열림
+                sideDiv.style.marginLeft = "11%"
+                sideDiv.style.transition = "all 600ms ease 0s"
+                document.getElementById("contentBody").style.maxWidth = "89%"
+                document.getElementById("contentBody").style.transition = "all 600ms ease 0s"
             }
         }
 
+        let toggle_id = document.getElementById("navbar")
+        toggle_id.addEventListener('mouseover', (event) => {
+            divChange()
+        });
 
+        toggle_id.addEventListener('mouseout', (event) => {
+            console.log("mouseOut")
+            divChange()
+        });
     </script>
 
 </th:block>
