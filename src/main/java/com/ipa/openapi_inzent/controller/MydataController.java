@@ -5,10 +5,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.ipa.openapi_inzent.model.MdAgencyDTO;
+import com.ipa.openapi_inzent.model.MdCollectorDTO;
 import com.ipa.openapi_inzent.model.MdProviderDTO;
 import com.ipa.openapi_inzent.model.MdServiceDTO;
 import com.ipa.openapi_inzent.service.MydataService;
-import io.swagger.v3.core.util.Json;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,11 +31,6 @@ public class MydataController {
         this.mydataService = mydataService;
     }
 
-
-    @GetMapping("/collectorTable")
-    public String collectorTable() {
-        return "/mydata/mdCollectorTable";
-    }
 
     @GetMapping("/agencyTable")
     public String mdServiceTable(Model model) {
@@ -178,6 +173,10 @@ public class MydataController {
         return "/mydata/statistics-7Day";
     }
 
+
+    /////////////////////////////////////////////////
+    // TOKEN start
+    /////////////////////////////////////////////////
     @GetMapping("/mydataToken")
     public String mydataToken(Model model) {
         model.addAttribute("astList", mydataService.mdAstList());
@@ -253,6 +252,10 @@ public class MydataController {
         return object;
     }
 
+    /////////////////////////////////////////////////
+    // TOKEN end
+    /////////////////////////////////////////////////
+
     @GetMapping("/serviceTable")
     public String serviceTable(Model model) {
         System.out.println(mydataService.mdServiceSelectList());
@@ -299,8 +302,44 @@ public class MydataController {
     @GetMapping("/providerTable")
     public String mdProviderSelectAll(Model model) {
 
-        model.addAttribute("list", mydataService.mdProviderSelectAll());
+        List<MdProviderDTO> list = mydataService.mdProviderSelectAll();
+
+        model.addAttribute("list", list);
+        System.out.println("MydataController.mdProviderSelectAll==========");
+        System.out.println(list);
+
+        System.out.println("list.size() = " + list.size());
+
+
         return "/mydata/mdProviderTable";
+    }
+
+    @GetMapping("/provider/insert")
+    public void mdProviderInsert(MdProviderDTO mdProviderDTO) {
+        // 특정 코드 실행 되기 전 시간
+        long start = System.currentTimeMillis();
+        System.out.println("start = " + start);
+
+        // 전송 하는 부분(코드 작성 필요)
+//        int sum = 0;
+//        for (int i = 0; i < 10000000; i++) {
+//            sum += i;
+//        }
+        // 특정 코드 실행 되고 난 후 시간
+        long end = System.currentTimeMillis();
+        System.out.println("end = " + end);
+
+        // 초 단위 실행시간
+        double result = (end-start)/1000.0;
+        System.out.println("result = " + result);
+
+        // to_json으로 db들어가기전에 타입 변환해줘야함
+//        mdProviderDTO.setRuntime(result);
+
+
+//        mydataService.mdProviderInsert(mdProviderDTO);
+
+
     }
 
     @GetMapping("/provider/selectOne")
@@ -322,11 +361,34 @@ public class MydataController {
         object.addProperty("serviceName", mdProviderDTO.getMdReqInfoDTO().getServiceName()); //서비스명
         object.addProperty("consumerNum", mdProviderDTO.getMdReqInfoDTO().getConsumerNum()); //통합고객번호
         object.addProperty("code", mdProviderDTO.getMdReqInfoDTO().getCode());
-        object.addProperty("tokenExpiryDate", mdProviderDTO.getMdReqInfoDTO().getTokenExpiryDate()); //토큰유효기간
         object.addProperty("reqType", mdProviderDTO.getMdReqInfoDTO().getReqType()); //전송요구타입
+
+        if (mdProviderDTO.getMdReqInfoDTO().getTokenExpiryDate() == null) {
+            object.addProperty("tokenExpiryDate", ""); //토큰유효기간
+        } else {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String tokenExpiryDate = sdf.format(mdProviderDTO.getMdReqInfoDTO().getTokenExpiryDate());
+            object.addProperty("tokenExpiryDate", tokenExpiryDate); //토큰유효기간
+        }
 
 
         return object;
     }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    //                            (oﾟvﾟ)ノ  Collector Page  (oﾟvﾟ)ノ                           //
+    ///////////////////////////////////////////////////////////////////////////////////////////
+
+    @GetMapping("/collectorTable")
+    public String collectorTable(Model model) {
+
+        List<MdCollectorDTO> list = mydataService.mdCollectorSelectAll();
+
+        System.out.println("list = " + list);
+
+        model.addAttribute("list", list);
+        return "/mydata/mdCollectorTable";
+    }
+
 
 }

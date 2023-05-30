@@ -170,6 +170,31 @@
         #{id}
     </select>
 
+    <insert id="mdProviderInsert" parameterType="com.ipa.openapi_inzent.model.MdProviderDTO">
+        INSERT INTO public."providerHistory"(
+        "reqDate", runtime, "resCode", "apiCode", "customerNum", "regularTransmission", "uniqueNum", "statusInfo", "apiResources", "reqHeader", "resMsg", "resData")
+        VALUES (NOW(), #{runtime}, #{resCode}, #{apiCode}, #{customerNum}, #{regularTransmission}, #{uniqueNum}, #{statusInfo}, #{apiResources}, #{reqHeader}, #{resMsg}, #{resData});
+    </insert>
+
+    <!--    ///////////////////////////////////////////////////////////////////////////////////////////-->
+    <!--    //                            (oﾟvﾟ)ノ  Collecter Page  (oﾟvﾟ)ノ                           //-->
+    <!--    ///////////////////////////////////////////////////////////////////////////////////////////-->
+
+    <select id="mdCollectorSelectAll" resultType="com.ipa.openapi_inzent.model.MdCollectorDTO">
+        select * from public."collectorHistory";
+    </select>
+    <select id="mdCollectorSelectOne" parameterType="int" resultType="com.ipa.openapi_inzent.model.MdCollectorDTO">
+        select * from public."collectorHistory"
+        where id = #{id};
+    </select>
+    
+    <insert id="mdCollectorInsert" parameterType="com.ipa.openapi_inzent.model.MdCollectorDTO">
+        INSERT INTO public."collectorHistory"(
+        "reqDate", runtime, "resCode", "apiCode", "regularTransmission", "targetHost", "uniqueNum", "apiResources", "reqHeader", "resMsg", "resData")
+        VALUES (#{reqDate}, #{runtime}, #{resCode}, #{apiCode}, #{regularTransmission}, #{targetHost}, #{uniqueNum}, #{apiResources}, #{reqHeader}, #{resMsg}, #{resData});
+    </insert>
+
+
     <!--    //////////////////////////////////-->
     <!-- mydataToken   -->
     <!-- mdAgency + mdService + mdToken list -->

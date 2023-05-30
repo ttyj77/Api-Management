@@ -1,10 +1,7 @@
 package com.ipa.openapi_inzent.service;
 
 import com.ipa.openapi_inzent.dao.MydataDao;
-import com.ipa.openapi_inzent.model.MdAgencyDTO;
-import com.ipa.openapi_inzent.model.MdProviderDTO;
-import com.ipa.openapi_inzent.model.MdServiceDTO;
-import com.ipa.openapi_inzent.model.MdTokenDTO;
+import com.ipa.openapi_inzent.model.*;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
@@ -87,9 +84,41 @@ public class MydataService {
         return list;
     }
 
+    public void mdProviderInsert(MdProviderDTO mdProviderDTO) {
+        mydataDao.mdProviderInsert(mdProviderDTO);
+    }
+
     public MdProviderDTO mdProviderSelectOne(int id) {
         return mydataDao.mdProviderSelectOne(id);
     }
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    //                            (oﾟvﾟ)ノ  Collector Page  (oﾟvﾟ)ノ                           //
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    public List<MdCollectorDTO> mdCollectorSelectAll() {
+        List<MdCollectorDTO> list = mydataDao.mdCollectorSelectAll();
+        SimpleDateFormat dfFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        SimpleDateFormat newFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss:SSS");
+
+        Calendar cal = Calendar.getInstance();
+
+        try {
+            for (MdCollectorDTO m : list) {
+                Date forMatDate = dfFormat.parse(m.getReqDate());
+                m.setReqDate(newFormat.format(forMatDate)); //요청일 ex) 2021-11-23
+                m.setReqTime(timeFormat.format(forMatDate)); //요청시간 ex) 15:18:16.614
+                cal.setTime(forMatDate);
+                cal.add(Calendar.MILLISECOND, m.getRuntime()); // 요청일에 응답시간(runtime)을 더함 => 응답일자
+                m.setResDate(dfFormat.format(cal.getTime())); //응답일자 ex) 2021-11-23 15:18:16.642
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    
+    
+    
 
     public List<MdTokenDTO> mdAstList() {
         return mydataDao.mdAstList();
