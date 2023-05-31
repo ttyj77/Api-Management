@@ -119,13 +119,13 @@
             if (toggle && navbar) {
                 console.log("333")
                 div_id.addEventListener('mouseover', () => {
-                    console.log("mouseOver")
+                    // console.log("mouseOver")
                     navbar.classList.toggle('expander');
 
                     bodypadding.classList.toggle('body-pd')
                 })
                 div_id.addEventListener('mouseout', () => {
-                    console.log("mouseout!!!!!!!!!!!")
+                    // console.log("mouseout!!!!!!!!!!!")
                     navbar.className = "l-navbar"
 
                     bodypadding.className = ""
@@ -202,13 +202,13 @@
             // console.log(document.getElementById("navbar").className == "l-navbar")
             // console.log(sideDiv)
             if (document.getElementById("navbar").className == "l-navbar") {
-                console.log(false)
+                // console.log(false)
                 sideDiv.style.marginLeft = "4.5%"
                 sideDiv.style.transition = "all 600ms ease 0s"
                 document.getElementById("contentBody").style.maxWidth = "93%"
                 document.getElementById("contentBody").style.transition = "all 600ms ease 0s"
             } else {
-                console.log(true) // sidebar 열림
+                // console.log(true) // sidebar 열림
                 sideDiv.style.marginLeft = "11%"
                 sideDiv.style.transition = "all 600ms ease 0s"
                 document.getElementById("contentBody").style.maxWidth = "89%"
@@ -222,7 +222,7 @@
         });
 
         toggle_id.addEventListener('mouseout', (event) => {
-            console.log("mouseOut")
+            // console.log("mouseOut")
             divChange()
         });
     </script>

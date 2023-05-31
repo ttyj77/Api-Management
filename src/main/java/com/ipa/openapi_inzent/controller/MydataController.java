@@ -363,7 +363,6 @@ public class MydataController {
             object.addProperty("tokenExpiryDate", tokenExpiryDate); //토큰유효기간
         }
 
-
         return object;
     }
 
@@ -386,17 +385,49 @@ public class MydataController {
     //                            (oﾟvﾟ)ノ  Send Request Page  (oﾟvﾟ)ノ                       //
     ///////////////////////////////////////////////////////////////////////////////////////////
 
-
     @GetMapping("/mydataSendReq")
     public String mydataSendReq(Model model) {
         List<MdProviderDTO> list = mydataService.mdReqList();
-        System.out.println("=-=-=-=-=-=-=-=-=MydataController.mydataSendReq");
-        System.out.println("list = " + list);
+//        System.out.println("=-=-=-=-=-=-=-=-=MydataController.mydataSendReq");
+//        System.out.println("list = " + list);
 
         model.addAttribute("list", list);
 
         System.out.println("list.size() = " + list.size());
         return "/mydata/mydataSendReq";
     }
+
+    @GetMapping("/provider/customerList")
+    @ResponseBody
+    public JsonObject customerList(String customerNum) {
+        JsonObject object = new JsonObject();
+        List<MdProviderDTO> list = mydataService.mdProviderCustomerList(customerNum);
+        System.out.println("customerNum = " + customerNum);
+        System.out.println("MydataController.customerList-=-=-=-=-");
+//        System.out.println("list = " + list);
+
+//        object.addProperty("");
+
+        JsonArray providerArray = new JsonArray();
+        for (MdProviderDTO mdProviderDTO : list) {
+            JsonObject r = new JsonObject();
+            r.addProperty("reqDate", mdProviderDTO.getReqDate());
+            r.addProperty("reqTime", mdProviderDTO.getReqTime());
+            r.addProperty("resDate", mdProviderDTO.getResDate());
+            r.addProperty("runtime", mdProviderDTO.getRuntime());
+            r.addProperty("code", mdProviderDTO.getResCode());
+            r.addProperty("apiCode", mdProviderDTO.getApiCode());
+            r.addProperty("customerNum", customerNum);
+            r.addProperty("regularTransmission", mdProviderDTO.getRegularTransmission());
+
+            providerArray.add(r);
+        }
+
+        object.addProperty("providerList", providerArray.toString());
+        System.out.println("object = " + object);
+
+        return object;
+    }
+
 
 }
