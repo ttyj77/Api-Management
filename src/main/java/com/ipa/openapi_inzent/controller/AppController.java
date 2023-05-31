@@ -33,4 +33,16 @@ public class AppController {
         }
         return "redirect:/";
     }
+
+    @GetMapping("/app/agencyChoice")
+    public String agencyChoice() {
+
+        return "/app/agencyChoice";
+    }
+
+    @GetMapping("/app/bank")
+    public String bank() {
+
+        return "/app/bank";
+    }
 }
