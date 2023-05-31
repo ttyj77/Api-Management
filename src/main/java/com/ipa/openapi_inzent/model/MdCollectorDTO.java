@@ -3,7 +3,7 @@ package com.ipa.openapi_inzent.model;
 import lombok.Data;
 
 @Data
-public class MdProviderDTO {
+public class MdCollectorDTO {
     private int id;
     private String reqDate;
 
@@ -19,15 +19,12 @@ public class MdProviderDTO {
 
     private String resCode;
     private String apiCode;
-    private String customerNum;
     private String regularTransmission;
+    private String targetHost;
     private String uniqueNum;
-    private String statusInfo;
     private String apiResources;
     private String reqHeader;
     private String resMsg;
     private String resData;
-
-    private MdReqInfoDTO mdReqInfoDTO;
 
 }

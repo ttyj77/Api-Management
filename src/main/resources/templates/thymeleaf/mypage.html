@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
->
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
 <head>
     <meta charset="UTF-8">
     <title>Mypage</title>
     <link href="/images/logo_img.png" rel="shortcut icon" type="image/x-icon">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+<!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"-->
+<!--          integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+          crossorigin="anonymous">
     <script src="https://kit.fontawesome.com/24311b556d.js" crossorigin="anonymous"></script>
 
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
@@ -28,57 +32,330 @@
     <script src="/vendor/bootstrap2/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <style>
+        .tdContent:hover {
+            background-color: #f5f6fb;
+        }
+
+        .tdHead {
+            vertical-align: middle !important;
+            background-color: #f5f5f5 !important;
+            width: 25%;
+        }
+        .tdHeadLong{
+            vertical-align: middle !important;
+            background-color: #f5f5f5 !important;
+            width: 37%;
+        }
+
+        #myBox {
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+            border: 2px solid rgba(0, 0, 0, 0.23);
+            width: 65%;
+        }
+
+        #totalBox {
+            display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+            align-items: flex-end;
+            align-content: center;
+        }
+    </style>
+
+    <script>
+
+        // 스페이스바 금지
+        function checkSpacebar() {
+            let kcode = event.keyCode;
+            if (kcode == 32) {
+                event.returnValue = false;
+            }
+        }
+
+        // password 일치 확인
+        function overlapCheck() {
+            let pwd_1 = document.getElementById("password").value;
+            let pwd_2 = document.getElementById("doubleCheckPwd").value;
+
+            if (pwd_1 != pwd_2) {
+                $('#doubleCheckPwd').css("border", "1px solid red");
+                $('#pwdCheck').css("display", "block");
+            } else {
+                $('#doubleCheckPwd').css("border", "white");
+                $('#pwdCheck').css("display", "none");
+            }
+        }
+
+        // 비밀번호 변경
+        function updatePw(value) {
+            let userId = value.getAttribute("user_id");
+            console.log("userId = ", userId);
+            $('#updatePw').attr('action', '/user/updatePw/' + userId);
+        }
+
+        // 수정 버튼 누를시
+        function updateInfo() {
+            document.getElementById("passwordChange").disabled = false;
+            document.getElementById("nickname").disabled = false;
+            document.getElementById("email").disabled = false;
+
+            let div = document.getElementById("btnBox")
+            div.innerHTML = ""
+            let cancelBtn = document.createElement("button")
+            cancelBtn.type = "button"
+            cancelBtn.className = "btn btn-secondary"
+            cancelBtn.innerText = "취소"
+            cancelBtn.addEventListener("click", changeBtn)
+
+            let saveBtn = document.createElement("button")
+            saveBtn.type = "submit"
+            saveBtn.className = "btn btn-primary"
+            saveBtn.innerText = "저장"
+            saveBtn.id = "saveUpdate"
+            saveBtn.style.marginRight = "10px"
+            saveBtn.addEventListener("click", saveAlert)
+            // $(saveBtn).attr("onclick", "saveAlert()");
+
+            div.append(saveBtn)
+            div.append(cancelBtn)
+
+        }
+        // 취소 버튼 누를 시 다시 저장 -> 수정버튼으로 변경
+        function changeBtn() {
+            let div = document.getElementById("btnBox")
+            div.innerHTML = ""
+
+            let updateBtn = document.createElement("button");
+            updateBtn.type = "button"
+            updateBtn.className = "btn btn-dark";
+            updateBtn.innerText = "수정"
+            updateBtn.addEventListener("click", updateInfo);
+
+            div.append(updateBtn);
+
+        }
+
+        // 수정 확인 및 저장
+        function saveAlert(e) {
+            let saveBtn = document.getElementById("saveUpdate");
+            e.preventDefault();
+            Swal.fire({
+                showCancelButton: true,
+                cancelButtonText: "취소",
+                confirmButtonText: "확인",
+                icon: 'warning',
+                text: "변경내용을 저장하시겠습니까?"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: '저장 완료',
+                        icon: 'success',
+                    }).then(() => {
+                        document.getElementById("updateUser").submit();
+                    })
+                }
+
+            });
+
+        }
+
+
+    </script>
+
 </head>
 <body>
-<div class="container vh-100">
-    <div class="row h-100 align-items-center">
-        <div class="row">
-            <div class="col-10 align-items-center">
-                <form method="post" action="/user/update" style="text-align: -webkit-center">
-                    <label for="input-username">아이디</label>
-                    <input id="input-username" th:value="${user.username}" type="text" name="username"
-                           class="form-control w-50" disabled>
-                    <label for="input-nickname">닉네임</label>
-                    <input type="text" th:value="${user.nickname}" name="password" class="form-control w-50"
-                           id="input-nickname" disabled>
-                    <label for="input-email">이메일</label>
-                    <input type="email" th:value="${user.email}" name="password" class="form-control w-50"
-                           id="input-email" disabled>
-                    <label for="input-password">비밀번호</label>
-                    <div class="accordion w-50" id="input-password">
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="panelsStayOpen-headingOne">
-                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                        data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true"
-                                        aria-controls="panelsStayOpen-collapseOne">
-                                    비밀번호 변경하기
+<div layout:fragment="content">
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+            <!-- Main Content -->
+            <div id="content">
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+                    <!-- Page Heading -->
+                    <h3 class="text-gray-800" th:text="|${user.nickname} 님, 반갑습니다.|" style="margin-bottom: 40px"></h3>
+                    <!-- 본문 내용 시작 -->
+                    <form method="post" action="/user/updateUser" id="updateUser">
+                        <div class="container" id="totalBox">
+                            <div class="p-4 mb-3" id="myBox">
+                                <input type="hidden" id="saveId" name="id" th:value="${user.id}">
+                                <table class="table table-borderless">
+                                    <tbody>
+                                    <tr>
+                                        <td class="tdHead">
+                                            아이디
+                                        </td>
+                                        <td class="tdContent">
+                                            <input th:value="${user.username}" type="text"
+                                                   name="username"
+                                                   class="form-control" disabled>
+                                        </td>
+                                    </tr>
+                                    <tr style="border-top: 1px solid #dee2e6">
+                                        <td class="tdHead">
+                                            닉네임
+                                        </td>
+                                        <td class="tdContent">
+                                            <input type="text" th:value="${user.nickname}" name="nickname"
+                                                   class="form-control" id="nickname"
+                                                   disabled>
+                                        </td>
+                                    </tr>
+                                    <tr style="border-top: 1px solid #dee2e6">
+                                        <td class="tdHead">
+                                            이메일
+                                        </td>
+                                        <td class="tdContent">
+                                            <input type="email" th:value="${user.email}" name="email"
+                                                   class="form-control" id="email"
+                                                   disabled>
+                                        </td>
+                                    </tr>
+                                    <tr style="border-top: 1px solid #dee2e6; border-bottom: 1px solid #dee2e6">
+                                        <td class="tdHead">
+                                            비밀번호
+                                        </td>
+                                        <td class="tdContent" id="mdServiceName">
+                                            <button class="btn btn-dark" type="button" data-bs-toggle="modal"
+                                                    onclick="updatePw(this)" th:user_id="${user.id}"
+                                                    data-bs-target="#exampleModalCenter" disabled
+                                                    id="passwordChange">
+                                                비밀번호 변경
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                            <div class="d-flex justify-content-end" id="btnBox">
+                                <button type="button" class="btn btn-outline-light" id="cancel"
+                                        style="display: none; margin-right: 10px">
+                                    취소
                                 </button>
-                            </h2>
-                            <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse"
-                                 aria-labelledby="panelsStayOpen-headingOne">
-                                <div class="accordion-body">
-                                    <form action="/user/updatePw/${userDTO.id}" method="post">
-                                        <span class="span-1">현재 비밀번호</span> <input type="password" name="oldPw"
-                                                                                   class="mb-2"><br>
-                                        <span class="span-2">새 비밀번호</span> <input type="password" name="newPw"
-                                                                                  class="mb-2"><br>
-                                        <span class="span-3">비밀번호 다시 입력 </span> <input type="password" name="newPw2"
-                                                                                       class="mb-2"><br>
-                                        <span class="text-danger">${message}</span><br>
-                                        <button type="submit" class="badge text-bg-secondary">비밀번호 변경</button>
-                                    </form>
-                                </div>
+                                <button type="button" class="btn btn-dark" id="upSave" onclick="updateInfo()">
+                                    수정
+                                </button>
                             </div>
                         </div>
+                    </form>
+                    <!-- Password 변경 Modal -->
+                    <div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="exampleModalCenter"
+                         tabindex="-1"
+                         role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered"
+                             role="document">
+                            <form method="post" id="updatePw">
+                                <div class="modal-content" style="width: 120%">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLongTitle">비밀번호 변경</h5>
+                                        <button type="button" class="close" data-bs-dismiss="modal"
+                                                aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <table class="w-100">
+                                            <tbody>
+                                            <tr>
+                                                <td class="tdHeadLong">새 비밀번호</td>
+                                                <td><input id="password" class="form-control" type="password"
+                                                           onkeydown="checkSpacebar()" oninput="overlapCheck()"
+                                                           name="password">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                            </tr>
+                                            <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="tdHeadLong">새 비밀번호 확인</td>
+                                                <td><input id="doubleCheckPwd" class="form-control" type="password"
+                                                           onkeydown="checkSpacebar()" oninput="overlapCheck()"></td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                        <p id="pwdCheck" style="display:none; color: #E23137; font-size: small">비밀번호가 같지
+                                            않습니다.</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-primary">저장
+                                        </button>
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     </div>
-                    <button type="submit" class="btn btn-primary align-items-center m-2"> 로그인</button>
+                    <!--                            <div class="col-10 align-items-center">-->
+                    <!--                                <form method="post" action="/user/update" style="text-align: -webkit-center">-->
+                    <!--                                    <label for="input-username">아이디</label>-->
+                    <!--                                    <input id="input-username" th:value="${user.username}" type="text"-->
+                    <!--                                           name="username"-->
+                    <!--                                           class="form-control w-50" disabled>-->
+                    <!--                                    <label for="input-nickname">닉네임</label>-->
+                    <!--                                    <input type="text" th:value="${user.nickname}" name="password"-->
+                    <!--                                           class="form-control w-50"-->
+                    <!--                                           id="input-nickname" disabled>-->
+                    <!--                                    <label for="input-email">이메일</label>-->
+                    <!--                                    <input type="email" th:value="${user.email}" name="password"-->
+                    <!--                                           class="form-control w-50"-->
+                    <!--                                           id="input-email" disabled>-->
+                    <!--                                    <label for="input-password">비밀번호</label>-->
+                    <!--                                    <div class="accordion w-50" id="input-password">-->
+                    <!--                                        <div class="accordion-item">-->
+                    <!--                                            <h2 class="accordion-header" id="panelsStayOpen-headingOne">-->
+                    <!--                                                <button class="accordion-button" type="button"-->
+                    <!--                                                        data-bs-toggle="collapse"-->
+                    <!--                                                        data-bs-target="#panelsStayOpen-collapseOne"-->
+                    <!--                                                        aria-expanded="true"-->
+                    <!--                                                        aria-controls="panelsStayOpen-collapseOne">-->
+                    <!--                                                    비밀번호 변경하기-->
+                    <!--                                                </button>-->
+                    <!--                                            </h2>-->
+                    <!--                                            <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse"-->
+                    <!--                                                 aria-labelledby="panelsStayOpen-headingOne">-->
+                    <!--                                                <div class="accordion-body">-->
+                    <!--                                                    <form action="/user/updatePw/${userDTO.id}" method="post">-->
+                    <!--                                                        <span class="span-1">현재 비밀번호</span> <input type="password"-->
+                    <!--                                                                                                   name="oldPw"-->
+                    <!--                                                                                                   class="mb-2"><br>-->
+                    <!--                                                        <span class="span-2">새 비밀번호</span> <input type="password"-->
+                    <!--                                                                                                  name="newPw"-->
+                    <!--                                                                                                  class="mb-2"><br>-->
+                    <!--                                                        <span class="span-3">비밀번호 다시 입력 </span> <input-->
+                    <!--                                                            type="password" name="newPw2"-->
+                    <!--                                                            class="mb-2"><br>-->
+                    <!--                                                        <span class="text-danger">${message}</span><br>-->
+                    <!--                                                        <button type="submit" class="badge text-bg-secondary">비밀번호-->
+                    <!--                                                            변경-->
+                    <!--                                                        </button>-->
+                    <!--                                                    </form>-->
+                    <!--                                                </div>-->
+                    <!--                                            </div>-->
+                    <!--                                        </div>-->
+                    <!--                                    </div>-->
+                    <!--                                    <button type="submit" class="btn btn-primary align-items-center m-2"> 로그인-->
+                    <!--                                    </button>-->
 
-                    <a href="/user/register" class="btn btn-danger">회원 가입하기</a>
-                </form>
+                    <!--                                    <a href="/user/register" class="btn btn-danger">회원 가입하기</a>-->
+                    <!--                                </form>-->
+                    <!--                            </div>-->
+
+
+                    <!-- 본문 내용 끝 -->
+                </div>
+                <!-- /.container-fluid -->
+
             </div>
+
         </div>
     </div>
 </div>
+
 
 </body>
 </html>

@@ -4,9 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.ipa.openapi_inzent.model.MdAgencyDTO;
-import com.ipa.openapi_inzent.model.MdProviderDTO;
-import com.ipa.openapi_inzent.model.MdServiceDTO;
+import com.ipa.openapi_inzent.model.*;
 import com.ipa.openapi_inzent.service.MydataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,7 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.sql.ClientInfoStatus;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,11 +29,6 @@ public class MydataController {
     }
 
 
-    @GetMapping("/collectorTable")
-    public String collectorTable() {
-        return "/mydata/mdCollectorTable";
-    }
-
     @GetMapping("/agencyTable")
     public String mdServiceTable(Model model) {
 
@@ -49,7 +42,7 @@ public class MydataController {
     public JsonObject mdServiceTableModal(int id) {
 
         List<MdServiceDTO> list = mydataService.mdServiceSelectModal(id);
-        System.out.println("id = " + id);
+        System.out.println(" " + id);
         System.out.println(list);
 
         JsonArray array = new JsonArray();
@@ -62,12 +55,14 @@ public class MydataController {
             object.addProperty("mdServiceName", list.get(i).getMdServiceName());
             object.addProperty("domainName", list.get(i).getDomainName());
 
-            JsonElement element = JsonParser.parseString(list.get(i).getCallbackUrl()).getAsJsonObject().get("url");
+            JsonElement element = JsonParser.parseString(list.get(i).getCallbackUrl()).getAsJsonObject().get("callbackURL");
 
             object.add("callbackUrl", element);
             array.add(object);
 
         }
+        System.out.println("MydataController.mdServiceTableModal");
+        System.out.println("array = " + array);
 
         JsonObject result = new JsonObject();
 
@@ -161,7 +156,7 @@ public class MydataController {
     @ResponseBody
     public void agencyTableDeleteRow(int id) {
         System.out.println("id = " + id);
-        mydataService.mdAgencyDelete(id);
+//        mydataService.mdAgencyDelete(id);
     }
 
 
@@ -175,10 +170,88 @@ public class MydataController {
         return "/mydata/statistics-7Day";
     }
 
+
+    /////////////////////////////////////////////////
+    // TOKEN start
+    /////////////////////////////////////////////////
     @GetMapping("/mydataToken")
-    public String mydataToken() {
+    public String mydataToken(Model model) {
+        model.addAttribute("astList", mydataService.mdAstList());
+        System.out.println("========================");
+        System.out.println(mydataService.mdAstList());
+        System.out.println("========================");
         return "/mydata/mydataToken";
     }
+
+    // mdToken 검색
+    @GetMapping("/tokenSearch")
+    public String mydataSearch(Model model, String keyword) {
+        System.out.println("keyword = " + keyword);
+        model.addAttribute("astList", mydataService.mdTokenSearch(keyword));
+
+        return "/mydata/mydataToken";
+    }
+
+    @GetMapping("/token/modal")
+    @ResponseBody
+    public JsonObject tokenDetail(int id) {
+
+        System.out.println("MydataController.tokenDetail");
+
+        System.out.println("id = " + id);
+
+        MdAgencyDTO mdOne = mydataService.mdAstOne(id);
+        JsonObject object = new JsonObject();
+
+        System.out.println("mdOne = " + mdOne);
+
+        // mdService
+        object.addProperty("clientId", mdOne.getMdServiceDTO().getClientId());
+        object.addProperty("mdServiceName", mdOne.getMdServiceDTO().getMdServiceName());
+        object.addProperty("domainName", mdOne.getMdServiceDTO().getDomainName());
+
+        JsonElement element = JsonParser.parseString(mdOne.getMdServiceDTO().getCallbackUrl()).getAsJsonObject().get("callbackURL");
+
+        object.add("callbackUrl", element);
+
+        // mdAgency
+        object.addProperty("agencyId", mdOne.getId());
+        object.addProperty("code", mdOne.getCode());
+        object.addProperty("division", mdOne.getDivision());
+        object.addProperty("agencyName", mdOne.getName());
+        object.addProperty("industry", mdOne.getIndustry());
+
+        object.addProperty("address", mdOne.getAddress());
+        object.addProperty("domainName", mdOne.getDomainName());
+        object.addProperty("publicApiIp", mdOne.getPublicApiIp());
+        object.addProperty("authenticationMethod", mdOne.getAuthenticationMethod());
+
+        object.addProperty("TLSNum", mdOne.getTLSNum());
+        object.addProperty("agencyIp", mdOne.getAgencyIp());
+        object.addProperty("agencyPort", mdOne.getAgencyPort());
+
+        // mdToken
+        // date 시간 변환
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        String entryDate = sdf.format(mdOne.getMdTokenDTO().getCreateDate());
+        String endDate = sdf.format(mdOne.getMdTokenDTO().getEndDate());
+
+
+        object.addProperty("tokenId",mdOne.getMdTokenDTO().getTokenId());
+        object.addProperty("consumerNum",mdOne.getMdTokenDTO().getConsumerNum());
+        object.addProperty("createDate", entryDate);
+        object.addProperty("endDate", endDate);
+        object.addProperty("accessToken",mdOne.getMdTokenDTO().getAccessToken());
+
+
+        System.out.println("object = " + object);
+
+        return object;
+    }
+
+    /////////////////////////////////////////////////
+    // TOKEN end
+    /////////////////////////////////////////////////
 
     @GetMapping("/serviceTable")
     public String serviceTable(Model model) {
@@ -198,7 +271,7 @@ public class MydataController {
         object.addProperty("mdServiceName", mdServiceDTO.getMdServiceName());
         object.addProperty("domainName", mdServiceDTO.getDomainName());
 
-        JsonElement element = JsonParser.parseString(mdServiceDTO.getCallbackUrl()).getAsJsonObject().get("url");
+        JsonElement element = JsonParser.parseString(mdServiceDTO.getCallbackUrl()).getAsJsonObject().get("callbackURL");
 
         object.add("callbackUrl", element);
 
@@ -213,11 +286,6 @@ public class MydataController {
         return "/mydata/mdServiceControl";
     }
 
-    @GetMapping("/mydataSendReq")
-    public String mydataSendReq() {
-        return "/mydata/mydataSendReq";
-    }
-
 
     ///////////////////////////////////////////////////////////////////////////////////////////
     //                            (oﾟvﾟ)ノ  Provider Page  (oﾟvﾟ)ノ                           //
@@ -226,15 +294,53 @@ public class MydataController {
     @GetMapping("/providerTable")
     public String mdProviderSelectAll(Model model) {
 
-        model.addAttribute("list", mydataService.mdProviderSelectAll());
+        List<MdProviderDTO> list = mydataService.mdProviderSelectAll();
+
+        model.addAttribute("list", list);
+        System.out.println("MydataController.mdProviderSelectAll==========");
+        System.out.println(list);
+
+        System.out.println("list.size() = " + list.size());
+
+
         return "/mydata/mdProviderTable";
+    }
+
+    @GetMapping("/provider/insert")
+    public void mdProviderInsert(MdProviderDTO mdProviderDTO) {
+        // 특정 코드 실행 되기 전 시간
+        long start = System.currentTimeMillis();
+        System.out.println("start = " + start);
+
+        // 전송 하는 부분(코드 작성 필요)
+//        int sum = 0;
+//        for (int i = 0; i < 10000000; i++) {
+//            sum += i;
+//        }
+        // 특정 코드 실행 되고 난 후 시간
+        long end = System.currentTimeMillis();
+        System.out.println("end = " + end);
+
+        // 초 단위 실행시간
+        double result = (end-start)/1000.0;
+        System.out.println("result = " + result);
+
+        // to_json으로 db들어가기전에 타입 변환해줘야함
+//        mdProviderDTO.setRuntime(result);
+
+
+//        mydataService.mdProviderInsert(mdProviderDTO);
+
+
     }
 
     @GetMapping("/provider/selectOne")
     @ResponseBody
-    public JsonObject mdProviderSelectAll(int id) {
+    public JsonObject mdProviderSelectOne(int id) {
+        System.out.println("id = " + id);
 //        null 처리
         MdProviderDTO mdProviderDTO = mydataService.mdProviderSelectOne(id);
+        System.out.println("mdProviderDTO = " + mdProviderDTO);
         JsonObject object = new JsonObject();
         object.addProperty("id", mdProviderDTO.getId());
         object.addProperty("reqSEQ", mdProviderDTO.getMdReqInfoDTO().getReqSEQ());
@@ -245,13 +351,52 @@ public class MydataController {
         object.addProperty("statusInfo", mdProviderDTO.getStatusInfo()); //상태정보 ex)마이데이터
         object.addProperty("agencyName", mdProviderDTO.getMdReqInfoDTO().getAgencyName());//기관명
         object.addProperty("serviceName", mdProviderDTO.getMdReqInfoDTO().getServiceName()); //서비스명
-        object.addProperty("consumerNum", mdProviderDTO.getMdReqInfoDTO().getConsumerNum()); //통합고객번호
+        object.addProperty("consumerNum", mdProviderDTO.getCustomerNum()); //통합고객번호
         object.addProperty("code", mdProviderDTO.getMdReqInfoDTO().getCode());
-        object.addProperty("tokenExpiryDate", mdProviderDTO.getMdReqInfoDTO().getTokenExpiryDate()); //토큰유효기간
         object.addProperty("reqType", mdProviderDTO.getMdReqInfoDTO().getReqType()); //전송요구타입
+
+        if (mdProviderDTO.getMdReqInfoDTO().getTokenExpiryDate() == null) {
+            object.addProperty("tokenExpiryDate", ""); //토큰유효기간
+        } else {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String tokenExpiryDate = sdf.format(mdProviderDTO.getMdReqInfoDTO().getTokenExpiryDate());
+            object.addProperty("tokenExpiryDate", tokenExpiryDate); //토큰유효기간
+        }
 
 
         return object;
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    //                            (oﾟvﾟ)ノ  Collector Page  (oﾟvﾟ)ノ                           //
+    ///////////////////////////////////////////////////////////////////////////////////////////
+
+    @GetMapping("/collectorTable")
+    public String collectorTable(Model model) {
+
+        List<MdCollectorDTO> list = mydataService.mdCollectorSelectAll();
+
+        System.out.println("list = " + list);
+
+        model.addAttribute("list", list);
+        return "/mydata/mdCollectorTable";
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    //                            (oﾟvﾟ)ノ  Send Request Page  (oﾟvﾟ)ノ                       //
+    ///////////////////////////////////////////////////////////////////////////////////////////
+
+
+    @GetMapping("/mydataSendReq")
+    public String mydataSendReq(Model model) {
+        List<MdProviderDTO> list = mydataService.mdReqList();
+        System.out.println("=-=-=-=-=-=-=-=-=MydataController.mydataSendReq");
+        System.out.println("list = " + list);
+
+        model.addAttribute("list", list);
+
+        System.out.println("list.size() = " + list.size());
+        return "/mydata/mydataSendReq";
     }
 
 }

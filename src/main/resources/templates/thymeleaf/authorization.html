@@ -36,20 +36,23 @@
                 crossorigin="anonymous"></script>
 
         <script>
-            function eraseWarning() {
+            function eraseWarning(value) {
+                let name = value.getAttribute("role_name");
+                let id = value.getAttribute("role_id");
                 Swal.fire({
-                    title: "삭제하시겠습니까?",
-                    text: "이 작업은 되돌릴수 없습니다!",
+                    showCancelButton: true,
+                    cancelButtonText: "취소",
+                    confirmButtonText: "확인",
+                    text: name + " 역할을 삭제하시겠습니까?",
                     icon: "warning",
-                    buttons: true,
-                    dangerMode: true,
-                }).then((willDelete) => {
-                    if (willDelete) {
-                        Swal.fire("삭제되었습니다.", {
-                            icon: "success",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                            title: '삭제 성공',
+                            icon: 'success'
+                        }).then(() => {
+                            location.href = "/roleDelete/" + id;
                         });
-                    } else {
-                        Swal.fire("취소되었습니다.");
                     }
                 });
             }
@@ -168,11 +171,11 @@
                             </div>
                         </div>
                         <div class="modal-footer">
+                            <form name="modalSubmit" type="button" class="btn btn-primary"
+                            onclick=changeConfirm()>저장
+                            </form>
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기
                             </button>
-                            <form name="modalSubmit" type="button" class="btn btn-primary"
-                                  onclick=changeConfirm()>저장
-                            </form>
                             <!--권한 추가 모달끝-->
                         </div>
                     </div>
@@ -203,32 +206,14 @@
                     <tr style=" width: -webkit-fill-available; font-weight: bold; background-color: #f5f6fb;">
                         <td>CODE</td>
                         <td>이름</td>
-                        <td>비고</td>
+                        <td style="width: 14%;">비고</td>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td data-bs-toggle="modal" data-bs-target="#authModal">ADMIN</td>
-                        <td data-bs-toggle="modal" data-bs-target="#authModal">운영자</td>
-                        <td><i onclick="eraseWarning();" style="cursor: pointer;"
-                               class="fa-solid fa-trash-can"></i></td>
-                    </tr>
-                    <tr>
-                        <td data-bs-toggle="modal" data-bs-target="#authModal">USER</td>
-                        <td data-bs-toggle="modal" data-bs-target="#authModal">일반사용자</td>
-                        <td><i onclick="eraseWarning();" style="cursor: pointer;"
-                               class="fa-solid fa-trash-can"></i></td>
-                    </tr>
-                    <tr>
-                        <td data-bs-toggle="modal" data-bs-target="#authModal">PROVIDER</td>
-                        <td data-bs-toggle="modal" data-bs-target="#authModal">API제공자</td>
-                        <td><i onclick="eraseWarning();" style="cursor: pointer;"
-                               class="fa-solid fa-trash-can"></i></td>
-                    </tr>
-                    <tr>
-                        <td data-bs-toggle="modal" data-bs-target="#authModal">MYDATA</td>
-                        <td data-bs-toggle="modal" data-bs-target="#authModal">마이데이터 사업자</td>
-                        <td><i onclick="eraseWarning();" style="cursor: pointer;"
+                    <tr th:each="roles:${roleList}">
+                        <td data-bs-toggle="modal" data-bs-target="#authModal" th:text="${roles.code}"></td>
+                        <td data-bs-toggle="modal" data-bs-target="#authModal" th:text="${roles.name}"></td>
+                        <td><i onclick="eraseWarning(this);" style="cursor: pointer;" th:role_name="${roles.name}" th:role_id="${roles.id}"
                                class="fa-solid fa-trash-can"></i></td>
                     </tr>
                     </tbody>
@@ -252,7 +237,7 @@
                                     <h6 class="mt-2">사용자</h6>
                                     <label><input class="m-2" type="checkbox" value="create" checked>생성</label>
                                     <label><input class="m-2" type="checkbox" value="delete">삭제</label>
-                                    <label><input class="m-2" type="checkbox" value="read" >읽기</label>
+                                    <label><input class="m-2" type="checkbox" value="read">읽기</label>
                                     <label><input class="m-2" type="checkbox" value="update" checked>갱신</label>
                                     <hr>
                                     <h6 class="mt-2">사용통계</h6>
@@ -264,14 +249,14 @@
                                     <label><input class="m-2" type="checkbox" value="create" checked>생성</label>
                                     <label><input class="m-2" type="checkbox" value="delete">삭제</label>
                                     <label><input class="m-2" type="checkbox" value="read" checked>읽기</label>
-                                    <label><input class="m-2" type="checkbox" value="update" >갱신</label>
+                                    <label><input class="m-2" type="checkbox" value="update">갱신</label>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                        닫기
-                                    </button>
                                     <button type="button" class="btn btn-primary"
                                             onclick="adminAuthCorrection()">수정
+                                    </button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                        닫기
                                     </button>
                                 </div>
                             </div>

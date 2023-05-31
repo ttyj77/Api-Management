@@ -51,11 +51,6 @@ public class IndexController {
         return "modalTest";
     }
 
-    @GetMapping("/authorization")
-    public String authorization() {
-        return "authorization";
-    }
-
     @GetMapping("/register")
     public String regis() {
         return "register";

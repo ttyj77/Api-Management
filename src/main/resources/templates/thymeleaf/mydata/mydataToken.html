@@ -17,7 +17,9 @@
 
         .tdHead {
             background-color: #f5f5f5;
+            width: 25%;
         }
+
     </style>
 
     <title>계정 목록</title>
@@ -43,6 +45,7 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js"
                 integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
                 crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script>
             function removeAlert() {
                 console.log("alert")
@@ -64,45 +67,34 @@
                 });
             }
 
-            function checkRole() {
-                let admin = document.getElementById('admin');
-                let normal = document.getElementById('normal');
-                let api = document.getElementById('api');
-                let md = document.getElementById('md');
-
-                let adminBadge = $(document.createElement("span")).addClass("badge badge-secondary admin").attr('style', "margin-right:2px").text(admin.value);
-                let normalBadge = $(document.createElement("span")).addClass("badge badge-secondary normal").attr('style', "margin-right:2px").text(normal.value);
-                let apiBadge = $(document.createElement("span")).addClass("badge badge-secondary api").attr('style', "margin-right:2px").text(api.value);
-                let mdBadge = $(document.createElement("span")).addClass("badge badge-secondary md").attr('style', "margin-right:2px").text(md.value);
-
-                let radimin = document.querySelector('.admin');
-                let rnormal = document.querySelector('.normal');
-                let rapi = document.querySelector('.api');
-                let rmd = document.querySelector('.md');
-
-                if (admin.checked && radimin == null) {
-                    $('#target').append(adminBadge);
-                } else if (radimin != null && !admin.checked) {
-                    $('.admin').remove();
+            // 토근 발급 목록 detail 모달 ajax
+            function tokenDetail(value) {
+                console.log(value);
+                let tokenId = value.getAttribute("token_id");
+                console.log("tokenIDdddddddd= ",tokenId)
+                let data = {
+                    "id": tokenId,
                 }
 
-                if (normal.checked && rnormal == null) {
-                    $('#target').append(normalBadge);
-                } else if (rnormal != null && !normal.checked) {
-                    $('.normal').remove();
-                }
+                $.ajax({
+                    url: "/mydata/token/modal",
+                    data: data,
+                    type: "get",
 
-                if (api.checked && rapi == null) {
-                    $('#target').append(apiBadge);
-                } else if (rapi != null && !api.checked) {
-                    $('.api').remove();
-                }
+                    success: (message) => {
+                        console.log(message)
 
-                if (md.checked && rmd == null) {
-                    $('#target').append(mdBadge);
-                } else if (rmd != null && !md.checked) {
-                    $('.md').remove();
-                }
+                        document.getElementById("clientId").innerText = message.clientId;
+                        document.getElementById("userInfo").innerText = message.consumerNum;
+                        document.getElementById("mdServiceName").innerText = message.mdServiceName;
+                        document.getElementById("agencyName").innerText = message.agencyName;
+                        document.getElementById("agencyCode").innerText = message.code;
+                        document.getElementById("accessToken").innerText = message.accessToken;
+                        document.getElementById("entryTime").innerText = message.createDate;
+                        document.getElementById("endTime").innerText = message.endDate;
+
+                    }
+                })
             }
 
         </script>
@@ -129,17 +121,16 @@
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <!-- Topbar Search -->
-                        <div class="col input-group mt-3" style="width: 25%; align-self: end;">
-                            <input type="text" class="form-control"
+                        <form action="/mydata/tokenSearch" method="get" class="col input-group mt-3" style="width: 40%; align-self: end;">
+                            <input type="text" class="form-control m-0"
                                    placeholder="검색어를 입력해주세요"
-                                   aria-label="Search" aria-describedby="basic-addon2">
+                                   aria-label="Search" name="keyword">
                             <div class="input-group-append">
-                                <button class="btn btn-primary" type="button"
-                                        style="height: 38px;">
+                                <button class="btn btn-primary" type="submit">
                                     <i class="fas fa-search fa-sm"></i>
                                 </button>
                             </div>
-                        </div>
+                        </form>
                         <!--                        </div>-->
                         <div class="card-body">
                             <div class="table-responsive">
@@ -157,22 +148,18 @@
                                     </thead>
 
                                     <tbody>
-                                    <tr data-bs-toggle="modal" data-bs-target="#exampleModal">
-
-                                        <td id="tableId">
-                                            yTGYvaNYtCOectRcfnsviayDzGIEHthUqBSdvlZPikFvUmqW
+                                    <tr data-bs-toggle="modal" data-bs-target="#exampleModal" th:each="list:${astList}"
+                                        th:token_id="${list.mdTokenDTO.tokenId}" onclick="tokenDetail(this)">
+                                        <td id="tableId" th:text="${list.mdServiceDTO.clientId}">
                                         </td>
-                                        <td id="tableName">최용훈
+                                        <td id="tableName" th:text="${list.mdTokenDTO.consumerNum}">
                                         </td>
-                                        <td>
-                                            기업은행 테스트
+                                        <td th:text="${list.mdServiceDTO.mdServiceName}">
                                         </td>
-                                        <td> 중소기업은행</td>
-                                        <td>
-                                            A1AAEO0000
+                                        <td th:text="${list.name}"></td>
+                                        <td th:text="${list.code}">
                                         </td>
-                                        <td>
-                                            2021-09-23 11:03
+                                        <td th:text="${#dates.format(list.mdTokenDTO.createDate, 'yyyy-MM-dd HH:mm')}">
                                         </td>
                                         <!--삭제 활동 끝-->
                                     </tr>
@@ -195,60 +182,99 @@
                                 <h5 class="modal-title" id="exampleModalLabel">요청상세정보</h5>
 
                             </div>
-                            <div class="modal-body" id="modalDark" style="overflow-x: hidden">
 
-                                <table class="table table-bordered align-middle"
-                                       style="width: -webkit-fill-available; font-size: 15px">
-                                    <tbody>
-                                    <tr>
-                                        <td class="col-2 tdHead">클라이언트 ID</td>
-                                        <td>GTrnmyGXBQlRqneuORuENJfFYjKdHBHaQZlf</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="tdHead">사용자 정보(CI)</td>
-                                        <td colspan="3">40112633</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="tdHead">서비스명</td>
-                                        <td colspan="3">
-                                            핀다
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="tdHead">기관명</td>
-                                        <td colspan="3">(주)핀다</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="tdHead">기관명</td>
-                                        <td colspan="3">ZVAALO0000</td>
-                                    </tr>
+                            <div class="modal-body" style="overflow-x: hidden">
+                                <div class="w-100 p-2">
+                                    <div class="border mb-3">
+                                        <div class="border-bottom">
+                                            <h5 class="text-muted p-3 m-0">기본 정보</h5>
+                                        </div>
+                                        <div class="p-4">
+                                            <table class="table table-borderless">
+                                                <tbody>
+                                                <tr>
+                                                    <td class="tdHead">
+                                                        클라이언트 ID
+                                                    </td>
+                                                    <td class="tdContent" id="clientId">
 
-                                    </tbody>
-                                </table>
-                                <table class="table table-bordered align-middle"
-                                       style="width: -webkit-fill-available; font-size: 15px">
-                                    <tbody>
-                                    <tr>
-                                        <td class="col-2 tdHead" style="vertical-align: inherit !important;">발급한<br>Accecc Token
-                                        </td>
-                                        <td style="word-break: break-all;">
-                                            eyJhbGciOiJSUzI1NiJ9.eyJhdWQiOiJaVkFBTE8wMDAwIiwianRpIjoiMTMyMCIsImlzcyI6Im15ZGF0YXQua3lvYm8uY29tIiwic3ViIjoiaHZVWDNnUEVhWWs0YUhOMm5wNnpuWkl4MDVWaVlHWWMiLCJzY29wZSI6Im1hbmFnZSIsImV4cCI6MTY0NTc2Mzc1MywiaWF0IjoxNjM3OTg3NzUzfQ.m7PU7VGT67vG4lqHkG37_ClLimPEXwSl1ft9ttQjsXBTE1SqcgFQn0vmgLq9zJjuO9nxQPaAdci2wU1MvZq-419H9Bu1Ubp2-TCRN080dlPLIDyByofZLGtcabs2o5pmUqT2yMoPo51bcan-jqqGMUy3yzvkaVW8o4aaud9rudu6zFWVSOHmdvWKPY0iL_CXNM1ShSpS2FXcwBOi3NI7LTqdI0YD3pzU1lYsAPHu-_Fk0OZoKwYL0ITzOcJY5EJgXjsOr_E9C7cHrs_O8lk1SkTgQWUG8oGo5phyt5WKM-uMR8o3B388zqA3cHc6sxNJtiS9sSvDv9cN6x9FwkVIyA
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="tdHead">발급시간</td>
-                                        <td colspan="3">2021-11-27 13:35</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="tdHead">Accecc Token 폐기일</td>
-                                        <td colspan="3">
-                                            2023-11-27 13:35
-                                        </td>
-                                    </tr>
+                                                    </td>
+                                                </tr>
+                                                <tr style="border-top: 1px solid #dee2e6">
+                                                    <td class="tdHead">
+                                                        사용자 정보(CI)
+                                                    </td>
+                                                    <td class="tdContent" id="userInfo">
 
-                                    </tbody>
-                                </table>
+                                                    </td>
+                                                </tr>
+                                                <tr style="border-top: 1px solid #dee2e6">
+                                                    <td class="tdHead">
+                                                        서비스명
+                                                    </td>
+                                                    <td class="tdContent" id="mdServiceName">
 
+                                                    </td>
+                                                </tr>
+
+                                                <tr style="border-top: 1px solid #dee2e6">
+                                                    <td class="tdHead">
+                                                        기관명
+                                                    </td>
+                                                    <td class="tdContent" id="agencyName">
+
+                                                    </td>
+                                                </tr>
+
+                                                <tr style="border-top: 1px solid #dee2e6">
+                                                    <td class="tdHead">
+                                                        기관코드
+                                                    </td>
+                                                    <td class="tdContent" id="agencyCode">
+
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="border mb-3">
+                                        <div class="border-bottom">
+                                            <h5 class="text-muted p-3 m-0">Access Token</h5>
+                                        </div>
+                                        <div class="p-4" style="overflow-x:auto;">
+                                            <table class="table table-borderless">
+                                                <tbody>
+                                                <tr>
+                                                    <td class="tdHead">
+                                                        발급한 Access Token
+                                                    </td>
+                                                    <td class="tdContent" id="accessToken"
+                                                        >
+
+                                                    </td>
+                                                </tr>
+                                                <tr style="border-top: 1px solid #dee2e6">
+                                                    <td class="tdHead">
+                                                        발급시간
+                                                    </td>
+                                                    <td class="tdContent" id="entryTime">
+
+                                                    </td>
+                                                </tr>
+                                                <tr style="border-top: 1px solid #dee2e6">
+                                                    <td class="tdHead">
+                                                        Access Token 폐기일
+                                                    </td>
+                                                    <td class="tdContent" id="endTime">
+
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>

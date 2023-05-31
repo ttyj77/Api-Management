@@ -2,6 +2,8 @@ package com.ipa.openapi_inzent.model;
 
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
 public class MdReqInfoDTO {
     private int id;
@@ -9,9 +11,8 @@ public class MdReqInfoDTO {
     private String code;
     private String agencyName;
     private String serviceName;
-    private String consumerNum;
-    private String reqSEQ;
     private String reqType;
-    private String tokenExpiryDate;
+    private String reqSEQ;
+    private Date tokenExpiryDate;
 
 }

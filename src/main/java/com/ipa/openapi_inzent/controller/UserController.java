@@ -136,8 +136,9 @@ public class UserController {
         return object;
     }
 
+    // 계정관리 비번 변경
     @PostMapping("/updatePwd/{id}")
-    public String updatePw(@PathVariable int id, String password) {
+    public String updatePwd(@PathVariable int id, String password) {
         UserDTO userDTO = userService.userOne(id);
 
         userDTO.setPassword(passwordEncoder.encode(password));
@@ -145,6 +146,17 @@ public class UserController {
         userService.update(userDTO);
 
         return "redirect:/accountList";
+    }
+    // 내정보 비번 변경
+    @PostMapping("/updatePw/{id}")
+    public String updatePw(@PathVariable int id, String password) {
+        UserDTO userDTO = userService.userOne(id);
+
+        userDTO.setPassword(passwordEncoder.encode(password));
+
+        userService.update(userDTO);
+
+        return "redirect:/user/mypage";
     }
 
     @GetMapping("/selectOneRole")
@@ -198,23 +210,27 @@ public class UserController {
         return "redirect:/accountList";
     }
 
+    // mypage role 없이 계정 update
+    @PostMapping("/updateUser")
+    public String updateUser(Model model, int id, String nickname, String email) {
 
-//    @PostMapping("updatePw/{id}")
-//    public void updatePw(Model model, RedirectAttributes redirectAttributes, @PathVariable int id, String oldPw, String newPw, String newPw2) {
-//        UserDTO userDTO = userService.selectOne(id);
-//        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-//
-//        if (!passwordEncoder.matches(oldPw, userDTO.getPassword())) {
-//            redirectAttributes.addFlashAttribute("message", "기존 비밀번호를 확인해주세요.");
-//        } else if (!newPw.equals(newPw2)) {
-//            redirectAttributes.addFlashAttribute("message", "새 비밀번호가 서로 일치하지 않습니다.");
-//        } else {
-//            redirectAttributes.addFlashAttribute("message", "비밀번호 변경 성공!");
-//            userDTO.setPassword(passwordEncoder.encode(newPw));
-//            userService.update(userDTO);
-//        }
-//
-////        return "redirect:/user/mypage/" + id;
-//    }
+        System.out.println("UserController.updateAccount");
+        System.out.println("id = " + id);
+        System.out.println("nickname = " + nickname);
+        System.out.println("email = " + email);
+        // 유저 정보 갱신
+        UserDTO temp = userService.userOne(id);
+        temp.setNickname(nickname);
+        temp.setEmail(email);
+        System.out.println("temp = " + temp);
+
+        userService.update(temp);
+
+        model.addAttribute("user", temp);
+
+        return "mypage";
+    }
+
+
 
 }

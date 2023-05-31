@@ -65,7 +65,7 @@
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional>
         </dependency>
-<!--        &lt;!&ndash;   swagger dependency   &ndash;&gt;-->
+        <!--        &lt;!&ndash;   swagger dependency   &ndash;&gt;-->
         <!--        <dependency>-->
         <!--            <groupId>org.springdoc</groupId>-->
         <!--            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>-->
@@ -79,18 +79,27 @@
         <!--        </dependency>-->
 
         <!--        &lt;!&ndash; https://mvnrepository.com/artifact/io.springfox/springfox-boot-starter &ndash;&gt;-->
-        <!--        <dependency>-->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-boot-starter</artifactId>
+            <version>3.0.0</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/io.springfox/springfox-swagger-ui -->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>3.0.0</version>
+        </dependency>
+<!--        <dependency>-->
         <!--            <groupId>io.springfox</groupId>-->
         <!--            <artifactId>springfox-boot-starter</artifactId>-->
         <!--            <version>3.0.0</version>-->
         <!--        </dependency>-->
-        <!--        &lt;!&ndash; https://mvnrepository.com/artifact/io.springfox/springfox-swagger-ui &ndash;&gt;-->
         <!--        <dependency>-->
         <!--            <groupId>io.springfox</groupId>-->
         <!--            <artifactId>springfox-swagger-ui</artifactId>-->
         <!--            <version>3.0.0</version>-->
         <!--        </dependency>-->
-
 
         <!--fragment-->
         <dependency>

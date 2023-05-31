@@ -34,8 +34,7 @@
     <div id="sidebarMargin" style="margin-left: 4.5%">
         <div class="l-navbar" id="navbar">
             <nav class="nav">
-                <div style="overflow-y: auto;
-    overflow-x: hidden;">
+                <div id="scrollbar">
                     <div class="nav__brand">
                         <ion-icon name="menu-outline" class="nav__toggle" id="nav-toggle"></ion-icon>
                     </div>
@@ -113,7 +112,6 @@
     <script>
         /* EXPANDER MENU */
         const showMenu = (toggleId, navbarId, bodyId) => {
-
             const toggle = document.getElementById(toggleId),
                 navbar = document.getElementById(navbarId),
                 bodypadding = document.getElementById(bodyId)
@@ -167,6 +165,7 @@
         // window.onload(function () {
         //     colorLink()
         // })
+
 
 
         /* COLLAPSE MENU */

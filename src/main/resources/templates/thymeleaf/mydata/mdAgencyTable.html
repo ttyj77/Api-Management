@@ -53,6 +53,7 @@
                         $('#etcModal').modal('show');
                         document.getElementById("etcModalTbody").innerHTML = ""
                         let array = JSON.parse(message.responseText);
+                        console.log(array)
                         createEtcModal(array);
 
 
@@ -117,6 +118,9 @@
 
 
             function createAgencyModal(list) {
+                //ipPort 초기화
+                document.getElementById("ipPort").innerHTML = "";
+
                 document.getElementById("code").innerText = list.code
                 document.getElementById("division").innerText = list.division
                 document.getElementById("name").innerText = list.name
@@ -156,7 +160,6 @@
                         createAgencyList(array);
                         console.log(array)
 
-
                     },
                     error: (e) => {
                         console.log("통신 실패", e);
@@ -174,6 +177,8 @@
                     let division = document.createElement("td")
                     let industry = document.createElement("td")
                     let note = document.createElement("td")
+                    let deleteTd = document.createElement("td")
+                    let btn = document.createElement("button")
 
 
                     agCode.append(array[i].code)
@@ -195,6 +200,12 @@
                     // <td onClick="infoModal(this)" th:id="${agencyList.id}"><i className="fa-solid fa-braille"
                     // style="cursor: pointer"></i></td>
 
+                    btn.className = "btn-sm btn-danger rounded-pill";
+                    $(btn).attr("onclick", "deleteRow(this)");
+                    btn.innerText = "삭제"
+
+                    deleteTd.append(btn);
+
                     note.onclick = function () {
                         infoModal(this);
                     };
@@ -205,7 +216,7 @@
                     note.append(icon)
 
                     tr.id = array[i].id
-                    tr.append(agCode, division, name, industry, note)
+                    tr.append(agCode, division, name, industry, note, deleteTd);
 
                     document.getElementById("agencyListTbody").append(tr)
                 }
@@ -217,21 +228,35 @@
                 let data = {
                     "id": value.parentNode.parentNode.id,
                 };
-                $.ajax({
-                    url: "/mydata/agencyTable/delete",
-                    type: "get",
-                    data: data,
 
-                    success: (message) => {
-                        // 1. 리다이렉트
-                        location.href = '/mydata/agencyTable';
+                Swal.fire({
+                    showCancelButton: true,
+                    cancelButtonText: "취소",
+                    confirmButtonText: "확인",
+                    icon: 'warning',
+                    text: "메소드를 삭제하시겠습니까??"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                            title: '삭제 성공',
+                            icon: 'success'
+                        }).then(() => {
+                            $.ajax({
+                                url: "/mydata/agencyTable/delete",
+                                type: "get",
+                                data: data,
 
-
-                    },
-                    error: (e) => {
-                        console.log("통신 실패", e);
+                                success: (message) => {
+                                    // 1. 리다이렉트
+                                    location.href = '/mydata/agencyTable';
+                                },
+                                error: (e) => {
+                                    console.log("통신 실패", e);
+                                }
+                            })
+                        })
                     }
-                })
+                });
             }
 
 
@@ -254,6 +279,10 @@
 
         .borderTop {
             border-top: 1px solid #dee2e6;
+        }
+
+        td {
+            vertical-align: middle !important;
         }
     </style>
 
@@ -313,9 +342,8 @@
                         <td onclick="infoModal(this)" th:id="${agencyList.id}"><i class="fa-solid fa-braille"
                                                                                   style="cursor: pointer"></i></td>
                         <td>
-                            <button class="btn btn-danger" onclick="deleteRow(this)">삭제</button>
+                            <button class="btn-sm btn-danger" onclick="deleteRow(this)">삭제</button>
                         </td>
-
                     </tr>
 
 
@@ -581,24 +609,7 @@
                                             </table>
                                         </div>
                                     </div>
-                                    <div class="border mb-3">
-                                        <div class="border-bottom">
-                                            <h5 class="text-muted p-3 m-0">앱 URL 스킴</h5>
-                                        </div>
-                                        <div class="p-4 table-responsive">
-                                            <table class="table table-borderless">
-                                                <tbody>
-                                                <tr>
-                                                    <td class="tdHead">
-                                                        API서버 도메인명
-                                                    </td>
-                                                    <td class="tdContent">
-                                                    </td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
+
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
