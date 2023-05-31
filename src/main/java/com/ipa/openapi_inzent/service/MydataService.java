@@ -70,6 +70,31 @@ public class MydataService {
         Calendar cal = Calendar.getInstance();
 
         try {
+            System.out.println("MydataService.mdProviderSelectAll");
+            for (MdProviderDTO m : list) {
+                Date forMatDate = dfFormat.parse(m.getReqDate());
+                m.setReqDate(newFormat.format(forMatDate)); //요청일 ex) 2021-11-23
+                m.setReqTime(timeFormat.format(forMatDate)); //요청시간 ex) 15:18:16.614
+                cal.setTime(forMatDate);
+                cal.add(Calendar.MILLISECOND, m.getRuntime()); // 요청일에 응답시간(runtime)을 더함 => 응답일자
+                m.setResDate(dfFormat.format(cal.getTime())); //응답일자 ex) 2021-11-23 15:18:16.642
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    public List<MdProviderDTO> mdReqList() {
+        List<MdProviderDTO> list = mydataDao.mdReqList();
+        SimpleDateFormat dfFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        SimpleDateFormat hmsFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat newFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss:SSS");
+
+        Calendar cal = Calendar.getInstance();
+
+        try {
+            System.out.println("MydataService.mdProviderSelectAll");
             for (MdProviderDTO m : list) {
                 Date forMatDate = dfFormat.parse(m.getReqDate());
                 m.setReqDate(newFormat.format(forMatDate)); //요청일 ex) 2021-11-23
@@ -132,8 +157,6 @@ public class MydataService {
         return mydataDao.mdTokenSearch(keyword);
     }
 
-    public List<MdProviderDTO> mdReqList() {
-        return mydataDao.mdReqList();
-    }
+
 }
 

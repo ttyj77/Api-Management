@@ -12,7 +12,6 @@ public class MdReqInfoDTO {
     private String agencyName;
     private String serviceName;
     private String reqType;
-    private String consumerNum;
     private String reqSEQ;
     private Date tokenExpiryDate;
 

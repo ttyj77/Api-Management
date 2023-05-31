@@ -351,7 +351,7 @@ public class MydataController {
         object.addProperty("statusInfo", mdProviderDTO.getStatusInfo()); //상태정보 ex)마이데이터
         object.addProperty("agencyName", mdProviderDTO.getMdReqInfoDTO().getAgencyName());//기관명
         object.addProperty("serviceName", mdProviderDTO.getMdReqInfoDTO().getServiceName()); //서비스명
-        object.addProperty("consumerNum", mdProviderDTO.getMdReqInfoDTO().getConsumerNum()); //통합고객번호
+        object.addProperty("consumerNum", mdProviderDTO.getCustomerNum()); //통합고객번호
         object.addProperty("code", mdProviderDTO.getMdReqInfoDTO().getCode());
         object.addProperty("reqType", mdProviderDTO.getMdReqInfoDTO().getReqType()); //전송요구타입
 

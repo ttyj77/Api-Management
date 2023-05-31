@@ -86,7 +86,6 @@
         <result property="code" column="code"/>
         <result property="agencyName" column="agencyName"/>
         <result property="serviceName" column="serviceName"/>
-        <result property="consumerNum" column="consumerNum"/>
         <result property="reqSEQ" column="reqSEQ"/>
         <result property="reqType" column="reqType"/>
         <result property="tokenExpiryDate" column="tokenExpiryDate"/>
@@ -163,7 +162,7 @@
 
     <select id="mdReqList" resultMap="providerInfo">
         SELECT res.id as "reqId", res."providerId", res.code, res."agencyName", res."serviceName", res."reqType",
-        res."consumerNum", res."reqSEQ", res."tokenExpiryDate", pro.id, pro."reqDate", pro.runtime, pro."resCode",
+        res."reqSEQ", res."tokenExpiryDate", pro.id, pro."reqDate", pro.runtime, pro."resCode",
         pro."apiCode", pro."customerNum", pro."regularTransmission", pro."uniqueNum", pro."statusInfo",
         pro."apiResources", pro."reqHeader", pro."resMsg", pro."resData"
         FROM public."providerHistory" as pro join public."reqInfo" as res on pro.id = res."providerId";
@@ -171,7 +170,7 @@
 
     <select id="mdProviderSelectOne" parameterType="int" resultMap="providerInfo">
         SELECT res.id as "reqId", res."providerId", res.code, res."agencyName", res."serviceName", res."reqType",
-        res."consumerNum", res."reqSEQ", res."tokenExpiryDate", pro.id, pro."reqDate", pro.runtime, pro."resCode",
+        res."reqSEQ", res."tokenExpiryDate", pro.id, pro."reqDate", pro.runtime, pro."resCode",
         pro."apiCode", pro."customerNum", pro."regularTransmission", pro."uniqueNum", pro."statusInfo",
         pro."apiResources", pro."reqHeader", pro."resMsg", pro."resData"
         FROM public."providerHistory" as pro join public."reqInfo" as res on pro.id = res."providerId" where pro.id =
@@ -195,7 +194,7 @@
         select * from public."collectorHistory"
         where id = #{id};
     </select>
-    
+
     <insert id="mdCollectorInsert" parameterType="com.ipa.openapi_inzent.model.MdCollectorDTO">
         INSERT INTO public."collectorHistory"(
         "reqDate", runtime, "resCode", "apiCode", "regularTransmission", "targetHost", "uniqueNum", "apiResources", "reqHeader", "resMsg", "resData")
