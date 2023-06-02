@@ -3380,7 +3380,7 @@ input[type="submit"].btn-block {
 }
 
 .fade {
-    transition: opacity 0.15s linear;
+    /*transition: opacity 0.15s linear;*/
 }
 
 @media (prefers-reduced-motion: reduce) {

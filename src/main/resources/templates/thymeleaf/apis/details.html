@@ -138,7 +138,6 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script>
             function methodSwitch(value) {
-                console.log("click!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
                 console.log(value)
                 let method = value.innerText.toLowerCase()
                 console.log(method)
@@ -981,7 +980,8 @@
                                     </td>
                                     <td>
                                         <nav>
-                                            <div class="nav" id="nav-tab" role="tablist">
+                                            <div class="nav d-flex flex-row justify-content-start" id="nav-tab"
+                                                 role="tablist">
                                                 <button type="button" class="btn btn-outline-danger mr-3"
                                                         data-toggle="tab"
                                                         href="#nav-get" role="tab" aria-controls="nav-get"
@@ -1010,7 +1010,7 @@
                             </table>
                         </div>
                     </div>
-                    <ul class="nav" id="myTab" role="tablist">
+                    <ul class="nav d-flex flex-row justify-content-start" id="myTab" role="tablist">
                         <li class="nav-item" style="display: none" id="get">
                             <a class="redBtn nav-link" id="get-tab" data-toggle="tab" href="#get-content" role="tab"
                                aria-selected="true">GET</a>
@@ -1064,24 +1064,25 @@
                             <!--           인증선택박스                 -->
                             <div class="authorizationSelect ml-2 mr-2 mb-4 mt-3"
                                  style="margin-left: 1.5% !important;">
-                                <div class="selectBox" onclick="showSecondSelectBox()">
-                                    <select>
-                                        <option>인증</option>
-                                    </select>
-                                    <div class="overSelect"></div>
-                                </div>
-                                <div class="authorizationSelectBox">
-                                    <label for="getApiKey">
-                                        <input type="checkbox" id="getApiKey"/>APIKey(APIKEY)</label>
-                                    <label for="getBearer">
-                                        <input type="checkbox" id="getBearer"/>Bearer(APIKEY)</label>
-                                </div>
+<!--                                <div class="selectBox" onclick="showSecondSelectBox()">-->
+<!--                                    <select>-->
+<!--                                        <option>인증</option>-->
+<!--                                    </select>-->
+<!--                                    <div class="overSelect"></div>-->
+<!--                                </div>-->
+<!--                                <div class="authorizationSelectBox">-->
+<!--                                    <label for="getApiKey">-->
+<!--                                        <input type="checkbox" id="getApiKey"/>APIKey(APIKEY)</label>-->
+<!--                                    <label for="getBearer">-->
+<!--                                        <input type="checkbox" id="getBearer"/>Bearer(APIKEY)</label>-->
+<!--                                </div>-->
                             </div>
 
                             <!-- GET 파라미터/응답 선택 시작-->
                             <div class="d-flex flex-column">
                                 <div class="d-flex align-items-start">
-                                    <div class="nav d-flex nav-pills me-3 mb-2" id="v-pills-tab" role="tablist"
+                                    <div class="nav nav-pills me-3 mb-2 flex-row" id="v-pills-tab"
+                                         role="tablist"
                                          aria-orientation="vertical">
 
                                         <button class="nav-link active" id="v-pills-get-parameter-tab"
@@ -1199,25 +1200,25 @@
                             <!--           인증선택박스                 -->
                             <div class="authorizationSelect ml-2 mr-2 mb-4 mt-3"
                                  style="margin-left: 1.5% !important;">
-                                <div class="selectBox" onclick="showSecondSelectBox()">
-                                    <select>
-                                        <option>인증</option>
-                                    </select>
-                                    <div class="overSelect"></div>
-                                </div>
-                                <div class="authorizationSelectBox">
-                                    <label for="postApiKey">
-                                        <input type="checkbox" id="postApiKey"/>APIKey(APIKEY)</label>
-                                    <label for="postBearer">
-                                        <input type="checkbox" id="postBearer"/>Bearer(APIKEY)</label>
-                                </div>
+<!--                                <div class="selectBox" onclick="showSecondSelectBox()">-->
+<!--                                    <select>-->
+<!--                                        <option>인증</option>-->
+<!--                                    </select>-->
+<!--                                    <div class="overSelect"></div>-->
+<!--                                </div>-->
+<!--                                <div class="authorizationSelectBox">-->
+<!--                                    <label for="postApiKey">-->
+<!--                                        <input type="checkbox" id="postApiKey"/>APIKey(APIKEY)</label>-->
+<!--                                    <label for="postBearer">-->
+<!--                                        <input type="checkbox" id="postBearer"/>Bearer(APIKEY)</label>-->
+<!--                                </div>-->
                             </div>
 
 
                             <!-- POST 파라미터/응답 선택 시작-->
                             <div class="d-flex flex-column">
                                 <div class="d-flex align-items-start">
-                                    <div class="nav d-flex nav-pills me-3 mb-2" role="tablist"
+                                    <div class="nav nav-pills me-3 mb-2 flex-row" role="tablist"
                                          aria-orientation="vertical">
 
                                         <button class="nav-link active" id="v-pills-post-parameter-tab"
@@ -1360,19 +1361,19 @@
                             <!--           인증선택박스                 -->
                             <div class="authorizationSelect ml-2 mr-2 mb-4 mt-3"
                                  style="margin-left: 1.5% !important;">
-                                <div class="selectBox">
-                                    <select name="TagBox" id="TagBox">
-                                        <option value=""> -- 태그 선택 --</option>
-                                        <option th:each="list : ${tagList}" th:value="${list?.id}"
-                                                th:utext="${list?.name}">
-                                        </option>
-                                    </select>
-                                </div>
+<!--                                <div class="selectBox">-->
+                                <!--                                    <select name="TagBox" id="TagBox">-->
+                                <!--                                        <option value=""> &#45;&#45; 태그 선택 &#45;&#45;</option>-->
+                                <!--                                        <option th:each="list : ${tagList}" th:value="${list?.id}"-->
+                                <!--                                                th:utext="${list?.name}">-->
+                                <!--                                        </option>-->
+                                <!--                                    </select>-->
+                                <!--                                </div>-->
                             </div>
                             <!-- POST 파라미터/응답 선택 시작-->
                             <div class="d-flex flex-column">
                                 <div class="d-flex align-items-start">
-                                    <div class="nav d-flex nav-pills me-3 mb-2" role="tablist"
+                                    <div class="nav nav-pills me-3 mb-2 flex-row" role="tablist"
                                          aria-orientation="vertical">
 
                                         <button class="nav-link active" id="v-pills-put-parameter-tab"
@@ -1515,19 +1516,19 @@
                             <!--           인증선택박스                 -->
                             <div class="authorizationSelect ml-2 mr-2 mb-4 mt-3"
                                  style="margin-left: 1.5% !important;">
-                                <div class="selectBox">
-                                    <select name="tagBox">
-                                        <option value=""> -- 태그 선택 --</option>
-                                        <option th:each="list : ${tagList}" th:value="${list?.id}"
-                                                th:utext="${list?.name}">
-                                        </option>
-                                    </select>
-                                </div>
+<!--                                <div class="selectBox">-->
+<!--                                    <select name="tagBox">-->
+<!--                                        <option value=""> &#45;&#45; 태그 선택 &#45;&#45;</option>-->
+<!--                                        <option th:each="list : ${tagList}" th:value="${list?.id}"-->
+<!--                                                th:utext="${list?.name}">-->
+<!--                                        </option>-->
+<!--                                    </select>-->
+<!--                                </div>-->
                             </div>
                             <!-- DELETE 파라미터/응답 선택 시작-->
-                            <div class="d-flex flex-column">
+                            <div class="d-flex flex-column flex-row">
                                 <div class="d-flex align-items-start">
-                                    <div class="nav d-flex nav-pills me-3 mb-2" role="tablist"
+                                    <div class="nav nav-pills me-3 mb-2 flex-row" role="tablist"
                                          aria-orientation="vertical">
 
                                         <button class="nav-link active" id="v-pills-delete-parameter-tab"
