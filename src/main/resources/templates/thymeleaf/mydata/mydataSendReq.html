@@ -60,6 +60,8 @@
 
         <script>
             function providerDetailModal(value) {
+                let tbody = document.getElementById("userNumTbody");
+                tbody.innerHTML = "";
                 console.log("providerDetailModal=========");
                 let clientNum = value.getAttribute("client_num");
                 console.log(clientNum);
@@ -72,41 +74,116 @@
                     data: data,
 
                     success: (message) => {
-                        console.log("messagemmmmmmmmmmmmm");
-                        console.log(message);
                         let plist = JSON.parse(message.providerList);
                         console.log(plist);
-                        // console.log(plist);
-                        console.log(plist.length);
-
-                        console.log(Object.keys(plist[0]).length)
-                        // column 수
-                        let col_cnt = Object.keys(plist[0]).length + 1;
-
-                        let tbody = document.getElementById("userNumTbody");
+                        let col_cnt = Object.keys(plist[0]).length;
                         for (let i = 0; i < plist.length; i++) {
                             let tr = document.createElement("tr");
                             tr.style.fontSize = '14px';
-                            let keys = Object.keys(plist[i]);
-                            console.log(keys);
-                            $(tr).attr({"data-bs-toggle": "modal", "data-bs-target": "#detailModal"});
-                            for (let j = 0; j < col_cnt; j++) {
-                                let key = keys[j];
-                                console.log(key);
-                                console.log("value : ", plist[key]);
+                            $(tr).attr({
+                                "data-bs-toggle": "modal",
+                                "data-bs-target": "#detailModal",
+                                "onclick": "providerDetailModal()"
+                            });
 
-                                // let td = document.createElement("td").innerText = plist[key];
-                                tr.append(td);
-                            }
                             // for (let data in plist[i]) {
-                            //     let td = document.createElement("td").innerText = plist[i][data];
+                            //     let td = document.createElement("td");
+                            //     td.id = plist[i]["id"];
+                            //     td.innerText = plist[i][data];
                             //     tr.append(td);
                             // }
+
+                            let keys = Object.keys(plist[i]);
+                            $(tr).attr({
+                                "data-bs-toggle": "modal",
+                                "data-bs-target": "#detailModal",
+                                "onclick": "providerDetailInfo(this)"
+                            });
+                            tr.id = plist[i]["id"];
+                            for (let j = 1; j < col_cnt; j++) {
+                                let key = keys[j];
+
+                                let td = document.createElement("td");
+                                td.innerText = plist[i][key];
+                                tr.append(td);
+                            }
                             tbody.append(tr);
                         }
                     }
                 })
             }
+
+            function providerDetailInfo(value) {
+                let id = value.getAttribute("id");
+                console.log("id=", id);
+                let data = {
+                    "id":id,
+                }
+                $.ajax({
+                    url:"/mydata/provider/selectOne",
+                    data : data,
+                    type: "get",
+
+                    success: (message) =>{
+                        console.log(message);
+
+                    }
+                })
+            }
+
+            function input() {
+                let dday = document.getElementById("input_date").value;
+                console.log(dday);
+                let data = {
+                    date :dday,
+                }
+                $.ajax({
+                    url:"/mydata/calendar",
+                    type:"get",
+                    data :data,
+
+                    success: (message) => {
+                        let plist = JSON.parse(message.providerList);
+                        console.log(plist);
+                        let col_cnt = Object.keys(plist[0]).length;
+                        for (let i = 0; i < plist.length; i++) {
+                            let tr = document.createElement("tr");
+                            tr.style.fontSize = '14px';
+                            $(tr).attr({
+                                "data-bs-toggle": "modal",
+                                "data-bs-target": "#detailModal",
+                                "onclick": "providerDetailModal()"
+                            });
+
+                            // for (let data in plist[i]) {
+                            //     let td = document.createElement("td");
+                            //     td.id = plist[i]["id"];
+                            //     td.innerText = plist[i][data];
+                            //     tr.append(td);
+                            // }
+
+                            let keys = Object.keys(plist[i]);
+                            $(tr).attr({
+                                "data-bs-toggle": "modal",
+                                "data-bs-target": "#detailModal",
+                                "onclick": "providerDetailInfo(this)"
+                            });
+                            tr.id = plist[i]["id"];
+                            for (let j = 1; j < col_cnt; j++) {
+                                let key = keys[j];
+
+                                let td = document.createElement("td");
+                                td.innerText = plist[i][key];
+                                tr.append(td);
+                            }
+                            tbody.append(tr);
+                        }
+                    }
+                })
+
+
+            }
+
         </script>
     </th:block>
 
@@ -234,14 +311,12 @@
                             </div>
                             <div class="modal-body" id="modalDark">
                                 <div class="w-100 border overflow-auto">
-                                    <div class="border-bottom p-3 font-weight-bold" style="color: black">거래이력</div>
+                                    <div class="border-bottom p-3 font-weight-bold" style="color: black"></div>
                                     <div class="mt-2">
-                                        <label for="selectDate">조회날짜&nbsp;&nbsp;</label>
-                                        <input type="date" id="selectDate" name="selectDate"
+                                        <label for="input_date">조회날짜&nbsp;&nbsp;</label>
+                                        <input type="date" id="input_date" name="input_date"
                                                style="width: 220px; text-align: center;">
-                                        <input class="btn btn-dark p-1" type="submit" value="오늘"
-                                               style="  margin-bottom: 4px; height: 31px;">
-                                        <button class="btn btn-dark">조회</button>
+                                        <input type="submit" onclick="input()" id="input_submit" value="조회">
                                     </div>
                                     <table class="table table-hover">
                                         <thead>
@@ -259,22 +334,8 @@
                                         </thead>
                                         <tbody id="userNumTbody">
                                         <!-- createElement -->
-                                        <tr class="tds" data-bs-toggle="modal" data-bs-target="#detailModal">
-                                            <td>2021-11-23</td>
-                                            <td>01:00:19.915</td>
-                                            <td>2021-11-23 01:00:19.944</td>
-                                            <td>00.287</td>
-                                            <td>00000</td>
-                                            <td>보험-005</td>
-                                            <td>IS05</td>
-                                            <td>6384308822</td>
-                                            <td>scheduled</td>
-                                        </tr>
-                                        <!-- createElement -->
                                         </tbody>
                                     </table>
-
-
                                 </div>
                             </div>
                             <div class="modal-footer">
@@ -298,60 +359,56 @@
                                 </button>
                             </div>
                             <div class="modal-body" style="overflow-x: hidden">
-                                <h5 class="mb-1">
-                                    기본 정보
-                                </h5>
-                                <table class="table table-bordered align-middle"
-                                       style="width: -webkit-fill-available;font-size: 15px;">
-                                    <tbody>
-                                    <tr>
-                                        <td class="tdHead">거래이력 SEQ</td>
-                                        <td colspan="3" class="tdContent">TRH_1332035460658031120
-                                        </td>
+                                <div class="w-100 border overflow-auto">
+                                    <div class="border-bottom p-3 font-weight-bold" style="color: black">거래이력</div>
+                                    <table class="table table-bordered align-middle"
+                                           style="width: -webkit-fill-available;font-size: 15px;">
+                                        <tbody>
+<!--                                        <tr>-->
+<!--                                            <td class="tdHead">거래이력 SEQ</td>-->
+<!--                                            <td colspan="3" class="tdContent">TRH_1332035460658031120-->
+<!--                                            </td>-->
+<!--                                        </tr>-->
+                                        <tr>
+                                            <td class="tdHead">전송요구 SEQ</td>
+                                            <td class="tdContent" id="reqSEQ"></td>
+                                        </tr>
 
-                                    </tr>
-                                    <tr>
-                                        <td class="tdHead">전송요구 SEQ</td>
-                                        <td class="tdContent">TRQ_20211115162712_0798</td>
-                                    </tr>
+                                        <tr>
+                                            <td class="tdHead">거래 고유번호</td>
+                                            <td colspan="3" class="tdContent" id="code">
+                                            </td>
+                                        </tr>
 
-                                    <tr>
-                                        <td class="tdHead">거래 고유번호</td>
-                                        <td colspan="3" class="tdContent">KZT8QZCEEOPBO85Z9UAFCNHTK
-                                        </td>
+                                        <tr>
+                                            <td class="tdHead">요청API Resource</td>
+                                            <td colspan="3" class="tdContent" id="apiResources"></td>
+                                        </tr>
 
-                                    </tr>
-                                    <tr>
-                                        <td class="tdHead">요청API Resource</td>
-                                        <td colspan="3" class="tdContent">/v1/insu/insurances/payment</td>
+                                        <tr>
+                                            <td class="tdHead">증권번호</td>
+                                            <td class="tdContent" >168237311096
+                                            </td>
+                                        </tr>
 
-                                    </tr>
-                                    <tr>
-                                        <td class="tdHead">증권번호</td>
-                                        <td class="tdContent">168237311096
-                                        </td>
-                                    </tr>
+                                        <tr>
+                                            <td class="tdHead">응답메시지</td>
+                                            <td class="tdContent" id="resMsg" >
+                                            </td>
+                                        </tr>
 
-                                    <tr>
-                                        <td class="tdHead">응답메시지</td>
-                                        <td class="tdContent">성공
-                                        </td>
-                                    </tr>
+                                        <tr>
+                                            <td class="tdHead" style="vertical-align: middle">resdata
+                                            </td>
+                                            <td class="tdContent p-0">
+                                                <textarea style="height: 120px" class="w-100" id="resdata" disabled>
 
-                                    <tr>
-                                        <td class="tdHead">시간대역</td>
-                                        <td class="tdContent">01
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="tdHead" style="vertical-align: middle">resdata
-                                        </td>
-                                        <td class="tdContent p-0 ">
-                                            <textarea style="height: 120px" class="w-100">{'search_timestamp': '0', 'pay_date': '25', 'pay_cycle': '1M', 'pay_amt': '91000', 'rsp_code': '00000', 'pay_cnt': '120', 'pay_end_date': '20060206', 'pay_due': '02', 'rsp_msg': '성공', 'is_auto_pay': 'false', 'pay_org_code': 'AAAI0000'}</textarea>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
+                                                </textarea>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
