@@ -74,21 +74,32 @@
                     success: (message) => {
                         console.log("messagemmmmmmmmmmmmm");
                         console.log(message);
-                        console.log(message.length);
-                        console.log(message.providerList.length);
+                        let plist = JSON.parse(message.providerList);
+                        console.log(plist);
+                        // console.log(plist);
+                        console.log(plist.length);
 
-                        console.log(Object.keys(message).length)
+                        console.log(Object.keys(plist[0]).length)
+                        // column 수
+                        let col_cnt = Object.keys(plist[0]).length + 1;
+
                         let tbody = document.getElementById("userNumTbody");
-                        for (let i = 0; i < message.providerList.length; i++) {
+                        for (let i = 0; i < plist.length; i++) {
                             let tr = document.createElement("tr");
                             tr.style.fontSize = '14px';
+                            let keys = Object.keys(plist[i]);
+                            console.log(keys);
                             $(tr).attr({"data-bs-toggle": "modal", "data-bs-target": "#detailModal"});
-                            for (let data in message.providerList[i]) {
-                                let td = document.createElement("td").innerText = message.providerList[i][data];
+                            for (let j = 0; j < col_cnt; j++) {
+                                let key = keys[j];
+                                console.log(key);
+                                console.log("value : ", plist[key]);
+
+                                // let td = document.createElement("td").innerText = plist[key];
                                 tr.append(td);
                             }
-                            // for (let data in message[i]) {
-                            //     let td = document.createElement("td").innerText = message[i][data];
+                            // for (let data in plist[i]) {
+                            //     let td = document.createElement("td").innerText = plist[i][data];
                             //     tr.append(td);
                             // }
                             tbody.append(tr);
@@ -221,8 +232,8 @@
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
-                            <div class="modal-body" id="modalDark" style="overflow-y: auto;overflow-x: hidden">
-                                <div class="w-100 border">
+                            <div class="modal-body" id="modalDark">
+                                <div class="w-100 border overflow-auto">
                                     <div class="border-bottom p-3 font-weight-bold" style="color: black">거래이력</div>
                                     <div class="mt-2">
                                         <label for="selectDate">조회날짜&nbsp;&nbsp;</label>
