@@ -4,8 +4,6 @@ import com.ipa.openapi_inzent.model.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.dao.DataAccessException;
 
-import javax.xml.crypto.Data;
-import java.util.HashMap;
 import java.util.List;
 
 @Mapper
@@ -44,4 +42,5 @@ public interface MydataDao {
 
     List<MdProviderDTO> mdReqList() throws DataAccessException;
 
+    List<MdProviderDTO> mdProviderCustomerList(String customerNum) throws DataAccessException;
 }

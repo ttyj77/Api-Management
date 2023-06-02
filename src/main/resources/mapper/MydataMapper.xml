@@ -183,13 +183,19 @@
         VALUES (NOW(), #{runtime}, #{resCode}, #{apiCode}, #{customerNum}, #{regularTransmission}, #{uniqueNum}, #{statusInfo}, #{apiResources}, #{reqHeader}, #{resMsg}, #{resData});
     </insert>
 
+    <select id="mdProviderCustomerList" parameterType="string" resultType="com.ipa.openapi_inzent.model.MdProviderDTO">
+        select * from public."providerHistory"
+        where "customerNum" = #{customerNum};
+    </select>
+
     <!--    ///////////////////////////////////////////////////////////////////////////////////////////-->
-    <!--    //                            (oﾟvﾟ)ノ  Collecter Page  (oﾟvﾟ)ノ                           //-->
+    <!--    //                            (oﾟvﾟ)ノ  Collector Page  (oﾟvﾟ)ノ                           //-->
     <!--    ///////////////////////////////////////////////////////////////////////////////////////////-->
 
     <select id="mdCollectorSelectAll" resultType="com.ipa.openapi_inzent.model.MdCollectorDTO">
         select * from public."collectorHistory";
     </select>
+
     <select id="mdCollectorSelectOne" parameterType="int" resultType="com.ipa.openapi_inzent.model.MdCollectorDTO">
         select * from public."collectorHistory"
         where id = #{id};
@@ -200,7 +206,6 @@
         "reqDate", runtime, "resCode", "apiCode", "regularTransmission", "targetHost", "uniqueNum", "apiResources", "reqHeader", "resMsg", "resData")
         VALUES (#{reqDate}, #{runtime}, #{resCode}, #{apiCode}, #{regularTransmission}, #{targetHost}, #{uniqueNum}, #{apiResources}, #{reqHeader}, #{resMsg}, #{resData});
     </insert>
-
 
     <!--    //////////////////////////////////-->
     <!-- mydataToken   -->
@@ -234,7 +239,7 @@
         where mt."consumerNum" ILIKE CONCAT('%', #{keyword},'%')
         OR  ms.name ILIKE CONCAT('%', #{keyword},'%')
         OR ma.code ILIKE CONCAT('%', #{keyword},'%')
-        OR ma.name ILIKE CONCAT('%', #{keyword},'%') ;
+        OR ma.name ILIKE CONCAT('%', #{keyword},'%');
     </select>
 
 
