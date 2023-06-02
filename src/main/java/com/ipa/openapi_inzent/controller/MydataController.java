@@ -446,9 +446,9 @@ public class MydataController {
     //  달력   //
     ////////////
 
-    @GetMapping("/calendar")
+    @GetMapping("/calendarSend")
     @ResponseBody
-    public JsonObject calendar(String dday) {
+    public JsonObject calendarInSendReq(String dday, String customerNum) {
         JsonObject object = new JsonObject();
         List<MdProviderDTO> list = mydataService.mdReqList();
         System.out.println("dday = " + dday);
@@ -456,24 +456,28 @@ public class MydataController {
 
         JsonArray providerArray = new JsonArray();
         for (MdProviderDTO mdProviderDTO : list) {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            String reqDate = sdf.format(mdProviderDTO.getReqDate());
-//            if () {
-//            }
-            JsonObject r = new JsonObject();
+            System.out.println("mdProviderDTO.getReqDate() = " + mdProviderDTO.getReqDate());
+            String reqDate = mdProviderDTO.getReqDate();
+            System.out.println("reqDate.equals(dday) = " + reqDate.equals(dday));
+            System.out.println(dday.equals(reqDate) && customerNum.equals(mdProviderDTO.getCustomerNum()));
+            if (dday.equals(reqDate) && customerNum.equals(mdProviderDTO.getCustomerNum())) {
+                System.out.println("들어옴");
 
-            r.addProperty("id",mdProviderDTO.getId());
+                JsonObject r = new JsonObject();
 
-            r.addProperty("reqDate", reqDate);
-            r.addProperty("reqTime", mdProviderDTO.getReqTime());
-            r.addProperty("resDate", mdProviderDTO.getResDate());
-            r.addProperty("runtime", mdProviderDTO.getRuntime());
-            r.addProperty("code", mdProviderDTO.getResCode());
-            r.addProperty("apiCode", mdProviderDTO.getApiCode());
-            r.addProperty("customerNum", mdProviderDTO.getCustomerNum());
-            r.addProperty("regularTransmission", mdProviderDTO.getRegularTransmission());
+                r.addProperty("id",mdProviderDTO.getId());
 
-            providerArray.add(r);
+                r.addProperty("reqDate", reqDate);
+                r.addProperty("reqTime", mdProviderDTO.getReqTime());
+                r.addProperty("resDate", mdProviderDTO.getResDate());
+                r.addProperty("runtime", mdProviderDTO.getRuntime());
+                r.addProperty("code", mdProviderDTO.getResCode());
+                r.addProperty("apiCode", mdProviderDTO.getApiCode());
+                r.addProperty("customerNum", mdProviderDTO.getCustomerNum());
+                r.addProperty("regularTransmission", mdProviderDTO.getRegularTransmission());
+
+                providerArray.add(r);
+            }
         }
 
         object.addProperty("providerList", providerArray.toString());
@@ -482,5 +486,12 @@ public class MydataController {
         return object;
     }
 
+    @GetMapping
+    @ResponseBody
+    public JsonObject calendarInSendReq(String dday) {
+        JsonObject object = new JsonObject();
+
+        return object;
+    }
 
 }

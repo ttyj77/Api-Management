@@ -81,6 +81,52 @@
                 document.getElementById("consumerNum").innerText = data.consumerNum
                 document.getElementById("tokenExpiryDate").innerText = data.tokenExpiryDate
             }
+            // 달력
+            function input(value) {
+                let tbody = document.getElementById("userNumTbody");
+                tbody.innerHTML = "";
+                let dday = document.getElementById("input_date").value;
+                console.log(dday);
+                let data = {
+                    "dday" :dday,
+                }
+                $.ajax({
+                    url:"/mydata/calendarSend",
+                    type:"get",
+                    data :data,
+
+                    success: (message) => {
+
+                        console.log("calendar!!!!!!!!!!!!!!!!!!!!!!!!!!")
+                        let plist = JSON.parse(message.providerList);
+                        console.log(plist);
+                        let col_cnt = Object.keys(plist[0]).length;
+                        console.log(col_cnt);
+                        for (let i = 0; i < plist.length; i++) {
+                            let tr = document.createElement("tr");
+                            tr.style.fontSize = '14px';
+
+                            let keys = Object.keys(plist[i]);
+                            $(tr).attr({
+                                "data-bs-toggle": "modal",
+                                "data-bs-target": "#detailModal",
+                                "onclick": "providerDetailInfo(this)"
+                            });
+                            tr.id = plist[i]["id"];
+                            for (let j = 1; j < col_cnt; j++) {
+                                let key = keys[j];
+
+                                let td = document.createElement("td");
+                                td.innerText = plist[i][key];
+                                tr.append(td);
+                            }
+                            tbody.append(tr);
+                        }
+                    }
+                })
+
+
+            }
         </script>
 
     </th:block>
@@ -110,12 +156,10 @@
                         <!-- Topbar Search -->
                         <div class=" row" style="    display: flex;justify-content: space-between;">
                             <div class="col-md-7 m-3">
-                                <label for="selectDate">조회날짜&nbsp;&nbsp;</label>
-                                <input type="date" id="selectDate" name="selectDate"
+                                <label for="input_date">&nbsp;&nbsp;조회날짜</label>
+                                <input type="date" id="input_date" name="input_date"
                                        style="width: 220px; text-align: center;">
-                                <input class="btn btn-primary p-1" type="submit" value="오늘"
-                                       style="  margin-bottom: 4px; height: 31px;">
-                                <button class="btn btn-primary">조회</button>
+                                <input type="submit" onclick="input(this)" id="input_submit" value="조회">
                             </div>
                             <div class="col-md-3 input-group m-3">
                                 <input type="text" class="form-control"
