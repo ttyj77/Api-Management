@@ -189,7 +189,7 @@
     </select>
 
     <!--    ///////////////////////////////////////////////////////////////////////////////////////////-->
-    <!--    //                            (oﾟvﾟ)ノ  Collecter Page  (oﾟvﾟ)ノ                           //-->
+    <!--    //                            (oﾟvﾟ)ノ  Collector Page  (oﾟvﾟ)ノ                           //-->
     <!--    ///////////////////////////////////////////////////////////////////////////////////////////-->
 
     <select id="mdCollectorSelectAll" resultType="com.ipa.openapi_inzent.model.MdCollectorDTO">
@@ -239,7 +239,7 @@
         where mt."consumerNum" ILIKE CONCAT('%', #{keyword},'%')
         OR  ms.name ILIKE CONCAT('%', #{keyword},'%')
         OR ma.code ILIKE CONCAT('%', #{keyword},'%')
-        OR ma.name ILIKE CONCAT('%', #{keyword},'%') ;
+        OR ma.name ILIKE CONCAT('%', #{keyword},'%');
     </select>
 
 
