@@ -227,3 +227,24 @@ label {
 .hover {
     --bs-btn-hover-color: #ffffff !important;
 }
+
+/*.httpMethodBtn{*/
+/*    width: 20%;*/
+/*}*/
+
+#nav-tab > button {
+    width: 20%
+}
+
+#myTab > li {
+    width: 20%
+}
+
+.nav nav-pills me-3 mb-2 flex-row > button {
+    color: var(--bs-nav-pills-link-active-color);
+    background-color: #4a4a4a !important;
+}
+
+.fade {
+    transition: opacity 0s linear !important;
+}
