@@ -26,14 +26,10 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 @EnableWebSecurity
 public class SecurityConfig {
 
-//    private UserCustomDetailsService userDetailsService;
-
-
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfiguration) throws Exception {
         return authConfiguration.getAuthenticationManager();
     }
-
 
     @Bean
     public static PasswordEncoder passwordEncoder() {
@@ -41,7 +37,7 @@ public class SecurityConfig {
     }
 
     @Configuration
-    @Order(2)
+//    @Order(2)
     public static class App1ConfigurationAdapter {
 //        @Bean
 //        public AuthenticationSuccessHandler userAuthSuccessHandler() {
@@ -60,25 +56,24 @@ public class SecurityConfig {
         public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
             http.csrf().disable();
-            http.antMatcher("/*").authorizeRequests() //authorizeRequests
+            http.authorizeRequests() //authorizeRequests
                     .antMatchers(HttpMethod.GET, "/error/*", "/login", "/login_proc", "/user/login", "/user/register").permitAll() // 설정된 url은 인증되지 않더라도 누구든 접근 가능
 //                .anyRequest().authenticated()// 위 페이지 외 인증이 되어야 접근가능(ROLE에 상관없이)
-                    .antMatchers("/api/**", "/accountList", "/authorization", "/requestPage", "/user/mypage").authenticated()
                     .antMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**").permitAll()
+                    .antMatchers("/api/**", "/accountList", "/authorization", "/requestPage", "/user/mypage", "/mydata/**").authenticated()
                     .and()
-                    .formLogin().defaultSuccessUrl("/api", true).loginPage("/user/login")  // 접근이 차단된 페이지 클릭시 이동할 url
+                    .formLogin().loginPage("/user/login")  // 접근이 차단된 페이지 클릭시 이동할 url
                     .loginProcessingUrl("/login-proc") // 로그인시 맵핑되는 url
                     .usernameParameter("username")      // view form 태그 내에 로그인 할 id 에 맵핑되는 name ( form 의 name )
                     .passwordParameter("password")      // view form 태그 내에 로그인 할 password 에 맵핑되는 name ( form 의 name )
 //                    .successHandler(userAuthSuccessHandler()) // 로그인 성공시 실행되는 메소드
                     .failureHandler(userAuthFailureHandler()) // 로그인 실패시 실행되는 메소드
-                    .and().logout().logoutUrl("/app/logout")
-                    .invalidateHttpSession(true)
-                    .logoutSuccessUrl("/app/login?logout").deleteCookies("JSESSIONID").permitAll()
                     .and()
-                    .logout() // 로그아웃 설정
-                    .logoutUrl("/user/logout") // 로그아웃시 맵핑되는 url
-                    .logoutSuccessUrl("/") // 로그아웃 성공시 리다이렉트 주소
+                    .logout()
+                    .logoutUrl("/logout")
+                    .invalidateHttpSession(true)
+                    .logoutSuccessUrl("/user/login")
+//                    .deleteCookies("JSESSIONID").permitAll()
                     .invalidateHttpSession(true); // 세션 clear
 
             http.rememberMe() // rememberMe 기능 작동함
@@ -96,49 +91,5 @@ public class SecurityConfig {
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring().antMatchers("/images/**", "/js/**", "/css/**", "/scss/**", "/vendor/**");
     }
-
-    @Configuration
-    @Order(1)
-    public static class App2ConfigurationAdapter {
-        //        @Bean
-//        public AuthenticationSuccessHandler userAuthSuccessHandler() {
-//            return new UserAuthSuccessHandler();
-//        }
-
-        //        @Bean
-        public AuthenticationFailureHandler userAuthFailureHandler() {
-            return new UserAuthFailHandler();
-        }
-
-        @Bean
-        public SecurityFilterChain filterChainApp2(HttpSecurity http) throws Exception {
-            http.csrf().disable();
-            http.antMatcher("/app/**").authorizeRequests() //authorizeRequests
-//            http.authorizeRequests()
-                    .antMatchers(HttpMethod.GET, "/error/*", "/applogin", "/login_proc", "/user/login", "/user/register", "/app/login-proc", "/app/login", "/app/main").permitAll() // 설정된 url은 인증되지 않더라도 누구든 접근 가능
-//                .anyRequest().authenticated()// 위 페이지 외 인증이 되어야 접근가능(ROLE에 상관없이)
-                    .antMatchers("/api/**", "/accountList", "/authorization", "/requestPage", "/user/mypage").authenticated()
-                    .antMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**").permitAll()
-                    .and()
-                    .formLogin().defaultSuccessUrl("/app/main", true).loginPage("/app/login")  // 접근이 차단된 페이지 클릭시 이동할 url
-                    .loginProcessingUrl("/app/login-proc") // 로그인시 맵핑되는 url
-                    .usernameParameter("username")      // view form 태그 내에 로그인 할 id 에 맵핑되는 name ( form 의 name )
-                    .passwordParameter("password")      // view form 태그 내에 로그인 할 password 에 맵핑되는 name ( form 의 name )
-//                    .successHandler(userAuthSuccessHandler()) // 로그인 성공시 실행되는 메소드
-                    .failureHandler(userAuthFailureHandler()) // 로그인 실패시 실행되는 메소드
-                    .and().logout().logoutUrl("/logout")
-                    .invalidateHttpSession(true)
-                    .logoutSuccessUrl("/app/login?logout").deleteCookies("JSESSIONID").permitAll()
-                    .and()
-                    .logout() // 로그아웃 설정
-                    .logoutUrl("/user/logout") // 로그아웃시 맵핑되는 url
-                    .logoutSuccessUrl("/") // 로그아웃 성공시 리다이렉트 주소
-                    .invalidateHttpSession(true); // 세션 clear
-
-            return http.build();
-        }
-
-    }
-
 }
 

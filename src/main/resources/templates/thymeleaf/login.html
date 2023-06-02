@@ -125,7 +125,7 @@
               <span>
                 계정이 있으신가요?
               </span>
-                            <span id="goAuth" onclick="toggle()" class="pointer" style="color: #E23137">
+                            <span id="goAuth" onclick="toggle();" class="pointer" style="color: #E23137">
                                 로그인 하기
                             </span>
                         </p>
@@ -141,11 +141,12 @@
                 <img class="ani" src="/images/logo2.png" alt="background image2">
             </div>
             <div class="form-wrapper align-items-center">
-                <form
-                        th:action="@{/login-proc}"
-                        class="form-signin"
-                        method="post"
-                >
+                <!--                <form-->
+                <!--                        th:action="@{/login-proc}"-->
+                <!--                        class="form-signin"-->
+                <!--                        method="post"-->
+                <!--                >-->
+                <form method="get" id="login-form" onsubmit="return false;">
                     <div class="form sign-in">
                         <div class="input-group">
                             <i class='bx bxs-user'></i>
@@ -156,9 +157,9 @@
                             <input type="password" name="password" placeholder="비밀번호" onkeydown="checkSpacebar()"
                                    required>
                         </div>
-                        <button type="submit" class="btn btn-danger mb-6">
-                            로 그 인
-                        </button>
+                        <input type="submit" class="btn btn-danger mb-6" id="send">
+                        로 그 인
+                        </input>
                         <!--                        <p th:if="${LoginFailMessage!=null}" th:text="|Error : ${LoginFailMessage}|"-->
                         <!--                           style="color: #E23137; font-size: small"></p>-->
                         <div class="d-flex mt-2">
@@ -215,5 +216,37 @@
     </div>
     <!-- END CONTENT SECTION -->
 </div>
+<script>
+    let send = document.getElementById("send");
+    console.log(send)
+    send.addEventListener("click", function () {
+        let form = document.getElementById("login-form");
+        let id = document.getElementById("id");
+        let pw = document.getElementById("pw");
+        //
+        // if (pw.value.trim() == "" || id.value.trim() == "") {
+        //     alert("id와 비번 잘 적어라");
+        //     return false;
+        // }
+        //
+        // form.action = "http://www.naver.com";
+        // form.mothod = "GET";
+
+        // form.submit();
+        console.log($('#login-form').serialize())
+        $.ajax({
+            url: "/login-proc",
+            data: $('#login-form').serialize(),
+            method: "post",
+
+            success: (message) => {
+                console.log("성공")
+                window.location.href = "/api"
+            }, error: (e) => {
+                console.log("통신 실패", e)
+            }
+        })
+    });
+</script>
 <script src="/js/login.js"></script>
 </body>

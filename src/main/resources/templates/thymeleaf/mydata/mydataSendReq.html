@@ -15,13 +15,24 @@
             background-color: #f5f6fb;
         }
 
-        .tdHead {
-            background-color: #f5f5f5;
-            font-size: 12px;
-        }
-
         .tds {
             font-size: 14px;
+        }
+
+        .trContent {
+            vertical-align: middle;
+        !important;
+        }
+
+        tr th {
+            background-color: #f5f5f5 !important;
+        }
+
+        .tdHead {
+            background-color: #f5f5f5 !important;
+            font-size: 14px;
+            width: 30% !important;
+
         }
     </style>
 
@@ -45,14 +56,141 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js"
                 integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
                 crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
+        <script>
+            function providerDetailModal(value) {
+                let tbody = document.getElementById("userNumTbody");
+                tbody.innerHTML = "";
+                console.log("providerDetailModal=========");
+                let clientNum = value.getAttribute("client_num");
+                console.log(clientNum);
+                let data = {
+                    "customerNum": clientNum,
+                };
+                $.ajax({
+                    url: "/mydata/provider/customerList",
+                    type: "get",
+                    data: data,
+
+                    success: (message) => {
+                        let plist = JSON.parse(message.providerList);
+                        console.log(plist);
+                        let col_cnt = Object.keys(plist[0]).length;
+                        for (let i = 0; i < plist.length; i++) {
+                            let tr = document.createElement("tr");
+                            tr.style.fontSize = '14px';
+                            $(tr).attr({
+                                "data-bs-toggle": "modal",
+                                "data-bs-target": "#detailModal",
+                                "onclick": "providerDetailModal()"
+                            });
+
+                            // for (let data in plist[i]) {
+                            //     let td = document.createElement("td");
+                            //     td.id = plist[i]["id"];
+                            //     td.innerText = plist[i][data];
+                            //     tr.append(td);
+                            // }
+
+                            let keys = Object.keys(plist[i]);
+                            $(tr).attr({
+                                "data-bs-toggle": "modal",
+                                "data-bs-target": "#detailModal",
+                                "onclick": "providerDetailInfo(this)"
+                            });
+                            tr.id = plist[i]["id"];
+                            for (let j = 1; j < col_cnt; j++) {
+                                let key = keys[j];
+
+                                let td = document.createElement("td");
+                                td.innerText = plist[i][key];
+                                tr.append(td);
+                            }
+                            tbody.append(tr);
+                        }
+                    }
+                })
+            }
+
+            function providerDetailInfo(value) {
+                let id = value.getAttribute("id");
+                console.log("id=", id);
+                let data = {
+                    "id":id,
+                }
+                $.ajax({
+                    url:"/mydata/provider/selectOne",
+                    data : data,
+                    type: "get",
+
+                    success: (message) =>{
+                        console.log(message);
+
+                    }
+                })
+            }
+
+            function input() {
+                let dday = document.getElementById("input_date").value;
+                console.log(dday);
+                let data = {
+                    date :dday,
+                }
+                $.ajax({
+                    url:"/mydata/calendar",
+                    type:"get",
+                    data :data,
+
+                    success: (message) => {
+                        let plist = JSON.parse(message.providerList);
+                        console.log(plist);
+                        let col_cnt = Object.keys(plist[0]).length;
+                        for (let i = 0; i < plist.length; i++) {
+                            let tr = document.createElement("tr");
+                            tr.style.fontSize = '14px';
+                            $(tr).attr({
+                                "data-bs-toggle": "modal",
+                                "data-bs-target": "#detailModal",
+                                "onclick": "providerDetailModal()"
+                            });
+
+                            // for (let data in plist[i]) {
+                            //     let td = document.createElement("td");
+                            //     td.id = plist[i]["id"];
+                            //     td.innerText = plist[i][data];
+                            //     tr.append(td);
+                            // }
+
+                            let keys = Object.keys(plist[i]);
+                            $(tr).attr({
+                                "data-bs-toggle": "modal",
+                                "data-bs-target": "#detailModal",
+                                "onclick": "providerDetailInfo(this)"
+                            });
+                            tr.id = plist[i]["id"];
+                            for (let j = 1; j < col_cnt; j++) {
+                                let key = keys[j];
+
+                                let td = document.createElement("td");
+                                td.innerText = plist[i][key];
+                                tr.append(td);
+                            }
+                            tbody.append(tr);
+                        }
+                    }
+                })
+
+
+            }
+
+        </script>
     </th:block>
 
 </head>
 
 <body>
 <div layout:fragment="content">
-
 
     <!-- Page Wrapper -->
     <div id="wrapper">
@@ -106,34 +244,46 @@
                                         <td>서비스명</td>
                                         <td>전송요구타입</td>
                                         <td>정보주체번호</td>
-<!--                                        <td>전송주기(기본,추가)</td>-->
+                                        <!--                                        <td>전송주기(기본,추가)</td>-->
                                         <td>상태정보</td>
-<!--                                        <td>전송준비일</td>-->
+                                        <!--                                        <td>전송준비일</td>-->
                                         <td>전송요구일</td>
                                         <td>전송요구 종료일</td>
                                         <td>토큰 유효기간</td>
-<!--                                        <td>토큰폐기일</td>-->
+                                        <!--                                        <td>토큰폐기일</td>-->
                                         <td>자산|토큰</td>
                                     </tr>
                                     </thead>
 
                                     <tbody>
-                                    <tr th:each="list:${list}">
-                                        <td data-bs-toggle="modal" data-bs-target="#providerModal" th:text="${list.mdReqInfoDTO.code}"></td>
-                                        <td data-bs-toggle="modal" data-bs-target="#providerModal" th:text="${list.mdReqInfoDTO.agencyName}"></td>
-                                        <td style="color: #0d6efd; font-weight: bold;" data-bs-toggle="modal" data-bs-target="#providerModal" th:text="${list.mdReqInfoDTO.serviceName}"></td>
-                                        <td data-bs-toggle="modal" data-bs-target="#providerModal" th:text="${list.mdReqInfoDTO.reqType}"></td>
-                                        <td style="color: #0d6efd; font-weight: bold;" data-bs-toggle="modal" data-bs-target="#providerModal"th:text="${list.customerNum}"></td>
-<!--                                        <td data-bs-toggle="modal" data-bs-target="#providerModal">1/w,1/w</td>-->
-                                        <td data-bs-toggle="modal" data-bs-target="#providerModal" th:text="${list.statusInfo}"></td>
-                                        <td data-bs-toggle="modal" data-bs-target="#providerModal" th:text="${list.reqTime}">2021-11-15 16:27:12</td>
-<!--                                        <td data-bs-toggle="modal" data-bs-target="#providerModal">2021-11-15 17:09:52</td>-->
-                                        <td data-bs-toggle="modal" data-bs-target="#providerModal" th:text="${list.resDate}"></td>
-                                        <td data-bs-toggle="modal" data-bs-target="#providerModal" th:text="${#dates.format(list.mdReqInfoDTO.tokenExpiryDate, 'yyyy-MM-dd')}"></td>
-<!--                                        <td data-bs-toggle="modal" data-bs-target="#providerModal"></td>-->
-                                        <td><i class="fa-solid fa-file-lines" style="cursor: pointer"
-                                               data-toggle="tooltip"
+                                    <tr th:each="list:${list}" th:client_num="${list.customerNum}"
+                                        onclick="providerDetailModal(this)">
+                                        <td data-bs-toggle="modal" data-bs-target="#providerModal"
+                                            th:text="${list.mdReqInfoDTO.code}"></td>
+                                        <td data-bs-toggle="modal" data-bs-target="#providerModal"
+                                            th:text="${list.mdReqInfoDTO.agencyName}"></td>
+                                        <td style="color: #0d6efd; font-weight: bold;" data-bs-toggle="modal"
+                                            data-bs-target="#providerModal"
+                                            th:text="${list.mdReqInfoDTO.serviceName}"></td>
+                                        <td data-bs-toggle="modal" data-bs-target="#providerModal"
+                                            th:text="${list.mdReqInfoDTO.reqType}"></td>
+                                        <td style="color: #0d6efd; font-weight: bold;" data-bs-toggle="modal"
+                                            data-bs-target="#providerModal" th:text="${list.customerNum}"></td>
+                                        <!--                                        <td data-bs-toggle="modal" data-bs-target="#providerModal">1/w,1/w</td>-->
+                                        <td data-bs-toggle="modal" data-bs-target="#providerModal"
+                                            th:text="${list.statusInfo}"></td>
+                                        <td data-bs-toggle="modal" data-bs-target="#providerModal"
+                                            th:text="|${list.reqDate} ${list.reqTime}|"></td>
+                                        <!--                                        <td data-bs-toggle="modal" data-bs-target="#providerModal">2021-11-15 17:09:52</td>-->
+                                        <td data-bs-toggle="modal" data-bs-target="#providerModal"
+                                            th:text="${list.resDate}"></td>
+                                        <td data-bs-toggle="modal" data-bs-target="#providerModal"
+                                            th:text="${#dates.format(list.mdReqInfoDTO.tokenExpiryDate, 'yyyy-MM-dd')}"></td>
+                                        <!--                                        <td data-bs-toggle="modal" data-bs-target="#providerModal"></td>-->
+                                        <td><i class="fa-solid fa-file-lines" style="cursor: pointer; margin-right: 5px"
+                                               data-toggle="tooltip" data-bs-toggle="modal" data-bs-target="#assetModal"
                                                title="자산목록"></i> <i class="fa-solid fa-file-shield"
+                                                                    data-bs-toggle="modal" data-bs-target="#tokenModal"
                                                                     style="cursor: pointer" data-toggle="tooltip"
                                                                     title="발급 토큰 정보"></i></td>
                                     </tr>
@@ -153,21 +303,20 @@
                     <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title font-weight-bold" id="providerModalLabel" style="color: black">거래이력(제공자)</h5>
+                                <h5 class="modal-title font-weight-bold" id="providerModalLabel" style="color: black">
+                                    거래이력(제공자)</h5>
                                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
-                            <div class="modal-body" id="modalDark" style="overflow-y: auto;overflow-x: hidden">
-                                <div class="w-100 border">
-                                    <div class="border-bottom p-3 font-weight-bold" style="color: black">거래이력</div>
+                            <div class="modal-body" id="modalDark">
+                                <div class="w-100 border overflow-auto">
+                                    <div class="border-bottom p-3 font-weight-bold" style="color: black"></div>
                                     <div class="mt-2">
-                                        <label for="selectDate">조회날짜&nbsp;&nbsp;</label>
-                                        <input type="date" id="selectDate" name="selectDate"
+                                        <label for="input_date">조회날짜&nbsp;&nbsp;</label>
+                                        <input type="date" id="input_date" name="input_date"
                                                style="width: 220px; text-align: center;">
-                                        <input class="btn btn-dark p-1" type="submit" value="오늘"
-                                               style="  margin-bottom: 4px; height: 31px;">
-                                        <button class="btn btn-dark">조회</button>
+                                        <input type="submit" onclick="input()" id="input_submit" value="조회">
                                     </div>
                                     <table class="table table-hover">
                                         <thead>
@@ -183,22 +332,10 @@
                                             <td>정기적 전송</td>
                                         </tr>
                                         </thead>
-                                        <tbody>
-                                        <tr class="tds" data-bs-toggle="modal" data-bs-target="#detailModal">
-                                            <td>2021-11-23</td>
-                                            <td>01:00:19.915</td>
-                                            <td>2021-11-23 01:00:19.944</td>
-                                            <td>00.287</td>
-                                            <td>00000</td>
-                                            <td>보험-005</td>
-                                            <td>IS05</td>
-                                            <td>6384308822</td>
-                                            <td>scheduled</td>
-                                        </tr>
+                                        <tbody id="userNumTbody">
+                                        <!-- createElement -->
                                         </tbody>
                                     </table>
-
-
                                 </div>
                             </div>
                             <div class="modal-footer">
@@ -214,67 +351,64 @@
                     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title font-weight-bold" style="color: black" id="detailModalLabel">거래이력(제공자)-상세</h5>
+                                <h5 class="modal-title font-weight-bold" style="color: black" id="detailModalLabel">
+                                    거래이력(제공자)-상세</h5>
                                 <button type="button" class="close" aria-label="Close" data-bs-target="#providerModal"
                                         data-bs-toggle="modal">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                             <div class="modal-body" style="overflow-x: hidden">
-                                <h5 class="mb-1">
-                                    기본 정보
-                                </h5>
-                                <table class="table table-bordered align-middle"
-                                       style="width: -webkit-fill-available;font-size: 15px;">
-                                    <tbody>
-                                    <tr>
-                                        <td class="tdHead">거래이력 SEQ</td>
-                                        <td colspan="3" class="tdContent">TRH_1332035460658031120
-                                        </td>
+                                <div class="w-100 border overflow-auto">
+                                    <div class="border-bottom p-3 font-weight-bold" style="color: black">거래이력</div>
+                                    <table class="table table-bordered align-middle"
+                                           style="width: -webkit-fill-available;font-size: 15px;">
+                                        <tbody>
+<!--                                        <tr>-->
+<!--                                            <td class="tdHead">거래이력 SEQ</td>-->
+<!--                                            <td colspan="3" class="tdContent">TRH_1332035460658031120-->
+<!--                                            </td>-->
+<!--                                        </tr>-->
+                                        <tr>
+                                            <td class="tdHead">전송요구 SEQ</td>
+                                            <td class="tdContent" id="reqSEQ"></td>
+                                        </tr>
 
-                                    </tr>
-                                    <tr>
-                                        <td class="tdHead">전송요구 SEQ</td>
-                                        <td class="tdContent">TRQ_20211115162712_0798</td>
-                                    </tr>
+                                        <tr>
+                                            <td class="tdHead">거래 고유번호</td>
+                                            <td colspan="3" class="tdContent" id="code">
+                                            </td>
+                                        </tr>
 
-                                    <tr>
-                                        <td class="tdHead">거래 고유번호</td>
-                                        <td colspan="3" class="tdContent">KZT8QZCEEOPBO85Z9UAFCNHTK
-                                        </td>
+                                        <tr>
+                                            <td class="tdHead">요청API Resource</td>
+                                            <td colspan="3" class="tdContent" id="apiResources"></td>
+                                        </tr>
 
-                                    </tr>
-                                    <tr>
-                                        <td class="tdHead">요청API Resource</td>
-                                        <td colspan="3" class="tdContent">/v1/insu/insurances/payment</td>
+                                        <tr>
+                                            <td class="tdHead">증권번호</td>
+                                            <td class="tdContent" >168237311096
+                                            </td>
+                                        </tr>
 
-                                    </tr>
-                                    <tr>
-                                        <td class="tdHead">증권번호</td>
-                                        <td class="tdContent">168237311096
-                                        </td>
-                                    </tr>
+                                        <tr>
+                                            <td class="tdHead">응답메시지</td>
+                                            <td class="tdContent" id="resMsg" >
+                                            </td>
+                                        </tr>
 
-                                    <tr>
-                                        <td class="tdHead">응답메시지</td>
-                                        <td class="tdContent">성공
-                                        </td>
-                                    </tr>
+                                        <tr>
+                                            <td class="tdHead" style="vertical-align: middle">resdata
+                                            </td>
+                                            <td class="tdContent p-0">
+                                                <textarea style="height: 120px" class="w-100" id="resdata" disabled>
 
-                                    <tr>
-                                        <td class="tdHead">시간대역</td>
-                                        <td class="tdContent">01
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="tdHead" style="vertical-align: middle">resdata
-                                        </td>
-                                        <td class="tdContent p-0 ">
-                                            <textarea style="height: 120px" class="w-100">{'search_timestamp': '0', 'pay_date': '25', 'pay_cycle': '1M', 'pay_amt': '91000', 'rsp_code': '00000', 'pay_cnt': '120', 'pay_end_date': '20060206', 'pay_due': '02', 'rsp_msg': '성공', 'is_auto_pay': 'false', 'pay_org_code': 'AAAI0000'}</textarea>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
+                                                </textarea>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
@@ -284,6 +418,218 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- 자산 목록 모달 시작 -->
+                <div class="modal fade" id="assetModal" tabindex="-1" role="dialog"
+                     aria-labelledby="assetModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title font-weight-bold" style="color: black" id="assetModalLabel">
+                                    자산목록</h5>
+                                <button type="button" class="close" aria-label="Close" data-bs-dismiss="modal">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body" style="overflow-x: hidden">
+                                <div class="border mb-3">
+                                    <div class="border-bottom">
+                                        <h5 class="text-muted p-3 m-0">&nbsp;&nbsp;보험계좌</h5>
+                                    </div>
+                                    <div class="p-4">
+                                        <table class="table table-borderless table-hover">
+                                            <thead>
+                                            <tr>
+                                                <th>보험계좌</th>
+                                                <th>전송요구 여부</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <td id="insuAccount">1234123123</td>
+                                                <td><input type="checkbox" class="form-check" disabled checked></td>
+                                            </tr>
+                                            <tr>
+                                                <td id="">1234sadfa23</td>
+                                                <td><input type="checkbox" class="form-check" disabled checked></td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div class="border mb-3">
+                                    <div class="border-bottom">
+                                        <h5 class="text-muted p-3 m-0">&nbsp;&nbsp;IRP 계좌</h5>
+                                    </div>
+                                    <div class="p-4">
+                                        <table class="table table-borderless table-hover">
+                                            <thead>
+                                            <tr>
+                                                <th>IRP 계좌</th>
+                                                <th>전송요구 여부</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <td>1234123123</td>
+                                                <td><input type="checkbox" class="form-check" disabled checked></td>
+                                            </tr>
+                                            <tr>
+                                                <td>1234sadfa23</td>
+                                                <td><input type="checkbox" class="form-check" disabled checked></td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div class="border mb-3">
+                                    <div class="border-bottom">
+                                        <h5 class="text-muted p-3 m-0">&nbsp;&nbsp;대출계좌</h5>
+                                    </div>
+                                    <div class="p-4">
+                                        <table class="table table-borderless table-hover">
+                                            <thead>
+                                            <tr>
+                                                <th>대출계좌</th>
+                                                <th>전송요구 여부</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <td>1234123123</td>
+                                                <td><input type="checkbox" class="form-check" disabled checked></td>
+                                            </tr>
+                                            <tr>
+                                                <td>1234sadfa23</td>
+                                                <td><input type="checkbox" class="form-check" disabled checked></td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 자산 목록 모달 끝 -->
+
+                <!-- 발급 토큰 조회 모달 시작 -->
+                <div class="modal fade" id="tokenModal" tabindex="-1" role="dialog"
+                     aria-labelledby="tokenModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="tokenModalLabel">발급 토큰 정보</h5>
+                            </div>
+                            <div class="modal-body" style="overflow-x: hidden">
+                                <div class="w-100 p-2">
+                                    <div class="border mb-3">
+                                        <div class="border-bottom">
+                                            <h5 class="text-muted p-3 m-0">기본 정보</h5>
+                                        </div>
+                                        <div class="p-4">
+                                            <table class="table table-borderless">
+                                                <tbody>
+                                                <tr>
+                                                    <td class="tdHead">
+                                                        클라이언트 ID
+                                                    </td>
+                                                    <td class="tdContent" id="clientId">
+
+                                                    </td>
+                                                </tr>
+                                                <tr style="border-top: 1px solid #dee2e6">
+                                                    <td class="tdHead">
+                                                        사용자 정보(CI)
+                                                    </td>
+                                                    <td class="tdContent" id="userInfo">
+
+                                                    </td>
+                                                </tr>
+                                                <tr style="border-top: 1px solid #dee2e6">
+                                                    <td class="tdHead">
+                                                        서비스명
+                                                    </td>
+                                                    <td class="tdContent" id="mdServiceName">
+
+                                                    </td>
+                                                </tr>
+
+                                                <tr style="border-top: 1px solid #dee2e6">
+                                                    <td class="tdHead">
+                                                        기관명
+                                                    </td>
+                                                    <td class="tdContent" id="agencyName">
+
+                                                    </td>
+                                                </tr>
+
+                                                <tr style="border-top: 1px solid #dee2e6">
+                                                    <td class="tdHead">
+                                                        기관코드
+                                                    </td>
+                                                    <td class="tdContent" id="agencyCode">
+
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="border mb-3">
+                                        <div class="border-bottom">
+                                            <h5 class="text-muted p-3 m-0">Access Token</h5>
+                                        </div>
+                                        <div class="p-4" style="overflow-x:auto;">
+                                            <table class="table table-borderless">
+                                                <tbody>
+                                                <tr>
+                                                    <td class="tdHead">
+                                                        발급한 Access Token
+                                                    </td>
+                                                    <td class="tdContent" id="accessToken"
+                                                    >
+
+                                                    </td>
+                                                </tr>
+                                                <tr style="border-top: 1px solid #dee2e6">
+                                                    <td class="tdHead">
+                                                        발급시간
+                                                    </td>
+                                                    <td class="tdContent" id="entryTime">
+
+                                                    </td>
+                                                </tr>
+                                                <tr style="border-top: 1px solid #dee2e6">
+                                                    <td class="tdHead">
+                                                        Access Token 폐기일
+                                                    </td>
+                                                    <td class="tdContent" id="endTime">
+
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 발급 토큰 조회 모달 끝 -->
 
             </div>
             <!-- End of Main Content -->

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -344,7 +345,17 @@ public class MydataController {
         JsonObject object = new JsonObject();
         object.addProperty("id", mdProviderDTO.getId());
         object.addProperty("reqSEQ", mdProviderDTO.getMdReqInfoDTO().getReqSEQ());
-        object.addProperty("apiResources", mdProviderDTO.getApiResources()); //거래고유번호
+        // api 리소스 명에 contracts 있으면 provider 상세 정보에 피보험자 순번 column 추가
+        String apiResources = mdProviderDTO.getApiResources();
+        boolean contain = false;
+        if (apiResources.indexOf("contracts") != -1) {
+            // 해당 문자 포함
+            System.out.println("api resource에 contracts 포함");
+            contain = true;
+        }
+        System.out.println("contain = " + contain);
+
+        object.addProperty("apiResources", apiResources);
         object.addProperty("reqHeader", mdProviderDTO.getReqHeader());
         object.addProperty("resMsg", mdProviderDTO.getResMsg()); //응답메세지
         object.addProperty("resData", mdProviderDTO.getResData());
@@ -352,7 +363,7 @@ public class MydataController {
         object.addProperty("agencyName", mdProviderDTO.getMdReqInfoDTO().getAgencyName());//기관명
         object.addProperty("serviceName", mdProviderDTO.getMdReqInfoDTO().getServiceName()); //서비스명
         object.addProperty("consumerNum", mdProviderDTO.getCustomerNum()); //통합고객번호
-        object.addProperty("code", mdProviderDTO.getMdReqInfoDTO().getCode());
+        object.addProperty("code", mdProviderDTO.getMdReqInfoDTO().getCode());//거래고유번호
         object.addProperty("reqType", mdProviderDTO.getMdReqInfoDTO().getReqType()); //전송요구타입
 
         if (mdProviderDTO.getMdReqInfoDTO().getTokenExpiryDate() == null) {
@@ -363,9 +374,9 @@ public class MydataController {
             object.addProperty("tokenExpiryDate", tokenExpiryDate); //토큰유효기간
         }
 
-
         return object;
     }
+
 
     ///////////////////////////////////////////////////////////////////////////////////////////
     //                            (oﾟvﾟ)ノ  Collector Page  (oﾟvﾟ)ノ                           //
@@ -386,17 +397,90 @@ public class MydataController {
     //                            (oﾟvﾟ)ノ  Send Request Page  (oﾟvﾟ)ノ                       //
     ///////////////////////////////////////////////////////////////////////////////////////////
 
-
     @GetMapping("/mydataSendReq")
     public String mydataSendReq(Model model) {
         List<MdProviderDTO> list = mydataService.mdReqList();
-        System.out.println("=-=-=-=-=-=-=-=-=MydataController.mydataSendReq");
-        System.out.println("list = " + list);
+//        System.out.println("=-=-=-=-=-=-=-=-=MydataController.mydataSendReq");
+//        System.out.println("list = " + list);
 
         model.addAttribute("list", list);
 
         System.out.println("list.size() = " + list.size());
         return "/mydata/mydataSendReq";
     }
+
+    @GetMapping("/provider/customerList")
+    @ResponseBody
+    public JsonObject customerList(String customerNum) {
+        JsonObject object = new JsonObject();
+        List<MdProviderDTO> list = mydataService.mdProviderCustomerList(customerNum);
+        System.out.println("customerNum = " + customerNum);
+        System.out.println("MydataController.customerList-=-=-=-=-");
+//        System.out.println("list = " + list);
+
+//        object.addProperty("");
+
+        JsonArray providerArray = new JsonArray();
+        for (MdProviderDTO mdProviderDTO : list) {
+            JsonObject r = new JsonObject();
+            r.addProperty("id",mdProviderDTO.getId());
+            r.addProperty("reqDate", mdProviderDTO.getReqDate());
+            r.addProperty("reqTime", mdProviderDTO.getReqTime());
+            r.addProperty("resDate", mdProviderDTO.getResDate());
+            r.addProperty("runtime", mdProviderDTO.getRuntime());
+            r.addProperty("code", mdProviderDTO.getResCode());
+            r.addProperty("apiCode", mdProviderDTO.getApiCode());
+            r.addProperty("customerNum", customerNum);
+            r.addProperty("regularTransmission", mdProviderDTO.getRegularTransmission());
+
+            providerArray.add(r);
+        }
+
+        object.addProperty("providerList", providerArray.toString());
+        System.out.println("object = " + object);
+
+        return object;
+    }
+
+    ////////////
+    //  달력   //
+    ////////////
+
+    @GetMapping("/calendar")
+    @ResponseBody
+    public JsonObject calendar(String dday) {
+        JsonObject object = new JsonObject();
+        List<MdProviderDTO> list = mydataService.mdReqList();
+        System.out.println("dday = " + dday);
+        System.out.println("MydataController.calendar=-=-=-=-");
+
+        JsonArray providerArray = new JsonArray();
+        for (MdProviderDTO mdProviderDTO : list) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String reqDate = sdf.format(mdProviderDTO.getReqDate());
+//            if () {
+//            }
+            JsonObject r = new JsonObject();
+
+            r.addProperty("id",mdProviderDTO.getId());
+
+            r.addProperty("reqDate", reqDate);
+            r.addProperty("reqTime", mdProviderDTO.getReqTime());
+            r.addProperty("resDate", mdProviderDTO.getResDate());
+            r.addProperty("runtime", mdProviderDTO.getRuntime());
+            r.addProperty("code", mdProviderDTO.getResCode());
+            r.addProperty("apiCode", mdProviderDTO.getApiCode());
+            r.addProperty("customerNum", mdProviderDTO.getCustomerNum());
+            r.addProperty("regularTransmission", mdProviderDTO.getRegularTransmission());
+
+            providerArray.add(r);
+        }
+
+        object.addProperty("providerList", providerArray.toString());
+        System.out.println("object = " + object);
+
+        return object;
+    }
+
 
 }

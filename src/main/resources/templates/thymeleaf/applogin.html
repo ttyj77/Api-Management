@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <style>
         * {
             padding: 0;
@@ -71,20 +72,53 @@
             background-size: contain;
         }
     </style>
+
 </head>
 <body style="    text-align: -webkit-center;
     margin-top: 50%;">
 <div class="login-wrapper">
     <h2>Login</h2>
-    <form method="post" th:action="@{/app/login-proc}"
-          id="login-form">
+    <!--    <form id="login-form">-->
+    <form method="get" id="login-form" onsubmit="return false;">
         <input type="text" name="username" placeholder="Id" style="margin-top: 100px; height: 70px">
         <input type="password" name="password" placeholder="Password" style="height: 70px">
         <label for="remember-check">
             <input type="checkbox" id="remember-check">아이디 저장하기
         </label>
-        <input type="submit" value="Login" style="margin-top: 40px; height: 70px">
+        <input type="submit" value="Login" style="margin-top: 40px; height: 70px" id="send"/>
     </form>
 </div>
+<script>
+    let send = document.getElementById("send");
+    console.log(send)
+    send.addEventListener("click", function () {
+        let form = document.getElementById("login-form");
+        let id = document.getElementById("id");
+        let pw = document.getElementById("pw");
+        //
+        // if (pw.value.trim() == "" || id.value.trim() == "") {
+        //     alert("id와 비번 잘 적어라");
+        //     return false;
+        // }
+        //
+        // form.action = "http://www.naver.com";
+        // form.mothod = "GET";
+
+        // form.submit();
+        console.log($('#login-form').serialize())
+        $.ajax({
+            url: "/login-proc",
+            data: $('#login-form').serialize(),
+            method: "post",
+
+            success: (message) => {
+                console.log("성공")
+                window.location.href = "/app/main"
+            }, error: (e) => {
+                console.log("통신 실패", e)
+            }
+        })
+    });
+</script>
 </body>
 </html>
