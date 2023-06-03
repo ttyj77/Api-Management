@@ -314,10 +314,12 @@ public class MydataController {
         System.out.println("start = " + start);
 
         // 전송 하는 부분(코드 작성 필요)
-//        int sum = 0;
+        int sum = 0;
 //        for (int i = 0; i < 10000000; i++) {
 //            sum += i;
 //        }
+
+        mydataService.mdProviderSelectAll();
         // 특정 코드 실행 되고 난 후 시간
         long end = System.currentTimeMillis();
         System.out.println("end = " + end);
@@ -376,7 +378,6 @@ public class MydataController {
 
         return object;
     }
-
 
     ///////////////////////////////////////////////////////////////////////////////////////////
     //                            (oﾟvﾟ)ノ  Collector Page  (oﾟvﾟ)ノ                           //
@@ -460,7 +461,7 @@ public class MydataController {
             String reqDate = mdProviderDTO.getReqDate();
             System.out.println("reqDate.equals(dday) = " + reqDate.equals(dday));
             System.out.println(dday.equals(reqDate) && customerNum.equals(mdProviderDTO.getCustomerNum()));
-            if (dday.equals(reqDate) && customerNum.equals(mdProviderDTO.getCustomerNum())) {
+            if (dday.equals("") || dday.equals(reqDate) && customerNum.equals(mdProviderDTO.getCustomerNum())) {
                 System.out.println("들어옴");
 
                 JsonObject r = new JsonObject();
@@ -486,12 +487,47 @@ public class MydataController {
         return object;
     }
 
-    @GetMapping
+    @GetMapping("/provider/calendar")
     @ResponseBody
     public JsonObject calendarInSendReq(String dday) {
-        JsonObject object = new JsonObject();
+        JsonObject jsonObject = new JsonObject();
+        System.out.println("dday = " + dday);
+        System.out.println("MydataController.calendarInSendReq");
 
-        return object;
+        List<MdProviderDTO> list = mydataService.mdProviderSelectAll();
+
+        System.out.println(list);
+
+        JsonArray r = new JsonArray();
+        for (MdProviderDTO mdProviderDTO : list) {
+            String reqDate = mdProviderDTO.getReqDate();
+            if (dday.equals("") || dday.equals(reqDate)) {
+
+                JsonObject object = new JsonObject();
+                object.addProperty("id", mdProviderDTO.getId());
+                object.addProperty("reqDate", reqDate);
+                object.addProperty("reqTime", mdProviderDTO.getReqTime());
+                object.addProperty("runtime", mdProviderDTO.getRuntime());
+                object.addProperty("resDate", mdProviderDTO.getResDate());
+                object.addProperty("resCode", mdProviderDTO.getResCode());
+                object.addProperty("apiCode", mdProviderDTO.getApiCode());
+                object.addProperty("customerNum", mdProviderDTO.getCustomerNum());
+                object.addProperty("regularTransmission", mdProviderDTO.getRegularTransmission());
+                object.addProperty("uniqueNum", mdProviderDTO.getUniqueNum());
+                object.addProperty("statusInfo", mdProviderDTO.getStatusInfo());
+//                object.addProperty("apiResources", mdProviderDTO.getApiResources());
+//                object.addProperty("resMsg", mdProviderDTO.getResMsg());
+//                object.addProperty("reqHeader", mdProviderDTO.getReqHeader());
+//                object.addProperty("resData", mdProviderDTO.getResData());
+
+                r.add(object);
+            }
+
+        }
+
+        jsonObject.addProperty("providerList", r.toString());
+        System.out.println("jsonObject = " + jsonObject);
+        return jsonObject;
     }
 
 }

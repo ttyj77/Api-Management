@@ -5,56 +5,25 @@
     <title>Title</title>
 </head>
 <body>
-<script>
-    function providerDetailModal(value) {
-        console.log("providerDetailModal=========");
-        let clientNum = value.getAttribute("client_num");
-        console.log(clientNum);
-        let data = {
-            "customerNum": clientNum,
-        };
-        $.ajax({
-            url: "/mydata/provider/customerList",
-            type: "get",
-            data: data,
-
-            success: (message) => {
-                console.log("messagemmmmmmmmmmmmm");
-                console.log(message);
-                let plist = JSON.parse(message.providerList);
-                console.log(plist);
-                // console.log(plist);
-                console.log(plist.length);
-
-                console.log(Object.keys(plist[0]).length)
-                // column 수
-                let col_cnt = Object.keys(plist[0]).length + 1;
-
-                let tbody = document.getElementById("userNumTbody");
-                for (let i = 0; i < plist.length; i++) {
-                    let tr = document.createElement("tr");
-                    tr.style.fontSize = '14px';
-                    let keys = Object.keys(plist[i]);
-                    console.log(keys);
-                    $(tr).attr({"data-bs-toggle": "modal", "data-bs-target": "#detailModal"});
-                    for (let j = 0; j < col_cnt; j++) {
-                        let key = keys[j];
-                        console.log(key);
-                        console.log("value : ", plist[key]);
-
-                        // let td = document.createElement("td").innerText = plist[key];
-                        tr.append(td);
-                    }
-                    // for (let data in plist[i]) {
-                    //     let td = document.createElement("td").innerText = plist[i][data];
-                    //     tr.append(td);
-                    // }
-                    tbody.append(tr);
-                }
-            }
-        })
-    }
-</script>
+    <table>
+        <tbody id="userNumTbody">
+        <!-- calendar 조회 바뀌는 부분 -->
+        <tr class="trContent" th:each="list : ${list}" th:id="${list.id}"
+            data-bs-toggle="modal" data-bs-target="#providerModal"
+            onClick="providerModal(this)">
+            <td th:text="${list.reqDate}"></td>
+            <td th:text="${list.reqTime}"></td>
+            <td th:text="${list.resDate}"></td>
+            <td th:text="${list.runtime}"></td>
+            <td th:text="${list.resCode}"></td>
+            <td th:text="${list.apiCode}"></td>
+            <td th:text="${list.customerNum}"></td>
+            <td th:text="${list.regularTransmission}"></td>
+            <td th:text="${list.uniqueNum}"></td>
+            <td th:text="${list.statusInfo}"></td>
+        </tr>
+        </tbody>
+    </table>
 
 </body>
 </html>

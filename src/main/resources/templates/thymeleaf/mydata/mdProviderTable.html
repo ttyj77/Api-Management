@@ -57,7 +57,6 @@
                         console.log(message)
                         createProviderModal(message);
 
-
                     },
                     error: (e) => {
                         console.log("통신 실패", e);
@@ -81,19 +80,20 @@
                 document.getElementById("consumerNum").innerText = data.consumerNum
                 document.getElementById("tokenExpiryDate").innerText = data.tokenExpiryDate
             }
+
             // 달력
-            function input(value) {
+            function input() {
                 let tbody = document.getElementById("userNumTbody");
                 tbody.innerHTML = "";
                 let dday = document.getElementById("input_date").value;
                 console.log(dday);
                 let data = {
-                    "dday" :dday,
+                    "dday": dday,
                 }
                 $.ajax({
-                    url:"/mydata/calendarSend",
-                    type:"get",
-                    data :data,
+                    url: "/mydata/provider/calendar",
+                    type: "get",
+                    data: data,
 
                     success: (message) => {
 
@@ -103,16 +103,15 @@
                         let col_cnt = Object.keys(plist[0]).length;
                         console.log(col_cnt);
                         for (let i = 0; i < plist.length; i++) {
-                            let tr = document.createElement("tr");
-                            tr.style.fontSize = '14px';
-
                             let keys = Object.keys(plist[i]);
+                            let tr = document.createElement("tr");
+                            tr.className = "trContent";
+                            tr.id = plist[i]["id"];
                             $(tr).attr({
                                 "data-bs-toggle": "modal",
-                                "data-bs-target": "#detailModal",
-                                "onclick": "providerDetailInfo(this)"
+                                "data-bs-target": "#providerModal",
+                                "onclick": "providerModal(this)"
                             });
-                            tr.id = plist[i]["id"];
                             for (let j = 1; j < col_cnt; j++) {
                                 let key = keys[j];
 
@@ -187,13 +186,14 @@
                                         <td>API코드</td>
                                         <td>통합고객번호</td>
                                         <td>정기적 전송</td>
-                                        <td>providerModal</td>
+                                        <td>거래고유번호</td>
                                         <td>전송요구타입</td>
 
                                     </tr>
                                     </thead>
 
-                                    <tbody>
+                                    <tbody id="userNumTbody">
+                                    <!-- calendar 조회 바뀌는 부분 -->
                                     <tr class="trContent" th:each="list : ${list}" th:id="${list.id}"
                                         data-bs-toggle="modal" data-bs-target="#providerModal"
                                         onclick="providerModal(this)">

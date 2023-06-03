@@ -126,29 +126,7 @@
                     type: "get",
 
                     success: (message) =>{
-                        let plist = JSON.parse(message.providerList);
-                        console.log(plist);
-                        let col_cnt = Object.keys(plist[0]).length;
-                        for (let i = 0; i < plist.length; i++) {
-                            let tr = document.createElement("tr");
-                            tr.style.fontSize = '14px';
 
-                            let keys = Object.keys(plist[i]);
-                            $(tr).attr({
-                                "data-bs-toggle": "modal",
-                                "data-bs-target": "#detailModal",
-                                "onclick": "providerDetailInfo(this)"
-                            });
-                            tr.id = plist[i]["id"];
-                            for (let j = 1; j < col_cnt; j++) {
-                                let key = keys[j];
-
-                                let td = document.createElement("td");
-                                td.innerText = plist[i][key];
-                                tr.append(td);
-                            }
-                            tbody.append(tr);
-                        }
                     }
                 })
             }
@@ -166,7 +144,7 @@
                     "customerNum": cnum,
                 }
                 $.ajax({
-                    url:"/mydata/calendar",
+                    url:"/mydata/calendarSend",
                     type:"get",
                     data :data,
 
