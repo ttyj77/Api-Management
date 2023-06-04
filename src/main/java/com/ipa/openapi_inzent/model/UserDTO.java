@@ -3,6 +3,7 @@ package com.ipa.openapi_inzent.model;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 public class UserDTO {
@@ -20,9 +21,12 @@ public class UserDTO {
     private int userId;
     private int roleId;
 
+    private List<String> roleList;
     private String role;
 
     // role
     private String code;
     private String name;
+
+
 }

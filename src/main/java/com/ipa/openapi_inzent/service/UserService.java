@@ -3,6 +3,7 @@ package com.ipa.openapi_inzent.service;
 import com.ipa.openapi_inzent.dao.UserDao;
 import com.ipa.openapi_inzent.model.UserDTO;
 import com.ipa.openapi_inzent.model.UserRoleDTO;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -27,7 +28,7 @@ public class UserService {
         return id;
     }
 
-    public UserDTO findByUsername(String username) {
+    public List<UserDTO> findByUsername(String username) {
         return userDao.findByUsername(username);
     }
 

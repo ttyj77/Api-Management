@@ -2,6 +2,7 @@ package com.ipa.openapi_inzent.dao;
 
 import com.ipa.openapi_inzent.model.UserDTO;
 import com.ipa.openapi_inzent.model.UserRoleDTO;
+import org.apache.catalina.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.dao.DataAccessException;
 
@@ -12,7 +13,7 @@ import java.util.List;
 public interface UserDao {
     void register(UserDTO userDTO);
 
-    UserDTO findByUsername(String username) throws DataAccessException;
+    List<UserDTO> findByUsername(String username) throws DataAccessException;
 
     UserDTO findByNickname(String nickname) throws DataAccessException;
 

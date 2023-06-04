@@ -81,7 +81,7 @@ public class UserController {
     @ResponseBody
     public JsonObject idCheck(String username, String nickname) {
         JsonObject object = new JsonObject();
-        UserDTO un = userService.findByUsername(username);
+        UserDTO un = userService.findByUsername(username).get(0);
         UserDTO nn = userService.findByNickname(nickname);
         if (un != null) {
             object.addProperty("username", true);
@@ -147,6 +147,7 @@ public class UserController {
 
         return "redirect:/accountList";
     }
+
     // 내정보 비번 변경
     @PostMapping("/updatePw/{id}")
     public String updatePw(@PathVariable int id, String password) {
@@ -230,7 +231,6 @@ public class UserController {
 
         return "mypage";
     }
-
 
 
 }

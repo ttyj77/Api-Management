@@ -60,7 +60,10 @@ public class SecurityConfig {
                     .antMatchers(HttpMethod.GET, "/error/*", "/login", "/login_proc", "/user/login", "/user/register").permitAll() // 설정된 url은 인증되지 않더라도 누구든 접근 가능
 //                .anyRequest().authenticated()// 위 페이지 외 인증이 되어야 접근가능(ROLE에 상관없이)
                     .antMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**").permitAll()
-                    .antMatchers("/api/**", "/accountList", "/authorization", "/requestPage", "/user/mypage", "/mydata/**").authenticated()
+//                    .antMatchers("/api/**", "/accountList", "/authorization", "/requestPage", "/user/mypage", "/mydata/**").authenticated()
+                    .antMatchers("/api/**", "/accountList", "/authorization", "/requestPage", "/user/mypage", "/mydata/**").hasRole("PROVIDER")
+                    .antMatchers("/accountList", "/authorization", "/requestPage", "/user/mypage").hasRole("USER")
+                    .antMatchers("/mydata/**").hasRole("ADMIN")
                     .and()
                     .formLogin().loginPage("/user/login")  // 접근이 차단된 페이지 클릭시 이동할 url
                     .loginProcessingUrl("/login-proc") // 로그인시 맵핑되는 url

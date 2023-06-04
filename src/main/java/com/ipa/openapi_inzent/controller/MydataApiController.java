@@ -3,6 +3,7 @@ package com.ipa.openapi_inzent.controller;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.ipa.openapi_inzent.model.DataDTO;
+import com.ipa.openapi_inzent.service.MydataService;
 import org.apache.tomcat.util.json.JSONParser;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +24,9 @@ public class MydataApiController {
     @GetMapping("/invest/accounts")
     @ResponseBody
     public StringBuffer invest_001(@RequestParam String org_code, @RequestParam String limit, HttpServletRequest header) {
+
+        long start = System.currentTimeMillis();
+        System.out.println("start = " + start);
 
 
         System.out.println(header.getHeader("Authorization"));
@@ -83,6 +87,15 @@ public class MydataApiController {
         } catch (Exception e) {
             System.out.println(e);
         }
+
+        // 특정 코드 실행 되고 난 후 시간
+        long end = System.currentTimeMillis();
+        System.out.println("end = " + end);
+
+        // 초 단위 실행시간
+        double result = (end - start) / 1000.0;
+        System.out.println("result = " + result);
+
         return response;
     }
 
