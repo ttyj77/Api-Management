@@ -180,5 +180,12 @@ public class MydataService {
     }
 
 
+    public List<MdReqInfoDTO> mdReqAll() {
+        return mydataDao.mdReqAll();
+    }
+
+    public List<MdReqInfoDTO> mdReqSearch(String keyword) {
+        return mydataDao.mdReqSearch(keyword);
+    }
 }
 

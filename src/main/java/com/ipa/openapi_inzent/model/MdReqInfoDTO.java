@@ -8,6 +8,7 @@ import java.util.Date;
 public class MdReqInfoDTO {
     private int id;
     private String code;
+    private String clientNum;
     private String agencyName;
     private String serviceName;
     private String reqType;

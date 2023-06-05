@@ -380,6 +380,8 @@ public class MydataController {
         return object;
     }
 
+
+
     ///////////////////////////////////////////////////////////////////////////////////////////
     //                            (oﾟvﾟ)ノ  Collector Page  (oﾟvﾟ)ノ                           //
     ///////////////////////////////////////////////////////////////////////////////////////////
@@ -401,11 +403,10 @@ public class MydataController {
 
     @GetMapping("/mydataSendReq")
     public String mydataSendReq(Model model) {
-        List<MdProviderDTO> list = mydataService.mdReqList();
-//        System.out.println("=-=-=-=-=-=-=-=-=MydataController.mydataSendReq");
-//        System.out.println("list = " + list);
+        List<MdReqInfoDTO> list = mydataService.mdReqAll();
 
         model.addAttribute("list", list);
+        System.out.println("list = " + list);
 
         System.out.println("list.size() = " + list.size());
         return "/mydata/mydataSendReq";
@@ -442,6 +443,14 @@ public class MydataController {
         System.out.println("object = " + object);
 
         return object;
+    }
+
+    @GetMapping("/reqSearch")
+    public String mdReqSearch(Model model, String keyword) {
+        System.out.println("keyword = " + keyword);
+        model.addAttribute("list", mydataService.mdReqSearch(keyword));
+
+        return "/mydata/mydataSendReq";
     }
 
     ////////////

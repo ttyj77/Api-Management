@@ -43,4 +43,9 @@ public interface MydataDao {
     List<MdProviderDTO> mdReqList() throws DataAccessException;
 
     List<MdProviderDTO> mdProviderCustomerList(String customerNum) throws DataAccessException;
+
+    List<MdReqInfoDTO> mdReqAll() throws DataAccessException;
+
+    List<MdReqInfoDTO> mdReqSearch(String keyword) throws DataAccessException;
+
 }

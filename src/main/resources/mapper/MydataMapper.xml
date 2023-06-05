@@ -84,6 +84,7 @@
     <resultMap id="mdReqInfo" type="com.ipa.openapi_inzent.model.MdReqInfoDTO">
         <result property="id" column="reqId"/>
         <result property="code" column="code"/>
+        <result property="clientNum" column="clientNum"/>
         <result property="agencyName" column="agencyName"/>
         <result property="serviceName" column="serviceName"/>
         <result property="reqSEQ" column="reqSEQ"/>
@@ -186,6 +187,18 @@
     <select id="mdProviderCustomerList" parameterType="string" resultType="com.ipa.openapi_inzent.model.MdProviderDTO">
         select * from public."providerHistory"
         where "customerNum" = #{customerNum};
+    </select>
+
+    <select id="mdReqAll" resultType="com.ipa.openapi_inzent.model.MdReqInfoDTO">
+        select * from public."reqInfo";
+    </select>
+
+    <select id="mdReqSearch" parameterType="string" resultType="com.ipa.openapi_inzent.model.MdReqInfoDTO">
+        select * from public."reqInfo" as "req"
+        where req.code ILIKE CONCAT('%', #{keyword},'%')
+        OR req."agencyName" ILIKE CONCAT('%', #{keyword},'%')
+        OR req."serviceName" ILIKE CONCAT('%', #{keyword},'%')
+        OR req."clientNum" ILIKE CONCAT('%', #{keyword},'%') ;
     </select>
 
     <!--    ///////////////////////////////////////////////////////////////////////////////////////////-->
