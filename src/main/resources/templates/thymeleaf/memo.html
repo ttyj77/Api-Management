@@ -5,25 +5,91 @@
     <title>Title</title>
 </head>
 <body>
-    <table>
-        <tbody id="userNumTbody">
-        <!-- calendar 조회 바뀌는 부분 -->
-        <tr class="trContent" th:each="list : ${list}" th:id="${list.id}"
-            data-bs-toggle="modal" data-bs-target="#providerModal"
-            onClick="providerModal(this)">
-            <td th:text="${list.reqDate}"></td>
-            <td th:text="${list.reqTime}"></td>
-            <td th:text="${list.resDate}"></td>
-            <td th:text="${list.runtime}"></td>
-            <td th:text="${list.resCode}"></td>
-            <td th:text="${list.apiCode}"></td>
-            <td th:text="${list.customerNum}"></td>
-            <td th:text="${list.regularTransmission}"></td>
-            <td th:text="${list.uniqueNum}"></td>
-            <td th:text="${list.statusInfo}"></td>
-        </tr>
-        </tbody>
-    </table>
+<table>
+    <tbody>
+    <!-- calendar 조회 바뀌는 부분 -->
+    <tr>
+        <td class="tdHead">전송요구 SEQ</td>
+        <td class="tdContent" id="reqSEQ"></td>
+    </tr>
+
+    <tr>
+        <td class="tdHead">거래 고유번호</td>
+        <td colspan="3" class="tdContent" id="code">
+        </td>
+    </tr>
+
+    <tr>
+        <td class="tdHead">요청API Resource</td>
+        <td colspan="3" class="tdContent" id="apiResources"></td>
+    </tr>
+
+    <tr>
+        <td class="tdHead">증권번호</td>
+        <td class="tdContent">168237311096
+        </td>
+    </tr>
+
+    <tr>
+        <td class="tdHead">응답메시지</td>
+        <td class="tdContent" id="resMsg">
+        </td>
+    </tr>
+
+    <tr>
+        <td class="tdHead" style="vertical-align: middle">resdata
+        </td>
+        <td class="tdContent p-0">
+                                                <textarea style="height: 120px" class="w-100" id="resdata" disabled>
+
+                                                </textarea>
+        </td>
+    </tr>
+    </tbody>
+    <tbody id="userNumTbody">
+    <!-- createElement -->
+    </tbody>
+</table>
+
+agencyName
+:
+"주식회사 하나은행"
+apiResources
+:
+"/v1/insu/insurances/coverages"
+code
+:
+"ZVAAES0000"
+consumerNum
+:
+"480927489"
+id
+:
+1
+reqHeader
+:
+"{\"insured_no\": \"1016904381\", \"is_primary\": \"true\", \"insured_name\": \"김정호\"}"
+reqSEQ
+:
+"TRQ_20211115162712_0798"
+reqType
+:
+"마이데이터"
+resData
+:
+"{\"insured_no\": \"1016904381\", \"is_primary\": \"true\", \"insured_name\": \"김정호\"}"
+resMsg
+:
+"성공"
+serviceName
+:
+"마이데이터 서비스"
+statusInfo
+:
+"(통합인증)자산선택"
+tokenExpiryDate
+:
+"2023-05-26"
 
 </body>
 </html>

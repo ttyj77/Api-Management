@@ -367,6 +367,7 @@ public class MydataController {
         object.addProperty("consumerNum", mdProviderDTO.getCustomerNum()); //통합고객번호
         object.addProperty("code", mdProviderDTO.getMdReqInfoDTO().getCode());//거래고유번호
         object.addProperty("reqType", mdProviderDTO.getMdReqInfoDTO().getReqType()); //전송요구타입
+        object.addProperty("uniqueNum",mdProviderDTO.getUniqueNum());
 
         if (mdProviderDTO.getMdReqInfoDTO().getTokenExpiryDate() == null) {
             object.addProperty("tokenExpiryDate", ""); //토큰유효기간
@@ -461,23 +462,25 @@ public class MydataController {
             String reqDate = mdProviderDTO.getReqDate();
             System.out.println("reqDate.equals(dday) = " + reqDate.equals(dday));
             System.out.println(dday.equals(reqDate) && customerNum.equals(mdProviderDTO.getCustomerNum()));
-            if (dday.equals("") || dday.equals(reqDate) && customerNum.equals(mdProviderDTO.getCustomerNum())) {
-                System.out.println("들어옴");
+            if (dday.equals("") || dday.equals(reqDate)) {
+                if (customerNum.equals(mdProviderDTO.getCustomerNum())) {
+                    System.out.println("들어옴");
 
-                JsonObject r = new JsonObject();
+                    JsonObject r = new JsonObject();
 
-                r.addProperty("id",mdProviderDTO.getId());
+                    r.addProperty("id",mdProviderDTO.getId());
 
-                r.addProperty("reqDate", reqDate);
-                r.addProperty("reqTime", mdProviderDTO.getReqTime());
-                r.addProperty("resDate", mdProviderDTO.getResDate());
-                r.addProperty("runtime", mdProviderDTO.getRuntime());
-                r.addProperty("code", mdProviderDTO.getResCode());
-                r.addProperty("apiCode", mdProviderDTO.getApiCode());
-                r.addProperty("customerNum", mdProviderDTO.getCustomerNum());
-                r.addProperty("regularTransmission", mdProviderDTO.getRegularTransmission());
+                    r.addProperty("reqDate", reqDate);
+                    r.addProperty("reqTime", mdProviderDTO.getReqTime());
+                    r.addProperty("resDate", mdProviderDTO.getResDate());
+                    r.addProperty("runtime", mdProviderDTO.getRuntime());
+                    r.addProperty("code", mdProviderDTO.getResCode());
+                    r.addProperty("apiCode", mdProviderDTO.getApiCode());
+                    r.addProperty("customerNum", mdProviderDTO.getCustomerNum());
+                    r.addProperty("regularTransmission", mdProviderDTO.getRegularTransmission());
 
-                providerArray.add(r);
+                    providerArray.add(r);
+                }
             }
         }
 

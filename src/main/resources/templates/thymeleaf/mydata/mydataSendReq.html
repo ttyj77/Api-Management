@@ -59,6 +59,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
         <script>
+            // 디테일 모달 누르면
             function providerDetailModal(value) {
                 let tbody = document.getElementById("userNumTbody");
                 tbody.innerHTML = "";
@@ -111,7 +112,7 @@
                     }
                 })
             }
-
+            // 거래 이력별 만들어진 tr태그에 모달
             function providerDetailInfo(value) {
                 let tbody = document.getElementById("userNumTbody");
                 tbody.innerHTML = "";
@@ -126,11 +127,28 @@
                     type: "get",
 
                     success: (message) =>{
+                        let cn = document.getElementsByClassName("inputClientNum");
+                        console.log(message)
+                        console.log("디테일인포들어옴")
+                        for (let i = 0; i < cn.length; i++) {
+                            $(cn).attr("client_num", message.consumerNum);
+
+                            document.getElementById("reqSEQ").innerText = message.reqSEQ;
+                            document.getElementById("uniqueNum").innerText = message.uniqueNum;
+                            document.getElementById("apiResources").innerText = message.apiResources;
+                            // 증권번호 ( 계좌 번호 ) resData에서 가져와야함 !!!(여기에요)
+                            document.getElementById("accountNum").innerText = "계좌번호가 들어가야함 자산목록에 뜨는"
+                            document.getElementById("resMsg").innerText = message.resMsg;
+                            document.getElementById("resdata").innerText = message.resData;
+
+
+                        }
 
                     }
                 })
             }
 
+            // 날짜 조회 할 때 거래 이력 list 만들기
             function input(value) {
                 let tbody = document.getElementById("userNumTbody");
                 tbody.innerHTML = "";
@@ -349,8 +367,9 @@
                             <div class="modal-header">
                                 <h5 class="modal-title font-weight-bold" style="color: black" id="detailModalLabel">
                                     거래이력(제공자)-상세</h5>
-                                <button type="button" class="close" aria-label="Close" data-bs-target="#providerModal"
-                                        data-bs-toggle="modal">
+                                <button type="button" class="close inputClientNum" aria-label="Close" data-bs-target="#providerModal"
+                                        data-bs-toggle="modal"
+                                        onclick="providerDetailModal(this)">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
@@ -372,7 +391,7 @@
 
                                         <tr>
                                             <td class="tdHead">거래 고유번호</td>
-                                            <td colspan="3" class="tdContent" id="code">
+                                            <td colspan="3" class="tdContent" id="uniqueNum">
                                             </td>
                                         </tr>
 
@@ -383,7 +402,7 @@
 
                                         <tr>
                                             <td class="tdHead">증권번호</td>
-                                            <td class="tdContent" >168237311096
+                                            <td class="tdContent" id="accountNum">
                                             </td>
                                         </tr>
 
@@ -407,8 +426,9 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
-                                        data-bs-target="#providerModal">닫기
+                                <button type="button" class="btn btn-secondary inputClientNum" data-bs-toggle="modal"
+                                        data-bs-target="#providerModal"
+                                        onclick="providerDetailModal(this)">닫기
                                 </button>
                             </div>
                         </div>
