@@ -48,4 +48,6 @@ public interface MydataDao {
 
     List<MdReqInfoDTO> mdReqSearch(String keyword) throws DataAccessException;
 
+    List<MdProviderDTO> mdProviderSearch(String keyword) throws DataAccessException;
+
 }

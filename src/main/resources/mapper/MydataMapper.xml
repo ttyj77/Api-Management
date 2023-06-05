@@ -201,6 +201,13 @@
         OR req."clientNum" ILIKE CONCAT('%', #{keyword},'%') ;
     </select>
 
+    <select id="mdProviderSearch" parameterType="string" resultType="com.ipa.openapi_inzent.model.MdProviderDTO">
+        select * from public."providerHistory" as "pro"
+        where pro."apiCode" ILIKE CONCAT('%', #{keyword},'%')
+        OR pro."uniqueNum" ILIKE CONCAT('%', #{keyword},'%')
+        OR pro."customerNum" ILIKE CONCAT('%', #{keyword},'%') ;
+    </select>
+
     <!--    ///////////////////////////////////////////////////////////////////////////////////////////-->
     <!--    //                            (oﾟvﾟ)ノ  Collector Page  (oﾟvﾟ)ノ                           //-->
     <!--    ///////////////////////////////////////////////////////////////////////////////////////////-->

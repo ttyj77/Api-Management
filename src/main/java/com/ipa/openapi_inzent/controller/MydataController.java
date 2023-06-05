@@ -380,6 +380,14 @@ public class MydataController {
         return object;
     }
 
+    @GetMapping("/providerSearch")
+    public String mdProviderSearch(Model model, String keyword) {
+        System.out.println("keyword = " + keyword);
+        model.addAttribute("list", mydataService.mdProviderSearch(keyword));
+
+        return "/mydata/mdProviderTable";
+    }
+
 
 
     ///////////////////////////////////////////////////////////////////////////////////////////

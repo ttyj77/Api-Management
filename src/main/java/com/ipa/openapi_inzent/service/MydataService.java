@@ -187,5 +187,30 @@ public class MydataService {
     public List<MdReqInfoDTO> mdReqSearch(String keyword) {
         return mydataDao.mdReqSearch(keyword);
     }
+
+    public List<MdProviderDTO> mdProviderSearch(String keyword) {
+        List<MdProviderDTO> list = mydataDao.mdProviderSearch(keyword);
+        SimpleDateFormat dfFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        SimpleDateFormat newFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss:SSS");
+
+        Calendar cal = Calendar.getInstance();
+
+        try {
+            System.out.println("MydataService.mdProviderSelectAll");
+            for (MdProviderDTO m : list) {
+                Date forMatDate = dfFormat.parse(m.getReqDate());
+                m.setReqDate(newFormat.format(forMatDate)); //요청일 ex) 2021-11-23
+                m.setReqTime(timeFormat.format(forMatDate)); //요청시간 ex) 15:18:16.614
+                cal.setTime(forMatDate);
+                cal.add(Calendar.MILLISECOND, m.getRuntime()); // 요청일에 응답시간(runtime)을 더함 => 응답일자
+                m.setResDate(dfFormat.format(cal.getTime())); //응답일자 ex) 2021-11-23 15:18:16.642
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return list;
+
+    }
 }
 
