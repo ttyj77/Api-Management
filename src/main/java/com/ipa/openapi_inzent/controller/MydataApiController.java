@@ -32,6 +32,13 @@ public class MydataApiController {
         System.out.println(header.getHeader("Authorization"));
         System.out.println("org_code = " + org_code);
         String token = header.getHeader("Authorization");
+        System.out.println("====Header===Start");
+
+        header.getHeaderNames().asIterator().forEachRemaining(
+                headerName -> System.out.println(headerName + ": " + header.getHeader(headerName))
+        );
+
+        System.out.println("====Header===end");
         System.out.println("token = " + token);
         System.out.println("limit = " + limit);
 
