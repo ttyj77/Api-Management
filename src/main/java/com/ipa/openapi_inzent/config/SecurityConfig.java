@@ -66,6 +66,7 @@ public class SecurityConfig {
                     .loginProcessingUrl("/login-proc") // 로그인시 맵핑되는 url
                     .usernameParameter("username")      // view form 태그 내에 로그인 할 id 에 맵핑되는 name ( form 의 name )
                     .passwordParameter("password")      // view form 태그 내에 로그인 할 password 에 맵핑되는 name ( form 의 name )
+//                    .failureUrl("/user/login?error=true&exception=*")
 //                    .successHandler(userAuthSuccessHandler()) // 로그인 성공시 실행되는 메소드
                     .failureHandler(userAuthFailureHandler()) // 로그인 실패시 실행되는 메소드
                     .and()

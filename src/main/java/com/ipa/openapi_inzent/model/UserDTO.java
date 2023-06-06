@@ -15,6 +15,7 @@ public class UserDTO {
     private boolean activate;
     private Date createDate;
     private boolean approve; // false : 요청 상태 / true : 승인 완료
+    private String ownNum;
 
     // UserRole
     private int userId;

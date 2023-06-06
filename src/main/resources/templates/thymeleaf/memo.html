@@ -5,91 +5,116 @@
     <title>Title</title>
 </head>
 <body>
-<table>
-    <tbody>
-    <!-- calendar 조회 바뀌는 부분 -->
-    <tr>
-        <td class="tdHead">전송요구 SEQ</td>
-        <td class="tdContent" id="reqSEQ"></td>
-    </tr>
+<div class="d-flex justify-content-center target" style="height: 80rem">
+    <div class="mt-3">
+        <div class="d-flex p-4">
+            <h1 id="listName">&nbsp;카드 목록</h1>
+        </div>
+        <hr class="mt-0">
+        <div id="listBox">
+            <div class="p-4" id="listBox-1">
+                <div class="oneBox">
+                    <div class="listHover">
+                        <h1>
+                            인젠트 카드
+                        </h1>
+                        <h2>
+                            600,000원 지출
+                        </h2>
+                    </div>
+                </div>
+                <div class="oneBox">
+                    <div class="listHover">
+                        <h1>
+                            농협 카드
+                        </h1>
+                        <h2>
+                            630,000원 지출
+                        </h2>
+                    </div>
+                </div>
+                <div class="oneBox">
+                    <div class="listHover">
+                        <h1>
+                            카카오 카드
+                        </h1>
+                        <h2>
+                            100,000원 지출
+                        </h2>
+                    </div>
+                </div>
+                <div class="oneBox">
+                    <div class="listHover">
+                        <h1>
+                            비트 카드
+                        </h1>
+                        <h2>
+                            1,600,000원 지출
+                        </h2>
+                    </div>
+                </div>
+                <div class="oneBox">
+                    <div class="listHover">
+                        <h1>
+                            인젠트 카드
+                        </h1>
+                        <h2>
+                            600,000원 지출
+                        </h2>
+                    </div>
+                </div>
+                <div class="oneBox">
+                    <div class="listHover">
+                        <h1>
+                            인젠트 카드
+                        </h1>
+                        <h2>
+                            600,000원 지출
+                        </h2>
+                    </div>
+                </div>
+                <div class="oneBox">
+                    <div class="listHover">
+                        <h1>
+                            인젠트 카드
+                        </h1>
+                        <h2>
+                            600,000원 지출
+                        </h2>
+                    </div>
+                </div>
+                <div class="oneBox">
+                    <div class="listHover">
+                        <h1>
+                            인젠트 카드
+                        </h1>
+                        <h2>
+                            600,000원 지출
+                        </h2>
+                    </div>
+                </div>
+                <div class="oneBox">
+                    <div class="listHover">
+                        <h1>
+                            인젠트 카드
+                        </h1>
+                        <h2>
+                            600,000원 지출
+                        </h2>
+                    </div>
+                </div>
 
-    <tr>
-        <td class="tdHead">거래 고유번호</td>
-        <td colspan="3" class="tdContent" id="code">
-        </td>
-    </tr>
 
-    <tr>
-        <td class="tdHead">요청API Resource</td>
-        <td colspan="3" class="tdContent" id="apiResources"></td>
-    </tr>
+            </div>
+        </div>
+        <!-- 추가 해제 버튼 -->
+        <div class="d-flex justify-content-center align-items-center" style="height: 11%;">
+            <button class="btn-plus" type="button" onclick="location.href='/app/bank'">+ 추가</button>
+            <button class="btn-minus" type="button">- 해제</button>
+        </div>
 
-    <tr>
-        <td class="tdHead">증권번호</td>
-        <td class="tdContent">168237311096
-        </td>
-    </tr>
 
-    <tr>
-        <td class="tdHead">응답메시지</td>
-        <td class="tdContent" id="resMsg">
-        </td>
-    </tr>
-
-    <tr>
-        <td class="tdHead" style="vertical-align: middle">resdata
-        </td>
-        <td class="tdContent p-0">
-                                                <textarea style="height: 120px" class="w-100" id="resdata" disabled>
-
-                                                </textarea>
-        </td>
-    </tr>
-    </tbody>
-    <tbody id="userNumTbody">
-    <!-- createElement -->
-    </tbody>
-</table>
-
-agencyName
-:
-"주식회사 하나은행"
-apiResources
-:
-"/v1/insu/insurances/coverages"
-code
-:
-"ZVAAES0000"
-consumerNum
-:
-"480927489"
-id
-:
-1
-reqHeader
-:
-"{\"insured_no\": \"1016904381\", \"is_primary\": \"true\", \"insured_name\": \"김정호\"}"
-reqSEQ
-:
-"TRQ_20211115162712_0798"
-reqType
-:
-"마이데이터"
-resData
-:
-"{\"insured_no\": \"1016904381\", \"is_primary\": \"true\", \"insured_name\": \"김정호\"}"
-resMsg
-:
-"성공"
-serviceName
-:
-"마이데이터 서비스"
-statusInfo
-:
-"(통합인증)자산선택"
-tokenExpiryDate
-:
-"2023-05-26"
-
+    </div>
+</div>
 </body>
 </html>

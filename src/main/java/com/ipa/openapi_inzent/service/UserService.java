@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Random;
 
 @Service
 public class UserService {
@@ -21,7 +22,9 @@ public class UserService {
 
     public int register(UserDTO userDTO) {
         userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-
+        // 정보 주체 번호 부여
+        Random random = new Random();
+        userDTO.setOwnNum(String.valueOf(random.nextInt(999999) + 1));
         userDao.register(userDTO);
         int id = userDTO.getId();
         return id;

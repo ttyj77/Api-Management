@@ -1,10 +1,15 @@
 package com.ipa.openapi_inzent.controller;
 
+import com.ipa.openapi_inzent.config.auth.UserCustomDetails;
+import com.ipa.openapi_inzent.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.ui.Model;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,13 +17,23 @@ import javax.servlet.http.HttpServletResponse;
 @Controller
 public class AppController {
 
+    UserService userService;
+
+    @Autowired
+    public AppController(UserService userService) {
+        this.userService = userService;
+    }
+
     @GetMapping("/app/login")
     public String login() {
         return "applogin";
     }
 
     @GetMapping("/app/main")
-    public String main() {
+    public String main(Model model,@AuthenticationPrincipal UserCustomDetails userDetails) {
+        System.out.println("userDetails = " + userDetails);
+        System.out.println("userDetails = " + userDetails.getUserDTO());
+        model.addAttribute("user", userDetails.getUserDTO());
         return "/app/main";
     }
 
@@ -40,9 +55,34 @@ public class AppController {
         return "/app/agencyChoice";
     }
 
-    @GetMapping("/app/bank")
+    // ### 카드 ###
+    @GetMapping("/app/cardDetail")
+    public String cardDetail() {
+        //파라미터들 있어야함 ( 카드 정보 )
+        return "/app/cardDetail";
+    }
+
+    // 추가
+    @GetMapping("/app/card/insert")
+    public String cardInsert() {
+        return "/app/cardInsert";
+    }
+
+
+    // ### 은행 ###
+    @GetMapping("/app/bank/insert")
     public String bank() {
 
-        return "/app/bank";
+        return "/app/bankInsert";
     }
+
+
+    // ### 투자 ###
+
+
+
+    // ### 보험 ###
+
+
+    // ### 통신 ###
 }
