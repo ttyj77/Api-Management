@@ -81,7 +81,7 @@
     margin-top: 50%;">
 <div class="login-wrapper">
     <img src="../images/ODJGGE0.jpg" style="width: 70%; margin-bottom: 20px">
-<!--    <h2>Login</h2>-->
+    <!--    <h2>Login</h2>-->
     <div class="">
         <div class="h1 text-muted font-weight-bolder">INFINITY</div>
         <div class="h1">
@@ -94,12 +94,12 @@
         <input type="password" name="password" placeholder="Password" style="height: 70px">
         <hr style="margin: 1rem 0;"/>
         <label for="remember-check">
-            <input type="checkbox" id="remember-check" name="remember-me">&nbsp;로그인 유지
+            <input class="h2" type="checkbox" id="remember-check" name="remember-me">&nbsp;로그인 유지
         </label>
-        <p th:if="${error != null}" th:text="|${exception}|"
-           style="color: #E23137; font-size: small; margin-bottom: 0!important;"></p>
+        <h3 th:if="${error != null}" th:text="|${exception}|"
+           style="color: #E23137; margin-bottom: 0!important;"></h3>
 
-        <input type="submit" value="Login" style="margin-top: 40px; height: 70px" id="send"/>
+        <input type="submit" value="Login" style="margin-top: 40px; height: 70px" id="send" onclick="btnClick()"/>
     </form>
 </div>
 <script>

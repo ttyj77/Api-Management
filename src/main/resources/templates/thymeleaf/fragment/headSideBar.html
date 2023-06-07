@@ -82,25 +82,25 @@
                                      class="collapse__sublink2 accordion_div">
                                     거래이력(제공자)
                                 </div>
-                                <div onclick="location.href='/mydata/collectorTable'"
-                                     class="collapse__sublink2 accordion_div">
-                                    거래이력(사업자)
-                                </div>
-                                <div onclick="location.href='/mydata/statistics-Daily'"
-                                     class="collapse__sublink2 accordion_div">
-                                    통계(1일)관리
-                                </div>
-                                <div onclick="location.href='/mydata/statistics-7Day'"
-                                     class="collapse__sublink2 accordion_div">
-                                    통계(7일)관리
-                                </div>
+<!--                                <div onclick="location.href='/mydata/collectorTable'"-->
+<!--                                     class="collapse__sublink2 accordion_div">-->
+<!--                                    거래이력(사업자)-->
+<!--                                </div>-->
+<!--                                <div onclick="location.href='/mydata/statistics-Daily'"-->
+<!--                                     class="collapse__sublink2 accordion_div">-->
+<!--                                    통계(1일)관리-->
+<!--                                </div>-->
+<!--                                <div onclick="location.href='/mydata/statistics-7Day'"-->
+<!--                                     class="collapse__sublink2 accordion_div">-->
+<!--                                    통계(7일)관리-->
+<!--                                </div>-->
                             </ul>
                         </div>
 
-                        <a href="#" class="nav__link">
-                            <ion-icon name="settings-outline" class="nav__icon"></ion-icon>
-                            <span class="nav_name">Settings</span>
-                        </a>
+<!--                        <a href="#" class="nav__link">-->
+<!--                            <ion-icon name="settings-outline" class="nav__icon"></ion-icon>-->
+<!--                            <span class="nav_name">Settings</span>-->
+<!--                        </a>-->
                     </div>
 
                 </div>
@@ -204,12 +204,27 @@
                 sideDiv.style.transition = "all 600ms ease 0s"
                 document.getElementById("contentBody").style.width = "100%"
                 document.getElementById("contentBody").style.transition = "all 600ms ease 0s"
+
+                if (matchMedia("only screen and (max-width: 900px)").matches) {
+                    sideDiv.style.marginLeft = "8.5%"
+                }
+                if (matchMedia("only screen and (max-width: 550px)").matches) {
+                    sideDiv.style.marginLeft = "10.5%"
+                }
+
             } else {
                 // console.log(true) // sidebar 열림
                 sideDiv.style.marginLeft = "17%"
                 sideDiv.style.transition = "all 600ms ease 0s"
                 document.getElementById("contentBody").style.width = "82%"
                 document.getElementById("contentBody").style.transition = "all 600ms ease 0s"
+
+                if (matchMedia("only screen and (max-width: 900px)").matches) {
+                    sideDiv.style.marginLeft = "24%"
+                }
+                if (matchMedia("only screen and (max-width: 550px)").matches) {
+                    sideDiv.style.marginLeft = "28%"
+                }
             }
         }
 

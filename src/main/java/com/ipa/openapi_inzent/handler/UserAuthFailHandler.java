@@ -44,6 +44,7 @@ public class UserAuthFailHandler extends SimpleUrlAuthenticationFailureHandler {
         setDefaultFailureUrl("/user/login?error=true&exception=" + errorMessage);
         super.onAuthenticationFailure(httpServletRequest, httpServletResponse, e);
 
+
 //        httpServletResponse.sendRedirect("/login");
 //        RequestDispatcher dispatcher = httpServletRequest.getRequestDispatcher("/login");
 //        dispatcher.forward(httpServletRequest, httpServletResponse);

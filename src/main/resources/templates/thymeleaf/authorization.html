@@ -211,8 +211,8 @@
                     </thead>
                     <tbody>
                     <tr th:each="roles:${roleList}">
-                        <td data-bs-toggle="modal" data-bs-target="#authModal" th:text="${roles.code}"></td>
-                        <td data-bs-toggle="modal" data-bs-target="#authModal" th:text="${roles.name}"></td>
+                        <td th:text="${roles.code}"></td>
+                        <td th:text="${roles.name}"></td>
                         <td><i onclick="eraseWarning(this);" style="cursor: pointer;" th:role_name="${roles.name}" th:role_id="${roles.id}"
                                class="fa-solid fa-trash-can"></i></td>
                     </tr>
