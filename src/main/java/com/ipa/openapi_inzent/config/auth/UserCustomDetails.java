@@ -1,5 +1,6 @@
 package com.ipa.openapi_inzent.config.auth;
 
+import com.ipa.openapi_inzent.model.RoleDTO;
 import com.ipa.openapi_inzent.model.UserDTO;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
@@ -24,7 +25,10 @@ public class UserCustomDetails implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> list = new ArrayList<>();
-        list.add(new SimpleGrantedAuthority(userDTO.getRole()));
+        userDTO.getRoleList();
+        for (String a : userDTO.getRoleList()) {
+            list.add(new SimpleGrantedAuthority("ROLE_"+a));
+        }
         return list;
     }
 
