@@ -18,12 +18,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
-@Configuration
-@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
+
+//@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 // secured Annotation 활성화 / preAuthorize Annotation 활성화
 // 일반 메소드에 @Secured("ROLE_ADMIN") 단독 설정 가능 => 신버전
 // 일반 메소드에 @PreAuthorize("hasRole('ROLE_USER') or "hasRole('ROLE_ADMIN)") 다중 설정 가능 => 구버전
 @EnableWebSecurity
+@Configuration
 public class SecurityConfig {
 
     @Bean
@@ -54,14 +55,13 @@ public class SecurityConfig {
 
         @Bean
         public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
             http.csrf().disable();
             http.authorizeRequests() //authorizeRequests
                     .antMatchers(HttpMethod.GET, "/error/*", "/login", "/login_proc", "/user/login", "/user/register").permitAll() // 설정된 url은 인증되지 않더라도 누구든 접근 가능
 //                .anyRequest().authenticated()// 위 페이지 외 인증이 되어야 접근가능(ROLE에 상관없이)
                     .antMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**").permitAll()
 //                    .antMatchers("/api/**", "/accountList", "/authorization", "/requestPage", "/user/mypage", "/mydata/**").authenticated()
-                    .antMatchers("/api/**", "/accountList", "/authorization", "/requestPage", "/user/mypage", "/mydata/**").hasRole("PROVIDER")
+                    .antMatchers("/api/**", "/accountList", "/authorization", "/requestPage", "/user/mypage", "/mydata/**", "/app/main").hasRole("PROVIDER")
                     .antMatchers("/accountList", "/authorization", "/requestPage", "/user/mypage").hasRole("USER")
                     .antMatchers("/mydata/**").hasRole("ADMIN")
                     .and()
