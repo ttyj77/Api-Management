@@ -12,22 +12,20 @@
 
 <th:block th:fragment="headerFragment">
 
-    <div>
-        <div style="width: 100vw; height: 100px; background-color: #fafafa">
-            <div style="display: flex; justify-content: space-between;">
-                <div>
-                    <img src="/images/logo4.png" style="width: 200px; margin-left: 1%; cursor: pointer;"
-                         onclick="javascript:location.href='/api'">
-                </div>
-                <div style="margin-top: 30px; margin-right: 30px">
-                    <i style="width: 20px; margin-right:10px " class="fa-solid fa-user fa-bounce"
-                       onclick="location.href='/user/login'"></i>
-                    <i class="fa-solid fa-arrow-right-from-bracket" onclick="location.href='/logout'"></i>
-                </div>
+    <div style="width: 100vw; height: 100px; background-color: #fafafa">
+        <div style="display: flex; justify-content: space-between;">
+            <div>
+                <img src="/images/logo4.png" style="width: 200px; margin-left: 1%; cursor: pointer;"
+                     onclick="javascript:location.href='/api'">
+            </div>
+            <div style="margin-top: 30px; margin-right: 30px">
+                <i style="width: 20px; margin-right:10px " class="fa-solid fa-user fa-bounce"
+                   onclick="location.href='/user/login'"></i>
+                <i class="fa-solid fa-arrow-right-from-bracket" onclick="location.href='/logout'"></i>
             </div>
         </div>
-        <div style="width: 100vw; height: 50px; background-color: #12192c"></div>
     </div>
+    <div style="width: 100vw; height: 50px; background-color: #12192c"></div>
 </th:block>
 
 <th:block th:fragment="sideBarFragment">
@@ -167,7 +165,6 @@
         // })
 
 
-
         /* COLLAPSE MENU */
         const linkCollapse = document.getElementsByClassName('collapse__link2')
         var i
@@ -205,13 +202,13 @@
                 // console.log(false)
                 sideDiv.style.marginLeft = "4.5%"
                 sideDiv.style.transition = "all 600ms ease 0s"
-                document.getElementById("contentBody").style.maxWidth = "93%"
+                document.getElementById("contentBody").style.width = "100%"
                 document.getElementById("contentBody").style.transition = "all 600ms ease 0s"
             } else {
                 // console.log(true) // sidebar 열림
-                sideDiv.style.marginLeft = "11%"
+                sideDiv.style.marginLeft = "17%"
                 sideDiv.style.transition = "all 600ms ease 0s"
-                document.getElementById("contentBody").style.maxWidth = "89%"
+                document.getElementById("contentBody").style.width = "82%"
                 document.getElementById("contentBody").style.transition = "all 600ms ease 0s"
             }
         }
