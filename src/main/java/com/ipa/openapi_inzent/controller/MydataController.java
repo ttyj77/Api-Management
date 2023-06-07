@@ -314,10 +314,12 @@ public class MydataController {
         System.out.println("start = " + start);
 
         // 전송 하는 부분(코드 작성 필요)
-//        int sum = 0;
+        int sum = 0;
 //        for (int i = 0; i < 10000000; i++) {
 //            sum += i;
 //        }
+
+        mydataService.mdProviderSelectAll();
         // 특정 코드 실행 되고 난 후 시간
         long end = System.currentTimeMillis();
         System.out.println("end = " + end);
@@ -365,6 +367,7 @@ public class MydataController {
         object.addProperty("consumerNum", mdProviderDTO.getCustomerNum()); //통합고객번호
         object.addProperty("code", mdProviderDTO.getMdReqInfoDTO().getCode());//거래고유번호
         object.addProperty("reqType", mdProviderDTO.getMdReqInfoDTO().getReqType()); //전송요구타입
+        object.addProperty("uniqueNum",mdProviderDTO.getUniqueNum());
 
         if (mdProviderDTO.getMdReqInfoDTO().getTokenExpiryDate() == null) {
             object.addProperty("tokenExpiryDate", ""); //토큰유효기간
@@ -376,6 +379,15 @@ public class MydataController {
 
         return object;
     }
+
+    @GetMapping("/providerSearch")
+    public String mdProviderSearch(Model model, String keyword) {
+        System.out.println("keyword = " + keyword);
+        model.addAttribute("list", mydataService.mdProviderSearch(keyword));
+
+        return "/mydata/mdProviderTable";
+    }
+
 
 
     ///////////////////////////////////////////////////////////////////////////////////////////
@@ -399,11 +411,10 @@ public class MydataController {
 
     @GetMapping("/mydataSendReq")
     public String mydataSendReq(Model model) {
-        List<MdProviderDTO> list = mydataService.mdReqList();
-//        System.out.println("=-=-=-=-=-=-=-=-=MydataController.mydataSendReq");
-//        System.out.println("list = " + list);
+        List<MdReqInfoDTO> list = mydataService.mdReqAll();
 
         model.addAttribute("list", list);
+        System.out.println("list = " + list);
 
         System.out.println("list.size() = " + list.size());
         return "/mydata/mydataSendReq";
@@ -442,6 +453,14 @@ public class MydataController {
         return object;
     }
 
+    @GetMapping("/reqSearch")
+    public String mdReqSearch(Model model, String keyword) {
+        System.out.println("keyword = " + keyword);
+        model.addAttribute("list", mydataService.mdReqSearch(keyword));
+
+        return "/mydata/mydataSendReq";
+    }
+
     ////////////
     //  달력   //
     ////////////
@@ -460,23 +479,25 @@ public class MydataController {
             String reqDate = mdProviderDTO.getReqDate();
             System.out.println("reqDate.equals(dday) = " + reqDate.equals(dday));
             System.out.println(dday.equals(reqDate) && customerNum.equals(mdProviderDTO.getCustomerNum()));
-            if (dday.equals(reqDate) && customerNum.equals(mdProviderDTO.getCustomerNum())) {
-                System.out.println("들어옴");
+            if (dday.equals("") || dday.equals(reqDate)) {
+                if (customerNum.equals(mdProviderDTO.getCustomerNum())) {
+                    System.out.println("들어옴");
 
-                JsonObject r = new JsonObject();
+                    JsonObject r = new JsonObject();
 
-                r.addProperty("id",mdProviderDTO.getId());
+                    r.addProperty("id",mdProviderDTO.getId());
 
-                r.addProperty("reqDate", reqDate);
-                r.addProperty("reqTime", mdProviderDTO.getReqTime());
-                r.addProperty("resDate", mdProviderDTO.getResDate());
-                r.addProperty("runtime", mdProviderDTO.getRuntime());
-                r.addProperty("code", mdProviderDTO.getResCode());
-                r.addProperty("apiCode", mdProviderDTO.getApiCode());
-                r.addProperty("customerNum", mdProviderDTO.getCustomerNum());
-                r.addProperty("regularTransmission", mdProviderDTO.getRegularTransmission());
+                    r.addProperty("reqDate", reqDate);
+                    r.addProperty("reqTime", mdProviderDTO.getReqTime());
+                    r.addProperty("resDate", mdProviderDTO.getResDate());
+                    r.addProperty("runtime", mdProviderDTO.getRuntime());
+                    r.addProperty("code", mdProviderDTO.getResCode());
+                    r.addProperty("apiCode", mdProviderDTO.getApiCode());
+                    r.addProperty("customerNum", mdProviderDTO.getCustomerNum());
+                    r.addProperty("regularTransmission", mdProviderDTO.getRegularTransmission());
 
-                providerArray.add(r);
+                    providerArray.add(r);
+                }
             }
         }
 
@@ -486,12 +507,47 @@ public class MydataController {
         return object;
     }
 
-    @GetMapping
+    @GetMapping("/provider/calendar")
     @ResponseBody
     public JsonObject calendarInSendReq(String dday) {
-        JsonObject object = new JsonObject();
+        JsonObject jsonObject = new JsonObject();
+        System.out.println("dday = " + dday);
+        System.out.println("MydataController.calendarInSendReq");
 
-        return object;
+        List<MdProviderDTO> list = mydataService.mdProviderSelectAll();
+
+        System.out.println(list);
+
+        JsonArray r = new JsonArray();
+        for (MdProviderDTO mdProviderDTO : list) {
+            String reqDate = mdProviderDTO.getReqDate();
+            if (dday.equals("") || dday.equals(reqDate)) {
+
+                JsonObject object = new JsonObject();
+                object.addProperty("id", mdProviderDTO.getId());
+                object.addProperty("reqDate", reqDate);
+                object.addProperty("reqTime", mdProviderDTO.getReqTime());
+                object.addProperty("runtime", mdProviderDTO.getRuntime());
+                object.addProperty("resDate", mdProviderDTO.getResDate());
+                object.addProperty("resCode", mdProviderDTO.getResCode());
+                object.addProperty("apiCode", mdProviderDTO.getApiCode());
+                object.addProperty("customerNum", mdProviderDTO.getCustomerNum());
+                object.addProperty("regularTransmission", mdProviderDTO.getRegularTransmission());
+                object.addProperty("uniqueNum", mdProviderDTO.getUniqueNum());
+                object.addProperty("statusInfo", mdProviderDTO.getStatusInfo());
+//                object.addProperty("apiResources", mdProviderDTO.getApiResources());
+//                object.addProperty("resMsg", mdProviderDTO.getResMsg());
+//                object.addProperty("reqHeader", mdProviderDTO.getReqHeader());
+//                object.addProperty("resData", mdProviderDTO.getResData());
+
+                r.add(object);
+            }
+
+        }
+
+        jsonObject.addProperty("providerList", r.toString());
+        System.out.println("jsonObject = " + jsonObject);
+        return jsonObject;
     }
 
 }

@@ -20,13 +20,13 @@
         order by id asc;
     </select>
     <insert id="register" parameterType="com.ipa.openapi_inzent.model.UserDTO" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO public."user"(username,nickname, password, activate ,"createDate", email,approve)
-        VALUES (#{username},#{nickname} , #{password}, false ,NOW(),#{email}, false)
+        INSERT INTO public."user"(username,nickname, password, activate ,"createDate", email,approve,"ownNum")
+        VALUES (#{username},#{nickname} , #{password}, false ,NOW(),#{email}, false,${ownNum})
     </insert>
     <select id="findByUsername" parameterType="String" resultType="com.ipa.openapi_inzent.model.UserDTO">
         SELECT
         us.id,us.username,us.password,us.nickname,us.token,us.activate,us."createDate",us.email,us.approve,ro.code as
-        "role"
+        "role", us."ownNum"
         FROM public."user" as us
         join public."userRole" as ur on ur."userId" = us.id
         join public.role as ro on ro.id = ur."roleId"

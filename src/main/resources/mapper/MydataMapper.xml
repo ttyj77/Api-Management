@@ -63,6 +63,7 @@
     <!--mdProvider Table + mdReqInfo Table-->
     <resultMap id="providerInfo" type="com.ipa.openapi_inzent.model.MdProviderDTO">
         <result property="id" column="id"/>
+        <result property="reqInfoId" column="reqInfoId"/>
         <result property="reqDate" column="reqDate"/>
         <result property="runtime" column="runtime"/>
         <result property="resCode" column="resCode"/>
@@ -82,8 +83,8 @@
     <!--mdReqInfo table -->
     <resultMap id="mdReqInfo" type="com.ipa.openapi_inzent.model.MdReqInfoDTO">
         <result property="id" column="reqId"/>
-        <result property="providerId" column="providerId"/>
         <result property="code" column="code"/>
+        <result property="clientNum" column="clientNum"/>
         <result property="agencyName" column="agencyName"/>
         <result property="serviceName" column="serviceName"/>
         <result property="reqSEQ" column="reqSEQ"/>
@@ -156,36 +157,55 @@
 
     <select id="mdProviderSelectAll" resultType="com.ipa.openapi_inzent.model.MdProviderDTO">
         SELECT id, "reqDate", runtime, "resCode", "apiCode", "customerNum", "regularTransmission", "uniqueNum",
-        "statusInfo", "apiResources", "reqHeader", "resMsg", "resData"
+        "statusInfo", "apiResources", "reqHeader", "resMsg", "resData" , "reqInfoId"
         FROM public."providerHistory";
     </select>
 
     <select id="mdReqList" resultMap="providerInfo">
-        SELECT res.id as "reqId", res."providerId", res.code, res."agencyName", res."serviceName", res."reqType",
+        SELECT res.id as "reqId", res.code, res."agencyName", res."serviceName", res."reqType",
         res."reqSEQ", res."tokenExpiryDate", pro.id, pro."reqDate", pro.runtime, pro."resCode",
         pro."apiCode", pro."customerNum", pro."regularTransmission", pro."uniqueNum", pro."statusInfo",
-        pro."apiResources", pro."reqHeader", pro."resMsg", pro."resData"
-        FROM public."providerHistory" as pro join public."reqInfo" as res on pro.id = res."providerId";
+        pro."apiResources", pro."reqHeader", pro."resMsg", pro."resData", pro."reqInfoId"
+        FROM public."providerHistory" as pro join public."reqInfo" as res on pro."reqInfoId" = res.id;
     </select>
 
     <select id="mdProviderSelectOne" parameterType="int" resultMap="providerInfo">
-        SELECT res.id as "reqId", res."providerId", res.code, res."agencyName", res."serviceName", res."reqType",
+        SELECT res.id as "reqId", res.code, res."agencyName", res."serviceName", res."reqType",
         res."reqSEQ", res."tokenExpiryDate", pro.id, pro."reqDate", pro.runtime, pro."resCode",
         pro."apiCode", pro."customerNum", pro."regularTransmission", pro."uniqueNum", pro."statusInfo",
-        pro."apiResources", pro."reqHeader", pro."resMsg", pro."resData"
-        FROM public."providerHistory" as pro join public."reqInfo" as res on pro.id = res."providerId" where pro.id =
+        pro."apiResources", pro."reqHeader", pro."resMsg", pro."resData", pro."reqInfoId"
+        FROM public."providerHistory" as pro join public."reqInfo" as res on pro."reqInfoId" = res.id where pro.id =
         #{id}
     </select>
 
     <insert id="mdProviderInsert" parameterType="com.ipa.openapi_inzent.model.MdProviderDTO">
         INSERT INTO public."providerHistory"(
-        "reqDate", runtime, "resCode", "apiCode", "customerNum", "regularTransmission", "uniqueNum", "statusInfo", "apiResources", "reqHeader", "resMsg", "resData")
-        VALUES (NOW(), #{runtime}, #{resCode}, #{apiCode}, #{customerNum}, #{regularTransmission}, #{uniqueNum}, #{statusInfo}, #{apiResources}, #{reqHeader}, #{resMsg}, #{resData});
+        "reqDate", runtime, "resCode", "apiCode", "customerNum", "regularTransmission", "uniqueNum", "statusInfo", "apiResources", "reqHeader", "resMsg", "resData", "reqInfoId")
+        VALUES (NOW(), #{runtime}, #{resCode}, #{apiCode}, #{customerNum}, #{regularTransmission}, #{uniqueNum}, #{statusInfo}, #{apiResources}, #{reqHeader}, #{resMsg}, #{resData} , #{reqInfoId});
     </insert>
 
     <select id="mdProviderCustomerList" parameterType="string" resultType="com.ipa.openapi_inzent.model.MdProviderDTO">
         select * from public."providerHistory"
         where "customerNum" = #{customerNum};
+    </select>
+
+    <select id="mdReqAll" resultType="com.ipa.openapi_inzent.model.MdReqInfoDTO">
+        select * from public."reqInfo";
+    </select>
+
+    <select id="mdReqSearch" parameterType="string" resultType="com.ipa.openapi_inzent.model.MdReqInfoDTO">
+        select * from public."reqInfo" as "req"
+        where req.code ILIKE CONCAT('%', #{keyword},'%')
+        OR req."agencyName" ILIKE CONCAT('%', #{keyword},'%')
+        OR req."serviceName" ILIKE CONCAT('%', #{keyword},'%')
+        OR req."clientNum" ILIKE CONCAT('%', #{keyword},'%') ;
+    </select>
+
+    <select id="mdProviderSearch" parameterType="string" resultType="com.ipa.openapi_inzent.model.MdProviderDTO">
+        select * from public."providerHistory" as "pro"
+        where pro."apiCode" ILIKE CONCAT('%', #{keyword},'%')
+        OR pro."uniqueNum" ILIKE CONCAT('%', #{keyword},'%')
+        OR pro."customerNum" ILIKE CONCAT('%', #{keyword},'%') ;
     </select>
 
     <!--    ///////////////////////////////////////////////////////////////////////////////////////////-->

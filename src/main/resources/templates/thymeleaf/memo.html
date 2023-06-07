@@ -5,56 +5,116 @@
     <title>Title</title>
 </head>
 <body>
-<script>
-    function providerDetailModal(value) {
-        console.log("providerDetailModal=========");
-        let clientNum = value.getAttribute("client_num");
-        console.log(clientNum);
-        let data = {
-            "customerNum": clientNum,
-        };
-        $.ajax({
-            url: "/mydata/provider/customerList",
-            type: "get",
-            data: data,
+<div class="d-flex justify-content-center target" style="height: 80rem">
+    <div class="mt-3">
+        <div class="d-flex p-4">
+            <h1 id="listName">&nbsp;카드 목록</h1>
+        </div>
+        <hr class="mt-0">
+        <div id="listBox">
+            <div class="p-4" id="listBox-1">
+                <div class="oneBox">
+                    <div class="listHover">
+                        <h1>
+                            인젠트 카드
+                        </h1>
+                        <h2>
+                            600,000원 지출
+                        </h2>
+                    </div>
+                </div>
+                <div class="oneBox">
+                    <div class="listHover">
+                        <h1>
+                            농협 카드
+                        </h1>
+                        <h2>
+                            630,000원 지출
+                        </h2>
+                    </div>
+                </div>
+                <div class="oneBox">
+                    <div class="listHover">
+                        <h1>
+                            카카오 카드
+                        </h1>
+                        <h2>
+                            100,000원 지출
+                        </h2>
+                    </div>
+                </div>
+                <div class="oneBox">
+                    <div class="listHover">
+                        <h1>
+                            비트 카드
+                        </h1>
+                        <h2>
+                            1,600,000원 지출
+                        </h2>
+                    </div>
+                </div>
+                <div class="oneBox">
+                    <div class="listHover">
+                        <h1>
+                            인젠트 카드
+                        </h1>
+                        <h2>
+                            600,000원 지출
+                        </h2>
+                    </div>
+                </div>
+                <div class="oneBox">
+                    <div class="listHover">
+                        <h1>
+                            인젠트 카드
+                        </h1>
+                        <h2>
+                            600,000원 지출
+                        </h2>
+                    </div>
+                </div>
+                <div class="oneBox">
+                    <div class="listHover">
+                        <h1>
+                            인젠트 카드
+                        </h1>
+                        <h2>
+                            600,000원 지출
+                        </h2>
+                    </div>
+                </div>
+                <div class="oneBox">
+                    <div class="listHover">
+                        <h1>
+                            인젠트 카드
+                        </h1>
+                        <h2>
+                            600,000원 지출
+                        </h2>
+                    </div>
+                </div>
+                <div class="oneBox">
+                    <div class="listHover">
+                        <h1>
+                            인젠트 카드
+                        </h1>
+                        <h2>
+                            600,000원 지출
+                        </h2>
+                    </div>
+                </div>
 
-            success: (message) => {
-                console.log("messagemmmmmmmmmmmmm");
-                console.log(message);
-                let plist = JSON.parse(message.providerList);
-                console.log(plist);
-                // console.log(plist);
-                console.log(plist.length);
 
-                console.log(Object.keys(plist[0]).length)
-                // column 수
-                let col_cnt = Object.keys(plist[0]).length + 1;
+            </div>
+        </div>
+        <!-- 추가 해제 버튼 -->
+        <div class="d-flex justify-content-center align-items-center" style="height: 11%;">
+            <button class="btn-plus" type="button" onclick="location.href='/app/bank'">+ 추가</button>
+            <button class="btn-minus" type="button">- 해제</button>
+        </div>
 
-                let tbody = document.getElementById("userNumTbody");
-                for (let i = 0; i < plist.length; i++) {
-                    let tr = document.createElement("tr");
-                    tr.style.fontSize = '14px';
-                    let keys = Object.keys(plist[i]);
-                    console.log(keys);
-                    $(tr).attr({"data-bs-toggle": "modal", "data-bs-target": "#detailModal"});
-                    for (let j = 0; j < col_cnt; j++) {
-                        let key = keys[j];
-                        console.log(key);
-                        console.log("value : ", plist[key]);
 
-                        // let td = document.createElement("td").innerText = plist[key];
-                        tr.append(td);
-                    }
-                    // for (let data in plist[i]) {
-                    //     let td = document.createElement("td").innerText = plist[i][data];
-                    //     tr.append(td);
-                    // }
-                    tbody.append(tr);
-                }
-            }
-        })
-    }
-</script>
-
+    </div>
+</div>
 </body>
 </html>

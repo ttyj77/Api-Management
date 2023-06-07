@@ -5,6 +5,7 @@ import lombok.Data;
 @Data
 public class MdProviderDTO {
     private int id;
+    private int reqInfoId;
     private String reqDate;
 
     private String reqTime;

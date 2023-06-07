@@ -23,6 +23,7 @@ public class UserAuthFailHandler extends SimpleUrlAuthenticationFailureHandler {
 
         if (e instanceof BadCredentialsException) {
 //            httpServletRequest.setAttribute("LoginFailMessage", "아이디 또는 비밀번호가 일치하지 않습니다.");
+            System.out.println("아이디 틀렸음 exception");
             errorMessage = "아이디 또는 비밀번호가 일치하지 않습니다.";
         } else if (e instanceof DisabledException) {
             errorMessage = "본 계정은 현재 비활성화 되어 있습니다. 관리자에게 문의하세요.";

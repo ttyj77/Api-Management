@@ -59,6 +59,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
         <script>
+            // 디테일 모달 누르면
             function providerDetailModal(value) {
                 let tbody = document.getElementById("userNumTbody");
                 tbody.innerHTML = "";
@@ -112,63 +113,57 @@
                 })
             }
 
+            // 거래 이력별 만들어진 tr태그에 모달
             function providerDetailInfo(value) {
                 let tbody = document.getElementById("userNumTbody");
                 tbody.innerHTML = "";
                 let id = value.getAttribute("id");
                 console.log("id=", id);
                 let data = {
-                    "id":id,
+                    "id": id,
                 }
                 $.ajax({
-                    url:"/mydata/provider/selectOne",
-                    data : data,
+                    url: "/mydata/provider/selectOne",
+                    data: data,
                     type: "get",
 
-                    success: (message) =>{
-                        let plist = JSON.parse(message.providerList);
-                        console.log(plist);
-                        let col_cnt = Object.keys(plist[0]).length;
-                        for (let i = 0; i < plist.length; i++) {
-                            let tr = document.createElement("tr");
-                            tr.style.fontSize = '14px';
+                    success: (message) => {
+                        let cn = document.getElementsByClassName("inputClientNum");
+                        console.log(message)
+                        console.log("디테일인포들어옴")
+                        for (let i = 0; i < cn.length; i++) {
+                            $(cn).attr("client_num", message.consumerNum);
 
-                            let keys = Object.keys(plist[i]);
-                            $(tr).attr({
-                                "data-bs-toggle": "modal",
-                                "data-bs-target": "#detailModal",
-                                "onclick": "providerDetailInfo(this)"
-                            });
-                            tr.id = plist[i]["id"];
-                            for (let j = 1; j < col_cnt; j++) {
-                                let key = keys[j];
+                            document.getElementById("reqSEQ").innerText = message.reqSEQ;
+                            document.getElementById("uniqueNum").innerText = message.uniqueNum;
+                            document.getElementById("apiResources").innerText = message.apiResources;
+                            // 증권번호 ( 계좌 번호 ) resData에서 가져와야함 !!!(여기에요)
+                            document.getElementById("accountNum").innerText = "계좌번호가 들어가야함 자산목록에 뜨는"
+                            document.getElementById("resMsg").innerText = message.resMsg;
+                            document.getElementById("resdata").innerText = message.resData;
 
-                                let td = document.createElement("td");
-                                td.innerText = plist[i][key];
-                                tr.append(td);
-                            }
-                            tbody.append(tr);
                         }
                     }
                 })
             }
 
+            // 날짜 조회 할 때 거래 이력 list 만들기
             function input(value) {
                 let tbody = document.getElementById("userNumTbody");
                 tbody.innerHTML = "";
                 let dday = document.getElementById("input_date").value;
                 let cnum = value.getAttribute("cnum");
-                console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+                console.log("!!!!!!!!!!!!!!!")
                 console.log(cnum);
                 console.log(dday);
                 let data = {
-                    "dday" :dday,
+                    "dday": dday,
                     "customerNum": cnum,
                 }
                 $.ajax({
-                    url:"/mydata/calendar",
-                    type:"get",
-                    data :data,
+                    url: "/mydata/calendarSend",
+                    type: "get",
+                    data: data,
 
                     success: (message) => {
 
@@ -227,31 +222,32 @@
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <!-- Topbar Search -->
-                        <div class=" row" style="    display: flex;justify-content: space-between;">
-                            <div class="col-md-7 m-3">
-                                <div>상태정보 구분</div>
-                                <select class="form-control" id="statusInfo" style="width: 50%;">
-                                    <option selected>전체</option>
-                                    <option>(통합인증)자산목록</option>
-                                    <option>(통합인증)자산선택</option>
-                                    <option>(개별인증)인가코드</option>
-                                    <option>(개별인증)토큰발급</option>
-                                    <option>[토큰준비]자산목록(통합) + 인가코드(개별)</option>
-                                    <option>[토큰생성]자산목록(통합) + 토큰발급(개별)</option>
-                                </select>
+                        <!--                        <div class=" row" style="    display: flex;justify-content: space-between;">-->
+                        <!--                            <div class="col-md-7 m-3">-->
+                        <!--                                <div>상태정보 구분</div>-->
+                        <!--                                <select class="form-control" id="statusInfo" style="width: 50%;">-->
+                        <!--                                    <option selected>전체</option>-->
+                        <!--                                    <option>(통합인증)자산목록</option>-->
+                        <!--                                    <option>(통합인증)자산선택</option>-->
+                        <!--                                    <option>(개별인증)인가코드</option>-->
+                        <!--                                    <option>(개별인증)토큰발급</option>-->
+                        <!--                                    <option>[토큰준비]자산목록(통합) + 인가코드(개별)</option>-->
+                        <!--                                    <option>[토큰생성]자산목록(통합) + 토큰발급(개별)</option>-->
+                        <!--                                </select>-->
+                        <!--                            </div>-->
+                        <!-- Topbar Search -->
+                        <form action="/mydata/reqSearch" method="get" class="col input-group mt-3"
+                              style="width: 40%; align-self: end;">
+                            <input type="text" class="form-control m-0"
+                                   placeholder="검색어를 입력해주세요"
+                                   aria-label="Search" name="keyword">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="submit">
+                                    <i class="fas fa-search fa-sm"></i>
+                                </button>
                             </div>
-                            <div class="col-md-3 input-group m-3">
-                                <input type="text" class="form-control"
-                                       placeholder="검색어를 입력해주세요"
-                                       aria-label="Search" aria-describedby="basic-addon2">
-                                <div class="input-group-append">
-                                    <button class="btn btn-primary" type="button"
-                                            style="height: 38px;">
-                                        <i class="fas fa-search fa-sm"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+                        </form>
+                        <!--                        </div>-->
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-hover" id="dataTable"
@@ -264,10 +260,10 @@
                                         <td>전송요구타입</td>
                                         <td>정보주체번호</td>
                                         <!--                                        <td>전송주기(기본,추가)</td>-->
-                                        <td>상태정보</td>
+                                        <!--                                        <td>상태정보</td>-->
                                         <!--                                        <td>전송준비일</td>-->
-                                        <td>전송요구일</td>
-                                        <td>전송요구 종료일</td>
+                                        <!--                                        <td>전송요구일</td>-->
+                                        <!--                                        <td>전송요구 종료일</td>-->
                                         <td>토큰 유효기간</td>
                                         <!--                                        <td>토큰폐기일</td>-->
                                         <td>자산|토큰</td>
@@ -275,29 +271,29 @@
                                     </thead>
 
                                     <tbody>
-                                    <tr th:each="list:${list}" th:client_num="${list.customerNum}"
+                                    <tr th:each="list:${list}" th:client_num="${list.clientNum}"
                                         onclick="providerDetailModal(this)">
                                         <td data-bs-toggle="modal" data-bs-target="#providerModal"
-                                            th:text="${list.mdReqInfoDTO.code}"></td>
+                                            th:text="${list.code}"></td>
                                         <td data-bs-toggle="modal" data-bs-target="#providerModal"
-                                            th:text="${list.mdReqInfoDTO.agencyName}"></td>
+                                            th:text="${list.agencyName}"></td>
                                         <td style="color: #0d6efd; font-weight: bold;" data-bs-toggle="modal"
                                             data-bs-target="#providerModal"
-                                            th:text="${list.mdReqInfoDTO.serviceName}"></td>
+                                            th:text="${list.serviceName}"></td>
                                         <td data-bs-toggle="modal" data-bs-target="#providerModal"
-                                            th:text="${list.mdReqInfoDTO.reqType}"></td>
+                                            th:text="${list.reqType}"></td>
                                         <td style="color: #0d6efd; font-weight: bold;" data-bs-toggle="modal"
-                                            data-bs-target="#providerModal" th:text="${list.customerNum}"></td>
+                                            data-bs-target="#providerModal" th:text="${list.clientNum}"></td>
                                         <!--                                        <td data-bs-toggle="modal" data-bs-target="#providerModal">1/w,1/w</td>-->
-                                        <td data-bs-toggle="modal" data-bs-target="#providerModal"
-                                            th:text="${list.statusInfo}"></td>
-                                        <td data-bs-toggle="modal" data-bs-target="#providerModal"
-                                            th:text="|${list.reqDate} ${list.reqTime}|"></td>
+                                        <!--                                        <td data-bs-toggle="modal" data-bs-target="#providerModal"-->
+                                        <!--                                            th:text="${list.statusInfo}"></td>-->
+                                        <!--                                        <td data-bs-toggle="modal" data-bs-target="#providerModal"-->
+                                        <!--                                            th:text="|${list.reqDate} ${list.reqTime}|"></td>-->
                                         <!--                                        <td data-bs-toggle="modal" data-bs-target="#providerModal">2021-11-15 17:09:52</td>-->
+                                        <!--                                        <td data-bs-toggle="modal" data-bs-target="#providerModal"-->
+                                        <!--                                            th:text="${list.resDate}"></td>-->
                                         <td data-bs-toggle="modal" data-bs-target="#providerModal"
-                                            th:text="${list.resDate}"></td>
-                                        <td data-bs-toggle="modal" data-bs-target="#providerModal"
-                                            th:text="${#dates.format(list.mdReqInfoDTO.tokenExpiryDate, 'yyyy-MM-dd')}"></td>
+                                            th:text="${#dates.format(list.tokenExpiryDate, 'yyyy-MM-dd')}"></td>
                                         <!--                                        <td data-bs-toggle="modal" data-bs-target="#providerModal"></td>-->
                                         <td><i class="fa-solid fa-file-lines" style="cursor: pointer; margin-right: 5px"
                                                data-toggle="tooltip" data-bs-toggle="modal" data-bs-target="#assetModal"
@@ -371,8 +367,10 @@
                             <div class="modal-header">
                                 <h5 class="modal-title font-weight-bold" style="color: black" id="detailModalLabel">
                                     거래이력(제공자)-상세</h5>
-                                <button type="button" class="close" aria-label="Close" data-bs-target="#providerModal"
-                                        data-bs-toggle="modal">
+                                <button type="button" class="close inputClientNum" aria-label="Close"
+                                        data-bs-target="#providerModal"
+                                        data-bs-toggle="modal"
+                                        onclick="providerDetailModal(this)">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
@@ -382,11 +380,11 @@
                                     <table class="table table-bordered align-middle"
                                            style="width: -webkit-fill-available;font-size: 15px;">
                                         <tbody>
-<!--                                        <tr>-->
-<!--                                            <td class="tdHead">거래이력 SEQ</td>-->
-<!--                                            <td colspan="3" class="tdContent">TRH_1332035460658031120-->
-<!--                                            </td>-->
-<!--                                        </tr>-->
+                                        <!--                                        <tr>-->
+                                        <!--                                            <td class="tdHead">거래이력 SEQ</td>-->
+                                        <!--                                            <td colspan="3" class="tdContent">TRH_1332035460658031120-->
+                                        <!--                                            </td>-->
+                                        <!--                                        </tr>-->
                                         <tr>
                                             <td class="tdHead">전송요구 SEQ</td>
                                             <td class="tdContent" id="reqSEQ"></td>
@@ -394,7 +392,7 @@
 
                                         <tr>
                                             <td class="tdHead">거래 고유번호</td>
-                                            <td colspan="3" class="tdContent" id="code">
+                                            <td colspan="3" class="tdContent" id="uniqueNum">
                                             </td>
                                         </tr>
 
@@ -405,13 +403,13 @@
 
                                         <tr>
                                             <td class="tdHead">증권번호</td>
-                                            <td class="tdContent" >168237311096
+                                            <td class="tdContent" id="accountNum">
                                             </td>
                                         </tr>
 
                                         <tr>
                                             <td class="tdHead">응답메시지</td>
-                                            <td class="tdContent" id="resMsg" >
+                                            <td class="tdContent" id="resMsg">
                                             </td>
                                         </tr>
 
@@ -429,8 +427,9 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
-                                        data-bs-target="#providerModal">닫기
+                                <button type="button" class="btn btn-secondary inputClientNum" data-bs-toggle="modal"
+                                        data-bs-target="#providerModal"
+                                        onclick="providerDetailModal(this)">닫기
                                 </button>
                             </div>
                         </div>

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>은행</title>
+    <link
+            href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+            rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="/css/sb-admin-2.min.css" rel="stylesheet"> <!-- 필수 -->
+    <script src="https://kit.fontawesome.com/24311b556d.js" crossorigin="anonymous"></script> <!-- 필수 -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> <!-- 필수 -->
+    <script src="/vendor/bootstrap2/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Gowun Dodum', sans-serif;
+            /*font-family: 'NanumSquareRound', sans-serif;*/
+            /*font-family: 'Nanum Gothic', sans-serif;*/
+        }
+
+        input[type="checkbox"] {
+            zoom: 2.0;
+        }
+
+        .btn-commit:active {
+            background-color: #9c88ff;
+        }
+
+        .btn-commit {
+            width: 94%;
+            border-radius: 10px;
+            height: 75%;
+            background-color: #8c7ae6;
+            color: #fafafa;
+            border-color: #8c7ae6;
+            font-size: 3rem;
+        }
+
+        .listHover {
+            border-bottom: 1px solid black;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #targetBox {
+            background-color: #91aeff63;
+            border-radius: 30px;
+            width: 90%;
+        }
+
+        #listBox {
+            display: flex;
+            height: 75%;
+            justify-content: center;
+            margin-top: 3%;
+        }
+
+        #listBox-1 {
+            width: 95%;
+            height: 100%;
+            background-color: #fafafa99;
+            border-radius: 10px;
+            overflow: auto;
+            font-size: 2.5rem
+        }
+
+    </style>
+
+    <script>
+        window.onload = function () {
+            let total_bank = document.getElementsByClassName("banks").length;
+            document.getElementById("total-bank").innerText = total_bank;
+            let checkboxes = document.getElementsByName('bank');
+            let cnt = 0;
+            console.log(checkboxes);
+            checkboxes.forEach((checkbox) => {
+                if (document.getElementById("checkAll").checked == true) {
+                    cnt = cnt - 1;
+                } else {
+                    if (checkbox.checked) {
+                        cnt = cnt + 1;
+                    }
+                }
+            })
+
+            document.getElementById("choose-bank").innerText = cnt;
+        };
+
+        function cntCheck() {
+            let cnt = 0;
+            let checkboxes = document.getElementsByName('bank');
+            checkboxes.forEach((checkbox) => {
+                console.log("============")
+                if (document.getElementById("checkAll").checked) {
+                    cnt = cnt - 1;
+                } else {
+                    if (checkbox.checked) {
+                        console.log("짜잘이들 체크 됨")
+                        cnt = cnt + 1;
+                    }
+                }
+            })
+            // 체크박스 갯수
+            let chbox = document.getElementsByClassName('bankOne');
+            let total = chbox.length;
+            console.log(total);
+            for (let i = 0; i < total; i++) {
+                if (document.getElementById("checkAll").checked) {
+                    if (!chbox[i].checked) {
+                        console.log("들어옴")
+                        $('#checkAll').prop("checked", false);
+                        cnt = total - 1;
+                    }
+                }
+
+
+            }
+
+            document.getElementById("choose-bank").innerText = cnt;
+        }
+
+
+        function selectAll(selectAll) {
+            console.log("전체선택")
+            const checkboxes = document.getElementsByName('bank');
+            let total = document.getElementsByClassName('bankOne').length;
+
+            checkboxes.forEach((checkbox) => {
+                checkbox.checked = selectAll.checked;
+            })
+            if (document.getElementById('checkAll').checked == true) {
+                document.getElementById("choose-bank").innerText = total;
+            } else {
+                document.getElementById("choose-bank").innerText = 0;
+            }
+
+        }
+
+
+    </script>
+</head>
+<body>
+<div class="container-xl">
+    <div class="row mt-5 mb-5">
+        <h1 class="col-1 text-right mt-5" onclick="history.go(-1)"><</h1>
+        <h1 class="col-10 text-center mt-5">은행 자산 연결</h1>
+    </div>
+    <div class="d-flex justify-content-center" style="height: 6.3rem">
+        <div class="mt-3" style="background-color: #8c7ae6; border-radius: 30px;
+        width: 90%;">
+            <div class="d-flex justify-content-between p-4 align-items-center">
+                <h2 class="font-weight-bold" style="color : white;">INFINITY에서 관리할 내 자산이 있는 기관을 선택해주세요</h2>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex justify-content-center target" style="height: 113rem">
+        <div class="mt-3" id="targetBox">
+            <div class="d-flex p-4">
+                <h1 id="listName" class="ml-1">은행 목록</h1>
+            </div>
+            <div class="d-flex justify-content-between mb-4 p-4" style="font-size: 2rem">
+                <div class="text-muted"><span id="choose-bank" style="color: #273c75">0</span>/<span
+                        id="total-bank"></span>
+                </div>
+                <div class="d-flex">
+                    <input class="form-check" type="checkbox" name="bank" onclick="selectAll(this)" value="selectall"
+                           id="checkAll">
+                    <b class="text-muted">&nbsp;전체선택</b>
+                </div>
+            </div>
+            <hr class="mt-0">
+            <div id="listBox">
+                <div class="p-4" id="listBox-1">
+                    <div class="d-flex justify-content-between mb-3 banks listHover">
+                        <div class="d-flex">
+                            <span>💛&nbsp;</span>
+                            <div>카카오뱅크</div>
+                        </div>
+                        <input class="form-check bankOne" type="checkbox" name="bank" onclick="cntCheck()">
+                    </div>
+                    <div class="d-flex justify-content-between mb-3 banks listHover">
+                        <div class="d-flex">
+                            <span>💙&nbsp;</span>
+                            <div>토스</div>
+                        </div>
+                        <input class="form-check bankOne" type="checkbox" name="bank" onclick="cntCheck()">
+                    </div>
+                    <div class="d-flex justify-content-between mb-3 banks listHover">
+                        <div class="d-flex">
+                            <span>💖&nbsp;</span>
+                            <div>인젠트 뱅쿠</div>
+                        </div>
+                        <input class="form-check bankOne" type="checkbox" name="bank" onclick="cntCheck()">
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-3 banks listHover">
+                        <div class="d-flex">
+                            <span>💖&nbsp;</span>
+                            <div>인젠트 뱅쿠</div>
+                        </div>
+                        <input class="form-check bankOne" type="checkbox" name="bank" onclick="cntCheck()">
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-3 banks listHover">
+                        <div class="d-flex">
+                            <span>💖&nbsp;</span>
+                            <div>인젠트 뱅쿠</div>
+                        </div>
+                        <input class="form-check bankOne" type="checkbox" name="bank" onclick="cntCheck()">
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-3 banks listHover">
+                        <div class="d-flex">
+                            <span>💖&nbsp;</span>
+                            <div>인젠트 뱅쿠</div>
+                        </div>
+                        <input class="form-check bankOne" type="checkbox" name="bank" onclick="cntCheck()">
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-3 banks listHover">
+                        <div class="d-flex">
+                            <span>💖&nbsp;</span>
+                            <div>인젠트 뱅쿠</div>
+                        </div>
+                        <input class="form-check bankOne" type="checkbox" name="bank" onclick="cntCheck()">
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-3 banks listHover">
+                        <div class="d-flex">
+                            <span>💖&nbsp;</span>
+                            <div>인젠트 뱅쿠</div>
+                        </div>
+                        <input class="form-check bankOne" type="checkbox" name="bank" onclick="cntCheck()">
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-3 banks listHover">
+                        <div class="d-flex">
+                            <span>💖&nbsp;</span>
+                            <div>인젠트 뱅쿠</div>
+                        </div>
+                        <input class="form-check bankOne" type="checkbox" name="bank" onclick="cntCheck()">
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-center align-items-center" style="height: 11%;">
+                <button class="btn-commit" type="button">자산 연결하기</button>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+</body>
+</html>
