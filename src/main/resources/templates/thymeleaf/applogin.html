@@ -94,7 +94,7 @@
         <input type="password" name="password" placeholder="Password" style="height: 70px">
         <hr style="margin: 1rem 0;"/>
         <label for="remember-check">
-            <input type="checkbox" id="remember-check">&nbsp;로그인 유지
+            <input type="checkbox" id="remember-check" name="remember-me">&nbsp;로그인 유지
         </label>
         <p th:if="${error != null}" th:text="|${exception}|"
            style="color: #E23137; font-size: small; margin-bottom: 0!important;"></p>
