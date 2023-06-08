@@ -1,23 +1,23 @@
-$(document).ready(function(){
-    $.ajax({
-        url:"/api/grant",
-        type:"get",
-
-        success: (message) => {
-            console.log(message);
-            let apiList = JSON.parse(message.apisList);
-            let list = JSON.parse(message.list);
-            for (i in apiList){
-                console.log("==========================");
-                console.log(apiList[i].apisId);
-                // $('#' + apiList[i].apisId).attr("sec:authorize", "hasRole(" + "\'ADMIN\'" + ")");
-            }
-
-
-
-        }
-    })
-});
+// $(document).ready(function(){
+//     $.ajax({
+//         url:"/api/grant",
+//         type:"get",
+//
+//         success: (message) => {
+//             console.log(message);
+//             let apiList = JSON.parse(message.apisList);
+//             let list = JSON.parse(message.list);
+//             for (i in apiList){
+//                 console.log("==========================");
+//                 console.log(apiList[i].apisId);
+//                 $('#' + apiList[i].apisId).attr("sec:authorize", "hasRole(" + "\'ADMIN\'" + ")");
+//             }
+//
+//
+//
+//         }
+//     })
+// });
 
 
 function saveApi() {

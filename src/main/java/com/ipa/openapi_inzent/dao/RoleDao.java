@@ -19,4 +19,5 @@ public interface RoleDao {
 
     void deleteRole(int id) throws DataAccessException;
 
+    List<RoleDTO> apisRoles() throws DataAccessException;
 }

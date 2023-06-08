@@ -3,16 +3,20 @@ package com.ipa.openapi_inzent.controller;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.ipa.openapi_inzent.config.auth.UserCustomDetails;
 import com.ipa.openapi_inzent.model.*;
 import com.ipa.openapi_inzent.service.ApiDetailsService;
 import com.ipa.openapi_inzent.service.ApiService;
 import com.ipa.openapi_inzent.service.RoleService;
+import com.ipa.openapi_inzent.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -24,20 +28,120 @@ public class ApiController {
     ApiService apiService;
     RoleService roleService;
     ApiDetailsService apiDetailsService;
+    UserService userService;
 
     String[] array = {"get", "post", "put", "delete"};
 
     @Autowired
-    public ApiController(ApiService apiService, ApiDetailsService apiDetailsService, RoleService roleService) {
+    public ApiController(ApiService apiService, UserService userService, ApiDetailsService apiDetailsService, RoleService roleService) {
         this.apiService = apiService;
         this.apiDetailsService = apiDetailsService;
         this.roleService = roleService;
+        this.userService = userService;
     }
 
     @GetMapping("")
-    public String apis(Model model) {
-        model.addAttribute("list", apiService.selectAll());
-        model.addAttribute("roles", roleService.selectAll());
+    public String apis(Model model, HttpSession session) {
+        // 로그인 정보
+        UserDTO userDTO = (UserDTO) session.getAttribute("logIn");
+        if (userDTO == null) {
+            return "redirect:/user/login";
+        }
+        System.out.println("ApiController.apis============================================");
+        // 순수 apis 목록
+        List<ApiDTO> apisList = apiService.selectAll();
+        // apisRole + role 목록
+        List<RoleDTO> apisRoleList = roleService.apisRoles();
+        // 로그인 한 user role과 apis role을 비교하기 위해 userRole + userDTO 목록 ( 한 유저의 Role 들)
+        List<UserRoleDTO> userRoleList = userService.roleName(userDTO.getId());
+        // 비공개 애들 넣을 빈 리스트
+        List<Integer> noShow = new ArrayList<>();
+        List<Integer> temp = new ArrayList<>();
+        // 비공개 애들의 role들을 넣을 리스트
+        List<RoleDTO> noShowRoles = new ArrayList<>();
+        // apis 페이지에 보낼 최종 APIs 목록
+        List<ApiDTO> passList = new ArrayList<>();
+
+
+        // 비공개 + role 지정 없는 애들 넣을 목록
+        List<Integer> nothing = new ArrayList<>();
+
+        System.out.println("apisList = " + apisList);
+        System.out.println("apisRoleList = " + apisRoleList);
+
+        // APIs들 최종 리스트에 추가
+        for (ApiDTO a : apisList) {
+            if (a.isDisclosure()) {
+                // 공개인 APIs
+                passList.add(a);
+            } else if (!a.isDisclosure()){
+                // 비공개인 APIs
+                noShow.add(a.getId());
+                temp.add(a.getId());
+            }
+        }
+
+        System.out.println("noShow = " + noShow);
+        // 비공개이면서 지정된 role이 없는 APIs => 관리자만 볼 수 있음
+        for (RoleDTO r : apisRoleList) {
+            for (int id : noShow) {
+                if (r.getApisId() == id) {
+                    temp.remove(Integer.valueOf(id));
+                }
+            }
+        }
+        System.out.println("비공개 + 지정된 role이 없는 APIs = " + temp);
+
+        // 비공개 + 지정된 role이 없는 APIs들 관리자 권한만 부여, passList에 추가
+        for (UserRoleDTO userRoleDTO : userRoleList) {
+            for (int apisId : temp) {
+                if (userRoleDTO.getCode().equals("ADMIN")) {
+                    ApiDTO apiDTO = apiService.selectOne(apisId);
+                    passList.add(apiDTO);
+                }
+            }
+        }
+
+        // 역할에 맞게 APIs들 보임
+        for (UserRoleDTO userRoleDTO : userRoleList) {
+            for (RoleDTO roleDTO : noShowRoles) {
+                if (userRoleDTO.getRoleId() == roleDTO.getRoleId()) {
+                    ApiDTO apiDTO = apiService.selectOne(roleDTO.getApisId());
+                    passList.add(apiDTO);
+                }
+            }
+        }
+
+
+
+        for (RoleDTO r : apisRoleList) {
+            for (int id : noShow) {
+                if (r.getApisId() == id) {
+                    RoleDTO roleDTO = new RoleDTO();
+                    roleDTO.setRoleId(r.getRoleId());
+                    roleDTO.setCode(r.getCode());
+                    roleDTO.setApisId(r.getApisId());
+                    noShowRoles.add(roleDTO);
+                } else if (r.getApisId() != id){
+//                    nothing.add(r.getApisId());
+                }
+            }
+        }
+
+        System.out.println("nothing = " + nothing);
+
+        System.out.println("noShowRoles = " + noShowRoles);
+        System.out.println("userRoleList = " + userRoleList);
+        System.out.println("session = " + userDTO);
+        System.out.println("-------------------------");
+
+//        if (userDTO.getId() == ) {
+//
+//        }
+
+        System.out.println("passList = " + passList);
+        model.addAttribute("list", passList);
+//        model.addAttribute("roles", apisRoleList);
 
         return "/apis/index";
     }

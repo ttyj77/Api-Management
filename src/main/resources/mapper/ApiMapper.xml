@@ -61,4 +61,5 @@
         join public.apis as "a" on a.id = ar."apisId"
         join public.role as "r" on r.id = ar."roleId"
     </select>
+
 </mapper>

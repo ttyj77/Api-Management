@@ -28,5 +28,10 @@
         delete from public.role
         where id = #{id};
     </delete>
+    <select id="apisRoles" resultType="com.ipa.openapi_inzent.model.RoleDTO">
+        select * from public."apisRole" as ar
+        join public."role" as r
+        on r.id = ar."roleId"
+    </select>
 
 </mapper>
