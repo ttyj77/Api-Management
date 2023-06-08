@@ -41,21 +41,19 @@
                         // 불가능
                         $('#username').css("border", "1px solid red");
                         $('#idNo').css("display", "block");
-
                     } else {
                         $('#username').css("border", "white");
                         $('#idNo').css("display", "none");
-
+                        $('#canRegister').prop("disabled", false);
                     }
                     if (message.nickname) {
                         // 불가능
                         $('#nickname').css("border", "1px solid red");
                         $('#nicknameNo').css("display", "block");
-
                     } else {
                         $('#nickname').css("border", "white");
                         $('#nicknameNo').css("display", "none");
-
+                        $('#canRegister').prop("disabled", false);
                     }
                     if (pwd_1 != pwd_2) {
                         $('#doubleCheckPwd').css("border", "1px solid red");
@@ -63,8 +61,12 @@
                     } else {
                         $('#doubleCheckPwd').css("border", "white");
                         $('#pwdCheck').css("display", "none");
+                        $('#canRegister').prop("disabled", false);
                     }
 
+                    if (message.nickname || message.username || pwd_1 != pwd_2) {
+                        $('#canRegister').prop("disabled", true);
+                    }
                 }
             })
         }
@@ -118,7 +120,7 @@
                         <div id="pwdCheck" style="display: none">
                             ❌ 비밀번호가 같지 않습니다. ❌
                         </div>
-                        <button type="submit" style="margin-top: 12px">
+                        <button type="submit" style="margin-top: 12px" id="canRegister">
                             회 원 가 입
                         </button>
                         <p>
@@ -141,12 +143,7 @@
                 <img class="ani" src="/images/logo2.png" alt="background image2">
             </div>
             <div class="form-wrapper align-items-center">
-                <!--                <form-->
-                <!--                        th:action="@{/login-proc}"-->
-                <!--                        class="form-signin"-->
-                <!--                        method="post"-->
-                <!--                >-->
-                <form method="get" id="login-form" onsubmit="return false;">
+                <form method="post" id="login-form" action="/login-proc">
                     <div class="form sign-in">
                         <div class="input-group">
                             <i class='bx bxs-user'></i>
@@ -157,7 +154,7 @@
                             <input type="password" name="password" placeholder="비밀번호" onkeydown="checkSpacebar()"
                                    required>
                         </div>
-                        <input type="submit" class="btn btn-danger mb-6" id="send" value="로 그 인" style="width: 100%"/>
+                        <input type="submit" class="btn btn-danger mb-6" value="로 그 인" style="width: 100%"/>
 
                         <!--                        <p th:if="${LoginFailMessage!=null}" th:text="|Error : ${LoginFailMessage}|"-->
                         <!--                           style="color: #E23137; font-size: small"></p>-->
@@ -200,10 +197,10 @@
         <!-- SIGN UP CONTENT -->
         <div class="col align-items-center flex-col">
             <div class="img sign-up">
-                <!--                <img class="ani" src="/images/logo_img.png" alt="background image2">-->
+                <!-- <img class="ani" src="/images/logo_img.png" alt="background image2">-->
             </div>
             <div class="text sign-up">
-                <h2 style="color: black">
+                <h2 style="color: rgb(255,255,255)">
                     Join with us
                 </h2>
             </div>
@@ -213,36 +210,36 @@
     <!-- END CONTENT SECTION -->
 </div>
 <script>
-    let send = document.getElementById("send");
-    console.log(send)
-    send.addEventListener("click", function () {
-        let form = document.getElementById("login-form");
-        let id = document.getElementById("id");
-        let pw = document.getElementById("pw");
-        //
-        // if (pw.value.trim() == "" || id.value.trim() == "") {
-        //     alert("id와 비번 잘 적어라");
-        //     return false;
-        // }
-        //
-        // form.action = "http://www.naver.com";
-        // form.mothod = "GET";
-
-        // form.submit();
-        console.log($('#login-form').serialize())
-        $.ajax({
-            url: "/login-proc",
-            data: $('#login-form').serialize(),
-            method: "post",
-
-            success: (message) => {
-                console.log("성공")
-                window.location.href = "/api"
-            }, error: (e) => {
-                console.log("통신 실패", e)
-            }
-        })
-    });
+    // let send = document.getElementById("send");
+    // console.log(send)
+    // send.addEventListener("click", function () {
+    //     let form = document.getElementById("login-form");
+    //     let id = document.getElementById("id");
+    //     let pw = document.getElementById("pw");
+    //     //
+    //     // if (pw.value.trim() == "" || id.value.trim() == "") {
+    //     //     alert("id와 비번 잘 적어라");
+    //     //     return false;
+    //     // }
+    //     //
+    //     // form.action = "http://www.naver.com";
+    //     // form.mothod = "GET";
+    //
+    //     // form.submit();
+    //     console.log($('#login-form').serialize())
+    //     $.ajax({
+    //         url: "/login-proc",
+    //         data: $('#login-form').serialize(),
+    //         method: "post",
+    //
+    //         success: (message) => {
+    //             console.log("성공")
+    //             window.location.href = "/api"
+    //         }, error: (e) => {
+    //             console.log("통신 실패", e)
+    //         }
+    //     })
+    // });
 </script>
 <script src="/js/login.js"></script>
 </body>

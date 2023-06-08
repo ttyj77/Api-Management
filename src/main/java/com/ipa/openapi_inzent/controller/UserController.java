@@ -41,6 +41,12 @@ public class UserController {
                         @RequestParam(value = "exception", required = false) String exception, Model model) {
         model.addAttribute("error", error);
         model.addAttribute("exception", exception);
+        System.out.println("error = " + error);
+        System.out.println("exception = " + exception);
+//        if (error.equals("true")) {
+//            System.out.println("error true조건");
+//            return "redirect:/user/login";
+//        }
         return "login";
     }
 
@@ -57,7 +63,7 @@ public class UserController {
         // 역할 넣기 (일반 사용자 2)
         UserRoleDTO userRoleDTO = new UserRoleDTO();
         userRoleDTO.setUserId(id);
-        userRoleDTO.setRoleId(2); // 일반 사용자 ( ROLE_USER )
+        userRoleDTO.setRoleId(2); // 일반 사용자 ( ROLE_NORMAL )
         userService.insertRole(userRoleDTO);
 
         RequestDTO requestDTO = new RequestDTO();
@@ -82,14 +88,13 @@ public class UserController {
     @ResponseBody
     public JsonObject idCheck(String username, String nickname) {
         JsonObject object = new JsonObject();
-        UserDTO un = userService.findByUsername(username).get(0);
-        UserDTO nn = userService.findByNickname(nickname);
-        if (un != null) {
-            object.addProperty("username", true);
-        } else {
+        if (userService.findByUsername(username).isEmpty()) {
             object.addProperty("username", false);
+        } else {
+            object.addProperty("username", true);
         }
 
+        UserDTO nn = userService.findByNickname(nickname);
         if (nn != null) {
             object.addProperty("nickname", true);
         } else {

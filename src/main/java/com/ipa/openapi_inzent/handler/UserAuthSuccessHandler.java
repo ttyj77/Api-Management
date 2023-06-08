@@ -24,7 +24,8 @@ public class UserAuthSuccessHandler implements AuthenticationSuccessHandler {
 
         HttpSession session = httpServletRequest.getSession();
         session.setAttribute("logIn", userDTO);
-
+        System.out.println("session = " + session.getAttribute("logIn"));
+        System.out.println("success handler out");
         httpServletResponse.sendRedirect("/api");
     }
 }

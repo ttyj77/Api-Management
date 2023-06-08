@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:sec="http://www.w3.org/1999/xhtml"
       layout:decorate="~{layout/layout}">
 <head>
     <meta charset="UTF-8">
@@ -23,7 +23,7 @@
     </th:block>
 
 </head>
-<body>
+<body>#757575
 <div layout:fragment="content">
     <div id="wrapper">
         <div id="content-wrapper" class="d-flex flex-column">
@@ -32,7 +32,7 @@
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800">APIs</h1>
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                        <button  sec:authorize="hasAnyRole('ADMIN','MYDATA','PROVIDER')" type="button" class="btn btn-primary" data-bs-toggle="modal"
                                 data-bs-target="#registerModal">
                             <i class="fa-solid fa-plus fa-flip"></i> 서비스 등록
                         </button>
@@ -59,14 +59,10 @@
                                                 <div class="h6 text-dark mb-0" th:if="${api.disclosure==false}">비공개
                                                 </div>
                                             </div>
-                                            <div class="d-flex flex-column" id="subtable">
+                                            <div sec:authorize="hasAnyRole('ADMIN','MYDATA','PROVIDER')" class="d-flex flex-column" id="subtable">
                                                 <button class="btn btn-light inBtn modal2"
                                                         th:apiId="${api.id}"
                                                         onclick="updateApi(this)">
-                                                    <!--                                                    th:onclick="updateApi(this.getAttribute('apiOne'))"-->
-                                                    <!--   <button class="btn btn-light inBtn" onclick="event.stopPropagation(); $('#updateModal').modal('show');"-->
-                                                    <!--   >-->
-
                                                     <i class="fa-solid fa-pen" style="color: #797a7c;"></i>
                                                 </button>
                                                 <button class="btn btn-light inBtn modal2"
