@@ -23,7 +23,7 @@
     </th:block>
 
 </head>
-<body>#757575
+<body>
 <div layout:fragment="content">
     <div id="wrapper">
         <div id="content-wrapper" class="d-flex flex-column">
@@ -41,7 +41,7 @@
 
                         <!-- Earnings (Monthly) Card Example -->
 
-                        <div class="col-xl-4 col-md-6 mb-4" th:each="api:${list}">
+                        <div class="col-xl-4 col-md-6 mb-4" th:id="${api.id}" th:each="api:${list}">
                             <div class="goTable" style="cursor: pointer">
                                 <div class="card border-left-primary shadow h-100 py-2">
                                     <div class="card-body">
@@ -112,7 +112,7 @@
                                         <div class="form-check mr-2">
                                             <input class="form-check-input" type="radio"
                                                    value="true"
-                                                   name="public"
+                                                   name="disclosure"
                                                    id="show" checked>
                                             <label class="form-check-label" for="show">
                                                 공개
@@ -120,7 +120,7 @@
                                         </div>
                                         <div class="form-check">
                                             <input class="form-check-input" type="radio"
-                                                   name="public"
+                                                   name="disclosure"
                                                    value="false"
                                                    id="noshow">
                                             <label class="form-check-label" for="noshow">
@@ -130,11 +130,10 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="tdbg">역할1</td>
+                                    <input name="roleId" type="hidden" value="0">
+                                    <td class="tdbg">역할</td>
                                     <td>
                                         <div id="target">
-
-
                                         </div>
                                         <button type="button"
                                                 class="btn btn-dark btn-sm"
@@ -171,7 +170,7 @@
                 <div class="modal-content">
                     <form method="post" id="updateApi">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="updateModalLabel">보험업권</h5>
+                            <h5 class="modal-title" id="updateModalLabel"></h5>
                             <div class="" style="cursor: pointer"
                                  data-bs-dismiss="modal"
                             ><i class="fa-solid fa-xmark"
@@ -201,7 +200,7 @@
                                                    type="radio"
                                                    id="radio1"
                                                    value="true"
-                                                   name="publicUpdate"
+                                                   name="disclosure"
                                             >
                                             <label class="form-check-label"
                                                    for="radio1">
@@ -213,7 +212,7 @@
                                                    type="radio"
                                                    id="radio2"
                                                    value="false"
-                                                   name="publicUpdate"
+                                                   name="disclosure"
                                             >
                                             <label class="form-check-label"
                                                    for="radio2">
@@ -229,6 +228,7 @@
                                 <tr>
                                     <td class="tdbg">역할</td>
                                     <td class="d-flex">
+                                        <input name="roleId" type="hidden" value="0">
                                         <div id="target2">
 
                                         </div>

@@ -57,5 +57,11 @@ public class ApiService {
     }
 
 
+    public void deleteRole(int id) {
+        apiDao.deleteRole(id);
+    }
 
+    public List<ApiDTO> giveRole() {
+        return apiDao.giveRole();
+    }
 }

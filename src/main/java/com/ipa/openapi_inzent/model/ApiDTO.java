@@ -13,4 +13,7 @@ public class ApiDTO {
     // apisRole
     private int apisId;
     private int roleId;
+
+    // role
+    private String code;
 }

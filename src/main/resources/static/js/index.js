@@ -1,3 +1,25 @@
+$(document).ready(function(){
+    $.ajax({
+        url:"/api/grant",
+        type:"get",
+
+        success: (message) => {
+            console.log(message);
+            let apiList = JSON.parse(message.apisList);
+            let list = JSON.parse(message.list);
+            for (i in apiList){
+                console.log("==========================");
+                console.log(apiList[i].apisId);
+                // $('#' + apiList[i].apisId).attr("sec:authorize", "hasRole(" + "\'ADMIN\'" + ")");
+            }
+
+
+
+        }
+    })
+});
+
+
 function saveApi() {
     // 입력 확인
     let context = document.querySelector('.contextApi');
@@ -32,10 +54,14 @@ function saveApiUpdate() {
         });
     } else {
         Swal.fire({
-            icon: 'success', text: 'API 그룹이 저장되었습니다.'
-        }).then(() => {
-            $('#updateBtn').submit();
-            $('#updateModal').modal('hide');
+            icon: 'success', text: 'API 그룹이 저장되었습니다.',
+            confirmButtonText: "확인",
+
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $('#updateBtn').submit();
+                $('#updateModal').modal('hide');
+            }
         });
     }
 }
@@ -93,8 +119,13 @@ function updateApi(apiOne) {
             name.value = message.apiName;
             explanation.textContent = message.apiExplanation;
             buttonApi.id = message.apiId;
-            console.log("message !!! " + message)
-
+            console.log("===================================");
+            if (message.apiDisclosure) {
+                $('#radio1').prop("checked", true);
+            } else {
+                $('#radio2').prop("checked", true);
+            }
+            document.getElementById("updateModalLabel").innerText = message.apiName;
             let selectedRoleList = JSON.parse(message.selectedRoleList);
             console.log(selectedRoleList)
             let target2 = document.getElementById("target2")
@@ -206,12 +237,10 @@ function drawRole(value) {
 
     console.log(parent)
     console.log(parent.length)
-    console.log()
     console.log(childNodes)
 
     console.log(childNodes.length)
     let cnt = childNodes.length;
-
     for (let i = 0; i < cnt; i++) {
 
         let check = childNodes[i].childNodes[0];
@@ -226,10 +255,10 @@ function drawRole(value) {
             badge.innerText = check.value
             let inputHidden = document.createElement("input")
             inputHidden.name = "roleId"
-            inputHidden.value = check.name
+            inputHidden.value = i+1;
             inputHidden.type = "hidden"
             if (value.id == "updateApisModal") {
-                console.log("update Api modal span id BADGE_ 추가")
+                console.log("update Api modal span id BADGE_ 추가");
                 let id = check.id.substr(4,)
                 console.log(id)
                 badge.id = "BADGE_" + id
@@ -239,6 +268,13 @@ function drawRole(value) {
             target.append(h5)
         }
     }
+    // if (checkRole == 0) {
+    //     let inputHidden = document.createElement("input")
+    //     inputHidden.name = "roleId"
+    //     inputHidden.value = checkRole;
+    //     inputHidden.type = "hidden"
+    //     target.append(inputHidden);
+    // }
 }
 
 // 기존 Apis 역할 모달 리스트  기존 Apis 는 기존의 역할을 가지고 있어야 된다.

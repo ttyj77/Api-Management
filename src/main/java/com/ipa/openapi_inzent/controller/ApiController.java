@@ -42,6 +42,48 @@ public class ApiController {
         return "/apis/index";
     }
 
+    @GetMapping("/grant")
+    @ResponseBody
+    public JsonObject giveRole() {
+        JsonObject object = new JsonObject();
+        List<ApiDTO> list = apiService.giveRole();
+        // 역할 없는 비공개인 apis들을 분류하기 위해 apis list 호출
+        List<ApiDTO> apiDTOList = apiService.selectAll();
+        System.out.println("apiDTOList = " + apiDTOList);
+        
+        JsonArray jsonArray = new JsonArray();
+        for (ApiDTO a : apiDTOList) {
+            JsonObject object1 = new JsonObject();
+            // 모든 비공개인 것들
+            if (!a.isDisclosure()) {
+                object1.addProperty("apisId",a.getId());
+                jsonArray.add(object1);
+            }
+        }
+
+        object.addProperty("apisList",jsonArray.toString());
+
+        System.out.println("list = " + list);
+
+        JsonArray array1 = new JsonArray();
+        for (ApiDTO apiDTO : list) {
+            JsonObject jsonObject = new JsonObject();
+            // 역할 있는 비공개인 것들
+            if (!apiDTO.isDisclosure()) {
+                jsonObject.addProperty("apisId",apiDTO.getApisId());
+                jsonObject.addProperty("roleId",apiDTO.getRoleId());
+                jsonObject.addProperty("code",apiDTO.getCode());
+                array1.add(jsonObject);
+            }
+        }
+        object.addProperty("list", array1.toString());
+
+        System.out.println("object = " + object);
+
+        return object;
+    }
+
+
     @GetMapping("/selectOne")
     @ResponseBody
     public JsonObject apiOne(int apiId) {
@@ -67,7 +109,7 @@ public class ApiController {
         object.addProperty("selectedRoleList", selectRoleArray.toString());
 
 //        System.out.println("roleAll = " + roleAll);
-
+        System.out.println("object = " + object);
 
         return object;
     }
@@ -155,9 +197,13 @@ public class ApiController {
 //        List<RoleDTO> list = roleService.selectAll();
         System.out.println("roleId = " + roleId);
         apisRoleDTO.setApisId(id);
+        if (roleId.contains("0")) {
+            System.out.println("0 조건 들어옴");
+            roleId.remove(0);
+        }
 
-        if (apisRoleDTO.getApisId() == 0 || apisRoleDTO.getRoleId() == 0) {
-            System.out.println("fk 제약조건 위배");
+        if (roleId.isEmpty()) {
+            System.out.println("role 선택 안됨");
         } else {
             for (String role : roleId) {
                 apisRoleDTO.setRoleId(Integer.parseInt(role));
@@ -170,29 +216,38 @@ public class ApiController {
     }
 
     @PostMapping("/update/{id}")
-    public String update(ApiDTO apiDTO, @RequestParam(value = "roleId") List<String> roleId, @PathVariable int id) {
+    public String update(String context, String name, boolean disclosure, String explanation, @RequestParam(value = "roleId") List<String> roleId, @PathVariable int id) {
+        ApiDTO apiDTO = new ApiDTO();
+        apiDTO.setId(id);
+        apiDTO.setContext(context);
+        apiDTO.setName(name);
+        apiDTO.setDisclosure(disclosure);
+        apiDTO.setExplanation(explanation);
+        System.out.println("apiDTO = " + apiDTO);
         apiService.update(apiDTO);
         System.out.println("roleId = " + roleId);
         System.out.println("id = " + id);
         List<ApiDTO> roleList = apiService.selectRoleList(id);
+        System.out.println("roleList = " + roleList);
         ApisRoleDTO apisRoleDTO = new ApisRoleDTO();
         apisRoleDTO.setApisId(id);
-        // 수정시 업데이트될 역할들어갈 list
-        List<Integer> roles = new ArrayList<>();
+        System.out.println("apisRoleDTO = " + apisRoleDTO);
+        apiService.deleteRole(id);
+        if (roleId.contains("0")) {
+            System.out.println("0 조건 들어옴");
+            roleId.remove(0);
+        }
+        System.out.println("-----------------------------");
+        System.out.println("roleId = " + roleId);
 
-        if (apisRoleDTO.getApisId() == 0 || apisRoleDTO.getRoleId() == 0) {
+        if (roleId.isEmpty()) {
             System.out.println("선택된 ROLE 없음");
         } else {
-            for (ApiDTO roleOne : roleList) {
                 for (String role : roleId) {
-                    if (roleOne.getRoleId() == Integer.parseInt(role)) {
-                        System.out.println("");
-                    }
                     apisRoleDTO.setRoleId(Integer.parseInt(role));
-                    apiService.updateRole(apisRoleDTO);
+                    System.out.println("apisRoleDTO = " + apisRoleDTO);
+                    apiService.insertRole(apisRoleDTO);
                 }
-
-            }
 
         }
         return "redirect:/api";

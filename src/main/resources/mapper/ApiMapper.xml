@@ -7,7 +7,7 @@
         INSERT INTO public.apis(context, name, disclosure, explanation)
         VALUES (#{context}, #{name}, #{disclosure}, #{explanation});
     </insert>
-    <insert id="insertRole" parameterType="com.ipa.openapi_inzent.model.ApiDTO">
+    <insert id="insertRole" parameterType="com.ipa.openapi_inzent.model.ApisRoleDTO">
         INSERT INTO public."apisRole"("apisId", "roleId")
         VALUES (#{apisId}, #{roleId});
     </insert>
@@ -51,5 +51,14 @@
         INNER JOIN public."apisRole"
         ON public.apis.id = public."apisRole"."apisId"
         ORDER BY public.apis.id
+    </select>
+    <delete id="deleteRole" parameterType="int">
+        DELETE FROM public."apisRole"
+        WHERE "apisId" = #{apisId};
+    </delete>
+    <select id="giveRole" resultType="com.ipa.openapi_inzent.model.ApiDTO">
+        select a.disclosure, ar."apisId", ar."roleId", r.code from public."apisRole" as "ar"
+        join public.apis as "a" on a.id = ar."apisId"
+        join public.role as "r" on r.id = ar."roleId"
     </select>
 </mapper>

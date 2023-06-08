@@ -29,4 +29,7 @@ public interface ApiDao {
     ApiDTO showRole() throws DataAccessException;
 
 
+    void deleteRole(int id) throws DataAccessException;
+
+    List<ApiDTO> giveRole() throws DataAccessException;
 }
