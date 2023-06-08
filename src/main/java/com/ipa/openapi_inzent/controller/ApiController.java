@@ -3,7 +3,6 @@ package com.ipa.openapi_inzent.controller;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.ipa.openapi_inzent.config.auth.UserCustomDetails;
 import com.ipa.openapi_inzent.model.*;
 import com.ipa.openapi_inzent.service.ApiDetailsService;
 import com.ipa.openapi_inzent.service.ApiService;
@@ -156,7 +155,7 @@ public class ApiController {
         // 역할 없는 비공개인 apis들을 분류하기 위해 apis list 호출
         List<ApiDTO> apiDTOList = apiService.selectAll();
         System.out.println("apiDTOList = " + apiDTOList);
-        
+
         JsonArray jsonArray = new JsonArray();
         for (ApiDTO a : apiDTOList) {
             JsonObject object1 = new JsonObject();

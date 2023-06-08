@@ -1,6 +1,7 @@
 package com.ipa.openapi_inzent.handler;
 
 
+import jakarta.servlet.ServletException;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
