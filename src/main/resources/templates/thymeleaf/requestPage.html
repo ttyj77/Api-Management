@@ -27,6 +27,7 @@
             .tdHead {
                 background-color: #f5f5f5;
             }
+
         </style>
     </th:block>
 
@@ -149,15 +150,11 @@
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <!-- Topbar Search -->
-                        <form action="/requestSearch" method="get" class="col input-group mt-3" style="width: 40%; align-self: end;">
-                            <input type="text" class="form-control m-0"
-                                   placeholder="검색어를 입력해주세요(제목, 내용)"
-                                   aria-label="Search" name="keyword">
-                            <div class="input-group-append">
-                                <button class="btn btn-primary" type="submit">
-                                    <i class="fas fa-search fa-sm"></i>
-                                </button>
-                            </div>
+                        <form action="/requestSearch" method="get" class="d-flex mt-3 align-self-end mr-2" style="width: 40%;">
+                            <input type="text" class="form-control m-0" placeholder="검색어를 입력해주세요(제목, 내용)" aria-label="Search" name="keyword">
+                            <button type="submit" class="btn btn-sm" style=" width: 25%; background-color: black; color: white">
+                                <i class="fa-solid fa-magnifying-glass" style="color: #ffffff;"></i> 조회
+                            </button>
                         </form>
                         <!--</div>-->
                         <div class="card-body">

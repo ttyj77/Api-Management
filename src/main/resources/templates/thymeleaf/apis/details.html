@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:sec="http://www.w3.org/1999/xhtml"
       layout:decorate="~{layout/layout}">
 <head>
 
@@ -758,8 +758,8 @@
                     <!--                        <option>deprecate</option>-->
                     <!--                        <option>out_of_service</option>-->
                     <!--                    </select>-->
-                    <form class="d-flex w-50">
-                        <input type="text" class="form-control m-0" placeholder="검색어 입력">
+                    <form class="d-flex" style="width: 70%">
+                        <input type="text" class="form-control m-0" placeholder="검색어를 입력해주세요.">
                         <button type="submit" class="btn btn-dark btn-sm" style=" width: 25%">
                             <i class="fa-solid fa-magnifying-glass" style="color: #ffffff;"></i> 조회
                         </button>
@@ -795,7 +795,7 @@
                                        title="Swagger UI"
                                        class="fa-solid fa-globe ui"></i>
                                     <!-- <div id="tooltipUI">Swagger UI</div>-->
-                                    <i th:resourceId="${index.id}" onclick="goTrashResource(this)"
+                                    <i th:resourceId="${index.id}" onclick="goTrashResource(this)" sec:authorize="hasAnyRole('ADMIN','MYDATA','PROVIDER')"
                                        style="cursor: pointer;"
                                        data-toggle="tooltip"
                                        title="삭제"
@@ -855,7 +855,7 @@
                                                data-toggle="tooltip"
                                                title="Swagger UI"
                                                class="fa-solid fa-globe ui"></i>
-                                            <i th:detailId="${detail.id}" th:detailName="${detail?.summary}"
+                                            <i sec:authorize="hasAnyRole('ADMIN','MYDATA','PROVIDER')" th:detailId="${detail.id}" th:detailName="${detail?.summary}"
                                                onclick="goTrash(this)" style="cursor: pointer;"
                                                data-toggle="tooltip"
                                                title="삭제"

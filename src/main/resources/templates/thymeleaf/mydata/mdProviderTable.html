@@ -161,13 +161,13 @@
                                 <input type="submit" onclick="input(this)" id="input_submit" value="조회">
                             </div>
                             <!-- Topbar Search -->
-                            <form action="/mydata/providerSearch" method="get" class="col input-group mt-3" style="width: 40%; align-self: end;">
+                            <form action="/mydata/providerSearch" method="get" class="col input-group mt-3 mr-3" style="width: 40%; align-self: end;">
                                 <input type="text" class="form-control m-0"
-                                       placeholder="검색어를 입력해주세요"
+                                       placeholder="검색어를 입력해주세요( API코드, 거래고유번호, 통합고객번호 )"
                                        aria-label="Search" name="keyword">
                                 <div class="input-group-append">
-                                    <button class="btn btn-primary" type="submit">
-                                        <i class="fas fa-search fa-sm"></i>
+                                    <button class="btn btn-sm" type="submit" style="background-color: black; color: white" >
+                                        <i class="fa-solid fa-magnifying-glass" style="color: #ffffff;"></i> 조회
                                     </button>
                                 </div>
                             </form>

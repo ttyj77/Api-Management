@@ -236,17 +236,16 @@
                         <!--                                </select>-->
                         <!--                            </div>-->
                         <!-- Topbar Search -->
-                        <form action="/mydata/reqSearch" method="get" class="col input-group mt-3"
-                              style="width: 40%; align-self: end;">
-                            <input type="text" class="form-control m-0"
-                                   placeholder="검색어를 입력해주세요"
-                                   aria-label="Search" name="keyword">
-                            <div class="input-group-append">
-                                <button class="btn btn-primary" type="submit">
-                                    <i class="fas fa-search fa-sm"></i>
+                        <div class="d-flex mb-3 justify-content-end mr-3">
+                            <form class="d-flex justify-content-end mt-3" action="/mydata/reqSearch" method="get"
+                                  style="width: 60%">
+                                <input type="text" class="form-control m-0" aria-label="Search" name="keyword"
+                                       placeholder="검색어를 입력해주세요(기관코드, 기관명, 서비스명)" style="width: 40%">
+                                <button type="submit" class="btn btn-sm" style=" width: 15%; background-color: black; color: white">
+                                    <i class="fa-solid fa-magnifying-glass" style="color: #ffffff;"></i> 조회
                                 </button>
-                            </div>
-                        </form>
+                            </form>
+                        </div>
                         <!--                        </div>-->
                         <div class="card-body">
                             <div class="table-responsive">
@@ -341,7 +340,7 @@
                                             <td>응답일자</td>
                                             <td>응답시간(sec)</td>
                                             <td>응답 Code</td>
-                                            <td>요청API Code</td>
+                                            <td>요청API</td>
                                             <td>통합고객번호</td>
                                             <td>정기적 전송</td>
                                         </tr>
