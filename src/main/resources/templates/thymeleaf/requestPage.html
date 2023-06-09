@@ -97,6 +97,7 @@
                     method: "get",
 
                     success: (message) => {
+                        console.log(message);
                         document.getElementById('reqId').innerText = id;
                         let title = document.getElementsByClassName('reqTitle');
                         for (let i = 0; i < title.length; i++) {
@@ -150,7 +151,7 @@
                         <!-- Topbar Search -->
                         <form action="/requestSearch" method="get" class="col input-group mt-3" style="width: 40%; align-self: end;">
                             <input type="text" class="form-control m-0"
-                                   placeholder="검색어를 입력해주세요"
+                                   placeholder="검색어를 입력해주세요(제목, 내용)"
                                    aria-label="Search" name="keyword">
                             <div class="input-group-append">
                                 <button class="btn btn-primary" type="submit">

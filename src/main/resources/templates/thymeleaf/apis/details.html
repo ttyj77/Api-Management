@@ -739,11 +739,11 @@
             </div>
             <div class="d-flex mb-3">
                 <div class="w-100 d-flex">
-<!--                    <select class="form-select mr-4" onchange="selectChange(this)" id="show" style="width: 35%;">-->
-<!--                        <option value="resource" selected>리소스</option>-->
-<!--                        <option value="tag">태그</option>-->
-<!--                    </select>-->
-                    <!-- <button type="button" class="btn btn-secondary" id="pick" data-bs-toggle="modal"></button>-->
+                    <select class="form-select mr-4" onchange="selectChange(this)" id="show" style="width: 35%;">
+                        <option value="resource" selected>리소스</option>
+                        <option value="tag">태그</option>
+                    </select>
+                    <!--                     <button type="button" class="btn btn-secondary" id="pick" data-bs-toggle="modal"></button>-->
                     <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
                             data-bs-target="#resourceModal" onclick="tabHidden()">
                         + 리소스 추가
@@ -751,16 +751,16 @@
                     <!-- Button trigger modal -->
                 </div>
                 <div class="d-flex w-100 justify-content-end">
-<!--                    <select class="form-select" style="width: 30%;">-->
-<!--                        <option selected>전체</option>-->
-<!--                        <option>develop</option>-->
-<!--                        <option>service</option>-->
-<!--                        <option>deprecate</option>-->
-<!--                        <option>out_of_service</option>-->
-<!--                    </select>-->
-                    <form class="d-flex">
+                    <!--                    <select class="form-select" style="width: 30%;">-->
+                    <!--                        <option selected>전체</option>-->
+                    <!--                        <option>develop</option>-->
+                    <!--                        <option>service</option>-->
+                    <!--                        <option>deprecate</option>-->
+                    <!--                        <option>out_of_service</option>-->
+                    <!--                    </select>-->
+                    <form class="d-flex w-50">
                         <input type="text" class="form-control m-0" placeholder="검색어 입력">
-                        <button type="submit" class="btn btn-dark btn-sm" style=" width: 45%">
+                        <button type="submit" class="btn btn-dark btn-sm" style=" width: 25%">
                             <i class="fa-solid fa-magnifying-glass" style="color: #ffffff;"></i> 조회
                         </button>
                     </form>
@@ -769,7 +769,7 @@
             <!-- 리소스 정보들 -->
             <div class="card shadow mb-4">
                 <div class="accordion accordion-flush" id="accordionFlushExample">
-                    <div th:if="${#lists.size(resourceIndex) == 0}">
+                    <div class="d-flex justify-content-center" th:if="${#lists.size(resourceIndex) == 0}">
                         <h5>리소스가 존재하지 않습니다.</h5>
                     </div>
                     <div class="accordion-item"
@@ -780,14 +780,12 @@
                                 th:aria-controls="'flush-collapse'+${index.id}">
                             <div class="btn-control">
                                 <div>
-                                    <i class="fa-solid fa-plus"
-                                       onclick="location.href='#'; event.stopPropagation()"></i>
-                                    <span th:text="${index.id}"></span> | <span th:text="${index.uri}"></span> </span>
+                                    &nbsp;&nbsp;&nbsp;|&nbsp; <span th:text="${index.uri}"></span> </span>
                                 </div>
                                 <div>
-                                    <i class="fa-solid fa-arrows-rotate renew" data-toggle="tooltip"
-                                       title="리소스 갱신"
-                                       onclick="location.href='#'; event.stopPropagation()"></i>
+<!--                                    <i class="fa-solid fa-arrows-rotate renew" data-toggle="tooltip"-->
+<!--                                       title="리소스 갱신"-->
+<!--                                       onclick="location.href='#'; event.stopPropagation()"></i>-->
                                     <!-- <div id="tooltipRenew">리소스 갱신</div>-->
                                     <i class="fa-solid fa-file-word doc" data-toggle="tooltip"
                                        title="Swagger 문서"
@@ -818,7 +816,7 @@
                                         <th scope="col">Security</th>
                                         <th scope="col">Operation ID</th>
                                         <th scope="col">Version</th>
-<!--                                        <th scope="col">Status</th>-->
+                                        <!--                                        <th scope="col">Status</th>-->
                                         <th scope="col">else</th>
                                     </tr>
                                     </thead>
@@ -840,14 +838,14 @@
                                         <td th:text="${detail?.version}" data-bs-toggle="modal"
                                             data-bs-target="#detailModal"></td>
 
-<!--                                        <td>-->
-<!--                                            <select class="form-select">-->
-<!--                                                <option selected>develop</option>-->
-<!--                                                <option value="1">service</option>-->
-<!--                                                <option value="2">deprecate</option>-->
-<!--                                                <option value="3">out_of_service</option>-->
-<!--                                            </select>-->
-<!--                                        </td>-->
+                                        <!--                                        <td>-->
+                                        <!--                                            <select class="form-select">-->
+                                        <!--                                                <option selected>develop</option>-->
+                                        <!--                                                <option value="1">service</option>-->
+                                        <!--                                                <option value="2">deprecate</option>-->
+                                        <!--                                                <option value="3">out_of_service</option>-->
+                                        <!--                                            </select>-->
+                                        <!--                                        </td>-->
                                         <td>
                                             <i onclick="location.href='#'" style="cursor: pointer;"
                                                data-toggle="tooltip"
@@ -1064,18 +1062,18 @@
                             <!--           인증선택박스                 -->
                             <div class="authorizationSelect ml-2 mr-2 mb-4 mt-3"
                                  style="margin-left: 1.5% !important;">
-<!--                                <div class="selectBox" onclick="showSecondSelectBox()">-->
-<!--                                    <select>-->
-<!--                                        <option>인증</option>-->
-<!--                                    </select>-->
-<!--                                    <div class="overSelect"></div>-->
-<!--                                </div>-->
-<!--                                <div class="authorizationSelectBox">-->
-<!--                                    <label for="getApiKey">-->
-<!--                                        <input type="checkbox" id="getApiKey"/>APIKey(APIKEY)</label>-->
-<!--                                    <label for="getBearer">-->
-<!--                                        <input type="checkbox" id="getBearer"/>Bearer(APIKEY)</label>-->
-<!--                                </div>-->
+                                <!--                                <div class="selectBox" onclick="showSecondSelectBox()">-->
+                                <!--                                    <select>-->
+                                <!--                                        <option>인증</option>-->
+                                <!--                                    </select>-->
+                                <!--                                    <div class="overSelect"></div>-->
+                                <!--                                </div>-->
+                                <!--                                <div class="authorizationSelectBox">-->
+                                <!--                                    <label for="getApiKey">-->
+                                <!--                                        <input type="checkbox" id="getApiKey"/>APIKey(APIKEY)</label>-->
+                                <!--                                    <label for="getBearer">-->
+                                <!--                                        <input type="checkbox" id="getBearer"/>Bearer(APIKEY)</label>-->
+                                <!--                                </div>-->
                             </div>
 
                             <!-- GET 파라미터/응답 선택 시작-->
@@ -1200,18 +1198,18 @@
                             <!--           인증선택박스                 -->
                             <div class="authorizationSelect ml-2 mr-2 mb-4 mt-3"
                                  style="margin-left: 1.5% !important;">
-<!--                                <div class="selectBox" onclick="showSecondSelectBox()">-->
-<!--                                    <select>-->
-<!--                                        <option>인증</option>-->
-<!--                                    </select>-->
-<!--                                    <div class="overSelect"></div>-->
-<!--                                </div>-->
-<!--                                <div class="authorizationSelectBox">-->
-<!--                                    <label for="postApiKey">-->
-<!--                                        <input type="checkbox" id="postApiKey"/>APIKey(APIKEY)</label>-->
-<!--                                    <label for="postBearer">-->
-<!--                                        <input type="checkbox" id="postBearer"/>Bearer(APIKEY)</label>-->
-<!--                                </div>-->
+                                <!--                                <div class="selectBox" onclick="showSecondSelectBox()">-->
+                                <!--                                    <select>-->
+                                <!--                                        <option>인증</option>-->
+                                <!--                                    </select>-->
+                                <!--                                    <div class="overSelect"></div>-->
+                                <!--                                </div>-->
+                                <!--                                <div class="authorizationSelectBox">-->
+                                <!--                                    <label for="postApiKey">-->
+                                <!--                                        <input type="checkbox" id="postApiKey"/>APIKey(APIKEY)</label>-->
+                                <!--                                    <label for="postBearer">-->
+                                <!--                                        <input type="checkbox" id="postBearer"/>Bearer(APIKEY)</label>-->
+                                <!--                                </div>-->
                             </div>
 
 
@@ -1361,7 +1359,7 @@
                             <!--           인증선택박스                 -->
                             <div class="authorizationSelect ml-2 mr-2 mb-4 mt-3"
                                  style="margin-left: 1.5% !important;">
-<!--                                <div class="selectBox">-->
+                                <!--                                <div class="selectBox">-->
                                 <!--                                    <select name="TagBox" id="TagBox">-->
                                 <!--                                        <option value=""> &#45;&#45; 태그 선택 &#45;&#45;</option>-->
                                 <!--                                        <option th:each="list : ${tagList}" th:value="${list?.id}"-->
@@ -1516,14 +1514,14 @@
                             <!--           인증선택박스                 -->
                             <div class="authorizationSelect ml-2 mr-2 mb-4 mt-3"
                                  style="margin-left: 1.5% !important;">
-<!--                                <div class="selectBox">-->
-<!--                                    <select name="tagBox">-->
-<!--                                        <option value=""> &#45;&#45; 태그 선택 &#45;&#45;</option>-->
-<!--                                        <option th:each="list : ${tagList}" th:value="${list?.id}"-->
-<!--                                                th:utext="${list?.name}">-->
-<!--                                        </option>-->
-<!--                                    </select>-->
-<!--                                </div>-->
+                                <!--                                <div class="selectBox">-->
+                                <!--                                    <select name="tagBox">-->
+                                <!--                                        <option value=""> &#45;&#45; 태그 선택 &#45;&#45;</option>-->
+                                <!--                                        <option th:each="list : ${tagList}" th:value="${list?.id}"-->
+                                <!--                                                th:utext="${list?.name}">-->
+                                <!--                                        </option>-->
+                                <!--                                    </select>-->
+                                <!--                                </div>-->
                             </div>
                             <!-- DELETE 파라미터/응답 선택 시작-->
                             <div class="d-flex flex-column flex-row">
@@ -1834,11 +1832,14 @@
     <div class="modal fade tab" id="detailModal" tabindex="-1">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h4>마이데이터 기관 정보</h4>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                <div class="modal-header" style="align-items: flex-start !important; flex-direction: column !important;">
+                    <div class="d-flex justify-content-between align-items-center w-100">
+                        <h4 id="methodUrl"></h4>
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <span class="text-muted" id="summary"></span>
                 </div>
                 <div class="modal-body">
                     <div class="w-100 p-2">

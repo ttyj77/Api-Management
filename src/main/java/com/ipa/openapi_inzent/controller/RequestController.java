@@ -1,11 +1,13 @@
 package com.ipa.openapi_inzent.controller;
 
 import com.google.gson.JsonObject;
+import com.ipa.openapi_inzent.config.auth.UserCustomDetails;
 import com.ipa.openapi_inzent.model.RequestDTO;
 import com.ipa.openapi_inzent.model.UserDTO;
 import com.ipa.openapi_inzent.service.RequestService;
 import com.ipa.openapi_inzent.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -59,6 +61,8 @@ public class RequestController {
         object.addProperty("reqUsername", requestDTO.getReqUsername());
         object.addProperty("reqNickname", requestDTO.getReqNickname());
 
+        System.out.println("object = " + object);
+
         return object;
     }
 
@@ -69,12 +73,15 @@ public class RequestController {
     }
 
     @GetMapping("/refuse/{id}")
-    public String refuse(@PathVariable int id, HttpSession session) {
-        UserDTO logIn = (UserDTO) session.getAttribute("logIn");
+    public String refuse(@PathVariable int id, @AuthenticationPrincipal UserCustomDetails userDetails) {
+        UserDTO logIn = userDetails.getUserDTO();
         if (logIn == null) {
             return "redirect:/user/login";
         }
+        System.out.println("id = " + id);
+        System.out.println("logIn = " + logIn);
         RequestDTO requestDTO = requestService.selectUserId(id);
+        System.out.println("requestDTO = " + requestDTO);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date now = new Date();
         String procDate = sdf.format(now);
@@ -90,12 +97,14 @@ public class RequestController {
     }
 
     @GetMapping("/approve/{id}")
-    public String approve(@PathVariable int id, HttpSession session) {
-        UserDTO logIn = (UserDTO) session.getAttribute("logIn");
+    public String approve(@PathVariable int id, @AuthenticationPrincipal UserCustomDetails userDetails) {
+        UserDTO logIn = userDetails.getUserDTO();
         if (logIn == null) {
             return "redirect:/user/login";
         }
+        System.out.println("id = " + id);
         RequestDTO requestDTO = requestService.selectUserId(id);
+        System.out.println("requestDTO = " + requestDTO);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date now = new Date();
         String procDate = sdf.format(now);

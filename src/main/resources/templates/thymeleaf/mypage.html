@@ -123,6 +123,9 @@
         }
         // 취소 버튼 누를 시 다시 저장 -> 수정버튼으로 변경
         function changeBtn() {
+            document.getElementById("passwordChange").disabled = true;
+            document.getElementById("nickname").disabled = true;
+            document.getElementById("email").disabled = true;
             let div = document.getElementById("btnBox")
             div.innerHTML = ""
 

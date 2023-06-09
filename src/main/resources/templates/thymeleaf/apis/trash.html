@@ -184,9 +184,10 @@
                         </form>
                     </div>
                     <h3># Resources</h3>
+                    <div th:if="${#lists.size(rlist) == 0}">리소스 관련 휴지통이 비었습니다.</div>
                 </div>
             </div>
-            <div class="accordion" id="accordionExample" th:each="index:${rlist}">
+            <div class="accordion" id="accordionExample" th:each="index:${rlist}" >
                 <div class="accordion-item" th:if="${index.garbage == true}">
                     <h2 class="accordion-header" th:id="'heading'+${index.id}">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
@@ -244,6 +245,7 @@
             </div>
             <!--  /////////////////////////////////////////////////////////////// -->
             <h3># Details</h3>
+            <div th:if="${#lists.size(adlist) == 0}">Details 관련 휴지통이 비었습니다.</div>
             <div class="accordion" id="accordionExampleDetails" th:each="index:${rlist}">
                 <div th:each="dlist:${adlist}">
                     <div class="accordion-item"

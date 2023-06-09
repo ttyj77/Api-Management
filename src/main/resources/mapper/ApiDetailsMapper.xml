@@ -128,6 +128,16 @@
         where ad.uri ILIKE CONCAT('%', #{keyword},'%')
         OR ad.summary ILIKE CONCAT('%', #{keyword},'%');
     </select>
+    <select id="SearchDetail" parameterType="string" resultType="com.ipa.openapi_inzent.model.ApiDetailsDTO">
+        select r."apisId", r.id as resource_id, ad.id, ad."resourceId", ad.method, ad.url, ad.uri, ad.summary,
+        r.garbage,
+        ad.security, ad.scope, ad."operationId", ad.version, ad.status, ad."authorization", r."tagId", ad.trash from
+        public.resource as r
+        join public."apiDetails" as ad
+        on ad."resourceId" = r."id"
+        where ad.uri ILIKE CONCAT('%', #{keyword},'%')
+        OR ad.summary ILIKE CONCAT('%', #{keyword},'%');
+    </select>
     <!--현재 들어온 api에 해당하는 resource 리스트 출력-->
     <select id="searchPath" parameterType="hashmap" resultType="com.ipa.openapi_inzent.model.ApiDetailsDTO">
         <!-- uri,method 받아오면 된다. /v1/insu -->

@@ -47,9 +47,9 @@ public class ApiController {
         UserDTO userDTO = userDetails.getUserDTO();
         System.out.println("userDTO = " + userDTO);
 
-        if (userDTO == null) {
-            return "redirect:/user/login";
-        }
+//        if (userDTO == null) {
+//            return "redirect:/user/login";
+//        }
         System.out.println("ApiController.apis============================================");
         // 순수 apis 목록
         List<ApiDTO> apisList = apiService.selectAll();
@@ -279,6 +279,8 @@ public class ApiController {
         List<ApiDetailsDTO> apiDetailsDTOList = apiDetailsService.detailsList(apisId);
         List<TagDTO> tagList = apiDetailsService.selectAllTag();
 
+        System.out.println("apisId = " + apisId);
+        System.out.println("resourceList = " + resourceList);
         model.addAttribute("api", a);
         model.addAttribute("resourceIndex", resourceList);
         model.addAttribute("apiDetailsDTOList", apiDetailsDTOList);

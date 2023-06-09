@@ -1,4 +1,5 @@
 function detailModal(value) {
+
     // console.log(value.children())
     // $("#detailModal").modal('show')
     // let details = value.lastElementChild.lastElementChild;
@@ -15,6 +16,7 @@ function detailModal(value) {
         method: "get",
 
         success: (message) => {
+            console.log("detailModal!!!!")
             console.log(message)
             let parameterList = JSON.parse(message.parameterList)
             console.log(parameterList)
@@ -25,6 +27,9 @@ function detailModal(value) {
             console.log(message.uri)
             document.getElementById("dModal_method").innerText = message.method
             document.getElementById("dModal_summary").innerText = message.summary.replace(/\"/gi, "");
+
+            document.getElementById("summary").innerText = message.summary.replace(/\"/gi, "");
+            document.getElementById("methodUrl").innerText = message.method + " | " + message.uri;
             let operationId = document.getElementById("dModal_operationId")
             operationId.innerText = message.operationId.replace(/\"/gi, "");
 
@@ -67,7 +72,6 @@ function detailModal(value) {
             console.log("출력실패", e)
         }
     })
-
     showResData(value)
 }
 
