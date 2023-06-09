@@ -10,6 +10,7 @@ import com.ipa.openapi_inzent.service.ApiService;
 import com.ipa.openapi_inzent.service.RoleService;
 import com.ipa.openapi_inzent.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -41,9 +42,11 @@ public class ApiController {
     }
 
     @GetMapping("")
-    public String apis(Model model, HttpSession session) {
+    public String apis(Model model, HttpSession session, @AuthenticationPrincipal UserCustomDetails userDetails) {
         // 로그인 정보
-        UserDTO userDTO = (UserDTO) session.getAttribute("logIn");
+        UserDTO userDTO = userDetails.getUserDTO();
+        System.out.println("userDTO = " + userDTO);
+
         if (userDTO == null) {
             return "redirect:/user/login";
         }
@@ -69,6 +72,8 @@ public class ApiController {
         System.out.println("apisList = " + apisList);
         System.out.println("apisRoleList = " + apisRoleList);
 
+
+
         // APIs들 최종 리스트에 추가
         for (ApiDTO a : apisList) {
             if (a.isDisclosure()) {
@@ -82,6 +87,21 @@ public class ApiController {
         }
 
         System.out.println("noShow = " + noShow);
+
+        for (RoleDTO r : apisRoleList) {
+            for (int id : noShow) {
+                if (r.getApisId() == id) {
+                    RoleDTO roleDTO = new RoleDTO();
+                    roleDTO.setRoleId(r.getRoleId());
+                    roleDTO.setCode(r.getCode());
+                    roleDTO.setApisId(r.getApisId());
+                    noShowRoles.add(roleDTO);
+                } else if (r.getApisId() != id){
+//                    nothing.add(r.getApisId());
+                }
+            }
+        }
+
         // 비공개이면서 지정된 role이 없는 APIs => 관리자만 볼 수 있음
         for (RoleDTO r : apisRoleList) {
             for (int id : noShow) {
@@ -114,20 +134,6 @@ public class ApiController {
 
 
 
-        for (RoleDTO r : apisRoleList) {
-            for (int id : noShow) {
-                if (r.getApisId() == id) {
-                    RoleDTO roleDTO = new RoleDTO();
-                    roleDTO.setRoleId(r.getRoleId());
-                    roleDTO.setCode(r.getCode());
-                    roleDTO.setApisId(r.getApisId());
-                    noShowRoles.add(roleDTO);
-                } else if (r.getApisId() != id){
-//                    nothing.add(r.getApisId());
-                }
-            }
-        }
-
         System.out.println("nothing = " + nothing);
 
         System.out.println("noShowRoles = " + noShowRoles);
@@ -135,13 +141,9 @@ public class ApiController {
         System.out.println("session = " + userDTO);
         System.out.println("-------------------------");
 
-//        if (userDTO.getId() == ) {
-//
-//        }
 
         System.out.println("passList = " + passList);
         model.addAttribute("list", passList);
-//        model.addAttribute("roles", apisRoleList);
 
         return "/apis/index";
     }

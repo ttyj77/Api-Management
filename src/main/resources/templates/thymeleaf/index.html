@@ -100,10 +100,11 @@
                 <button sec:authorize="isAnonymous()" class="btn btn-primary mr-1" onclick="checkWeb()">로그인
                     <i class="fa-solid fa-user"></i>
                 </button>
-                <button sec:authorize="isAuthenticated()" type="button" class="btn btn-success mr-1"
-                        th:onclick="|location.href='/user/mypage/'+${session.logIn.id}|">
-                    내정보 <i class="fa-solid fa-user"></i>
-                </button>
+<!--                <button sec:authorize="isAuthenticated()" type="button" class="btn btn-success mr-1"-->
+<!--                        th:onclick="|location.href='/user/mypage/'+${session.logIn.id}|">-->
+<!--                    내정보 <i class="fa-solid fa-user"></i>-->
+<!--                </button>-->
+<!--                <div th:text="${userDetails}"-->
                 <button sec:authorize="isAuthenticated()" type="button" class="btn btn-danger mr-1" onclick="location.href='/logout'">로그아웃
                     <i class="fa-solid fa-arrow-right-from-bracket"></i>
                 </button>
