@@ -184,15 +184,16 @@
                         </form>
                     </div>
                     <h3># Resources</h3>
-                    <div th:if="${#lists.size(rlist) == 0}">리소스 관련 휴지통이 비었습니다.</div>
+                    <div th:if="${#lists.size(resourceTrashList) == 0}">리소스 관련 휴지통이 비었습니다.</div>
                 </div>
             </div>
-            <div class="accordion" id="accordionExample" th:each="index:${rlist}" >
-                <div class="accordion-item" th:if="${index.garbage == true}">
-                    <h2 class="accordion-header" th:id="'heading'+${index.id}">
+            <div class="accordion" id="accordionExample" th:each="index:${resourceTrashList}"
+                 th:if="${index.garbage == true}">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" th:id="'reHeading'+${index.id}">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                th:data-bs-target="'#collapse'+ ${index.id}" aria-expanded="false"
-                                th:aria-controls="'collapse'+ ${index.id}">
+                                th:data-bs-target="'#Recollapse'+ ${index.id}" aria-expanded="false"
+                                th:aria-controls="'Recollapse'+ ${index.id}">
                             <div class="w-100 mr-2">
                                 <span th:text="${index.uri}"></span>
                             </div>
@@ -203,12 +204,62 @@
                                 <i th:id="${index.id}" th:resource="${index.uri}" onclick="completeDelete(this)"
                                    style="cursor: pointer;"
                                    class="fa-solid fa-trash-can"></i>
-                                <!--                                <a href="javascript:void(0);" onclick="completeDelete(); return false;">-->
-                                <!--                                </a>-->
                             </div>
                         </button>
                     </h2>
 
+                    <div th:id="'Recollapse'+${index.id}" class="accordion-collapse collapse"
+                         th:aria-labelledby="'reHeading'+${index.id}">
+                        <div class="accordion-body">
+                            <table class="table table-hover demo02">
+                                <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col">Method</th>
+                                    <th scope="col">URI</th>
+                                    <th scope="col">Summary</th>
+                                    <th scope="col">Security</th>
+                                    <th scope="col">Operation ID</th>
+                                    <th scope="col">Version</th>
+                                    <th scope="col">else</th>
+                                </tr>
+                                </thead>
+                                <div th:each="dlist:${adlist}"
+                                     th:if="${index.id == dlist.resourceId}">
+                                    <tbody>
+                                    <div th:each="dlist:${adlist}" th:if="${index.id == dlist.resourceId}">
+                                        <tr onclick="location.href='#'" style="cursor: pointer">
+                                            <td th:text="${dlist?.method}"></td>
+                                            <td th:text="${dlist?.uri}"></td>
+                                            <td th:text="${dlist?.summary}"></td>
+                                            <td th:text="${dlist?.security}"></td>
+                                            <td th:text="${dlist?.operationId}"></td>
+                                            <td th:text="${dlist?.version}"></td>
+                                            <td></td>
+                                        </tr>
+                                    </div>
+                                    </tbody>
+                                </div>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--  /////////////////////////////////////////////////////////////// -->
+            <h3># Details</h3>
+            <div th:if="${#lists.size(adlist) == 0}">Details 관련 휴지통이 비었습니다.</div>
+            <div class="accordion" id="accordionExampleDetails" th:each="index:${rlist}">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" th:id="'heading'+${index.id}">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                th:data-bs-target="'#collapse'+ ${index.id}" aria-expanded="false"
+                                th:aria-controls="'collapse'+ ${index.id}">
+                            <div class="w-100 mr-2">
+
+                                <span th:text="${index.uri}"></span>
+                            </div>
+                        </button>
+                    </h2>
+                    <!--                        <h3 th:text="${dlist}"></h3>-->
                     <div th:id="'collapse'+${index.id}" class="accordion-collapse collapse"
                          th:aria-labelledby="'heading'+${index.id}">
                         <div class="accordion-body">
@@ -224,9 +275,10 @@
                                     <th scope="col">else</th>
                                 </tr>
                                 </thead>
-                                <tbody>
-                                <div th:each="dlist:${adlist}" th:if="${index.id == dlist.resourceId}">
-
+                                <div th:each="dlist:${adlist}"
+                                     th:if="${index.id == dlist.resourceId and dlist.trash == true}">
+                                    <tbody>
+                                    <!--                                    <div th:each="dlist:${adlist}" th:if="${index.id == dlist.resourceId}">-->
                                     <tr onclick="location.href='#'" style="cursor: pointer">
                                         <td th:text="${dlist?.method}"></td>
                                         <td th:text="${dlist?.uri}"></td>
@@ -234,97 +286,47 @@
                                         <td th:text="${dlist?.security}"></td>
                                         <td th:text="${dlist?.operationId}"></td>
                                         <td th:text="${dlist?.version}"></td>
-                                        <td></td>
+                                        <td>
+                                            <i th:id="${dlist.id}"
+                                               onclick="goReturn(this)" id="return"
+                                               style="cursor: pointer;"
+                                               class="fa-solid fa-rotate-left"></i>
+                                            <div id="tooltipReturn">복구</div>
+                                            <i th:id="${dlist.id}"
+                                               onclick="completeDelete(this)" id="trash"
+                                               style="cursor: pointer;"
+                                               class="fa-solid fa-trash-can"></i>
+                                            <div id="tooltipTrash">완전 삭제</div>
+                                        </td>
                                     </tr>
-                                </div>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!--  /////////////////////////////////////////////////////////////// -->
-            <h3># Details</h3>
-            <div th:if="${#lists.size(adlist) == 0}">Details 관련 휴지통이 비었습니다.</div>
-            <div class="accordion" id="accordionExampleDetails" th:each="index:${rlist}">
-                <div th:each="dlist:${adlist}">
-                    <div class="accordion-item"
-                         th:if="${index.garbage == false and dlist.trash == true and index.id == dlist.resourceId}">
-                        <h2 class="accordion-header" th:id="'heading'+${index.id}">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                    th:data-bs-target="'#collapse'+ ${index.id}" aria-expanded="false"
-                                    th:aria-controls="'collapse'+ ${index.id}">
-                                <div class="w-100 mr-2">
-                                    <span th:text="${index.uri}"></span>
-                                </div>
-                            </button>
-                        </h2>
-                        <div th:id="'collapse'+${index.id}" class="accordion-collapse collapse"
-                             th:aria-labelledby="'heading'+${index.id}">
-
-                            <div class="accordion-body">
-                                <table class="table table-hover demo02">
-                                    <thead class="thead-dark">
-                                    <tr>
-                                        <th scope="col">Method</th>
-                                        <th scope="col">URI</th>
-                                        <th scope="col">Summary</th>
-                                        <th scope="col">Security</th>
-                                        <th scope="col">Operation ID</th>
-                                        <th scope="col">Version</th>
-                                        <th scope="col">else</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <div th:each="dlist:${adlist}" th:if="${index.id == dlist.resourceId}">
-                                        <tr onclick="location.href='#'" style="cursor: pointer">
-                                            <td th:text="${dlist?.method}"></td>
-                                            <td th:text="${dlist?.uri}"></td>
-                                            <td th:text="${dlist?.summary}"></td>
-                                            <td th:text="${dlist?.security}"></td>
-                                            <td th:text="${dlist?.operationId}"></td>
-                                            <td th:text="${dlist?.version}"></td>
-                                            <td>
-                                                <i th:id="${dlist.id}"
-                                                   onclick="goReturn(this)" id="return"
-                                                   style="cursor: pointer;"
-                                                   class="fa-solid fa-rotate-left"></i>
-                                                <div id="tooltipReturn">복구</div>
-                                                <i th:id="${dlist.id}"
-                                                   onclick="completeDelete(this)" id="trash"
-                                                   style="cursor: pointer;"
-                                                   class="fa-solid fa-trash-can"></i>
-                                                <div id="tooltipTrash">완전 삭제</div>
-                                            </td>
-                                        </tr>
-                                    </div>
+                                    <!--                                    </div>-->
                                     </tbody>
-                                </table>
-                            </div>
+                            </table>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <div class="w-100 d-flex justify-content-center">
-        <ul class="pagination">
-            <li class="page-item">
-                <a class="page-link" href="#" aria-label="Previous">
-                    <span aria-hidden="true">«</span>
-                </a>
-            </li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item">
-                <a class="page-link" href="#" aria-label="Next">
-                    <span aria-hidden="true">»</span>
-                </a>
-            </li>
-        </ul>
-    </div>
+<div class="w-100 d-flex justify-content-center">
+    <ul class="pagination">
+        <li class="page-item">
+            <a class="page-link" href="#" aria-label="Previous">
+                <span aria-hidden="true">«</span>
+            </a>
+        </li>
+        <li class="page-item"><a class="page-link" href="#">1</a></li>
+        <li class="page-item"><a class="page-link" href="#">2</a></li>
+        <li class="page-item"><a class="page-link" href="#">3</a></li>
+        <li class="page-item">
+            <a class="page-link" href="#" aria-label="Next">
+                <span aria-hidden="true">»</span>
+            </a>
+        </li>
+    </ul>
+</div>
 </div>
 </div>
 <!-- /.container-fluid -->

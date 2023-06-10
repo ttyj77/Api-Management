@@ -2,19 +2,19 @@ package com.ipa.openapi_inzent.controller;
 
 import com.ipa.openapi_inzent.config.auth.UserCustomDetails;
 import com.ipa.openapi_inzent.service.UserService;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
@@ -38,7 +38,7 @@ public class AppController {
 
 
     @GetMapping("/app/main")
-    public String main(Model model,@AuthenticationPrincipal UserCustomDetails userDetails) throws UnsupportedEncodingException {
+    public String main(Model model, @AuthenticationPrincipal UserCustomDetails userDetails) throws UnsupportedEncodingException {
         System.out.println("userDetails = " + userDetails);
 
         if (userDetails == null) {
@@ -46,7 +46,7 @@ public class AppController {
             String errorMessage = "아이디와 비밀번호를 확인해주세요.";
 
             errorMessage = URLEncoder.encode(errorMessage, "UTF-8");
-            return "redirect:/app/login?error=true&exception="+errorMessage;
+            return "redirect:/app/login?error=true&exception=" + errorMessage;
         }
 
 
@@ -95,7 +95,6 @@ public class AppController {
 
 
     // ### 투자 ###
-
 
 
     // ### 보험 ###

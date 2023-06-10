@@ -22,6 +22,8 @@ public interface ApiDetailsDao {
 
     List<ResourceDTO> goTrashResource() throws DataAccessException;
 
+    List<ResourceDTO> resourceTrashList() throws DataAccessException;
+
     List<ApiDetailsDTO> goTrashDetail() throws DataAccessException;
 
     void completeDelete(int id) throws DataAccessException;
