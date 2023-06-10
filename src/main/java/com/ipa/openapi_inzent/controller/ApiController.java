@@ -9,7 +9,6 @@ import com.ipa.openapi_inzent.service.ApiService;
 import com.ipa.openapi_inzent.service.RoleService;
 import com.ipa.openapi_inzent.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -64,7 +63,6 @@ public class ApiController {
         // apis 페이지에 보낼 최종 APIs 목록
         List<ApiDTO> passList = new ArrayList<>();
 
-
         // 비공개 + role 지정 없는 애들 넣을 목록
         List<Integer> nothing = new ArrayList<>();
 
@@ -72,13 +70,12 @@ public class ApiController {
         System.out.println("apisRoleList = " + apisRoleList);
 
 
-
         // APIs들 최종 리스트에 추가
         for (ApiDTO a : apisList) {
             if (a.isDisclosure()) {
                 // 공개인 APIs
                 passList.add(a);
-            } else if (!a.isDisclosure()){
+            } else if (!a.isDisclosure()) {
                 // 비공개인 APIs
                 noShow.add(a.getId());
                 temp.add(a.getId());
@@ -95,7 +92,7 @@ public class ApiController {
                     roleDTO.setCode(r.getCode());
                     roleDTO.setApisId(r.getApisId());
                     noShowRoles.add(roleDTO);
-                } else if (r.getApisId() != id){
+                } else if (r.getApisId() != id) {
 //                    nothing.add(r.getApisId());
                 }
             }
@@ -132,7 +129,6 @@ public class ApiController {
         }
 
 
-
         System.out.println("nothing = " + nothing);
 
         System.out.println("noShowRoles = " + noShowRoles);
@@ -161,12 +157,12 @@ public class ApiController {
             JsonObject object1 = new JsonObject();
             // 모든 비공개인 것들
             if (!a.isDisclosure()) {
-                object1.addProperty("apisId",a.getId());
+                object1.addProperty("apisId", a.getId());
                 jsonArray.add(object1);
             }
         }
 
-        object.addProperty("apisList",jsonArray.toString());
+        object.addProperty("apisList", jsonArray.toString());
 
         System.out.println("list = " + list);
 
@@ -175,9 +171,9 @@ public class ApiController {
             JsonObject jsonObject = new JsonObject();
             // 역할 있는 비공개인 것들
             if (!apiDTO.isDisclosure()) {
-                jsonObject.addProperty("apisId",apiDTO.getApisId());
-                jsonObject.addProperty("roleId",apiDTO.getRoleId());
-                jsonObject.addProperty("code",apiDTO.getCode());
+                jsonObject.addProperty("apisId", apiDTO.getApisId());
+                jsonObject.addProperty("roleId", apiDTO.getRoleId());
+                jsonObject.addProperty("code", apiDTO.getCode());
                 array1.add(jsonObject);
             }
         }
@@ -350,11 +346,11 @@ public class ApiController {
         if (roleId.isEmpty()) {
             System.out.println("선택된 ROLE 없음");
         } else {
-                for (String role : roleId) {
-                    apisRoleDTO.setRoleId(Integer.parseInt(role));
-                    System.out.println("apisRoleDTO = " + apisRoleDTO);
-                    apiService.insertRole(apisRoleDTO);
-                }
+            for (String role : roleId) {
+                apisRoleDTO.setRoleId(Integer.parseInt(role));
+                System.out.println("apisRoleDTO = " + apisRoleDTO);
+                apiService.insertRole(apisRoleDTO);
+            }
 
         }
         return "redirect:/api";
@@ -620,10 +616,12 @@ public class ApiController {
     @GetMapping("/trash")
     public String apiTrash(Model model) {
         List<ResourceDTO> rlist = apiDetailsService.goTrashResource();
+        List<ResourceDTO> resourceTrashList = apiDetailsService.resourceTrashList();
         List<ApiDetailsDTO> adlist = apiDetailsService.goTrashDetail();
         List<ApiDetailsDTO> temp = new ArrayList<>();
 
         model.addAttribute("rlist", rlist);
+        model.addAttribute("resourceTrashList", resourceTrashList);
         model.addAttribute("adlist", adlist);
 
         return "/apis/trash";

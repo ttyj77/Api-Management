@@ -40,6 +40,9 @@ public class ApiDetailsService {
     public List<ResourceDTO> goTrashResource() {
         return apiDetailsDao.goTrashResource();
     }
+    public List<ResourceDTO> resourceTrashList() {
+        return apiDetailsDao.resourceTrashList();
+    }
 
     public List<ApiDetailsDTO> goTrashDetail() {
         return apiDetailsDao.goTrashDetail();

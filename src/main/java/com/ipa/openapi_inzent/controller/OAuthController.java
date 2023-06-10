@@ -1,15 +1,16 @@
-//package com.ipa.openapi_inzent.controller;
-//
-//import com.ipa.openapi_inzent.model.OauthToken;
-//import kong.unirest.Unirest;
-//import org.apache.commons.codec.binary.Base64;
-//import org.springframework.web.bind.annotation.RequestMapping;
-//import org.springframework.web.bind.annotation.RequestParam;
-//import org.springframework.web.bind.annotation.RestController;
-//
-//@RestController
-//public class OAuthController {
-//
+package com.ipa.openapi_inzent.controller;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class OAuthController {
+
+    @GetMapping("/authorized")
+    public void authorized() {
+        System.out.println("OAuthController.authorized");
+    }
+
 //    // 클라이언트가 구현해야하는 코드 - 발급 받은 코드로 토큰 발행
 //    @RequestMapping("/callback")
 //    public OauthToken.response code(@RequestParam String code) {
@@ -33,4 +34,4 @@
 //        return oauthToken;
 //    }
 //
-//}
+}
