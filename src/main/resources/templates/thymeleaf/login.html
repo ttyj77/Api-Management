@@ -173,6 +173,28 @@
                         </p>
                     </div>
                 </form>
+                <a href="http://localhost:9000/oauth2/authorize
+?client_id=client
+&redirect_uri=http://127.0.0.1:8000/authorized
+&scope=openid
+&response_type=code
+&response_mode=form_post
+&code_challenge_method=S256
+&code_challenge=DQJMSJKBRbJ2HM0iB23mAY7HIxDxOxIAxn3RuPH44EQ
+&state=oy3rwjvk1z
+&nonce=13wvazekn9o">인젠트 로그인으로 이동하기</a>
+                <form action="http://localhost:9000/oauth2/authorize" method="post">
+                    <input type="hidden" name="client_id" value="client"/>
+                    <input type="hidden" name="redirect_uri" value="http://127.0.0.1:8000/authorized"/>
+                    <input type="hidden" name="scope" value="openid"/>
+                    <input type="hidden" name="response_type" value="code"/>
+                    <input type="hidden" name="response_mode" value="form_post"/>
+                    <input type="hidden" name="code_challenge_method" value="S256"/>
+                    <input type="hidden" name="code_challenge" value="DQJMSJKBRbJ2HM0iB23mAY7HIxDxOxIAxn3RuPH44EQ"/>
+                    <input type="hidden" name="state" value="97jexss3jm"/>
+                    <input type="hidden" name="nonce" value="n3zbsrsr9fs"/>
+                    <button type="submit" class="btn btn-danger">인젠트 로그인</button>
+                </form>
             </div>
             <div class="form-wrapper">
             </div>
