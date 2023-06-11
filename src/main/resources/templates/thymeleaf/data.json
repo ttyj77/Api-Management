@@ -1,0 +1,65 @@
+{
+  "res_msg" : "성공",
+  "res_code": "00000",
+  "next_page" : "",
+  "trans_cnt" : "6",
+  "trans_list" : [
+    {
+      "trans_dtime": "20230611134015",
+      "trans_no" : "20230611",
+      "trans_type" : "03",
+      "trans_class" : "인터넷뱅킹",
+      "currency_code" : "KRW",
+      "trans_amt" : "500000",
+      "balance_amt" : "600000"
+    },
+    {
+      "trans_dtime": "20230611202711",
+      "trans_no" : "20230611",
+      "trans_type" : "02",
+      "trans_class" : "쿠팡",
+      "currency_code" : "KRW",
+      "trans_amt" : "34000",
+      "balance_amt" : "566000"
+    },
+    {
+      "trans_dtime": "20230612125124",
+      "trans_no" : "20230612",
+      "trans_type" : "02",
+      "trans_class" : "스타벅스 삼성타운점",
+      "currency_code" : "KRW",
+      "trans_amt" : "7200",
+      "balance_amt" : "558800"
+    },
+    {
+      "trans_dtime": "20230612151204",
+      "trans_no" : "20230612",
+      "trans_type" : "02",
+      "trans_class" : "CU삼성타운점",
+      "currency_code" : "KRW",
+      "trans_amt" : "3200",
+      "balance_amt" : "555600"
+    },
+    {
+      "trans_dtime": "20230615134032",
+      "trans_no" : "20230615",
+      "trans_type" : "03",
+      "trans_class" : "(주)인젠트",
+      "currency_code" : "KRW",
+      "trans_amt" : "200000",
+      "balance_amt" : "755600"
+    },
+    {
+      "trans_dtime": "20230615231745",
+      "trans_no" : "20230615",
+      "trans_type" : "02",
+      "trans_class" : "(주)우아한형제",
+      "currency_code" : "KRW",
+      "trans_amt" : "31050",
+      "balance_amt" : "724550"
+    }
+  ]
+}
+
+
+

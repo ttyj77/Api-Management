@@ -127,7 +127,7 @@
             // 각 버튼
             if (category == "card") {
                 // 목록 이름
-                document.getElementById('listName').innerText = " 카드 목록";
+                document.getElementById('listName').innerText = "My 카드 목록";
                 $('.btn-plus').attr("onclick", "location.href='/app/card/insert'");
 
 
@@ -143,20 +143,19 @@
                 // });
             } else if (category == "bank") {
                 // 목록 이름
-                document.getElementById('listName').innerText = " 은행 목록";
+                document.getElementById('listName').innerText = " My 은행 목록";
                 $('.btn-plus').attr("onclick", "location.href='/app/bank/insert'");
 
 
-                // ajax로 목록 만들기
-                // $.ajax({
-                //     url:"app/cardList",
-                //     data:data,
-                //     type:"get",
-                //
-                //     success: (message) => {
-                //
-                //     }
-                // });
+                $.ajax({
+                    url:"/app/bank/myAccount",
+                    data:data,
+                    type:"post",
+
+                    success: (message) => {
+
+                    }
+                });
             } else if (category == "invest") {
                 // 목록 이름
                 document.getElementById('listName').innerText = " 투자 목록";

@@ -1,6 +1,9 @@
 package com.ipa.openapi_inzent.controller;
 
+import com.google.gson.JsonObject;
 import com.ipa.openapi_inzent.config.auth.UserCustomDetails;
+import com.ipa.openapi_inzent.model.GetDataDTO;
+import com.ipa.openapi_inzent.service.GetDataService;
 import com.ipa.openapi_inzent.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -8,23 +11,24 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.List;
 
 @Controller
 public class AppController {
 
     UserService userService;
+    GetDataService getDataService;
 
     @Autowired
-    public AppController(UserService userService) {
+    public AppController(UserService userService, GetDataService getDataService) {
+        this.getDataService = getDataService;
         this.userService = userService;
     }
 
@@ -91,6 +95,18 @@ public class AppController {
     public String bank() {
 
         return "/app/bankInsert";
+    }
+
+    @PostMapping("/app/bank/myAccount")
+    @ResponseBody
+    public JsonObject myAccount(String clientNum) {
+        JsonObject object = new JsonObject();
+        List<GetDataDTO> list = getDataService.selectAll(clientNum);
+
+        System.out.println("list = " + list);
+
+
+        return object;
     }
 
 
