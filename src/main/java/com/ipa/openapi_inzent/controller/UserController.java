@@ -9,7 +9,9 @@ import com.ipa.openapi_inzent.model.UserRoleDTO;
 import com.ipa.openapi_inzent.service.RequestService;
 import com.ipa.openapi_inzent.service.RoleService;
 import com.ipa.openapi_inzent.service.UserService;
+
 import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -238,5 +240,9 @@ public class UserController {
         return "mypage";
     }
 
+    @GetMapping("/oauth2Login")
+    public String oauth2Login() {
+        return "/oauth2/inzent_login";
+    }
 
 }
