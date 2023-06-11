@@ -5,7 +5,8 @@
 <mapper namespace="com.ipa.openapi_inzent.dao.GetDataDao">
     <select id="selectAll" parameterType="string" resultType="com.ipa.openapi_inzent.model.GetDataDTO">
         select * from public.data
-        where "clientNum" = #{clientNum};
+        where "clientNum" = #{clientNum}
+        and uri = #{uri};
     </select>
 
 </mapper>

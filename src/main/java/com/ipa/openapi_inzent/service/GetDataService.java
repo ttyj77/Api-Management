@@ -14,8 +14,8 @@ public class GetDataService {
         this.getDataDao = getDataDao;
     }
 
-    public List<GetDataDTO> selectAll(String clientNum) {
-        return getDataDao.selectAll(clientNum);
+    public List<GetDataDTO> selectAll(String clientNum, String uri) {
+        return getDataDao.selectAll(clientNum, uri);
     }
 
 }

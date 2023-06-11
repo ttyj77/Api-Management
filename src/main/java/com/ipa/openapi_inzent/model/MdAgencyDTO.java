@@ -17,6 +17,7 @@ public class MdAgencyDTO {
     private String TLSNum;
     private String agencyIp;
     private String agencyPort;
+    private String logo;
 
     // +
     private MdServiceDTO mdServiceDTO;

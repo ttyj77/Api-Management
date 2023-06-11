@@ -20,7 +20,6 @@ public class MydataService {
     }
 
     public List<MdAgencyDTO> mdAgencySelectAll() {
-        System.out.println("MydataService.mdAgencySelectAll >> " + mydataDao.mdAgencySelectAll());
         return mydataDao.mdAgencySelectAll();
     }
 

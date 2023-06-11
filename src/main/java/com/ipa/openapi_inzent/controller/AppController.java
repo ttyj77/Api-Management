@@ -1,9 +1,13 @@
 package com.ipa.openapi_inzent.controller;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.ipa.openapi_inzent.config.auth.UserCustomDetails;
 import com.ipa.openapi_inzent.model.GetDataDTO;
+import com.ipa.openapi_inzent.model.MdAgencyDTO;
 import com.ipa.openapi_inzent.service.GetDataService;
+import com.ipa.openapi_inzent.service.MydataService;
 import com.ipa.openapi_inzent.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -25,11 +29,13 @@ public class AppController {
 
     UserService userService;
     GetDataService getDataService;
+    MydataService mydataService;
 
     @Autowired
-    public AppController(UserService userService, GetDataService getDataService) {
+    public AppController(UserService userService, GetDataService getDataService, MydataService mydataService) {
         this.getDataService = getDataService;
         this.userService = userService;
+        this.mydataService = mydataService;
     }
 
     @GetMapping("/app/login")
@@ -42,7 +48,7 @@ public class AppController {
 
 
     @GetMapping("/app/main")
-    public String main(Model model,@AuthenticationPrincipal UserCustomDetails userDetails) throws UnsupportedEncodingException {
+    public String main(Model model, @AuthenticationPrincipal UserCustomDetails userDetails) throws UnsupportedEncodingException {
         System.out.println("userDetails = " + userDetails);
 
         if (userDetails == null) {
@@ -50,7 +56,7 @@ public class AppController {
             String errorMessage = "아이디와 비밀번호를 확인해주세요.";
 
             errorMessage = URLEncoder.encode(errorMessage, "UTF-8");
-            return "redirect:/app/login?error=true&exception="+errorMessage;
+            return "redirect:/app/login?error=true&exception=" + errorMessage;
         }
 
 
@@ -100,18 +106,95 @@ public class AppController {
     @PostMapping("/app/bank/myAccount")
     @ResponseBody
     public JsonObject myAccount(String clientNum) {
+        // 계좌 정보 조회 api resources
+        String uri_1 = "/accounts";
+        String uri_2 = "/accounts/deposit/detail";
+        List<GetDataDTO> list1 = getDataService.selectAll(clientNum, uri_1);
+        List<GetDataDTO> list2 = getDataService.selectAll(clientNum, uri_2);
+        List<MdAgencyDTO> agencyDTOList = mydataService.mdAgencySelectAll();
         JsonObject object = new JsonObject();
-        List<GetDataDTO> list = getDataService.selectAll(clientNum);
 
-        System.out.println("list = " + list);
+        JsonArray array = new JsonArray();
+        System.out.println("list = " + list1);
+        System.out.println("list2 = " + list2);
+        for (GetDataDTO g : list1) {
+            JsonParser parser = new JsonParser();
+            JsonObject jsonObject = (JsonObject) parser.parse(g.getResponseData());
+            JsonObject jsonObject1 = (JsonObject) parser.parse(g.getRequestData());
+
+            array.add(jsonObject1);
+            array.add(jsonObject);
+
+        }
+
+        JsonArray array1 = new JsonArray();
+
+        for (MdAgencyDTO m : agencyDTOList) {
+            JsonObject object1 = new JsonObject();
+            object1.addProperty("org_code", m.getCode());
+            object1.addProperty("bankName", m.getName());
+            object1.addProperty("logo", m.getLogo());
+
+            array1.add(object1);
+        }
+
+        // 잔액 가져오기 위해
+        JsonArray array2 = new JsonArray();
+
+        for (GetDataDTO getDataDTO : list2) {
+            JsonParser parser = new JsonParser();
+            JsonObject jsonObject = (JsonObject) parser.parse(getDataDTO.getResponseData());
+
+            array2.add(jsonObject);
+
+        }
+
+        object.addProperty("bankList", array.toString());
+        object.addProperty("agency", array1.toString());
+        object.addProperty("balance", array2.toString());
 
 
+        System.out.println("object = " + object);
         return object;
     }
 
+    @GetMapping("/app/bank/transactions/{account}")
+    public String bankDetail(Model model, @AuthenticationPrincipal UserCustomDetails userDetails, @PathVariable String account) {
+
+        System.out.println("account = " + account);
+        if (userDetails.getUserDTO() == null) {
+            return "redirect:/app/login";
+        }
+        String clientNum = userDetails.getUserDTO().getOwnNum();
+
+        String uri_1 = "/accounts";
+        String uri_2 = "/accounts/deposit/transactions";
+        List<GetDataDTO> list = getDataService.selectAll(clientNum, uri_1);
+        List<GetDataDTO> list2 = getDataService.selectAll(clientNum, uri_2);
+
+//        int i = 0;
+//        for (GetDataDTO getDataDTO : list) {
+//            JsonParser parser = new JsonParser();
+//            JsonObject jsonObject = (JsonObject) parser.parse(getDataDTO.getResponseData());
+//            jsonObject.get("account_list")[i].get("")
+//        }
+
+
+        model.addAttribute("reqAccountInfo", list.get(0).getRequestData());
+        model.addAttribute("transInfo", list2.get(0));
+        model.addAttribute("accountNum", account);
+
+
+        System.out.println("ll"+list.get(0).getRequestData());
+        System.out.println("list = " + list.get(0));
+        System.out.println("list2 = " + list2.get(0));
+
+        return "/app/bankDetail";
+    }
+
+
 
     // ### 투자 ###
-
 
 
     // ### 보험 ###

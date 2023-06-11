@@ -55,17 +55,19 @@
             /*font-family: 'NanumSquareRound', sans-serif;*/
             /*font-family: 'Nanum Gothic', sans-serif;*/
         }
-        .listHover{
+
+        .listHover {
             border-bottom: 1px solid black;
             padding: 40px 20px;
             display: flex;
             justify-content: space-between;
         }
+
         .listHover:active {
             background-color: #f5f5f5;
         }
 
-        .btn-plus{
+        .btn-plus {
             width: 25%;
             border-radius: 20%;
             height: 85%;
@@ -75,7 +77,8 @@
             font-size: xx-large;
             margin-right: 10px;
         }
-        .btn-minus{
+
+        .btn-minus {
             width: 25%;
             border-radius: 20%;
             height: 85%;
@@ -86,20 +89,20 @@
             margin-left: 10px;
         }
 
-        #targetBox{
+        #targetBox {
             background-color: #91aeff63;
             border-radius: 30px;
             width: 90%;
         }
 
-        #listBox{
+        #listBox {
             display: flex;
             height: 79%;
             justify-content: center;
             margin-top: 3%;
         }
 
-        #listBox-1{
+        #listBox-1 {
             width: 95%;
             height: 100%;
             background-color: #fafafa99;
@@ -107,21 +110,54 @@
             overflow: auto;
         }
 
-        .oneBox{
+        .oneBox {
             margin-top: 2%;
+        }
+
+        .box {
+            border-radius: 70%;
+            overflow: hidden;
+        }
+
+        .profile {
+            width: 100%;
+            object-fit: cover;
+        }
+
+        .bankName {
+            margin: 0px 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .cntAccount {
+            width: 40px;
+            height: 40px;
+            font-size: 27px;
+        }
+
+        .accountList {
+            font-size: xx-large;
+            border-bottom: 1px solid black;
+            padding: 20px 10px;
+        }
+
+        .accountList:active {
+            background-color: #e5ffff;
         }
     </style>
     <script>
         // 각 카테고리 버튼
         function showCategory(value) {
+            let target = document.getElementById('listBox-1');
             // 목록 초기화
-            document.getElementById('listBox-1').innerHTML = "";
+            target.innerHTML = "";
             let category = value.getAttribute("id");
             console.log(category);
             let custnum = value.getAttribute("custnum");
             console.log("custnum = " + custnum);
             let data = {
-                "custnum": custnum,
+                "clientNum": custnum,
             }
 
             // 각 버튼
@@ -148,11 +184,80 @@
 
 
                 $.ajax({
-                    url:"/app/bank/myAccount",
-                    data:data,
-                    type:"post",
+                    url: "/app/bank/myAccount",
+                    data: data,
+                    type: "post",
 
                     success: (message) => {
+                        // 데이터
+                        let reqData = JSON.parse(message.bankList)[0];
+                        let resData = JSON.parse(message.bankList)[1];
+                        let agency = JSON.parse(message.agency);
+                        console.log(agency)
+                        console.log(reqData)
+                        // let reqList = JSON.parse(message)
+                        console.log(resData);
+                        console.log("=====================");
+                        console.log(resData.account_list[0]);
+                        for (let i = 0; i < resData.account_list.length; i++) {
+                            console.log(resData.account_list[i].prod_name);
+                            console.log(resData.account_list[i].account_num);
+
+                            let div_1 = document.createElement("div");
+                            div_1.className = "oneBox";
+                            div_1.id = reqData.org_code;
+                            // $(div_1).attr("onclick", "showAccount()");
+                            let div_2 = document.createElement("div");
+                            div_2.className = "listHover";
+                            div_2.id = reqData.org_code + "1";
+                            let div_3 = document.createElement("div")
+                            div_3.className = "d-flex align-items-center";
+
+                            let h1 = document.createElement("h1");
+                            h1.className = "bankName";
+
+                            let span = document.createElement("span")
+                            span.className = "box";
+                            let img = document.createElement("img");
+                            img.className = "profile";
+                            // 기관 찾기
+                            for (let j = 0; j < agency.length; j++) {
+                                let org_code = agency[j].org_code;
+                                // 은행 로고 + 이름 넣기
+                                if (org_code == reqData.org_code) {
+
+                                    img.src = "/images/bank/" + agency[j].logo;
+                                    h1.innerText = agency[j].bankName;
+                                }
+                            }
+                            let div_4 = document.createElement("div");
+                            div_4.className = "badge badge-secondary cntAccount";
+                            div_4.innerText = resData.account_cnt;
+
+                            span.append(img);
+                            div_3.append(span, h1, div_4);
+                            div_2.append(div_3);
+                            div_1.append(div_2);
+
+                            target.append(div_1);
+
+                            let bankClick = document.getElementById(reqData.org_code + "1");
+                            // 계좌 정보 열려있는지 체크
+                            bankClick.onclick = function () {
+                                // 열려 있으면
+                                if ($('#showCheck').length) {
+                                    console.log("check")
+                                    $('#' + reqData.org_code).css("background-color", "transparent");
+                                    $('#showCheck').remove();
+                                } else {
+                                    console.log("else")
+                                    showAccount(custnum);
+                                }
+                            }
+
+
+                        }
+
 
                     }
                 });
@@ -204,8 +309,61 @@
             }
 
 
+        }
+
+        function showAccount(custNum) {
+            console.log(custNum);
+            let data = {
+                "clientNum": custNum,
+            }
+
+            $.ajax({
+                url: "/app/bank/myAccount",
+                data: data,
+                type: "post",
+
+                success: (message) => {
+                    let reqData = JSON.parse(message.bankList)[0];
+                    let resData = JSON.parse(message.bankList)[1];
+                    let agency = JSON.parse(message.agency);
+                    let balance = JSON.parse(message.balance)[0];
+                    console.log(balance);
+                    console.log("==================");
+
+                    $('#' + reqData.org_code).css("background-color", "#f5f5f5");
+                    for (let i = 0; i < resData.account_list.length; i++) {
+
+                        let div_1 = document.createElement("div");
+                        div_1.className = "accountList";
+                        div_1.id = "showCheck";
+                        let div_2 = document.createElement("div");
+                        div_2.className = "d-flex";
+
+                        let bankName = document.createElement("div");
+                        bankName.innerText = resData.account_list[i].prod_name;
+                        let accountNum = document.createElement("div");
+                        accountNum.className = "text-muted";
+                        accountNum.innerText = "( " + resData.account_list[i].account_num + " )";
+                        let balanceDiv = document.createElement("div");
+                        balanceDiv.className = "d-flex justify-content-end";
+                        balanceDiv.innerText = balance.detail_list[i].balance_amt + " 원"
+
+                        let target = document.getElementById(reqData.org_code);
+
+                        div_2.append(bankName, accountNum);
+                        div_1.append(div_2, balanceDiv);
+
+                        target.append(div_1);
+
+                        div_1.onclick = function () {
+                            location.href = "/app/bank/transactions/" + resData.account_list[i].account_num;
+                        }
+
+                    }
 
 
+                },
+            });
         }
     </script>
 </head>
@@ -314,16 +472,39 @@
                             </h2>
                         </div>
                     </div>
-                    <div class="oneBox">
+                    <div class="oneBox" onclick="showAccount()">
                         <div class="listHover">
-                            <h1>
-                                농협 카드
-                            </h1>
-                            <h2>
-                                630,000원 지출
-                            </h2>
+                            <div class="d-flex align-items-center">
+                                <span class="box"><img class="profile" src="/images/bank/inzent.png"></span>
+                                <h1 class="bankName">인젠트뱅크</h1>
+                                <div class="badge badge-secondary cntAccount">1</div>
+                            </div>
                         </div>
+                        <div class="accountList">
+                            <div class="d-flex">
+                                <div>스무살우리 통장</div>
+                                <div class="text-muted">
+                                    ( 1002192922992 )
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                7024 원
+                            </div>
+                        </div>
+                        <div class="accountList">
+                            <div class="d-flex">
+                                <div>스무살우리 통장</div>
+                                <div class="text-muted">
+                                    ( 1002192922992 )
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                7024 원
+                            </div>
+                        </div>
+
                     </div>
+
                     <div class="oneBox">
                         <div class="listHover">
                             <h1>
@@ -394,8 +575,6 @@
                             </h2>
                         </div>
                     </div>
-
-
 
 
                 </div>

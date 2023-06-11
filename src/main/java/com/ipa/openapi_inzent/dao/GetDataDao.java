@@ -9,5 +9,5 @@ import java.util.List;
 @Mapper
 public interface GetDataDao {
 
-    List<GetDataDTO> selectAll(String clientNum) throws DataAccessException;
+    List<GetDataDTO> selectAll(String clientNum, String uri) throws DataAccessException;
 }
