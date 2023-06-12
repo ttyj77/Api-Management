@@ -37,6 +37,8 @@ public class MydataController {
         return "/mydata/mdAgencyTable";
     }
 
+
+
     /* 마이데이터 기관 목록의 기관정보 모달 */
     @GetMapping("/agencyTable/modal")
     @ResponseBody
@@ -169,6 +171,11 @@ public class MydataController {
     @GetMapping("/statistics-7Day")
     public String statistics_7Day() {
         return "/mydata/statistics-7Day";
+    }
+
+    @GetMapping("/statistics")
+    public String statistics() {
+        return "/mydata/statistics";
     }
 
 
