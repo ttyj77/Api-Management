@@ -10,4 +10,7 @@ import java.util.List;
 public interface GetDataDao {
 
     List<GetDataDTO> selectAll(String clientNum, String uri) throws DataAccessException;
+
+    List<GetDataDTO> accountAll(String account, String clientNum, String uri) throws DataAccessException;
+
 }

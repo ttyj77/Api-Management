@@ -6,6 +6,7 @@ import com.google.gson.JsonParser;
 import com.ipa.openapi_inzent.config.auth.UserCustomDetails;
 import com.ipa.openapi_inzent.model.GetDataDTO;
 import com.ipa.openapi_inzent.model.MdAgencyDTO;
+import com.ipa.openapi_inzent.model.TransactionDataDTO;
 import com.ipa.openapi_inzent.service.GetDataService;
 import com.ipa.openapi_inzent.service.MydataService;
 import com.ipa.openapi_inzent.service.UserService;
@@ -17,11 +18,16 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
+import springfox.documentation.spring.web.json.Json;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -143,8 +149,10 @@ public class AppController {
 
         for (GetDataDTO getDataDTO : list2) {
             JsonParser parser = new JsonParser();
+            JsonObject jsonObject1 = (JsonObject) parser.parse(getDataDTO.getRequestData());
             JsonObject jsonObject = (JsonObject) parser.parse(getDataDTO.getResponseData());
 
+            array2.add(jsonObject1);
             array2.add(jsonObject);
 
         }
@@ -159,39 +167,97 @@ public class AppController {
     }
 
     @GetMapping("/app/bank/transactions/{account}")
-    public String bankDetail(Model model, @AuthenticationPrincipal UserCustomDetails userDetails, @PathVariable String account) {
+    public String bankDetail(Model model, @AuthenticationPrincipal UserCustomDetails userDetails, @PathVariable String account) throws ParseException {
 
         System.out.println("account = " + account);
         if (userDetails.getUserDTO() == null) {
             return "redirect:/app/login";
         }
+
         String clientNum = userDetails.getUserDTO().getOwnNum();
 
-        String uri_1 = "/accounts";
-        String uri_2 = "/accounts/deposit/transactions";
-        List<GetDataDTO> list = getDataService.selectAll(clientNum, uri_1);
-        List<GetDataDTO> list2 = getDataService.selectAll(clientNum, uri_2);
+        String uri_2 = "/accounts/deposit/detail";
+        String uri_3 = "/accounts/deposit/transactions";
+        List<GetDataDTO> balanceList = getDataService.accountAll(account,clientNum, uri_2);
+        List<GetDataDTO> accountList = getDataService.accountAll(account,clientNum, uri_3);
+        List<MdAgencyDTO> agencyDTOList = mydataService.mdAgencySelectAll();
 
-//        int i = 0;
-//        for (GetDataDTO getDataDTO : list) {
-//            JsonParser parser = new JsonParser();
-//            JsonObject jsonObject = (JsonObject) parser.parse(getDataDTO.getResponseData());
-//            jsonObject.get("account_list")[i].get("")
-//        }
+        System.out.println("agencyDTOList = " + agencyDTOList);
 
+        System.out.println("accountList = " + accountList);
 
-        model.addAttribute("reqAccountInfo", list.get(0).getRequestData());
-        model.addAttribute("transInfo", list2.get(0));
+        System.out.println("balanceList = " + balanceList);
+
+        // 은행 명, logo 출력 용
+        JsonObject object = (JsonObject) JsonParser.parseString(accountList.get(0).getRequestData());
+        String org_code = String.valueOf(object.get("org_code"));
+        String org = getString(org_code);
+        System.out.println("org = " + org);
+
+        for (MdAgencyDTO agencyDTO: agencyDTOList){
+            if (agencyDTO.getCode().equals(org)) {
+                model.addAttribute("agencyDTO", agencyDTO);
+                System.out.println("agencyDTO = " + agencyDTO);
+            }
+        }
+
+        // 잔액 용
+        JsonObject object1 = (JsonObject) JsonParser.parseString(balanceList.get(0).getResponseData());
+        System.out.println("================================");
+        System.out.println(object1.get("detail_list"));
+        JsonArray results = object1.get("detail_list").getAsJsonArray();
+        System.out.println("results = " + results);
+        JsonObject object2 = (JsonObject) results.get(0);
+        System.out.println("object2 = " + object2);
+        String balance_amt = String.valueOf(object2.get("balance_amt"));
+        System.out.println("balance = " + balance_amt);
+        String balance = getString(balance_amt);
+        System.out.println("balance = " + balance);
+
+        model.addAttribute("balance", balance);
+
+        // 거래 내역
+        // 거래내역 response Data 넣을 DTO List
+        List<TransactionDataDTO> transList = new ArrayList<>();
+
+        JsonObject jsonObject = (JsonObject) JsonParser.parseString(accountList.get(0).getResponseData());
+        System.out.println("jsonObject = " + jsonObject);
+
+        JsonArray results1 = jsonObject.get("trans_list").getAsJsonArray();
+        System.out.println("results1.size = " + results1.size());
+        System.out.println("results1 = " + results1);
+
+        SimpleDateFormat dayFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+        
+        for (int i = results1.size()-1; i >= 0; i--) {
+            TransactionDataDTO temp = new TransactionDataDTO();
+
+            JsonObject tempJson = (JsonObject) results1.get(i);
+            temp.setTrans_amt(getString(String.valueOf(tempJson.get("trans_amt"))));
+            temp.setTrans_type(getString(String.valueOf(tempJson.get("trans_type"))));
+            temp.setBalance_amt(getString(String.valueOf(tempJson.get("balance_amt"))));
+            temp.setTrans_class(getString(String.valueOf(tempJson.get("trans_class"))));
+            Date date = dayFormat.parse(getString(String.valueOf(tempJson.get("trans_dtime"))));
+            temp.setTrans_dtime(date);
+            temp.setCurrency_code(getString(String.valueOf(tempJson.get("currency_code"))));
+
+            transList.add(temp);
+
+        }
+
+        System.out.println("transList = " + transList);
         model.addAttribute("accountNum", account);
-
-
-        System.out.println("ll"+list.get(0).getRequestData());
-        System.out.println("list = " + list.get(0));
-        System.out.println("list2 = " + list2.get(0));
+        model.addAttribute("transList", transList);
+        System.out.println("model = " + model);
 
         return "/app/bankDetail";
     }
 
+    // "" 없애주는 function
+    private static String getString(String str) {
+        String newStr = str.replaceAll("\\\"", "");
+        return newStr;
+    }
 
 
     // ### 투자 ###

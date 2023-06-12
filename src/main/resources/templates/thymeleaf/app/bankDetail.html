@@ -28,13 +28,14 @@
 
         .listHover {
             border-bottom: 1px solid black;
-            padding: 40px 20px;
-            display: flex;
-            justify-content: space-between;
+            padding: 10px 20px 25px 20px;
+            /*display: flex;*/
+            /*justify-content: space-between;*/
         }
 
-        .listHover:active {
-            background-color: #f5f5f5;
+        .flexBetween{
+            display: flex;
+            justify-content: space-between;
         }
 
         #targetBox {
@@ -52,7 +53,7 @@
 
         #listBox-1 {
             width: 95%;
-            height: 100%;
+            height: 95%;
             background-color: #fafafa99;
             border-radius: 10px;
             overflow: auto;
@@ -60,6 +61,28 @@
 
         .oneBox {
             margin-top: 2%;
+        }
+
+        .fontXL {
+            font-size: xx-large;
+        }
+
+        .fontXXL {
+            font-size: xxx-large;
+        }
+
+        .fontL {
+            font-size: x-large;
+        }
+
+        .box {
+            border-radius: 70%;
+            overflow: hidden;
+        }
+
+        .profile {
+            width: 100%;
+            object-fit: cover;
         }
     </style>
     <script>
@@ -72,39 +95,67 @@
         <h1 class="col-1 text-right mt-5" onclick="history.go(-1)"><</h1>
         <h1 class="col-10 text-center mt-5">계좌조회</h1>
     </div>
-    <div class="d-flex justify-content-center" style="height: 20rem">
+    <div class="d-flex justify-content-center" style="height: 26rem">
         <div class="mt-3" style="background-color: #91aeff63; border-radius: 30px;
     width: 90%;">
             <div>
-                <div>
-                    <div th:text="${reqAccountInfo}"></div>
+                <div class="d-flex p-4 align-items-center">
+                    <span class="box mr-3"><img class="profile" th:src="|/images/bank/${agencyDTO.logo}|"></span>
+                    <div class="fontXXL" th:text="${agencyDTO.name}"></div>
                 </div>
-                <div class="d-flex justify-content-between p-4 align-items-center">
-                    <h2>계좌번호 </h2>
-                    <h2 class="ml-3" th:text="${accountNum}"></h2>
-                </div>
+
             </div>
             <hr class="mt-0">
-            <div style="display: flex;height: 43%;justify-content: center;margin-top: 3%;">
-                <div style="width: 95%;height: 100%;background-color: #fafafa99;border-radius: 10px;">
-                    <div style="display: flex;justify-content: space-between;padding: 4%;margin-top: 2%;">
-                        <h2>이번달 지출</h2>
-                        <h2 class="font-weight-bold">300,000</h2>
+            <div class="d-flex justify-content-between p-4 align-items-center">
+                <h2>계좌번호 </h2>
+                <h2 class="ml-3" th:text="${accountNum}"></h2>
+            </div>
+            <div style="display: flex;height:30%;justify-content: center; align-items: center">
+                <div style="width: 95%;height: 102%;background-color: #fafafa99;border-radius: 10px;">
+                    <div style="display: flex;justify-content: space-between;padding: 4%;align-items: center">
+                        <h2>총잔액</h2>
+                        <h2 class="font-weight-bold" style="font-size: xxx-large" th:text="|${balance} 원|"></h2>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="d-flex justify-content-center target" style="height: 100rem">
+    <div class="d-flex justify-content-center target" style="height: 72rem">
         <div class="mt-3" id="targetBox">
             <div class="d-flex p-4">
-                <h1 id="listName" class="ml-1">지출 내역</h1>
+                <h1 id="listName" class="ml-1">거래 내역</h1>
             </div>
             <hr class="mt-0">
             <div id="listBox">
                 <div class="p-4" id="listBox-1">
+                    <!-- 거래이력 들어가는 곳 -->
+                    <div class="oneBox" th:each="list:${transList}">
+                        <div class="fontL" style="padding-left: 20px; padding-top: 15px;"
+                             th:text="${#dates.format(list.trans_dtime, 'yyyy-MM-dd HH:mm:ss')}"></div>
+                        <div class="listHover">
+                            <div class="flexBetween">
+                                <div th:if="${list.trans_type}=='02'" class="fontL" style="color: blue">
+                                    출금
+                                </div>
+                                <div th:if="${list.trans_type}=='03'" class="fontL" style="color:#E23137;">
+                                    입금
+                                </div>
+                                <h3 th:if="${list.trans_type}=='02'" style="color: blue" th:text="|${list.trans_amt} 원|">
+                                </h3>
+                                <h3 th:if="${list.trans_type}=='03'" style="color: #E23137;"
+                                    th:text="|${list.trans_amt} 원|">
+                                </h3>
+                            </div>
+                            <div class="flexBetween">
+                                <h3 th:text="${list.trans_class}">
+                                    맘모스 커피
+                                </h3>
+                                <h3 th:text="|잔액 ${list.balance_amt} 원|">
+                                </h3>
 
-
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
