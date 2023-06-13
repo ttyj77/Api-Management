@@ -142,7 +142,7 @@
             <div class="img-control">
                 <img class="ani" src="/images/logo2.png" alt="background image2">
             </div>
-            <div class="form-wrapper align-items-center">
+            <div class="form-wrapper align-items-center" style="flex-wrap: wrap">
                 <form method="post" id="login-form" action="/login-proc">
                     <div class="form sign-in">
                         <div class="input-group">
@@ -173,28 +173,17 @@
                         </p>
                     </div>
                 </form>
-                <a href="http://15.165.67.119:9000/oauth2/authorize
+                <a class="inzent_login_btn" href="http://localhost:9000/oauth2/authorize
 ?client_id=client
-&redirect_uri=http://52.78.136.223:8080/authorized
+&redirect_uri=http://localhost:8080/authorized
 &scope=openid
 &response_type=code
 &response_mode=form_post
 &code_challenge_method=S256
 &code_challenge=DQJMSJKBRbJ2HM0iB23mAY7HIxDxOxIAxn3RuPH44EQ
 &state=oy3rwjvk1z
-&nonce=13wvazekn9o">인젠트 로그인으로 이동하기</a>
-                <form action="http://15.165.67.119:9000/oauth2/authorize" method="post">
-                    <input type="hidden" name="client_id" value="client"/>
-                    <input type="hidden" name="redirect_uri" value="http://ssag.shop:8080/authorized"/>
-                    <input type="hidden" name="scope" value="openid"/>
-                    <input type="hidden" name="response_type" value="code"/>
-                    <input type="hidden" name="response_mode" value="form_post"/>
-                    <input type="hidden" name="code_challenge_method" value="S256"/>
-                    <input type="hidden" name="code_challenge" value="DQJMSJKBRbJ2HM0iB23mAY7HIxDxOxIAxn3RuPH44EQ"/>
-                    <input type="hidden" name="state" value="97jexss3jm"/>
-                    <input type="hidden" name="nonce" value="n3zbsrsr9fs"/>
-                    <button type="submit" class="btn btn-danger">인젠트 로그인</button>
-                </form>
+&nonce=13wvazekn9o">인젠트 로그인</a>
+
             </div>
             <div class="form-wrapper">
             </div>

@@ -44,6 +44,7 @@ public class SecurityConfig {
         public AuthenticationSuccessHandler userAuthSuccessHandler() {
             return new UserAuthSuccessHandler();
         }
+
         @Bean
         public AuthenticationFailureHandler userAuthFailureHandler() {
             return new UserAuthFailHandler();
@@ -52,11 +53,16 @@ public class SecurityConfig {
         @Autowired
         private UserCustomDetailsService userDetailsService;
 
+
+//        @Autowired
+//        private PrincipalOauth2UserService principalOauth2UserService;
+
+
         @Bean
         public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
             http.csrf().disable();
             http.authorizeRequests() //authorizeRequests
-                    .antMatchers(HttpMethod.GET, "/error/*", "/login", "/login_proc", "/user/login", "/user/register", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**","/authorized").permitAll() // 설정된 url은 인증되지 않더라도 누구든 접근 가능
+                    .antMatchers(HttpMethod.GET, "/error/*", "/newIndex", "/login", "/login_proc", "/user/login", "/user/register", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**", "/authorized").permitAll() // 설정된 url은 인증되지 않더라도 누구든 접근 가능
                     .antMatchers("/api", "/api/details").authenticated()
                     .antMatchers("/api/trash", "/requestPage").hasAnyRole("PROVIDER", "ADMIN", "MYDATA")
                     .antMatchers("/accountList", "/authorization").hasRole("ADMIN")

@@ -308,9 +308,21 @@ body {
     box-shadow: 0px 0px 5px rgb(187, 45, 59);
 
 }
+
 .form-check-input:focus {
     border-color: #fefc86;
     outline: 0;
     box-shadow: 0 0 0 0.15rem rgba(187, 45, 59, 0.33);
+}
+
+.inzent_login_btn {
+    display: flex;
+    text-decoration: none;
+    color: #dc3545;
+    background-color: #ffffff;
+    width: 200px;
+    height: 50px;
+    align-items: center;
+    justify-content: center;
 }
 
