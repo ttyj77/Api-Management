@@ -204,8 +204,8 @@ public class AppController {
 
         String uri_2 = "/accounts/deposit/detail";
         String uri_3 = "/accounts/deposit/transactions";
-        List<GetDataDTO> balanceList = getDataService.accountAll(account,clientNum, uri_2);
-        List<GetDataDTO> accountList = getDataService.accountAll(account,clientNum, uri_3);
+        List<GetDataDTO> balanceList = getDataService.accountAll(account, clientNum, uri_2);
+        List<GetDataDTO> accountList = getDataService.accountAll(account, clientNum, uri_3);
         List<MdAgencyDTO> agencyDTOList = mydataService.mdAgencySelectAll();
 
         System.out.println("agencyDTOList = " + agencyDTOList);
@@ -220,7 +220,7 @@ public class AppController {
         String org = getString(org_code);
         System.out.println("org = " + org);
 
-        for (MdAgencyDTO agencyDTO: agencyDTOList){
+        for (MdAgencyDTO agencyDTO : agencyDTOList) {
             if (agencyDTO.getCode().equals(org)) {
                 model.addAttribute("agencyDTO", agencyDTO);
                 System.out.println("agencyDTO = " + agencyDTO);
@@ -254,8 +254,8 @@ public class AppController {
         System.out.println("results1 = " + results1);
 
         SimpleDateFormat dayFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-        
-        for (int i = results1.size()-1; i >= 0; i--) {
+
+        for (int i = results1.size() - 1; i >= 0; i--) {
             TransactionDataDTO temp = new TransactionDataDTO();
 
             JsonObject tempJson = (JsonObject) results1.get(i);
@@ -277,8 +277,6 @@ public class AppController {
 
         return "/app/bankDetail";
     }
-
-
 
 
     // ### 투자 ###
@@ -305,6 +303,13 @@ public class AppController {
         return "/app/certificationIndividualInfoAgree";
     }
 
+    @GetMapping("/app/certificationChoice")
+    public String certificationChoice() {
+        return "/app/certificationChoice";
+    }
 
-
+    @GetMapping("/app/addProperty")
+    public String addProperty() {
+        return "/app/addProperty";
+    }
 }

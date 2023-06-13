@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>자산 선택</title>
+  <link
+          href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+          rel="stylesheet">
+  <!-- Custom styles for this template -->
+  <link href="/css/sb-admin-2.min.css" rel="stylesheet"> <!-- 필수 -->
+  <script src="https://kit.fontawesome.com/24311b556d.js" crossorigin="anonymous"></script> <!-- 필수 -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> <!-- 필수 -->
+  <script src="/vendor/bootstrap2/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200&display=swap" rel="stylesheet">
+
+  <style>
+    .fontGown {
+      font-family: 'Gowun Dodum', sans-serif;
+      /*font-family: 'NanumSquareRound', sans-serif;*/
+      /*font-family: 'Nanum Gothic', sans-serif;*/
+    }
+
+    #fontBasic {
+      font-family: 'Noto Serif KR', serif;
+    }
+
+    input[type="checkbox"] {
+      zoom: 2.0;
+    }
+
+    .targetBox {
+      /*background-color: #91aeff63;*/
+      border-radius: 30px;
+      width: 90%;
+      border: 1px solid #E4E2E3;
+    }
+
+    .box {
+      border-radius: 70%;
+      overflow: hidden;
+    }
+    .profile {
+      width: 100%;
+      object-fit: cover;
+    }
+
+  </style>
+  <script>
+
+  </script>
+</head>
+<body>
+<div class="container-xl">
+  <div class="row mt-5 mb-5 fontGown">
+    <h1 class="col-1 text-right mt-5" onclick="history.go(-1)"><</h1>
+    <h1 class="col-10 text-center mt-5">자산 연결</h1>
+    <h1 class="col-1 text-left mt-5" onclick="endAdd()">×</h1>
+  </div>
+  <div id="fontBasic">
+    <div class="d-flex justify-content-center mb-5" style="height: 6.3rem">
+      <div class="mt-3" style="background-color: #91aeff63; border-radius: 30px;
+        width: 90%;">
+        <div class="d-flex justify-content-center p-4 align-items-center">
+          <h2 class="font-weight-bold" style="color : black;">상품(계좌) 리스트에서 가져올 상세 정보를 선택해 주세요</h2>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex justify-content-center target mb-4" style="height: 30rem" onclick="caution()">
+      <div class="d-flex mt-3 shadow align-items-center p-3 targetBox">
+        <span class="box"><img class="profile" src="/images/bank/inzent.png"></span>
+        <h1 class="ml-3 d-flex justify-content-between">
+          <span>인젠트 뱅크</span><input type="checkbox" class="form-check" name="property">
+        </h1>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
