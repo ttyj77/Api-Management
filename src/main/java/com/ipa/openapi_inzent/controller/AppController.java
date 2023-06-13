@@ -7,6 +7,7 @@ import com.ipa.openapi_inzent.config.auth.UserCustomDetails;
 import com.ipa.openapi_inzent.model.GetDataDTO;
 import com.ipa.openapi_inzent.model.MdAgencyDTO;
 import com.ipa.openapi_inzent.model.TransactionDataDTO;
+import com.ipa.openapi_inzent.model.UserDTO;
 import com.ipa.openapi_inzent.service.GetDataService;
 import com.ipa.openapi_inzent.service.MydataService;
 import com.ipa.openapi_inzent.service.UserService;
@@ -57,6 +58,12 @@ public class AppController {
     public String main(Model model, @AuthenticationPrincipal UserCustomDetails userDetails) throws UnsupportedEncodingException {
         System.out.println("userDetails = " + userDetails);
 
+        UserDTO logIn = userDetails.getUserDTO();
+
+        String uri_2 = "/accounts/deposit/detail";
+        List<GetDataDTO> list = getDataService.selectAll(logIn.getOwnNum(), uri_2);
+
+
         if (userDetails == null) {
             System.out.println("앱 에러페이지 드가쟈!!!!!!!!!");
             String errorMessage = "아이디와 비밀번호를 확인해주세요.";
@@ -65,12 +72,32 @@ public class AppController {
             return "redirect:/app/login?error=true&exception=" + errorMessage;
         }
 
+        System.out.println("list = " + list);
 
+        int sum = 0;
+
+        for (int i = 0; i < list.size(); i++) {
+            JsonObject jsonObject = (JsonObject) JsonParser.parseString(list.get(i).getResponseData());
+            JsonArray results = jsonObject.get("detail_list").getAsJsonArray();
+            JsonObject tempJson = (JsonObject) results.get(0);
+            String balance = getString(String.valueOf(tempJson.get("balance_amt")));
+            System.out.println("balance = " + balance);
+            sum += Integer.parseInt(balance);
+
+        }
+
+        model.addAttribute("myProperty", sum);
         model.addAttribute("user", userDetails.getUserDTO());
         return "/app/main";
     }
 
-    // 인증을 받은 사용자가 로그아웃가능 로그아웃은 SecurityContextLogoutHandler이친구가 진행함
+    // "" 없애주는 function
+    private static String getString(String str) {
+        String newStr = str.replaceAll("\\\"", "");
+        return newStr;
+    }
+
+    // 인증을 받은 사용자가 로그아웃가능 로그아웃은 SecurityContextLogoutHandler 이친구가 진행함
     @GetMapping("/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -79,6 +106,7 @@ public class AppController {
         if (authentication != null) {
             new SecurityContextLogoutHandler().logout(request, response, authentication);
         }
+
         return "redirect:/";
     }
 
@@ -112,6 +140,7 @@ public class AppController {
     @PostMapping("/app/bank/myAccount")
     @ResponseBody
     public JsonObject myAccount(String clientNum) {
+
         // 계좌 정보 조회 api resources
         String uri_1 = "/accounts";
         String uri_2 = "/accounts/deposit/detail";
@@ -130,7 +159,6 @@ public class AppController {
 
             array.add(jsonObject1);
             array.add(jsonObject);
-
         }
 
         JsonArray array1 = new JsonArray();
@@ -154,13 +182,11 @@ public class AppController {
 
             array2.add(jsonObject1);
             array2.add(jsonObject);
-
         }
 
         object.addProperty("bankList", array.toString());
         object.addProperty("agency", array1.toString());
         object.addProperty("balance", array2.toString());
-
 
         System.out.println("object = " + object);
         return object;
@@ -242,7 +268,6 @@ public class AppController {
             temp.setCurrency_code(getString(String.valueOf(tempJson.get("currency_code"))));
 
             transList.add(temp);
-
         }
 
         System.out.println("transList = " + transList);
@@ -253,11 +278,7 @@ public class AppController {
         return "/app/bankDetail";
     }
 
-    // "" 없애주는 function
-    private static String getString(String str) {
-        String newStr = str.replaceAll("\\\"", "");
-        return newStr;
-    }
+
 
 
     // ### 투자 ###
@@ -267,4 +288,23 @@ public class AppController {
 
 
     // ### 통신 ###
+
+
+    // ### 인증 페이지 ###
+    // ( 가입상품 목록 전송 요구서 )
+    @GetMapping("/app/certificationSendReq/{list}")
+    public String certificationSendReq(Model model, @PathVariable List<String> list) {
+        System.out.println("list = " + list);
+        model.addAttribute("list", list);
+        return "/app/certificationSendReq";
+    }
+
+    @GetMapping("/app/infoAgreement")
+    public String certificationIndividualInfoAgree() {
+
+        return "/app/certificationIndividualInfoAgree";
+    }
+
+
+
 }

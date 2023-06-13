@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>가입상품 목록 전송요구서</title>
+    <link
+            href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+            rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="/css/sb-admin-2.min.css" rel="stylesheet"> <!-- 필수 -->
+    <script src="https://kit.fontawesome.com/24311b556d.js" crossorigin="anonymous"></script> <!-- 필수 -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> <!-- 필수 -->
+    <script src="/vendor/bootstrap2/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200&display=swap" rel="stylesheet">
+
+    <style>
+        .fontGown {
+            font-family: 'Gowun Dodum', sans-serif;
+            /*font-family: 'NanumSquareRound', sans-serif;*/
+            /*font-family: 'Nanum Gothic', sans-serif;*/
+        }
+
+        #fontBasic {
+            font-family: 'Noto Serif KR', serif;
+        }
+
+        input[type="checkbox"] {
+            zoom: 2.0;
+        }
+
+        .btn-commit:active {
+            background-color: #9c88ff;
+        }
+
+        .btn-commit {
+            width: 90%;
+            border-radius: 20px;
+            height: 75%;
+            background-color: #8c7ae6;
+            color: #fafafa;
+            border-color: #8c7ae6;
+            font-size: 2.2rem;
+        }
+
+        .listHover {
+            border-bottom: 1px solid black;
+            padding: 40px 50px 35px 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #targetBox {
+            /*background-color: #91aeff63;*/
+            border-radius: 30px;
+            width: 90%;
+            border: 1px solid #E4E2E3;
+        }
+
+        #listBox {
+            height: 75%;
+        }
+
+        .fontColor {
+            color: #5a5c69;
+        }
+
+    </style>
+    <script>
+        function endAdd() {
+            Swal.fire({
+                showCancelButton: true,
+                cancelButtonText: "아니요",
+                confirmButtonText: "예",
+                // cancelButtonColor: '#f5f5f5',
+                confirmButtonColor: '#8c7ae6',
+                title: "자산 연결을 종료하시겠어요?",
+                text: "종료하면 처음부터 다시 시작해야해요.",
+                // reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    location.href='/app/main';
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+<div class="container-xl">
+    <div class="row mt-5 mb-5 fontGown">
+        <h1 class="col-1 text-right mt-5" onclick="history.go(-1)"><</h1>
+        <h1 class="col-10 text-center mt-5">자산 연결</h1>
+        <h1 class="col-1 text-left mt-5" onclick="endAdd()">×</h1>
+    </div>
+    <div id="fontBasic">
+        <div class="d-flex justify-content-center" style="height: 6.3rem">
+            <div class="mt-3" style="background-color: #91aeff63; border-radius: 30px;
+        width: 90%;">
+                <div class="d-flex justify-content-center p-4 align-items-center">
+                    <h2 class="font-weight-bold" style="color : black;">가입상품 목록 전송요구서</h2>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex justify-content-center target" style="height: 85rem;">
+            <div class="mt-3 shadow" id="targetBox">
+                <div class="d-flex p-4">
+                    <h2 id="listName" class="ml-1">정보제공자</h2>
+                </div>
+                <div class="d-flex justify-content-between mb-2 pl-4 pr-4 pb-4 pt-0"
+                     style="font-size: 2rem; color: #91aeff" th:text="${list}">
+
+                </div>
+                <hr class="mt-0" style="border-top: 3px solid #E4E2E3!important;">
+                <div id="listBox" class="p-5">
+                    <div class="mb-5">
+                        <h3>전송을 요구하는 개인신용정보</h3>
+                        <div>
+                            <h4 class="fontColor p-2">
+                                • 은행 : 계좌(수신/투자상품/대출상품)목록 및 개인형 IRP 계좌 목록
+                            </h4>
+                            <h4 class="fontColor p-2">
+                                • 카드 : 카드 목록 및 선불 카드 목록
+                            </h4>
+                            <h4 class="fontColor p-2">
+                                • 금융투자 : 계좌 목록 및 개인형 IRP 계좌 목록
+                            </h4>
+                            <h4 class="fontColor p-2">
+                                • 보험 : 보험증권 목록, 대출계좌 목록 및 개인형 IRP 계좌 목록
+                            </h4>
+                        </div>
+                    </div>
+
+                    <div class="mb-5">
+                        <h3>개인신용정보를 제공받는 자</h3>
+                        <div>
+                            <h4 class="fontColor p-2">
+                                (주) INFINITY
+                            </h4>
+                        </div>
+                    </div>
+
+                    <div class="mb-5">
+                        <h3>전송을 요구하는 목적</h3>
+                        <div>
+                            <h4 class="fontColor p-2">
+                                상세정보 전송요구를 위한 가입상품목록 조회
+                            </h4>
+                        </div>
+                    </div>
+
+                    <div class="mb-5">
+                        <h3>전송을 요구하는 개인신용정보의 보유기간</h3>
+                        <div>
+                            <h4 class="fontColor p-2">
+                                상세정보 전송요구 시까지 또는 7일 중 짧은 기간
+                            </h4>
+                        </div>
+                    </div>
+
+                    <div class="mb-5">
+                        <h3>정기적 전송 요구 여부 및 주기</h3>
+                        <div>
+                            <h4 class="fontColor p-2">
+                                아니오
+                            </h4>
+                        </div>
+                    </div>
+
+                    <div class="mb-5">
+                        <h3>전송요구의 종료 시점</h3>
+                        <div>
+                            <h4 class="fontColor p-2">
+                                상세정보 전송요구 시까지 또는 7일 중 짧은 기간
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+                <hr class="m-0" style="border-top: 3px solid #E4E2E3!important;">
+                <div class="d-flex justify-content-center align-items-center" style="height: 10%;">
+                    <button class="btn-commit" type="button" onclick="location.href='/app/infoAgreement'">다음</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

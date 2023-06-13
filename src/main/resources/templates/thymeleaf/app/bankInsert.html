@@ -16,6 +16,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <style>
         * {
             font-family: 'Gowun Dodum', sans-serif;
@@ -74,17 +76,17 @@
             border-radius: 70%;
             overflow: hidden;
         }
+
         .profile {
             width: 100%;
             object-fit: cover;
         }
 
-        .bankName{
+        .bankName {
             margin-left: 20px;
             display: flex;
             align-items: center;
         }
-
 
     </style>
 
@@ -135,12 +137,10 @@
                     }
                 }
 
-
             }
 
             document.getElementById("choose-bank").innerText = cnt;
         }
-
 
         function selectAll(selectAll) {
             console.log("전체선택")
@@ -155,9 +155,61 @@
             } else {
                 document.getElementById("choose-bank").innerText = 0;
             }
-
         }
 
+        function addProperty() {
+            // 체크 기업 확인
+            // let cnt = 0;
+            // let checkboxes = document.getElementsByName('bank');
+            // checkboxes.forEach((checkbox) => {
+            //     console.log("============")
+            //     if (document.getElementById("checkAll").checked) {
+            //         cnt = cnt - 1;
+            //     } else {
+            //         if (checkbox.checked) {
+            //             console.log("짜잘이들 체크 됨")
+            //             cnt = cnt + 1;
+            //         }
+            //     }
+            // })
+            // 체크박스 갯수
+            let chbox = document.getElementsByClassName('bankOne');
+            let total = chbox.length;
+            let list = [];
+            console.log(total);
+            for (let i = 0; i < total; i++) {
+                console.log(chbox[i].checked)
+                if (chbox[i].checked) {
+
+                    console.log(chbox[i].parentNode.children[0].children[1].innerText);
+
+                    list.push(chbox[i].parentNode.children[0].children[1].innerText);
+                    $('#checkAll').prop("checked", false);
+                    cnt = total - 1;
+                }
+            }
+            console.log("===========")
+            console.log(list);
+
+            location.href = '/app/certificationSendReq/' + list;
+        }
+
+        function endAdd() {
+            Swal.fire({
+                showCancelButton: true,
+                cancelButtonText: "아니요",
+                confirmButtonText: "예",
+                // cancelButtonColor: '#f5f5f5',
+                confirmButtonColor: '#8c7ae6',
+                title: "자산 연결을 종료하시겠어요?",
+                text: "종료하면 처음부터 다시 시작해야해요.",
+                // reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    location.href = '/app/main';
+                }
+            });
+        }
 
     </script>
 </head>
@@ -166,6 +218,7 @@
     <div class="row mt-5 mb-5">
         <h1 class="col-1 text-right mt-5" onclick="history.go(-1)"><</h1>
         <h1 class="col-10 text-center mt-5">은행 자산 연결</h1>
+        <h1 class="col-1 text-left mt-5" onclick="endAdd()">×</h1>
     </div>
     <div class="d-flex justify-content-center" style="height: 6.3rem">
         <div class="mt-3" style="background-color: #8c7ae6; border-radius: 30px;
@@ -196,21 +249,21 @@
                     <div class="d-flex justify-content-between mb-3 banks listHover">
                         <div class="d-flex">
                             <span class="box"><img class="profile" src="/images/bank/kakao.png"></span>
-                            <div class="bankName" >카카오뱅크</div>
+                            <div class="bankName" id="kakao" value="카카오뱅크">카카오뱅크</div>
                         </div>
                         <input class="form-check bankOne" type="checkbox" name="bank" onclick="cntCheck()">
                     </div>
                     <div class="d-flex justify-content-between mb-3 banks listHover">
                         <div class="d-flex">
                             <span class="box"><img class="profile" src="/images/bank/toss.png"></span>
-                            <div class="bankName">토스</div>
+                            <div class="bankName" id="toss" value="토스">토스</div>
                         </div>
                         <input class="form-check bankOne" type="checkbox" name="bank" onclick="cntCheck()">
                     </div>
                     <div class="d-flex justify-content-between mb-3 banks listHover">
                         <div class="d-flex">
                             <span class="box"><img class="profile" src="/images/bank/inzent.png"></span>
-                            <div class="bankName">인젠트뱅크</div>
+                            <div class="bankName" id="inzent" value="인젠트뱅크">인젠트뱅크</div>
                         </div>
                         <input class="form-check bankOne" type="checkbox" name="bank" onclick="cntCheck()">
                     </div>
@@ -218,7 +271,7 @@
                     <div class="d-flex justify-content-between mb-3 banks listHover">
                         <div class="d-flex">
                             <span class="box"><img class="profile" src="/images/bank/ibk.png"></span>
-                            <div class="bankName">IBK 기업은행</div>
+                            <div class="bankName" id="ibk" value="IBK 기업은행">IBK 기업은행</div>
                         </div>
                         <input class="form-check bankOne" type="checkbox" name="bank" onclick="cntCheck()">
                     </div>
@@ -226,7 +279,7 @@
                     <div class="d-flex justify-content-between mb-3 banks listHover">
                         <div class="d-flex">
                             <span class="box"><img class="profile" src="/images/bank/kb.png"></span>
-                            <div class="bankName">KB 국민은행</div>
+                            <div class="bankName" id="kb" value="KB 국민은행">KB 국민은행</div>
                         </div>
                         <input class="form-check bankOne" type="checkbox" name="bank" onclick="cntCheck()">
                     </div>
@@ -234,7 +287,7 @@
                     <div class="d-flex justify-content-between mb-3 banks listHover">
                         <div class="d-flex">
                             <span class="box"><img class="profile" src="/images/bank/shinhan.png"></span>
-                            <div class="bankName">신한은행</div>
+                            <div class="bankName" id="shinhan" value="신한은행">신한은행</div>
                         </div>
                         <input class="form-check bankOne" type="checkbox" name="bank" onclick="cntCheck()">
                     </div>
@@ -242,7 +295,7 @@
                     <div class="d-flex justify-content-between mb-3 banks listHover">
                         <div class="d-flex">
                             <span class="box"><img class="profile" src="/images/bank/wori.webp"></span>
-                            <div class="bankName">우리은행</div>
+                            <div class="bankName" id="woori" value="우리은행">우리은행</div>
                         </div>
                         <input class="form-check bankOne" type="checkbox" name="bank" onclick="cntCheck()">
                     </div>
@@ -250,7 +303,7 @@
                     <div class="d-flex justify-content-between mb-3 banks listHover">
                         <div class="d-flex">
                             <span class="box"><img class="profile" src="/images/bank/hana.png"></span>
-                            <div class="bankName" >하나은행</div>
+                            <div class="bankName" id="hana" value="하나은행">하나은행</div>
                         </div>
                         <input class="form-check bankOne" type="checkbox" name="bank" onclick="cntCheck()">
                     </div>
@@ -258,14 +311,14 @@
                     <div class="d-flex justify-content-between mb-3 banks listHover">
                         <div class="d-flex">
                             <span class="box"><img class="profile" src="/images/bank/suhub.png"></span>
-                            <div class="bankName">수협은행</div>
+                            <div class="bankName" id="suhub" value="수협은행">수협은행</div>
                         </div>
                         <input class="form-check bankOne" type="checkbox" name="bank" onclick="cntCheck()">
                     </div>
                 </div>
             </div>
             <div class="d-flex justify-content-center align-items-center" style="height: 11%;">
-                <button class="btn-commit" type="button">자산 연결하기</button>
+                <button class="btn-commit" type="button" onclick="addProperty()">자산 연결하기</button>
             </div>
 
         </div>
