@@ -33,13 +33,16 @@ public class UserCustomDetailsService implements UserDetailsService {
         } else {
             System.out.println("로그인 진행");
             UserDTO userDTO2 = userDTO.get(0);
+            System.out.println("userDTO2 = " + userDTO2);
             List<String> roleList = new ArrayList<>();
 
             for (UserDTO r : userDTO) {
                 roleList.add(r.getRole());
             }
             userDTO2.setRoleList(roleList);
+            System.out.println("roleList = " + roleList);
             UserCustomDetails details = new UserCustomDetails(userDTO2);
+            System.out.println("details = " + details.getUserDTO());
             return details;
         }
 

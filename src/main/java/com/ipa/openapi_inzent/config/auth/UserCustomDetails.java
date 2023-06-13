@@ -1,10 +1,12 @@
 package com.ipa.openapi_inzent.config.auth;
 
+import com.ipa.openapi_inzent.model.AppUserDTO;
 import com.ipa.openapi_inzent.model.UserDTO;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,12 +22,6 @@ public class UserCustomDetails implements UserDetails {
     public UserCustomDetails(UserDTO userDTO) {
         this.userDTO = userDTO;
     }
-
-    // OAuth2.0 로그인시 사용
-//    public UserCustomDetails(UserDTO user, Map<String, Object> attributes) {
-//        this.userDTO = user;
-//        this.attributes = attributes;
-//    }
 
 
 //    @Override
@@ -75,8 +71,4 @@ public class UserCustomDetails implements UserDetails {
         return true;
     }
 
-//    @Override
-//    public String getName() {
-//        return null;
-//    }
 }

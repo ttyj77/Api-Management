@@ -57,13 +57,12 @@ public class SecurityConfig {
 //        @Autowired
 //        private PrincipalOauth2UserService principalOauth2UserService;
 
-
         @Bean
         public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
             http.csrf().disable();
             http.authorizeRequests() //authorizeRequests
                     .antMatchers(HttpMethod.GET, "/error/*", "/newIndex", "/login", "/login_proc", "/user/login", "/user/register", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**", "/authorized").permitAll() // 설정된 url은 인증되지 않더라도 누구든 접근 가능
-                    .antMatchers("/api", "/api/details").authenticated()
+                    .antMatchers("/api ", "/api/details").authenticated()
                     .antMatchers("/api/trash", "/requestPage").hasAnyRole("PROVIDER", "ADMIN", "MYDATA")
                     .antMatchers("/accountList", "/authorization").hasRole("ADMIN")
                     .antMatchers("/mydata/**").hasAnyRole("MYDATA", "PROVIDER")
@@ -82,12 +81,6 @@ public class SecurityConfig {
                     .logoutSuccessUrl("/user/login")
 //                    .deleteCookies("JSESSIONID").permitAll()
                     .invalidateHttpSession(true);
-//                    .and()
-//                    .oauth2Login()
-//                    .loginPage("/user/login")
-//                    .userInfoEndpoint();
-//                    .userService(principalOauth2UserService);
-
 
             http.rememberMe() // rememberMe 기능 작동함
                     .key("sampleKey") // 필수값
@@ -104,6 +97,7 @@ public class SecurityConfig {
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring().antMatchers("/images/**", "/js/**", "/css/**", "/scss/**", "/vendor/**");
     }
+
 }
 
 

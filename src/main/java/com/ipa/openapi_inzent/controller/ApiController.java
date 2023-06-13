@@ -11,6 +11,8 @@ import com.ipa.openapi_inzent.service.RoleService;
 import com.ipa.openapi_inzent.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -41,14 +43,27 @@ public class ApiController {
     }
 
     @GetMapping("")
-    public String apis(Model model, HttpSession session, @AuthenticationPrincipal UserCustomDetails userDetails) {
-        // 로그인 정보
-        UserDTO userDTO = userDetails.getUserDTO();
-        System.out.println("userDTO = " + userDTO);
+    public String apis(Model model, HttpSession session, @AuthenticationPrincipal UserCustomDetails userCustomDetails) {
 
-//        if (userDTO == null) {
-//            return "redirect:/user/login";
-//        }
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDTO userDTO = new UserDTO();
+
+        if (principal instanceof UserDetails) {
+            //일반로그인
+            String username = ((UserDetails) principal).getUsername();
+            System.out.println("username 1 = " + username);
+            System.out.println((UserDetails) principal);
+            userDTO = userCustomDetails.getUserDTO();
+        } else {
+            //인젠트 로그인
+            UserDTO logIn = (UserDTO) session.getAttribute("logIn");
+            System.out.println("==============" + logIn);
+            String username = principal.toString();
+            System.out.println("username 2  = " + username);
+            System.out.println("userinfo 2  " + principal);
+            userDTO = logIn;
+        }
+
         System.out.println("ApiController.apis============================================");
         // 순수 apis 목록
         List<ApiDTO> apisList = apiService.selectAll();

@@ -17,23 +17,3 @@ public class GsonHttpMessageConverterConfig {
         return builder.create();
     }
 }
-//
-//import com.google.gson.Gson;
-//import com.google.gson.GsonBuilder;
-//import org.springframework.http.converter.json.GsonHttpMessageConverter;
-//import springfox.documentation.spring.web.json.Json;
-//
-//public class GsonHttpMessageConverterConfig extends GsonHttpMessageConverter {
-//
-//    public GsonHttpMessageConverter buildGson() {
-//        final Gson gson = new GsonBuilder()
-//                .registerTypeAdapter(Json.class, new SwaggerJsonSerializer())
-//                .serializeNulls()
-//                .create();
-//
-//        final GsonHttpMessageConverter converter = new GsonHttpMessageConverter();
-//        converter.setGson(gson);
-//        return converter;
-//    }
-//
-//}

@@ -101,5 +101,18 @@
         select * from public.user
         where activate = #{b};
     </select>
+
+    <!-- oauth2 로그인 한 이력있나 확인 -->
+    <select id="findByAppUsername" parameterType="string" resultType="com.ipa.openapi_inzent.model.AppUserDTO">
+        SELECT id, username, nickname, "createDate", role, password
+        FROM public."appUser" where "username" = #{username};
+    </select>
+
+    <!-- app user register -->
+    <insert id="appRegister" parameterType="com.ipa.openapi_inzent.model.AppUserDTO">
+        INSERT INTO public."appUser"(
+        username, nickname, "createDate", role, password)
+        VALUES (#{username}, #{nickname},NOW(),#{role},#{password});
+    </insert>
 </mapper>
 
