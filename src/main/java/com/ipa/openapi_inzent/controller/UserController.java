@@ -9,14 +9,18 @@ import com.ipa.openapi_inzent.model.UserRoleDTO;
 import com.ipa.openapi_inzent.service.RequestService;
 import com.ipa.openapi_inzent.service.RoleService;
 import com.ipa.openapi_inzent.service.UserService;
+
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Random;
 
@@ -104,13 +108,28 @@ public class UserController {
     }
 
     @GetMapping("/mypage")
-    public String mypage(@AuthenticationPrincipal UserCustomDetails userDetails, Model model) {
-        System.out.println("userDetails");
-        System.out.println(userDetails.getUsername());
-        System.out.println(userDetails.getUserDTO());
-        System.out.println(userDetails.getUserDTO().getId());
+    public String mypage(@AuthenticationPrincipal UserCustomDetails userCustomDetails, Model model, HttpSession session) {
 
-        model.addAttribute("user", userDetails.getUserDTO());
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDTO userDTO = new UserDTO();
+
+        if (principal instanceof UserDetails) {
+            //일반로그인
+            String username = ((UserDetails) principal).getUsername();
+            System.out.println("username 1 = " + username);
+            System.out.println((UserDetails) principal);
+            userDTO = userCustomDetails.getUserDTO();
+        } else {
+            //인젠트 로그인
+            UserDTO logIn = (UserDTO) session.getAttribute("logIn");
+            System.out.println("==============" + logIn);
+            String username = principal.toString();
+            System.out.println("username 2  = " + username);
+            System.out.println("userinfo 2  " + principal);
+            userDTO = logIn;
+        }
+
+        model.addAttribute("user", userDTO);
         return "mypage";
     }
 
@@ -238,5 +257,9 @@ public class UserController {
         return "mypage";
     }
 
+    @GetMapping("/oauth2Login")
+    public String oauth2Login() {
+        return "/oauth2/inzent_login";
+    }
 
 }

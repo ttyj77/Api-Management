@@ -12,12 +12,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-public class authorizationController {
+public class AuthorizationController {
 
     RoleService roleService;
 
     @Autowired
-    public authorizationController(RoleService roleService) {
+    public AuthorizationController(RoleService roleService) {
         this.roleService = roleService;
     }
 

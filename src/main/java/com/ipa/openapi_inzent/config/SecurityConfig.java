@@ -6,11 +6,9 @@ import com.ipa.openapi_inzent.handler.UserAuthSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -20,12 +18,13 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
-@Configuration
-@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
-// secured Annotation 활성화 / preAuthorize Annotation 활성화
-// 일반 메소드에 @Secured("ROLE_ADMIN") 단독 설정 가능 => 신버전
-// 일반 메소드에 @PreAuthorize("hasRole('ROLE_USER') or "hasRole('ROLE_ADMIN)") 다중 설정 가능 => 구버전
+
+//@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
+// secured Annotation 활성화/preAuthorize Annotation 활성화
+//         일반 메소드에@Secured("ROLE_ADMIN") 단독 설정 가능=>신버전
+//        일반 메소드에@PreAuthorize("hasRole('ROLE_USER') or "hasRole('ROLE_ADMIN)") 다중 설정 가능 => 구버전
 @EnableWebSecurity
+@Configuration
 public class SecurityConfig {
 
     @Bean
@@ -54,18 +53,19 @@ public class SecurityConfig {
         @Autowired
         private UserCustomDetailsService userDetailsService;
 
+
+//        @Autowired
+//        private PrincipalOauth2UserService principalOauth2UserService;
+
         @Bean
         public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
             http.csrf().disable();
             http.authorizeRequests() //authorizeRequests
-                    .antMatchers(HttpMethod.GET, "/error/*", "/login", "/login_proc", "/user/login", "/user/register", "/mydata/**", "/**").permitAll() // 설정된 url은 인증되지 않더라도 누구든 접근 가능
-//                .anyRequest().authenticated()// 위 페이지 외 인증이 되어야 접근가능(ROLE에 상관없이)
-//                    .antMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**").permitAll()
-//                    .antMatchers("/api/**", "/accountList", "/authorization", "/requestPage", "/user/mypage", "/mydata/**").authenticated()
-//                    .antMatchers( "/accountList", "/authorization", "/requestPage", "/user/mypage", "/mydata/**").hasRole("PROVIDER")
-//                    .antMatchers("/accountList", "/authorization", "/requestPage", "/user/mypage").hasRole("NORMAL")
-//                    .antMatchers("/mydata/**").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.GET, "/error/*", "/newIndex", "/login", "/login_proc", "/user/login", "/user/register", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**", "/authorized").permitAll() // 설정된 url은 인증되지 않더라도 누구든 접근 가능
+                    .antMatchers("/api ", "/api/details").authenticated()
+                    .antMatchers("/api/trash", "/requestPage").hasAnyRole("PROVIDER", "ADMIN", "MYDATA")
+                    .antMatchers("/accountList", "/authorization").hasRole("ADMIN")
+                    .antMatchers("/mydata/**").hasAnyRole("MYDATA", "PROVIDER")
                     .and()
                     .formLogin().loginPage("/user/login")  // 접근이 차단된 페이지 클릭시 이동할 url
                     .loginProcessingUrl("/login-proc") // 로그인시 맵핑되는 url
@@ -78,9 +78,9 @@ public class SecurityConfig {
                     .logout()
                     .logoutUrl("/logout")
                     .invalidateHttpSession(true)
-                    .logoutSuccessUrl("/")
+                    .logoutSuccessUrl("/user/login")
 //                    .deleteCookies("JSESSIONID").permitAll()
-                    .invalidateHttpSession(true); // 세션 clear
+                    .invalidateHttpSession(true);
 
             http.rememberMe() // rememberMe 기능 작동함
                     .key("sampleKey") // 필수값
@@ -97,5 +97,7 @@ public class SecurityConfig {
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring().antMatchers("/images/**", "/js/**", "/css/**", "/scss/**", "/vendor/**");
     }
+
 }
+
 

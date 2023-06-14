@@ -6,6 +6,10 @@ import com.ipa.openapi_inzent.model.RequestDTO;
 import com.ipa.openapi_inzent.model.UserDTO;
 import com.ipa.openapi_inzent.service.RequestService;
 import com.ipa.openapi_inzent.service.UserService;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -14,7 +18,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.ipa.openapi_inzent.config;
+package com.ipa.openapi_inzent.config.swagger;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

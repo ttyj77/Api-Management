@@ -112,11 +112,15 @@
         SELECT *
         FROM public.tag;
     </select>
-
+    <!--trash = true인 리스트 (details 만 쓰레기통에 있을 경우 리스트) -->
     <select id="goTrashResource" resultType="com.ipa.openapi_inzent.model.ResourceDTO">
-        select DISTINCT re.id,re."apisId", re.garbage, ad.uri from public.resource as re join
-        public.apis as ap on ap.id = re."apisId" join public."apiDetails" as ad on ad."resourceId" = re.id
-        order by re.id asc
+        select distinct ad."resourceId" as id, uri from public."apiDetails" as ad left join public."resource" as re on re.id = ad."resourceId" where ad."resourceId" In (select id
+        from public.resource as re where exists(select 1 from public."apiDetails" as ad where re.id=ad."resourceId" and ad.trash = true)) and re.garbage = false
+    </select>
+    <!--  trash 페이지 resource의 garbage = true인 리스트  -->
+    <select id="resourceTrashList" resultType="com.ipa.openapi_inzent.model.ResourceDTO">
+        select Distinct re.id,re.garbage , ad.uri from public."resource" as re join public."apiDetails" as ad on
+        ad."resourceId" = re.id
     </select>
     <select id="trashSearch" parameterType="string" resultType="com.ipa.openapi_inzent.model.ApiDetailsDTO">
         select r."apisId", r.id as resource_id, ad.id, ad."resourceId", ad.method, ad.url, ad.uri, ad.summary,

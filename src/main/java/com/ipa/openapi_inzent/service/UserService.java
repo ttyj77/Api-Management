@@ -1,6 +1,7 @@
 package com.ipa.openapi_inzent.service;
 
 import com.ipa.openapi_inzent.dao.UserDao;
+import com.ipa.openapi_inzent.model.AppUserDTO;
 import com.ipa.openapi_inzent.model.UserDTO;
 import com.ipa.openapi_inzent.model.UserRoleDTO;
 import org.apache.catalina.User;
@@ -9,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -22,6 +24,7 @@ public class UserService {
     }
 
     public int register(UserDTO userDTO) {
+        System.out.println("UserService.register");
         userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         // 정보 주체 번호 부여
         Random random = new Random();
@@ -31,8 +34,20 @@ public class UserService {
         return id;
     }
 
+//    public Optional<UserDTO> findByProviderAndProviderId(String provider, String providerId) {
+//
+//        Optional<UserDTO> providerInfo = userDao.findByProviderAndProviderId(provider, providerId);
+//        System.out.print("이건 뭘로 나오나 userservice" + userDao.findByProviderAndProviderId(provider, providerId));
+//        return providerInfo;
+//    }
+
     public List<UserDTO> findByUsername(String username) {
         return userDao.findByUsername(username);
+    }
+
+    //appuser 로그인 활용
+    public AppUserDTO findByAppUsername(String username) {
+        return userDao.findByAppUsername(username);
     }
 
     public UserDTO findByNickname(String nickname) {

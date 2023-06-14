@@ -10,7 +10,13 @@ public class IndexController {
     @GetMapping("")
     public String index() {
 //        @AuthenticationPrincipal UserCustomDetails details   로그인 된 사용자 정보 가져옴
-        return "index";
+        return "newIndex";
+    }
+
+    @GetMapping("newIndex")
+    public String newIndex() {
+//        @AuthenticationPrincipal UserCustomDetails details   로그인 된 사용자 정보 가져옴
+        return "newIndex";
     }
 
     @GetMapping("/headSideBar")

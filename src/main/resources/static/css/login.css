@@ -308,9 +308,39 @@ body {
     box-shadow: 0px 0px 5px rgb(187, 45, 59);
 
 }
+
 .form-check-input:focus {
     border-color: #fefc86;
     outline: 0;
     box-shadow: 0 0 0 0.15rem rgba(187, 45, 59, 0.33);
 }
 
+.inzent_login_btn {
+    display: flex;
+    text-decoration: none;
+    width: 303px;
+    height: 38px;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    /* display: inline-block; */
+    padding: 10px 20px;
+    background-color: #dc3545;
+    color: #ffffff;
+    font-size: 16px;
+    text-transform: uppercase;
+    overflow: hidden;
+    transition: .5s;
+    margin-top: 20px;
+    letter-spacing: 4px;
+    border-radius: 5px;
+
+}
+
+.inzent_login_btn:hover {
+    background: #ffffff;
+    color: #dc3545;
+    border-radius: 5px;
+    border-color: #dc3545;
+
+}

@@ -11,4 +11,5 @@ public class UserRoleDTO {
     private int id;
     private String code;
     private String name;
+
 }
