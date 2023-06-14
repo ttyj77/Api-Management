@@ -1,8 +1,7 @@
 package com.ipa.openapi_inzent.service;
 
-import com.ipa.openapi_inzent.dao.RequestDao;
+import com.ipa.openapi_inzent.dao.RequestDAO;
 import com.ipa.openapi_inzent.model.RequestDTO;
-import com.ipa.openapi_inzent.model.UserDTO;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
@@ -10,8 +9,8 @@ import java.util.List;
 
 @Service
 public class RequestService {
-    private RequestDao requestDao;
-    public RequestService(@Qualifier("requestDao") RequestDao requestDao) {
+    private RequestDAO requestDao;
+    public RequestService(@Qualifier("requestDAO") RequestDAO requestDao) {
         this.requestDao = requestDao;
     }
 

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ipa.openapi_inzent.dao.RoleDao">
+<mapper namespace="com.ipa.openapi_inzent.dao.RoleDAO">
     <insert id="insert" parameterType="com.ipa.openapi_inzent.model.RoleDTO">
         INSERT INTO public.role(code, name)
         VALUES (#{code}, #{name});

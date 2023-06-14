@@ -61,14 +61,14 @@ public class SecurityConfig {
         public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
             http.csrf().disable();
             http.authorizeRequests() //authorizeRequests
-                    .antMatchers(HttpMethod.GET, "/error/*", "/newIndex", "/login", "/login_proc", "/user/login", "/user/register", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**", "/authorized").permitAll() // 설정된 url은 인증되지 않더라도 누구든 접근 가능
-                    .antMatchers("/api ", "/api/details").authenticated()
+                    .antMatchers(HttpMethod.GET, "/spring-cloud-service/**","/spring-cloud-gateway/**","/error/*","/**", "/newIndex", "/login", "/login_proc", "/user/login", "/user/register", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**", "/authorized").permitAll() // 설정된 url은 인증되지 않더라도 누구든 접근 가능
+                    .antMatchers("/api ", "/api/details","/mydata/chart").authenticated()
                     .antMatchers("/api/trash", "/requestPage").hasAnyRole("PROVIDER", "ADMIN", "MYDATA")
                     .antMatchers("/accountList", "/authorization").hasRole("ADMIN")
                     .antMatchers("/mydata/**").hasAnyRole("MYDATA", "PROVIDER")
                     .and()
                     .formLogin().loginPage("/user/login")  // 접근이 차단된 페이지 클릭시 이동할 url
-                    .loginProcessingUrl("/login-proc") // 로그인시 맵핑되는 url
+                    .loginProcessingUrl("/spring-cloud-service/login-proc") // 로그인시 맵핑되는 url
                     .usernameParameter("username")      // view form 태그 내에 로그인 할 id 에 맵핑되는 name ( form 의 name )
                     .passwordParameter("password")      // view form 태그 내에 로그인 할 password 에 맵핑되는 name ( form 의 name )
 //                    .failureUrl("/user/login?error=true&exception=*")
@@ -95,7 +95,7 @@ public class SecurityConfig {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().antMatchers("/images/**", "/js/**", "/css/**", "/scss/**", "/vendor/**");
+        return (web) -> web.ignoring().antMatchers("/images/**", "/js/**", "/spring-cloud-service/css/**", "/scss/**", "/vendor/**");
     }
 
 }

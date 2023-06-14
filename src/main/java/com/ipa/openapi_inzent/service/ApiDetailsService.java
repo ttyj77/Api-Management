@@ -1,6 +1,6 @@
 package com.ipa.openapi_inzent.service;
 
-import com.ipa.openapi_inzent.dao.ApiDetailsDao;
+import com.ipa.openapi_inzent.dao.ApiDetailsDAO;
 import com.ipa.openapi_inzent.model.*;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -10,9 +10,9 @@ import java.util.List;
 
 @Service
 public class ApiDetailsService {
-    private ApiDetailsDao apiDetailsDao;
+    private ApiDetailsDAO apiDetailsDao;
 
-    public ApiDetailsService(@Qualifier("apiDetailsDao") ApiDetailsDao apiDetailsDao) {
+    public ApiDetailsService(@Qualifier("apiDetailsDAO") ApiDetailsDAO apiDetailsDao) {
         this.apiDetailsDao = apiDetailsDao;
     }
 

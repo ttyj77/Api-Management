@@ -7,7 +7,7 @@ import org.springframework.dao.DataAccessException;
 import java.util.List;
 
 @Mapper
-public interface MydataDao {
+public interface MydataDAO {
     List<MdAgencyDTO> mdAgencySelectAll() throws DataAccessException;
 
     List<MdServiceDTO> mdServiceSelectModal(int id) throws DataAccessException;

@@ -1,24 +1,22 @@
 package com.ipa.openapi_inzent.service;
 
-import com.ipa.openapi_inzent.dao.UserDao;
+import com.ipa.openapi_inzent.dao.UserDAO;
 import com.ipa.openapi_inzent.model.AppUserDTO;
 import com.ipa.openapi_inzent.model.UserDTO;
 import com.ipa.openapi_inzent.model.UserRoleDTO;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 
 @Service
 public class UserService {
     private final PasswordEncoder passwordEncoder;
-    private UserDao userDao;
+    private UserDAO userDao;
 
-    public UserService(PasswordEncoder passwordEncoder, @Qualifier("userDao") UserDao userDao) {
+    public UserService(PasswordEncoder passwordEncoder, @Qualifier("userDAO") UserDAO userDao) {
         this.passwordEncoder = passwordEncoder;
         this.userDao = userDao;
     }

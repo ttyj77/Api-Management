@@ -1,18 +1,17 @@
 package com.ipa.openapi_inzent.service;
 
-import com.ipa.openapi_inzent.dao.RoleDao;
+import com.ipa.openapi_inzent.dao.RoleDAO;
 import com.ipa.openapi_inzent.model.RoleDTO;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import javax.management.relation.Role;
 import java.util.List;
 
 @Service
 public class RoleService {
-    private RoleDao roleDao;
+    private RoleDAO roleDao;
 
-    public RoleService(@Qualifier("roleDao") RoleDao roleDao) {
+    public RoleService(@Qualifier("roleDAO") RoleDAO roleDao) {
         this.roleDao = roleDao;
     }
     public void insert(RoleDTO roleDTO) {

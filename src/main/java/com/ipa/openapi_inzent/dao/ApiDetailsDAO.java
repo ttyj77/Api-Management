@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @Mapper
-public interface ApiDetailsDao {
+public interface ApiDetailsDAO {
     List<ApiDetailsDTO> selectAll() throws DataAccessException;
 
     List<ResourceDTO> resourceList(int apisId) throws DataAccessException;

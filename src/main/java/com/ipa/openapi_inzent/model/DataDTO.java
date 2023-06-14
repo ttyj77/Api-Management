@@ -10,4 +10,5 @@ public class DataDTO {
     private String x_api_tran_id;
     private String org_code;
 
+
 }

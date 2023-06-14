@@ -1,7 +1,6 @@
 package com.ipa.openapi_inzent.dao;
 
 import com.ipa.openapi_inzent.model.ApiDTO;
-import com.ipa.openapi_inzent.model.ApiDetailsDTO;
 import com.ipa.openapi_inzent.model.ApisRoleDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.dao.DataAccessException;
@@ -9,7 +8,7 @@ import org.springframework.dao.DataAccessException;
 import java.util.List;
 
 @Mapper
-public interface ApiDao {
+public interface ApiDAO {
     void insertApi(ApiDTO apiDTO) throws DataAccessException;
 
     void insertRole(ApisRoleDTO apisRoleDTO) throws DataAccessException;

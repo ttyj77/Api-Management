@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ipa.openapi_inzent.dao.MydataApiDAO">
+    <insert id="providerHistoryInsert" parameterType="com.ipa.openapi_inzent.model.MdProviderDTO">
+        INSERT INTO public."providerHistory"(
+        "reqDate", runtime, "resCode", "apiCode", "regularTransmission", "uniqueNum", "statusInfo", "apiResources",
+        "reqHeader", "resMsg", "resData", "customerNum", "reqInfoId")
+        VALUES
+        (NOW(),#{runtime},#{resCode},#{apiCode},#{regularTransmission},#{uniqueNum},#{statusInfo},#{apiResources},
+        to_json(#{reqHeader}::json),#{resMsg},#{resData},#{customerNum},#{reqInfoId});
+    </insert>
+
+    <insert id="reqInfoInsert" parameterType="com.ipa.openapi_inzent.model.MdReqInfoDTO" useGeneratedKeys="true"
+            keyProperty="id" keyColumn="id">
+        INSERT INTO public."reqInfo"(
+        code, "agencyName", "serviceName", "reqType", "reqSEQ", "tokenExpiryDate", "clientNum")
+        VALUES (#{code} , #{agencyName},#{serviceName},#{reqType},#{reqSEQ},#{tokenExpiryDate},#{clientNum});
+    </insert>
+
+</mapper>
