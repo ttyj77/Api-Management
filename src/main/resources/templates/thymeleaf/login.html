@@ -154,25 +154,31 @@
                             <input type="password" name="password" placeholder="비밀번호" onkeydown="checkSpacebar()"
                                    required>
                         </div>
-                        <input type="submit" class="btn btn-danger mb-6" value="로 그 인" style="width: 100%"/>
+                        <input type="submit" class="btn btn-dark mb-6" value="로 그 인" style="width: 100%"/>
 
                         <!--                        <p th:if="${LoginFailMessage!=null}" th:text="|Error : ${LoginFailMessage}|"-->
                         <!--                           style="color: #E23137; font-size: small"></p>-->
-                        <div class="d-flex mt-2">
-                            <input type="checkbox" class="form-check-input" name="remember-me"
-                                   style="border: 1.5px solid #bb2d3b">
-                            &nbsp;&nbsp;로그인 유지
-                        </div>
-                        <p th:if="${error != null}" th:text="|${exception}|"
-                           style="color: #E23137; font-size: small"></p>
-                        <hr style="margin: 1rem 0;"/>
-                        <p class="help-text">
+                        <div class="d-flex mt-2 align-items-center">
+                            <div style="font-size: 13px;">
+                                <input type="checkbox" class="form-check-input" name="remember-me"
+                                       style="border: 1.5px solid #bb2d3b">
+                                &nbsp;&nbsp;로그인 유지
+                            </div>
+                            <div style="font-size: 13px;">
+                                <p class="help-text">
                             <span onclick="toggle()" class="pointer" style="font-size: 12px; margin-left: 40px;">
                                 회원이 아닌신가요? <span style="color: #E23137">회원가입하기</span>
                             </span>
-                        </p>
+                                </p>
+                            </div>
+                        </div>
+                        <p th:if="${error != null}" th:text="|${exception}|"
+                           style="color: #E23137; font-size: small"></p>
+                        <hr style="margin: 0.5rem 0;"/>
+
                     </div>
                 </form>
+                <!--                    <img class="ani" src="/images/logo2.png" alt="background image2">-->
                 <a class="inzent_login_btn" href="http://localhost:9000/oauth2/authorize
 ?client_id=client
 &redirect_uri=http://localhost:8080/authorized
@@ -183,7 +189,6 @@
 &code_challenge=DQJMSJKBRbJ2HM0iB23mAY7HIxDxOxIAxn3RuPH44EQ
 &state=oy3rwjvk1z
 &nonce=13wvazekn9o">인젠트 로그인</a>
-
             </div>
             <div class="form-wrapper">
             </div>
