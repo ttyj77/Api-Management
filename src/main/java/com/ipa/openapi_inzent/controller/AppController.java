@@ -15,11 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.ui.Model;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -303,9 +303,29 @@ public class AppController {
     // ### 인증 페이지 ###
     // ( 가입상품 목록 전송 요구서 )
     @GetMapping("/app/certificationSendReq/{list}")
-    public String certificationSendReq(Model model, @PathVariable List<String> list) {
+    public String certificationSendReq(Model model, @PathVariable List<String> list, RedirectAttributes redirectAttributes, HttpServletRequest httpServletRequest) {
         System.out.println("list = " + list);
         model.addAttribute("list", list);
+
+        // 선택한  org_code 넣을 lIst
+        List<String> codeList = new ArrayList<>();
+
+        List<MdAgencyDTO> agencyList = mydataService.mdAgencySelectAll();
+
+        for (MdAgencyDTO m : agencyList) {
+            for (String str : list) {
+                if (m.getName().equals(str)) {
+                    codeList.add(m.getCode());
+                }
+            }
+        }
+
+        HttpSession session = httpServletRequest.getSession();
+        session.setAttribute("choiceAgency", codeList);
+
+        System.out.println("codeList = " + codeList);
+        System.out.println("agencyList = " + agencyList);
+
         return "/app/certificationSendReq";
     }
 
@@ -321,7 +341,12 @@ public class AppController {
     }
 
     @GetMapping("/app/addProperty")
-    public String addProperty() {
+    public String addProperty(Model model, HttpSession session) {
+        List<String> agencyList = (List<String>) session.getAttribute("choiceAgency");
+        System.out.println("agencyList = " + agencyList);
+
+        model.addAttribute("agencyList", agencyList);
+
         return "/app/addProperty";
     }
 }

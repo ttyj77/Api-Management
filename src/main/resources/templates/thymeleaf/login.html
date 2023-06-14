@@ -15,6 +15,14 @@
     <link rel="stylesheet" th:href="@{/css/login.css}"/>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+
+        .profile {
+            border-radius: 50%;
+            width: 40%;
+            object-fit: cover;
+        }
+    </style>
 
     <script>
         // 스페이스바 금지
@@ -158,9 +166,8 @@
                                    required>
                         </div>
                         <input type="submit" class="btn btn-dark mb-6" value="로 그 인" style="width: 100%"/>
-
-                        <!--                        <p th:if="${LoginFailMessage!=null}" th:text="|Error : ${LoginFailMessage}|"-->
-                        <!--                           style="color: #E23137; font-size: small"></p>-->
+                        <!-- <p th:if="${LoginFailMessage!=null}" th:text="|Error : ${LoginFailMessage}|"-->
+                        <!-- style="color: #E23137; font-size: small"></p>-->
                         <div class="d-flex mt-2 align-items-center">
                             <div style="font-size: 13px;">
                                 <input type="checkbox" class="form-check-input" name="remember-me"
@@ -191,7 +198,8 @@
 &code_challenge_method=S256
 &code_challenge=DQJMSJKBRbJ2HM0iB23mAY7HIxDxOxIAxn3RuPH44EQ
 &state=oy3rwjvk1z
-&nonce=13wvazekn9o">인젠트 로그인</a>
+&nonce=13wvazekn9o"><span class="box"><img class="profile shadow-lg" src="/images/bank/inzent.png"></span>인젠트
+                    로그인</a>
             </div>
             <div class="form-wrapper">
             </div>
