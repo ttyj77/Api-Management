@@ -28,6 +28,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class AppController {
@@ -348,6 +349,7 @@ public class AppController {
 
     @GetMapping("/app/addProperty")
     public String addProperty(Model model, HttpSession session, @AuthenticationPrincipal UserCustomDetails userDetails) {
+        // 선택한 기관들
         List<String> agencyList = (List<String>) session.getAttribute("choiceAgency");
         System.out.println("agencyList = " + agencyList);
 
@@ -356,6 +358,10 @@ public class AppController {
         String uri_1 = "/accounts";
         List<GetDataDTO> list = getDataService.selectAll(clientNum, uri_1);
 
+        List<MdAgencyDTO> agencyDTOList = mydataService.mdAgencySelectAll();
+
+        System.out.println("agencyDTOList = " + agencyDTOList);
+
         System.out.println("list = " + list);
         System.out.println("list.size() 2= " + list.size());
 
@@ -363,6 +369,46 @@ public class AppController {
         System.out.println("list.get(1) = " + list.get(1));
 
         List<AddPropertyDTO> accountList = new ArrayList<>();
+        
+//        // new
+//        List<String> orgCodeList = new ArrayList<>();
+//        List<String> prodName = null;
+//        List<String> accountNum = null;
+//        for (String str : agencyList) {
+//            for (int i = 0; i < list.size(); i++) {
+//                AddPropertyDTO addPropertyDTO = new AddPropertyDTO();
+//                JsonObject object = (JsonObject) JsonParser.parseString(list.get(i).getRequestData());
+//                String org_code = String.valueOf(object.get("org_code"));
+//                String org = getString(org_code);
+//                if (str.equals(org)) {
+//                    JsonObject resObj = (JsonObject) JsonParser.parseString(list.get(i).getResponseData());
+//                    JsonArray array = resObj.get("account_list").getAsJsonArray();
+//                    System.out.println("array = " + array);
+//                    System.out.println("array 2= " + array.size());
+//
+//
+//                    for (int j = 0; j < array.size(); j++) {
+//
+//
+//                        JsonObject tempJson = (JsonObject) array.get(j);
+//
+//                        prodName = new ArrayList<>();
+//                        accountNum = new ArrayList<>();
+//
+//                        prodName.add(getString(String.valueOf(tempJson.get("prod_name"))));
+//                        accountNum.add(getString(String.valueOf(tempJson.get("account_num"))));
+//
+//                    }
+//
+//                }
+//                addPropertyDTO.setProd_name(prodName);
+//                addPropertyDTO.setAccount_num(accountNum);
+//
+//                accountList.add(addPropertyDTO);
+//            }
+//        }
+//
+//        System.out.println("accountList = " + accountList);
 
         // 자산연결 선택한 기관 돌고
         for (String str : agencyList) {
@@ -375,10 +421,12 @@ public class AppController {
                     JsonObject resObj = (JsonObject) JsonParser.parseString(list.get(i).getResponseData());
                     System.out.println("resObj = " + resObj);
                     JsonArray array = resObj.get("account_list").getAsJsonArray();
+                    // 계좌 마다 돌고
                     for (int j = 0; j < array.size(); j++) {
                         AddPropertyDTO addPropertyDTO = new AddPropertyDTO();
 
                         JsonObject tempJson = (JsonObject) array.get(j);
+                        addPropertyDTO.setOrg_code(org);
                         addPropertyDTO.setProd_name(getString(String.valueOf(tempJson.get("prod_name"))));
                         addPropertyDTO.setAccount_num(getString(String.valueOf(tempJson.get("account_num"))));
 
@@ -390,8 +438,25 @@ public class AppController {
         }
         System.out.println("accountList = " + accountList);
 
+        // 선택한 기관들 정보 가지고 있을 List
+        List<MdAgencyDTO> choiceAgency = new ArrayList<>();
+
+        for (AddPropertyDTO a : accountList) {
+            for (MdAgencyDTO m : agencyDTOList) {
+                if (a.getOrg_code().equals(m.getCode())) {
+                    choiceAgency.add(m);
+                }
+            }
+        }
+        System.out.println("choiceAgency = " + choiceAgency);
+
+        // 중복 제거
+        List<MdAgencyDTO> mdAgencyDTOList = choiceAgency.stream().distinct().collect(Collectors.toList());
+
+        System.out.println("mdAgencyDTOList = " + mdAgencyDTOList);
+
         model.addAttribute("accountList", accountList);
-        model.addAttribute("agencyList", agencyList);
+        model.addAttribute("mdAgencyDTOList", mdAgencyDTOList);
 
         return "/app/addProperty";
     }

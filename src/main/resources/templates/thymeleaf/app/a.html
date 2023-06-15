@@ -40,7 +40,7 @@
         .btn-commit {
             width: 90%;
             border-radius: 20px;
-            height: 75%;
+            : 75%;
             background-color: #8c7ae6;
             color: #fafafa;
             border-color: #8c7ae6;
@@ -62,22 +62,11 @@
             font-size: 2rem;
         }
 
-        .listHover {
-            border-bottom: 1px solid black;
-            padding: 40px 50px 35px 20px;
-            display: flex;
-            justify-content: space-between;
-        }
-
         #targetBox {
             /*background-color: #91aeff63;*/
             border-radius: 30px;
             width: 90%;
             border: 1px solid #E4E2E3;
-        }
-
-        #listBox {
-            height: 85%;
         }
 
         .fontColor {
@@ -88,7 +77,6 @@
             padding: 2.5rem;
             padding-bottom: 1rem !important;
         }
-
 
     </style>
     <script>
@@ -119,15 +107,6 @@
             }
         }
 
-        // function goCheckInput() {
-        //     let checkAgree = document.getElementById("agree");
-        //     if (checkAgree.checked == false) {
-        //         document.getElementById("nextBtn").disabled = false;
-        //     } else {
-        //         document.getElementById("nextBtn").disabled = true;
-        //     }
-        // }
-
         function endAdd() {
             Swal.fire({
                 showCancelButton: true,
@@ -155,7 +134,7 @@
         <h1 class="col-10 text-center mt-5">자산 연결</h1>
         <h1 class="col-1 text-left mt-5" onclick="endAdd()">×</h1>
     </div>
-    <div id="fontBasic">
+    <div id="fontBasic" style="height: 112rem;">
         <div class="d-flex justify-content-center" style="height: 6.3rem">
             <div class="mt-3" style="background-color: #91aeff63; border-radius: 30px;
         width: 90%;">
@@ -164,7 +143,7 @@
                 </div>
             </div>
         </div>
-        <div class="d-flex justify-content-center target" style="height: 170rem;">
+        <div class="d-flex justify-content-center target" style="height: 85%;">
             <div class="mt-3 shadow" id="targetBox">
                 <div class="d-flex p-4">
                     <h3 id="listName" class="ml-1">가입상품목록조회 통합인증용</h3>
@@ -174,7 +153,7 @@
                 </h2>
                 <hr class="mt-0" style="border-top: 3px solid #E4E2E3!important;">
                 <div id="listBox">
-                    <div class="getPad" style="height: 26%">
+                    <div class="getPad">
                         <div class="mb-5">
                             <h3>전송을 요구하는 개인신용정보</h3>
                             <div class="d-flex">
@@ -213,7 +192,7 @@
 
                     </div>
                     <hr class="mt-0" style="border-top: 3px solid #E4E2E3!important;">
-                    <div class="getPad" style="height:19%">
+                    <div class="getPad">
                         <h3>정기적 전송 요구 여부 및 주기</h3>
                         <div class="btn-group pt-3" style="width: 100%">
                             <button type="button" class="col btn btn-outline-info" style="font-size: 2rem;">
@@ -245,8 +224,8 @@
                     </div>
                     <hr class="m-0" style="border-top: 3px solid #E4E2E3!important;">
                     <h3 style="padding: 3.3rem 2.5rem 1rem 2.5rem;">정기적 전송 요구 여부 및 주기</h3>
-                    <div class="d-flex justify-content-center align-items-center flex-column" style="height: 5%;">
-                        <div class="checkAgree" onclick="goCheck()" style="height: 90%">
+                    <div class="d-flex justify-content-center align-items-center flex-column">
+                        <div class="checkAgree" onclick="goCheck()">
                             <input type="checkbox" class="form-check" name="agree" id="agree"
                                    onclick="event.cancelBubble=true; goCheckInput()">
                             <p class="d-flex align-items-center m-0">
@@ -259,7 +238,7 @@
                         정보 전송은 본인 책임과 판단 하에 신중하게 결정하여 주시기 바립니다.
                     </h4>
                     <div class="pt-4"></div>
-                    <div class="d-flex justify-content-center align-items-center" style="height: 6%;">
+                    <div class="d-flex justify-content-center align-items-center">
                         <button id="nextBtn" class="btn btn-commit" type="button"
                                 onclick="location.href='/app/certificationChoice'" disabled>다음
                         </button>
