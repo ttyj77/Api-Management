@@ -10,15 +10,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <style>
-        .tdContent:hover {
-            background-color: #f5f6fb;
-        }
-
-        .tdHead {
-            background-color: #f5f5f5;
-        }
-    </style>
 
     <title>통계(1일)</title>
 
@@ -43,54 +34,150 @@
                 integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
                 crossorigin="anonymous"></script>
 
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-        <script>
-            function statisticsCall() {
-                console.log("alert")
-                Swal.fire({
-                    showCancelButton: true,
-                    cancelButtonText: "취소",
-                    confirmButtonText: "확인",
-                    icon: 'warning',
-                    text: "1일 집계 호출하시겠습니까??"
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        Swal.fire({
-                            title: '1일 집계 호출 완료',
-                            icon: 'success'
-                        }).then(() => {
-
-                        })
-                    }
-                });
-            }
-
-
-        </script>
-
-
     </th:block>
+    <style>
+        #boxOne {
+            width: 100%;
+            margin-bottom: 30px;
+            height: 500px;
+        }
+
+        .boxTwo {
+            width: 49%;
+            height: 500px;
+            overflow-y: auto;
+        }
+
+        .backBox {
+            background-color: #12192c;
+            border-radius: 10px;
+            color: white;
+            padding: 10px 0 10px 20px
+        }
+
+        img {
+            width: 13%;
+            margin-right: 10px;
+        }
+
+        .fontStyle {
+            font-weight: bold;
+            color: #1b2c5e;
+        }
+
+    </style>
 
 </head>
 
 <body>
 <div layout:fragment="content">
 
-
     <!-- Page Wrapper -->
-    <div id="wrapper">
-
+    <div id="wrapper" style="height: 1400px">
 
         <!-- Content Wrapper -->
-        <div id="content-wrapper" class="d-flex flex-column">
+        <div id="content-wrapper" class="d-flex flex-column " style="overFlow-y:hidden">
+
             <!-- Main Content -->
             <div id="content">
+                <div class="container-fluid">
+                    <h1 class="h3 mb-4">API 통계</h1>
+                    <h5>2023-06-15</h5>
+                    <div class="mb-4 d-flex"><h5 class="backBox mr-2"><img class="profile"
+                                                                      src="/images/bank/inzent.png"><span>인젠트뱅크</span>
+                    </h5>
+                        <h5 class="d-flex align-items-center">
+                            총 API 호출 수 :&nbsp; <span style="color: #0c4128; font-weight: bolder">3517</span>
+                        </h5>
+                    </div>
+                    <div class="d-flex justify-content-around">
+                        <p class="mb-2 fontStyle">< API 호출 성공 실패 수 ></p>
+                        <p class="mb-2 fontStyle">< API 호출 RUNTIME ></p>
+                    </div>
+                    <div class="shadow-lg d-flex justify-content-around" id="boxOne">
+                        <!--차트가 그려질 부분-->
+                        <canvas id="line-chart" width="800" height="500"></canvas>
+                        <canvas id="run-chart" width="800" height="500"></canvas>
 
-                <div style="width: 900px; height: 900px;">
-                    <!--차트가 그려질 부분-->
-                    <canvas id="myLineChart"></canvas>
+
+                    </div>
+                    <div class="d-flex justify-content-around">
+                        <p class="mb-2 fontStyle">< API Resources 사용 빈도 ></p>
+                        <p class="mb-2 fontStyle">< 에러코드 빈도 ></p>
+                    </div>
+                    <div class="d-flex justify-content-between">
+
+                        <div class="shadow-lg boxTwo d-flex justify-content-around">
+                            <canvas id="pie-chart" width="400" height="400"></canvas>
+                            <script src="/js/chart.js"></script>
+                        </div>
+                        <div class="shadow-lg boxTwo">
+                            <table class="table table-hover" id="dataTable"
+                                   style="text-align: center; font-size: 14px">
+                                <thead>
+                                <tr style=" font-weight: bold; background-color: #f5f6fb;">
+                                    <td>ERROR CODE</td>
+                                    <td>Reasons</td>
+                                    <td>Frequency</td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>40101</td>
+                                    <td>유효하지 않은 접근토큰</td>
+                                    <td>92</td>
+                                </tr>
+                                <tr>
+                                    <td>40001</td>
+                                    <td>요청 파라미터 문제</td>
+                                    <td>78</td>
+                                </tr>
+                                <tr>
+                                    <td>40301</td>
+                                    <td>올바르지 않은 API 호출</td>
+                                    <td>51</td>
+                                </tr>
+                                <tr>
+                                    <td>40405</td>
+                                    <td>자산 정보조회 권한 없음</td>
+                                    <td>48</td>
+                                </tr>
+                                <tr>
+                                    <td>40401</td>
+                                    <td>요청한 엔드포인트 미존재</td>
+                                    <td>31</td>
+                                </tr>
+                                <tr>
+                                    <td>40402</td>
+                                    <td>유효한 자산이 아님</td>
+                                    <td>26</td>
+                                </tr>
+                                <tr>
+                                    <td>40403</td>
+                                    <td>정보주체 미존재</td>
+                                    <td>23</td>
+                                </tr>
+                                <tr>
+                                    <td>40501</td>
+                                    <td>허용되지 않은 HTTP Method</td>
+                                    <td>11</td>
+                                </tr>
+                                <tr>
+                                    <td>40203</td>
+                                    <td>일시적 클라이언트 요청 제한</td>
+                                    <td>8</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
                 </div>
+
 
             </div>
             <!-- End of Content Wrapper -->
@@ -99,107 +186,7 @@
     </div>
 </div>
 
-<script>
-    var ctx = $('#myLineChart')[0];
-    var myLineChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            // labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-            labels: xArray,
 
-            datasets: [
-                {
-                    label: "value",
-                    lineTension: 0.1,
-                    backgroundColor: "rgba(78, 115, 223, 0.05)",
-                    borderColor: "rgba(78, 115, 223, 1)",
-                    pointRadius: 1,
-                    pointBackgroundColor: "rgba(78, 115, 223, 1)",
-                    pointBorderColor: "rgba(78, 115, 223, 1)",
-                    pointHoverRadius: 3,
-                    pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
-                    pointHoverBorderColor: "rgba(78, 115, 223, 1)",
-                    pointHitRadius: 1,
-                    pointBorderWidth: 1,
-                    // data: [0, 10000, 5000, 15000, 10000, 20000, 15000, 0, null, 30000, 25000, 30000],
-                    data: yArray,
-                    fill: false
-                }
-            ]
-        },
-        options: {
-            maintainAspectRatio: false,
-            layout: {
-                padding: {
-                    left: 10,
-                    right: 25,
-                    top: 25,
-                    bottom: 0
-                }
-            },
-            scales: {
-                xAxes: [
-                    {
-                        time: {
-                            unit: 'date'
-                        },
-                        gridLines: {
-                            display: false,
-                            drawBorder: false
-                        },
-                        ticks: {
-                            maxTicksLimit: 12
-                        }
-                    }
-                ],
-                yAxes: [
-                    {
-                        ticks: {
-                            maxTicksLimit: 5,
-                            padding: 10,
-                            min: -0.05,
-                            max: 0.05
-                        },
-                        gridLines: {
-                            color: "rgb(234, 236, 244)",
-                            zeroLineColor: "rgb(234, 236, 244)",
-                            drawBorder: false,
-                            borderDash: [2],
-                            zeroLineBorderDash: [2]
-                        }
-                    }
-                ]
-            },
-            legend: {
-                display: false
-            },
-            tooltips: {
-                backgroundColor: "rgb(255,255,255)",
-                bodyFontColor: "#858796",
-                titleMarginBottom: 10,
-                titleFontColor: '#6e707e',
-                titleFontSize: 14,
-                borderColor: '#dddfeb',
-                borderWidth: 1,
-                xPadding: 15,
-                yPadding: 15,
-                displayColors: false,
-                intersect: false,
-                mode: 'index',
-                caretPadding: 10,
-                callbacks: {
-                    label: function (tooltipItem, chart) {
-                        var datasetLabel = chart
-                            .datasets[tooltipItem.datasetIndex]
-                            .label || '';
-                        return datasetLabel + ': ' + number_format_div1(tooltipItem.yLabel, 2);
-                    }
-                }
-            }
-        }
-
-    });
-</script>
 </body>
 
 </html>

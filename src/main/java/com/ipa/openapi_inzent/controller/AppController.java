@@ -382,4 +382,9 @@ public class AppController {
     public String a() {
         return "/app/a";
     }
+
+    @GetMapping("/app/b")
+    public String b() {
+        return "/app/b";
+    }
 }
