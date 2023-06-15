@@ -4,10 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.ipa.openapi_inzent.config.auth.UserCustomDetails;
-import com.ipa.openapi_inzent.model.GetDataDTO;
-import com.ipa.openapi_inzent.model.MdAgencyDTO;
-import com.ipa.openapi_inzent.model.TransactionDataDTO;
-import com.ipa.openapi_inzent.model.UserDTO;
+import com.ipa.openapi_inzent.model.*;
 import com.ipa.openapi_inzent.service.GetDataService;
 import com.ipa.openapi_inzent.service.MydataService;
 import com.ipa.openapi_inzent.service.UserService;
@@ -57,6 +54,7 @@ public class AppController {
 
     @GetMapping("/app/main")
     public String main(Model model, @AuthenticationPrincipal UserCustomDetails userCustomDetails, HttpSession session) throws UnsupportedEncodingException {
+        List<String> list1 = (List<String>) session.getAttribute("choiceAgency");
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserDTO userDTO = new UserDTO();
         if (principal instanceof UserDetails) {
@@ -83,6 +81,14 @@ public class AppController {
             errorMessage = URLEncoder.encode(errorMessage, "UTF-8");
             return "redirect:/app/login?error=true&exception=" + errorMessage;
         }
+        session.removeAttribute("choiceAgency");
+        System.out.println("userDetails = " + userDetails);
+
+        UserDTO logIn = userDetails.getUserDTO();
+
+        String uri_2 = "/accounts/deposit/detail";
+        List<GetDataDTO> list = getDataService.selectAll(logIn.getOwnNum(), uri_2);
+
 
         System.out.println("list = " + list);
 
@@ -341,12 +347,57 @@ public class AppController {
     }
 
     @GetMapping("/app/addProperty")
-    public String addProperty(Model model, HttpSession session) {
+    public String addProperty(Model model, HttpSession session, @AuthenticationPrincipal UserCustomDetails userDetails) {
         List<String> agencyList = (List<String>) session.getAttribute("choiceAgency");
         System.out.println("agencyList = " + agencyList);
 
+        String clientNum = userDetails.getUserDTO().getOwnNum();
+
+        String uri_1 = "/accounts";
+        List<GetDataDTO> list = getDataService.selectAll(clientNum, uri_1);
+
+        System.out.println("list = " + list);
+        System.out.println("list.size() 2= " + list.size());
+
+        System.out.println("list.get(0) = " + list.get(0));
+        System.out.println("list.get(1) = " + list.get(1));
+
+        List<AddPropertyDTO> accountList = new ArrayList<>();
+
+        // 자산연결 선택한 기관 돌고
+        for (String str : agencyList) {
+            // 각 은행 마다 돌고
+            for (int i = 0; i < list.size(); i++) {
+                JsonObject object = (JsonObject) JsonParser.parseString(list.get(i).getRequestData());
+                String org_code = String.valueOf(object.get("org_code"));
+                String org = getString(org_code);
+                if (str.equals(org)) {
+                    JsonObject resObj = (JsonObject) JsonParser.parseString(list.get(i).getResponseData());
+                    System.out.println("resObj = " + resObj);
+                    JsonArray array = resObj.get("account_list").getAsJsonArray();
+                    for (int j = 0; j < array.size(); j++) {
+                        AddPropertyDTO addPropertyDTO = new AddPropertyDTO();
+
+                        JsonObject tempJson = (JsonObject) array.get(j);
+                        addPropertyDTO.setProd_name(getString(String.valueOf(tempJson.get("prod_name"))));
+                        addPropertyDTO.setAccount_num(getString(String.valueOf(tempJson.get("account_num"))));
+
+                        accountList.add(addPropertyDTO);
+                    }
+
+                }
+            }
+        }
+        System.out.println("accountList = " + accountList);
+
+        model.addAttribute("accountList", accountList);
         model.addAttribute("agencyList", agencyList);
 
         return "/app/addProperty";
+    }
+
+    @GetMapping("/app/a")
+    public String a() {
+        return "/app/a";
     }
 }

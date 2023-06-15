@@ -52,7 +52,22 @@
 
     </style>
     <script>
-
+        function endAdd() {
+            Swal.fire({
+                showCancelButton: true,
+                cancelButtonText: "아니요",
+                confirmButtonText: "예",
+                // cancelButtonColor: '#f5f5f5',
+                confirmButtonColor: '#8c7ae6',
+                title: "자산 연결을 종료하시겠어요?",
+                text: "종료하면 처음부터 다시 시작해야해요.",
+                // reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    location.href='/app/main';
+                }
+            });
+        }
     </script>
 </head>
 <body>
