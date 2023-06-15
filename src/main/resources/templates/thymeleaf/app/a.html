@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>가입상품 목록 전송요구서</title>
+    <link
+            href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+            rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="/css/sb-admin-2.min.css" rel="stylesheet"> <!-- 필수 -->
+    <script src="https://kit.fontawesome.com/24311b556d.js" crossorigin="anonymous"></script> <!-- 필수 -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> <!-- 필수 -->
+    <script src="/vendor/bootstrap2/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200&display=swap" rel="stylesheet">
+
+    <style>
+        .fontGown {
+            font-family: 'Gowun Dodum', sans-serif;
+            /*font-family: 'NanumSquareRound', sans-serif;*/
+            /*font-family: 'Nanum Gothic', sans-serif;*/
+        }
+
+        #fontBasic {
+            font-family: 'Noto Serif KR', serif;
+        }
+
+        input[type="checkbox"] {
+            zoom: 2.0;
+        }
+
+        .btn-commit:active {
+            background-color: #9c88ff;
+        }
+
+        .btn-commit {
+            width: 90%;
+            border-radius: 20px;
+            height: 75%;
+            background-color: #8c7ae6;
+            color: #fafafa;
+            border-color: #8c7ae6;
+            font-size: 2.2rem;
+        }
+
+        .btn:hover {
+            color: #f5f5f5 !important;
+        }
+
+        .checkAgree {
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            width: 90%;
+            border-radius: 20px;
+            height: 75%;
+            background-color: #d2d0d0;
+            font-size: 2rem;
+        }
+
+        .listHover {
+            border-bottom: 1px solid black;
+            padding: 40px 50px 35px 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #targetBox {
+            /*background-color: #91aeff63;*/
+            border-radius: 30px;
+            width: 90%;
+            border: 1px solid #E4E2E3;
+        }
+
+        #listBox {
+            height: 85%;
+        }
+
+        .fontColor {
+            color: #5a5c69;
+        }
+
+        .getPad {
+            padding: 2.5rem;
+            padding-bottom: 1rem !important;
+        }
+
+
+    </style>
+    <script>
+        window.onload = function () {
+            document.getElementById("agree").checked = false;
+        };
+
+        // 필수 checkbox 확인
+        function goCheck() {
+            console.log("goCheck")
+            console.log($('#agree').val());
+            let checkAgree = document.getElementById("agree");
+            if (checkAgree.checked == false) {
+                checkAgree.checked = true;
+                document.getElementById("nextBtn").disabled = false;
+            } else {
+                checkAgree.checked = false;
+                document.getElementById("nextBtn").disabled = true;
+            }
+        }
+
+        function goCheckInput() {
+            let checkAgree = document.getElementById("agree");
+            if (checkAgree.checked == false) {
+                document.getElementById("nextBtn").disabled = true;
+            } else {
+                document.getElementById("nextBtn").disabled = false;
+            }
+        }
+
+        // function goCheckInput() {
+        //     let checkAgree = document.getElementById("agree");
+        //     if (checkAgree.checked == false) {
+        //         document.getElementById("nextBtn").disabled = false;
+        //     } else {
+        //         document.getElementById("nextBtn").disabled = true;
+        //     }
+        // }
+
+        function endAdd() {
+            Swal.fire({
+                showCancelButton: true,
+                cancelButtonText: "아니요",
+                confirmButtonText: "예",
+                // cancelButtonColor: '#f5f5f5',
+                confirmButtonColor: '#8c7ae6',
+                title: "자산 연결을 종료하시겠어요?",
+                text: "종료하면 처음부터 다시 시작해야해요.",
+                // reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    location.href = '/app/main';
+                }
+            });
+        }
+
+
+    </script>
+</head>
+<body>
+<div class="container-xl">
+    <div class="row mt-5 mb-5 fontGown">
+        <h1 class="col-1 text-right mt-5" onclick="history.go(-1)"><</h1>
+        <h1 class="col-10 text-center mt-5">자산 연결</h1>
+        <h1 class="col-1 text-left mt-5" onclick="endAdd()">×</h1>
+    </div>
+    <div id="fontBasic">
+        <div class="d-flex justify-content-center" style="height: 6.3rem">
+            <div class="mt-3" style="background-color: #91aeff63; border-radius: 30px;
+        width: 90%;">
+                <div class="d-flex justify-content-center p-4 align-items-center">
+                    <h2 class="font-weight-bold" style="color : black;">상세정보 전송 요구서</h2>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex justify-content-center target" style="height: 170rem;">
+            <div class="mt-3 shadow" id="targetBox">
+                <div class="d-flex p-4">
+                    <h3 id="listName" class="ml-1">가입상품목록조회 통합인증용</h3>
+                </div>
+                <h2 class="text-info d-flex justify-content-between mb-2 pl-4 pr-4 pb-4 pt-0">
+                    인젠트 뱅크
+                </h2>
+                <hr class="mt-0" style="border-top: 3px solid #E4E2E3!important;">
+                <div id="listBox">
+                    <div class="getPad" style="height: 26%">
+                        <div class="mb-5">
+                            <h3>전송을 요구하는 개인신용정보</h3>
+                            <div class="d-flex">
+                                <h4 class="fontColor p-2">
+                                    은행 : 수신계좌 정보, 투자 상품 정보, 대충상품 정보, 개인형 IRP정보
+                                </h4>
+                            </div>
+                        </div>
+
+                        <div class="mb-5">
+                            <h3>개인신용정보를 제공받는 자</h3>
+                            <div>
+                                <h4 class="fontColor p-2">
+                                    (주)교보증권
+                                </h4>
+                            </div>
+                        </div>
+
+                        <div class="mb-5">
+                            <h3>전송을 요구하는 목적</h3>
+                            <div>
+                                <h4 class="fontColor p-3">
+                                    전송요구를 통한 본인신용정보 통합조회, 데이터분석 서비스의 이용
+                                </h4>
+                            </div>
+                        </div>
+
+                        <div class="mb-5">
+                            <h3>전송을 요구하는 개인신용정보의 보유기간</h3>
+                            <div>
+                                <h4 class="fontColor p-3">
+                                    서비스 이용 종료 시 또는 삭제요구 시까지
+                                </h4>
+                            </div>
+                        </div>
+
+                    </div>
+                    <hr class="mt-0" style="border-top: 3px solid #E4E2E3!important;">
+                    <div class="getPad" style="height:19%">
+                        <h3>정기적 전송 요구 여부 및 주기</h3>
+                        <div class="btn-group pt-3" style="width: 100%">
+                            <button type="button" class="col btn btn-outline-info" style="font-size: 2rem;">
+                                예
+                            </button>
+                            <button type="button" class="col btn btn-outline-info" style="font-size: 2rem;">
+                                아니요
+                            </button>
+                        </div>
+                        <div>
+                            <h4 class="fontColor pt-3 pb-3">
+                                정기 전송주기: 주 1회
+                            </h4>
+                        </div>
+
+
+                        <h3 class="pt-4">전송요구의 종료 시점</h3>
+                        <div class="btn-group pt-3" style="width: 100%">
+                            <button type="button" class="col btn btn-outline-info" style="font-size: 2rem;">
+                                1년
+                            </button>
+                            <button type="button" class="col btn btn-outline-info" style="font-size: 2rem;">
+                                6개월
+                            </button>
+                            <button type="button" class="col btn btn-outline-info" style="font-size: 2rem;">
+                                3개월
+                            </button>
+                        </div>
+
+                    </div>
+                    <hr class="m-0" style="border-top: 3px solid #E4E2E3!important;">
+                    <h3 style="padding: 3.3rem 2.5rem 1rem 2.5rem;">정기적 전송 요구 여부 및 주기</h3>
+                    <div class="d-flex justify-content-center align-items-center flex-column" style="height: 5%;">
+                        <div class="checkAgree" onclick="goCheck()" style="height: 90%">
+                            <input type="checkbox" class="form-check" name="agree" id="agree"
+                                   onclick="event.cancelBubble=true; goCheckInput()">
+                            <p class="d-flex align-items-center m-0">
+                                [선택] 적요 또는 거래메모정보 수집 이용에 동의
+                            </p>
+                        </div>
+                    </div>
+                    <h4 class="fontColor pt-3" style="padding: 2rem 2.5rem 1rem 2.5rem;">
+                        송금인/수취인명 정보 등 본인의 사생활 및 경제활동 등에 관련된 상세한 정보입니다.
+                        정보 전송은 본인 책임과 판단 하에 신중하게 결정하여 주시기 바립니다.
+                    </h4>
+                    <div class="pt-4"></div>
+                    <div class="d-flex justify-content-center align-items-center" style="height: 6%;">
+                        <button id="nextBtn" class="btn btn-commit" type="button"
+                                onclick="location.href='/app/certificationChoice'" disabled>다음
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
