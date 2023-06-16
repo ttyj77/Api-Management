@@ -43,6 +43,10 @@
             font-size: 3rem;
         }
 
+        .btn:hover {
+            color: #f5f5f5 !important;
+        }
+
         .listHover {
             border-bottom: 1px solid black;
             padding: 40px 50px 35px 20px;
@@ -140,6 +144,12 @@
             }
 
             document.getElementById("choose-bank").innerText = cnt;
+
+            if (cnt > 0) {
+                document.getElementById('connectProperty').disabled = false;
+            } else {
+                document.getElementById('connectProperty').disabled = true;
+            }
         }
 
         function selectAll(selectAll) {
@@ -152,27 +162,14 @@
             })
             if (document.getElementById('checkAll').checked == true) {
                 document.getElementById("choose-bank").innerText = total;
+                document.getElementById('connectProperty').disabled = false;
             } else {
                 document.getElementById("choose-bank").innerText = 0;
+                document.getElementById('connectProperty').disabled = true;
             }
         }
 
         function addProperty() {
-            // 체크 기업 확인
-            // let cnt = 0;
-            // let checkboxes = document.getElementsByName('bank');
-            // checkboxes.forEach((checkbox) => {
-            //     console.log("============")
-            //     if (document.getElementById("checkAll").checked) {
-            //         cnt = cnt - 1;
-            //     } else {
-            //         if (checkbox.checked) {
-            //             console.log("짜잘이들 체크 됨")
-            //             cnt = cnt + 1;
-            //         }
-            //     }
-            // })
-            // 체크박스 갯수
             let chbox = document.getElementsByClassName('bankOne');
             let total = chbox.length;
             let list = [];
@@ -318,7 +315,7 @@
                 </div>
             </div>
             <div class="d-flex justify-content-center align-items-center" style="height: 11%;">
-                <button class="btn-commit" type="button" onclick="addProperty()">자산 연결하기</button>
+                <button class="btn btn-commit" type="button" id="connectProperty" onclick="addProperty()" disabled>자산 연결하기</button>
             </div>
 
         </div>

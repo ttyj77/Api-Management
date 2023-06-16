@@ -351,6 +351,9 @@ public class AppController {
     public String addProperty(Model model, HttpSession session, @AuthenticationPrincipal UserCustomDetails userDetails) {
         // 선택한 기관들
         List<String> agencyList = (List<String>) session.getAttribute("choiceAgency");
+        if (agencyList == null) {
+            return "redirect:/app/main";
+        }
         System.out.println("agencyList = " + agencyList);
 
         String clientNum = userDetails.getUserDTO().getOwnNum();
@@ -370,46 +373,6 @@ public class AppController {
 
         List<AddPropertyDTO> accountList = new ArrayList<>();
         
-//        // new
-//        List<String> orgCodeList = new ArrayList<>();
-//        List<String> prodName = null;
-//        List<String> accountNum = null;
-//        for (String str : agencyList) {
-//            for (int i = 0; i < list.size(); i++) {
-//                AddPropertyDTO addPropertyDTO = new AddPropertyDTO();
-//                JsonObject object = (JsonObject) JsonParser.parseString(list.get(i).getRequestData());
-//                String org_code = String.valueOf(object.get("org_code"));
-//                String org = getString(org_code);
-//                if (str.equals(org)) {
-//                    JsonObject resObj = (JsonObject) JsonParser.parseString(list.get(i).getResponseData());
-//                    JsonArray array = resObj.get("account_list").getAsJsonArray();
-//                    System.out.println("array = " + array);
-//                    System.out.println("array 2= " + array.size());
-//
-//
-//                    for (int j = 0; j < array.size(); j++) {
-//
-//
-//                        JsonObject tempJson = (JsonObject) array.get(j);
-//
-//                        prodName = new ArrayList<>();
-//                        accountNum = new ArrayList<>();
-//
-//                        prodName.add(getString(String.valueOf(tempJson.get("prod_name"))));
-//                        accountNum.add(getString(String.valueOf(tempJson.get("account_num"))));
-//
-//                    }
-//
-//                }
-//                addPropertyDTO.setProd_name(prodName);
-//                addPropertyDTO.setAccount_num(accountNum);
-//
-//                accountList.add(addPropertyDTO);
-//            }
-//        }
-//
-//        System.out.println("accountList = " + accountList);
-
         // 자산연결 선택한 기관 돌고
         for (String str : agencyList) {
             // 각 은행 마다 돌고

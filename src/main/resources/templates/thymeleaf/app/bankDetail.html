@@ -114,7 +114,7 @@
                 <div style="width: 95%;height: 102%;background-color: #fafafa99;border-radius: 10px;">
                     <div style="display: flex;justify-content: space-between;padding: 4%;align-items: center">
                         <h2>총잔액</h2>
-                        <h2 class="font-weight-bold" style="font-size: xxx-large" th:text="|${balance} 원|"></h2>
+                        <h2 class="font-weight-bold" style="font-size: xxx-large" th:text="|${#numbers.formatInteger(balance, 0, 'COMMA')} 원|"></h2>
                     </div>
                 </div>
             </div>
@@ -140,19 +140,18 @@
                                 <div th:if="${list.trans_type}=='03'" class="fontL" style="color:#E23137;">
                                     입금
                                 </div>
-                                <h3 th:if="${list.trans_type}=='02'" style="color: blue" th:text="|${list.trans_amt} 원|">
+                                <h3 th:if="${list.trans_type}=='02'" style="color: blue" th:text="|${#numbers.formatInteger(list.trans_amt, 0, 'COMMA')} 원|">
                                 </h3>
                                 <h3 th:if="${list.trans_type}=='03'" style="color: #E23137;"
-                                    th:text="|${list.trans_amt} 원|">
+                                    th:text="|${#numbers.formatInteger(list.trans_amt, 0, 'COMMA')} 원|">
                                 </h3>
                             </div>
                             <div class="flexBetween">
                                 <h3 th:text="${list.trans_class}">
                                     맘모스 커피
                                 </h3>
-                                <h3 th:text="|잔액 ${list.balance_amt} 원|">
+                                <h3 th:text="|${#numbers.formatInteger(list.balance_amt, 0, 'COMMA')} 원|">
                                 </h3>
-
                             </div>
                         </div>
                     </div>
