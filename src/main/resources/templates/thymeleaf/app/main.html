@@ -470,8 +470,13 @@
 
                                 let balanceDiv = document.createElement("div");
                                 balanceDiv.className = "d-flex justify-content-end";
-                                console.log("잔액 : " + balanceNum);
-                                balanceDiv.innerText = balanceNum + " 원";
+                                console.log("잔액 : " +balanceNum);
+
+                                let balanceAccount = balanceNum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+                                console.log(balanceAccount);
+
+                                 balanceDiv.innerText = balanceAccount + " 원";
 
                                 let reqOrg = reqData.org_code;
                                 console.log(reqOrg);
@@ -518,7 +523,7 @@
                 <div style="width: 95%;height: 100%;background-color: #fafafa99;border-radius: 10px;">
                     <div style="display: flex;justify-content: space-between;padding: 4%;margin-top: 2%;">
                         <h2>총자산</h2>
-                        <h2 class="font-weight-bold" th:text="|${myProperty} 원|"></h2>
+                        <h2 class="font-weight-bold" th:text="|${#numbers.formatInteger(myProperty, 0, 'COMMA')} 원|"></h2>
                     </div>
                 </div>
             </div>
