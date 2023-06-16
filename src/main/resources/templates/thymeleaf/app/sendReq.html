@@ -39,8 +39,7 @@
 
         .btn-commit {
             width: 90%;
-            border-radius: 20px;
-            : 75%;
+            border-radius: 20px;: 75 %;
             background-color: #8c7ae6;
             color: #fafafa;
             border-color: #8c7ae6;
@@ -148,9 +147,11 @@
                 <div class="d-flex p-4">
                     <h3 id="listName" class="ml-1">가입상품목록조회 통합인증용</h3>
                 </div>
-                <h2 class="text-info d-flex justify-content-between mb-2 pl-4 pr-4 pb-4 pt-0">
-                    인젠트 뱅크
-                </h2>
+                <div class="d-flex pl-2">
+                    <h3 class="text-info d-flex mb-2 pl-2 pr-2 pb-4 pt-0" th:each="agency:${agencyList}"
+                        th:text="${agency}">
+                    </h3>
+                </div>
                 <hr class="mt-0" style="border-top: 3px solid #E4E2E3!important;">
                 <div id="listBox">
                     <div class="getPad">
@@ -240,7 +241,7 @@
                     <div class="pt-4"></div>
                     <div class="d-flex justify-content-center align-items-center">
                         <button id="nextBtn" class="btn btn-commit" type="button"
-                                onclick="location.href='/app/certificationChoice'" disabled>다음
+                                onclick="location.href='/app/main'" disabled> 완료
                         </button>
                     </div>
                 </div>

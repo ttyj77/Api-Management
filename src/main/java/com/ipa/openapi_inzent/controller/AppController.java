@@ -424,9 +424,42 @@ public class AppController {
         return "/app/addProperty";
     }
 
-    @GetMapping("/app/a")
-    public String a() {
-        return "/app/a";
+    @ResponseBody
+    @PostMapping("/app/connectAgency")
+    public String connectAgency(List<String> accountList) {
+        System.out.println("accountList = " + accountList);
+
+
+
+
+        return "redirect:/app/main";
+    }
+
+
+
+    @GetMapping("/app/sendReq")
+    public String sendReq(Model model, HttpSession session, @AuthenticationPrincipal UserCustomDetails userDetails) {
+        List<String> agencyList = (List<String>) session.getAttribute("choiceAgency");
+        if (agencyList == null) {
+            return "redirect:/app/main";
+        }
+        System.out.println("agencyList = " + agencyList);
+
+        List<MdAgencyDTO> agencyDTOList = mydataService.mdAgencySelectAll();
+
+        List<String> list = new ArrayList<>();
+
+        for (String str : agencyList) {
+            for (MdAgencyDTO m : agencyDTOList) {
+                if (str.equals(m.getCode())) {
+                    list.add(m.getName());
+                }
+            }
+        }
+
+        model.addAttribute("agencyList", list);
+
+        return "/app/sendReq";
     }
 
     @GetMapping("/app/b")
