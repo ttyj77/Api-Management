@@ -68,7 +68,7 @@ public class SecurityConfig {
                     .antMatchers("/mydata/**").hasAnyRole("MYDATA", "PROVIDER")
                     .and()
                     .formLogin().loginPage("/user/login")  // 접근이 차단된 페이지 클릭시 이동할 url
-                    .loginProcessingUrl("/spring-cloud-service/login-proc") // 로그인시 맵핑되는 url
+                    .loginProcessingUrl("/login-proc") // 로그인시 맵핑되는 url
                     .usernameParameter("username")      // view form 태그 내에 로그인 할 id 에 맵핑되는 name ( form 의 name )
                     .passwordParameter("password")      // view form 태그 내에 로그인 할 password 에 맵핑되는 name ( form 의 name )
 //                    .failureUrl("/user/login?error=true&exception=*")

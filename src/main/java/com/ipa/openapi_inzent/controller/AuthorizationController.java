@@ -43,4 +43,11 @@ public class AuthorizationController {
 
         return "redirect:/authorization";
     }
+
+    /* APP 인젠트 인증 페이지*/
+    @GetMapping("/appAuthorization")
+    public String inzentAuthorization() {
+        System.out.println("인젠트 인증 페이지");
+        return "inzentAuthorization";
+    }
 }
