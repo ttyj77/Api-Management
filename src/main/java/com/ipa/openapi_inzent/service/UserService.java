@@ -99,4 +99,8 @@ public class UserService {
     public List<UserDTO> choiceActivate(boolean b) {
         return userDao.choiceActivate(b);
     }
+
+    public String findToken(int id) {
+        return userDao.findToken(id);
+    }
 }

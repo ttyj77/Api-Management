@@ -23,6 +23,7 @@ import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
@@ -111,7 +112,8 @@ public class OAuthController {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode node = mapper.readTree(response.getBody());
         String token = node.path("access_token").asText();
-
+        System.out.println("******************************************");
+        System.out.println("token = " + token);
 
         String url = "http://localhost:8000/resource/userInfo";
 
@@ -128,16 +130,9 @@ public class OAuthController {
 
         // 회원가입 시키기
         //1. sub 데이터 뽑기
-        System.out.println(responseResource.getBody().getClass()); // String
         JsonObject jsonObject = (JsonObject) JsonParser.parseString(responseResource.getBody());
-        System.out.println(jsonObject.getClass());
-        System.out.println();
-        System.out.println();
-        System.out.println(jsonObject.get("details"));
-        System.out.println(jsonObject.get("principal"));
         JsonObject object = (JsonObject) jsonObject.get("principal");
 
-        System.out.println("object = " + object.get("claims"));
 
         JsonObject result = (JsonObject) object.get("claims");
 
@@ -151,6 +146,7 @@ public class OAuthController {
         List<UserDTO> userDTO = userService.findByUsername("inzent_" + username);
 
         UserDTO userDTO1 = new UserDTO();
+        System.out.println("userDTO = " + userDTO);
 
         if (userDTO.isEmpty()) { // 첫 소셜로그인
             System.out.println("처음 로그인 함");
@@ -158,6 +154,7 @@ public class OAuthController {
 //            userDTO1.setNickname("ROLE_NORMAL");
             userDTO1.setPassword(passwordEncoder.encode("password"));
             userDTO1.setNickname(nickname);
+            userDTO1.setToken(token);
             userDTO.add(userDTO1);
             System.out.println(userDTO);
 
@@ -168,8 +165,20 @@ public class OAuthController {
             userRoleDTO.setUserId(id);
             userRoleDTO.setRoleId(2); // 일반 사용자 ( ROLE_NORMAL )
             userService.insertRole(userRoleDTO);
+        } else {
+            System.out.println("이후 로그인 부터는 토큰만 업데이트 해주면 됨");
+            UserDTO updateUser = userDTO.get(0);
+            updateUser.setToken(token);
+            System.out.println("updateUser = " + updateUser);
+            userService.update(updateUser);
+            System.out.println("업데이트 완료");
         }
-
+        System.out.println();
+        System.out.println();
+        System.out.println("======================");
+        System.out.println();
+        System.out.println("token = " + token);
+        System.out.println();
         UserCustomDetails userDetails = (UserCustomDetails) userCustomDetailsService.loadUserByUsername("inzent_" + username);
         System.out.println("===========================================");
         System.out.println("userDetails = " + userDetails.getUserDTO());
@@ -183,6 +192,45 @@ public class OAuthController {
         session.setAttribute("logIn", userDetails.getUserDTO());
 
         return "redirect:/api";
+    }
+
+    @GetMapping("/accessTokenCheck")
+    @ResponseBody
+    public void check(HttpSession session, @AuthenticationPrincipal UserCustomDetails userCustomDetails) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDTO userDTO = new UserDTO();
+
+        if (principal instanceof UserDetails) {
+            //일반로그인
+            String username = ((UserDetails) principal).getUsername();
+            System.out.println("username 1 = " + username);
+            System.out.println((UserDetails) principal);
+            userDTO = userCustomDetails.getUserDTO();
+        } else {
+            //인젠트 로그인
+            UserDTO logIn = (UserDTO) session.getAttribute("logIn");
+            System.out.println("==============" + logIn);
+            String username = principal.toString();
+            System.out.println("username 2  = " + username);
+            System.out.println("userinfo 2  " + principal);
+            userDTO = logIn;
+        }
+
+        RestTemplate restTemplate = new RestTemplate();
+        String url = "http://localhost:8000/resource/check";
+        String token = userService.findToken(userDTO.getId());
+        System.out.println("token = " + token);
+
+        // Use the access token for authentication
+        HttpHeaders headers1 = new HttpHeaders();
+        headers1.add("Authorization", "Bearer " + token);
+        HttpEntity<String> entity = new HttpEntity<>(headers1);
+        ResponseEntity<String> responseResource = null;
+        responseResource = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+
+//        System.out.println("responseResource = " + responseResource.getBody());
+////        UserDetails body = responseResource.getBody().get;
+//        System.out.println("responseResource = " + responseResource.getStatusCodeValue());
     }
 
 }
