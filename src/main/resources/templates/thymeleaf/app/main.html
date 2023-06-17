@@ -19,6 +19,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js"
             integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
             crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <style>
         .bi {
             padding: 7px;
@@ -158,7 +160,7 @@
             font-size: x-large;
         }
 
-        .noList{
+        .noList {
             /*border-bottom: 1px solid black;*/
             padding: 40px 20px;
             display: flex;
@@ -173,34 +175,57 @@
             // 목록 초기화
             target.innerHTML = "";
             let category = value.getAttribute("id");
-            console.log(category);
+            console.log("카테고리요!!!!!! = " + category);
             let custnum = value.getAttribute("custnum");
             console.log("custnum = " + custnum);
             let data = {
                 "clientNum": custnum,
+                "industry": category,
             }
 
             // 각 버튼
             if (category == "card") {
                 // 목록 이름
                 document.getElementById('listName').innerText = "My 카드 목록";
-                $('.btn-plus').attr("onclick", "location.href='/app/card/insert'");
+                $('.btn-plus').attr("onclick", "sorry()");
+
 
                 // ajax로 목록 만들기
-                // $.ajax({
-                //     url:"app/cardList",
-                //     data:data,
-                //     type:"get",
-                //
-                //     success: (message) => {
-                //
-                //     }
-                // });
+                $.ajax({
+                    url: "/app/card/myAccount",
+                    data: data,
+                    type: "post",
+
+                    success: (message) => {
+                        console.log("카드!!!!!!!!!!!!!!!!")
+                        let cardList = JSON.parse(message.cardList);
+                        console.log(cardList.length == 0)
+
+                        if (cardList.length == 0) {
+                            let div_1 = document.createElement("div");
+                            let div_2 = document.createElement("div");
+                            let div_3 = document.createElement("div");
+                            let span_1 = document.createElement("span");
+                            let span_2 = document.createElement("span");
+
+                            div_1.className = "oneBox";
+                            div_2.className = "fontXL noList";
+                            div_3.className = "fontL noList";
+                            span_1.innerText = "연결된 자산이 없습니다.";
+                            span_2.innerText = "자산을 추가하시려면 아래 추가 버튼을 눌러주세요.";
+
+                            div_2.append(span_1);
+                            div_3.append(span_2);
+                            div_1.append(div_2, div_3);
+
+                            target.append(div_1);
+                        }
+                    }
+                });
             } else if (category == "bank") {
                 // 목록 이름
                 document.getElementById('listName').innerText = " My 은행 목록";
                 $('.btn-plus').attr("onclick", "location.href='/app/bank/insert'");
-
 
                 $.ajax({
                     url: "/app/bank/myAccount",
@@ -208,301 +233,441 @@
                     type: "post",
 
                     success: (message) => {
+
                         // 데이터
                         console.log(JSON.parse(message.bankList));
                         // let reqData = JSON.parse(message.bankList);
                         // let resData = JSON.parse(message.bankList);
                         let agency = JSON.parse(message.agency);
                         let bankList = JSON.parse(message.bankList);
-                        console.log(agency)
-                        // console.log(reqData)
-                        // let reqList = JSON.parse(message)
-                        // console.log(resData);
-                        console.log("=====================");
-                        // console.log(resData.account_list[0]);
-                        for (let i = 0; i < bankList.length; i += 2) {
-                            let reqData = JSON.parse(message.bankList)[i];
-                            let resData = JSON.parse(message.bankList)[i + 1];
-
-                            console.log("i = " + i);
-                            console.log(resData.account_list);
-                            // console.log(resData.account_list.prod_name);
-                            console.log(resData.account_list.length);
-
+                        // 해당 업권에 계좌 정보가 하나도 없을 때
+                        if (bankList.length == 0) {
                             let div_1 = document.createElement("div");
-
+                            let div_2 = document.createElement("div");
+                            let div_3 = document.createElement("div");
+                            let span_1 = document.createElement("span");
+                            let span_2 = document.createElement("span");
 
                             div_1.className = "oneBox";
-                            div_1.id = reqData.org_code;
+                            div_2.className = "fontXL noList";
+                            div_3.className = "fontL noList";
+                            span_1.innerText = "연결된 자산이 없습니다.";
+                            span_2.innerText = "자산을 추가하시려면 아래 추가 버튼을 눌러주세요.";
 
-                            $(div_1).attr("onclick", "showAccount(this)");
-                            let div_2 = document.createElement("div");
-                            div_2.className = "listHover";
-                            div_2.id = reqData.org_code + "1";
-                            for (let j = 0; j < resData.account_list.length; j++) {
-                                console.log(resData.account_list[j].prod_name);
-                                console.log(resData.account_list[j].account_num);
-
-                            }
-                            let div_3 = document.createElement("div")
-                            div_3.className = "d-flex align-items-center";
-
-                            let h1 = document.createElement("h1");
-                            h1.className = "bankName";
-
-                            let span = document.createElement("span")
-                            span.className = "box";
-                            let img = document.createElement("img");
-                            img.className = "profile";
-                            // 기관 찾기
-                            for (let j = 0; j < agency.length; j++) {
-                                let org_code = agency[j].org_code;
-                                // 은행 로고 + 이름 넣기
-                                if (org_code == reqData.org_code) {
-
-                                    img.src = "/images/bank/" + agency[j].logo;
-                                    h1.innerText = agency[j].bankName;
-                                }
-                            }
-                            let div_4 = document.createElement("div");
-                            div_4.className = "badge badge-secondary cntAccount";
-                            div_4.innerText = resData.account_cnt;
-
-                            span.append(img);
-                            div_3.append(span, h1, div_4);
-                            div_2.append(div_3);
-                            div_1.append(div_2);
+                            div_2.append(span_1);
+                            div_3.append(span_2);
+                            div_1.append(div_2, div_3);
 
                             target.append(div_1);
+                        } else {
+                            console.log(agency);
+                            // console.log(reqData)
+                            // let reqList = JSON.parse(message)
+                            // console.log(resData);
+                            console.log("=====================");
+                            // console.log(resData.account_list[0]);
+                            for (let i = 0; i < bankList.length; i += 2) {
+                                let reqData = JSON.parse(message.bankList)[i];
+                                let resData = JSON.parse(message.bankList)[i + 1];
 
-                            // let bankClick = document.getElementById(reqData.org_code + "1");
-                            // 계좌 정보 열려있는지 체크
-                            // bankClick.onclick = function (value) {
-                            //     // console.log()
-                            //     // let selectBack = value.target;
-                            //     // let id = selectBack.id // org_code
-                            //     // console.log(selectBack)
-                            //     //
-                            //     //
-                            //     // let cnt = selectBack.parentNode.childElementCount;
-                            //     // console.log(cnt) //3
-                            //     // if (cnt > 1) {  // 열려 있으면
-                            //     //     console.log("열려있음 -> 닫아야됨")
-                            //     //     for (let j = cnt - 1; j >= 0; j--) {
-                            //     //         if ($($('#' + reqData.org_code).children()[j]).hasClass("accountList")) {
-                            //     //             console.log(j)
-                            //     //             console.log("삭제")
-                            //     //             $('#' + reqData.org_code).children()[j].remove()
-                            //     //         }
-                            //     //     }
-                            //     // } else {
-                            //     //     console.log("닫혀있음")
-                            //     //     console.log("===============================================================")
-                            //     //     // 모두 지우기
-                            //     //     let divCnt = selectBack.parentNode.parentNode.childElementCount
-                            //     //     console.log(divCnt)
-                            //     //     for (let i = 0; i < divCnt; i++) {
-                            //     //
-                            //     //         if (selectBack.parentNode.parentNode.childNodes[i].childNodes[0].id != id) {
-                            //     //             //일치하는건 이미 위에서 제거함
-                            //     //             console.log("불일치")
-                            //     //             for (let j = selectBack.parentNode.parentNode.childNodes[i].childNodes.length - 1; j >= 0; j--) {
-                            //     //                 if ($(selectBack.parentNode.parentNode.childNodes[i].childNodes[j]).hasClass("accountList")) {
-                            //     //                     console.log("삭제")
-                            //     //                     selectBack.parentNode.parentNode.childNodes[i].childNodes[j].remove()
-                            //     //                 }
-                            //     //             }
-                            //     //         }
-                            //     //     }
-                            //     //     console.log("===============================================================")
-                            //     //     showAccount(custnum);
-                            //     // }
-                            //
-                            //
-                            //     // 열려 있으면
-                            //     if ($('#showCheck').length) {
-                            //         console.log("check");
-                            //         $('#' + reqData.org_code).css("background-color", "transparent");
-                            //         console.log("requestCode")
-                            //         console.log($('#' + reqData.org_code))
-                            //         console.log($('#' + reqData.org_code).children()[0].id)
-                            //         console.log($('#' + reqData.org_code).children().length)
-                            //         for (let j = 0; j < $('#' + reqData.org_code).children().length; j++) {
-                            //             if ($('#' + reqData.org_code).children()[j].className == "accountList") {
-                            //                 $('#' + reqData.org_code).children()[j].remove();
-                            //             }
-                            //         }
-                            //         // $('#showCheck').remove();
-                            //     } else {
-                            //         console.log("else")
-                            //         showAccount(custnum);
-                            //     }
-                            // }
+                                console.log("i = " + i);
+                                console.log(resData.account_list);
+                                // console.log(resData.account_list.prod_name);
+                                console.log(resData.account_list.length);
 
+                                let div_1 = document.createElement("div");
+
+                                div_1.className = "oneBox";
+                                div_1.id = reqData.org_code;
+                                $(div_1).attr("industry", category);
+
+                                $(div_1).attr("onclick", "showAccount(this)");
+                                let div_2 = document.createElement("div");
+                                div_2.className = "listHover";
+                                div_2.id = reqData.org_code + "1";
+                                for (let j = 0; j < resData.account_list.length; j++) {
+                                    console.log(resData.account_list[j].prod_name);
+                                    console.log(resData.account_list[j].account_num);
+
+                                }
+                                let div_3 = document.createElement("div")
+                                div_3.className = "d-flex align-items-center";
+
+                                let h1 = document.createElement("h1");
+                                h1.className = "bankName";
+
+                                let span = document.createElement("span")
+                                span.className = "box";
+                                let img = document.createElement("img");
+                                img.className = "profile";
+                                // 기관 찾기
+                                for (let j = 0; j < agency.length; j++) {
+                                    let org_code = agency[j].org_code;
+                                    // 은행 로고 + 이름 넣기
+                                    if (org_code == reqData.org_code) {
+
+                                        img.src = "/images/bank/" + agency[j].logo;
+                                        h1.innerText = agency[j].bankName;
+                                    }
+                                }
+                                let div_4 = document.createElement("div");
+                                div_4.className = "badge badge-secondary cntAccount";
+                                div_4.innerText = resData.account_cnt;
+
+                                span.append(img);
+                                div_3.append(span, h1, div_4);
+                                div_2.append(div_3);
+                                div_1.append(div_2);
+
+                                target.append(div_1);
+                            }
                         }
 
                     }
                 });
             } else if (category == "invest") {
+                console.log("금융투자!!!!!!!!!!!!!!!")
                 // 목록 이름
                 document.getElementById('listName').innerText = " My 투자 목록";
                 $('.btn-plus').attr("onclick", "location.href='/app/invest/insert'");
 
                 // ajax로 목록 만들기
-                // $.ajax({
-                //     url:"app/cardList",
-                //     data:data,
-                //     type:"get",
-                //
-                //     success: (message) => {
-                //
-                //     }
-                // });
-            } else if (category == "insu") {
-                // 목록 이름
-                document.getElementById('listName').innerText = " My 보험 목록";
-                $('.btn-plus').attr("onclick", "location.href='/app/insu/insert'");
-
-                // ajax로 목록 만들기
-                // $.ajax({
-                //     url:"app/cardList",
-                //     data:data,
-                //     type:"get",
-                //
-                //     success: (message) => {
-                //
-                //     }
-                // });
-            } else if (category == "phone") {
-                // 목록 이름
-                document.getElementById('listName').innerText = " 통신 목록";
-                $('.btn-plus').attr("onclick", "location.href='/app/phone/insert'");
-
-                // ajax로 목록 만들기
-                // $.ajax({
-                //     url:"app/cardList",
-                //     data:data,
-                //     type:"get",
-                //
-                //     success: (message) => {
-                //
-                //     }
-                // });
-            }
-        }
-
-        function showAccount(value) {
-            console.log(value);
-            let orgCode = value.getAttribute("id");
-            console.log(orgCode);
-            console.log("============================!!!!")
-            let cnt = document.getElementsByClassName(orgCode);
-            console.log($(cnt).length);
-            if ($(cnt).length != 0) {
-                console.log("삭제 조건들어옴");
-                console.log(cnt.length);
-
-                for (let i = cnt.length - 1; i >= 0; i--) {
-                    console.log(i);
-                    console.log(cnt[i]);
-
-                    cnt[i].remove();
-                }
-                $('#' + orgCode).css("background-color", "transparent");
-            } else {
-                let clientNum = [[${user.ownNum}]];
-                console.log(clientNum);
-                let data = {
-                    "clientNum": clientNum,
-                };
-
                 $.ajax({
-                    url: "/app/bank/myAccount",
+                    url: "/app/invest/myAccount",
                     data: data,
                     type: "post",
 
                     success: (message) => {
-                        let balance = JSON.parse(message.balance);
-                        let bankList = JSON.parse(message.bankList);
-                        console.log(balance);
-                        console.log("==================");
-                        console.log(bankList.length);
-                        for (let i = 0; i < bankList.length; i += 2) {
-                            let reqData = JSON.parse(message.bankList)[i];
-                            let resData = JSON.parse(message.bankList)[i + 1];
+                        // 데이터
+                        console.log(JSON.parse(message.investList));
+                        // let reqData = JSON.parse(message.bankList);
+                        // let resData = JSON.parse(message.bankList);
+                        let agency = JSON.parse(message.agency);
+                        let investList = JSON.parse(message.investList);
+                        // 해당 업권에 계좌 정보가 하나도 없을 때
+                        if (investList.length == 0) {
+                            let div_1 = document.createElement("div");
+                            let div_2 = document.createElement("div");
+                            let div_3 = document.createElement("div");
+                            let span_1 = document.createElement("span");
+                            let span_2 = document.createElement("span");
 
-                            console.log(reqData);
-                            console.log(resData);
-                            console.log(resData.account_list)
-                            console.log("=====================!!!!!!!")
-                            console.log(resData.account_list.length);
-                            console.log("=====================!!!!!!!")
+                            div_1.className = "oneBox";
+                            div_2.className = "fontXL noList";
+                            div_3.className = "fontL noList";
+                            span_1.innerText = "연결된 자산이 없습니다.";
+                            span_2.innerText = "자산을 추가하시려면 아래 추가 버튼을 눌러주세요.";
 
-                            console.log("res_acc_list = " + resData.account_list);
+                            div_2.append(span_1);
+                            div_3.append(span_2);
+                            div_1.append(div_2, div_3);
 
+                            target.append(div_1);
+                        } else {
+                            console.log(agency);
+                            console.log("===================== 금융투자!!!!!!!!!");
 
-                            for (let j = 0; j < resData.account_list.length; j++) {
-                                console.log(resData.account_list[j].prod_name);
-                                console.log(resData.account_list[j].account_num);
+                            for (let i = 0; i < investList.length; i += 2) {
+                                let reqData = investList[i];
+                                let resData = investList[i + 1];
 
+                                console.log("i = " + i);
                                 console.log(resData.account_list);
+                                // console.log(resData.account_list.prod_name);
+                                console.log(resData.account_list.length);
 
                                 let div_1 = document.createElement("div");
-                                div_1.className = "accountList " + reqData.org_code;
 
+                                div_1.className = "oneBox";
+                                div_1.id = reqData.org_code;
+                                $(div_1).attr("industry", category);
+
+                                $(div_1).attr("onclick", "showAccount(this)");
                                 let div_2 = document.createElement("div");
-                                div_2.className = "d-flex";
-                                console.log("j = " + j);
+                                div_2.className = "listHover";
+                                div_2.id = reqData.org_code + "1";
+                                for (let j = 0; j < resData.account_list.length; j++) {
+                                    console.log(resData.account_list[j].account_name);
+                                    console.log(resData.account_list[j].account_num);
+
+                                }
+                                let div_3 = document.createElement("div")
+                                div_3.className = "d-flex align-items-center";
+
+                                let h1 = document.createElement("h1");
+                                h1.className = "bankName";
+
+                                let span = document.createElement("span")
+                                span.className = "box";
+                                let img = document.createElement("img");
+                                img.className = "profile";
+                                // 기관 찾기
+                                for (let j = 0; j < agency.length; j++) {
+                                    let org_code = agency[j].org_code;
+                                    // 은행 로고 + 이름 넣기
+                                    if (org_code == reqData.org_code) {
+
+                                        img.src = "/images/invest/" + agency[j].logo;
+                                        h1.innerText = agency[j].agencyName;
+                                    }
+                                }
+                                let div_4 = document.createElement("div");
+                                div_4.className = "badge badge-secondary cntAccount";
+                                div_4.innerText = resData.account_cnt;
+
+                                span.append(img);
+                                div_3.append(span, h1, div_4);
+                                div_2.append(div_3);
+                                div_1.append(div_2);
+
+                                target.append(div_1);
+                            }
+                        }
+                    }
+
+                });
+            } else if (category == "insu") {
+                // 목록 이름
+                document.getElementById('listName').innerText = " My 보험 목록";
+                $('.btn-plus').attr("onclick", "sorry()");
+
+                // ajax로 목록 만들기
+                // $.ajax({
+                //     url:"app/cardList",
+                //     data:data,
+                //     type:"get",
+                //
+                //     success: (message) => {
+                //
+                //     }
+                // });
+            }
+        }
+
+            function showAccount(value) {
+                console.log(value);
+                let orgCode = value.getAttribute("id");
+                let industry = value.getAttribute("industry");
+                console.log(orgCode);
+                console.log(industry);
+                console.log("============================!!!!")
+                let cnt = document.getElementsByClassName(orgCode);
+                console.log($(cnt).length);
+                if ($(cnt).length != 0) {
+                    console.log("삭제 조건들어옴");
+                    console.log(cnt.length);
+
+                    for (let i = cnt.length - 1; i >= 0; i--) {
+                        console.log(i);
+                        console.log(cnt[i]);
+
+                        cnt[i].remove();
+                    }
+                    $('#' + orgCode).css("background-color", "transparent");
+                } else {
+                    let clientNum = [[${user.ownNum}]];
+                    console.log(clientNum);
+                    let data = {
+                        "clientNum": clientNum,
+                        "industry": industry,
+                    };
+
+                    // ## 각 업권 별 계좌 리스트
+                    if (industry == "card") {
+
+                    } else if (industry == "bank") {
+                        $.ajax({
+                            url: "/app/bank/myAccount",
+                            data: data,
+                            type: "post",
+
+                            success: (message) => {
+                                let balance = JSON.parse(message.balance);
+                                let bankList = JSON.parse(message.bankList);
+                                console.log(balance);
+                                console.log("==================");
+                                console.log(bankList.length);
+                                for (let i = 0; i < bankList.length; i += 2) {
+                                    let reqData = JSON.parse(message.bankList)[i];
+                                    let resData = JSON.parse(message.bankList)[i + 1];
+
+                                    console.log(reqData);
+                                    console.log(resData);
+                                    console.log(resData.account_list)
+                                    console.log("=====================!!!!!!!")
+                                    console.log(resData.account_list.length);
+                                    console.log("=====================!!!!!!!")
+
+                                    console.log("res_acc_list = " + resData.account_list);
+
+                                    for (let j = 0; j < resData.account_list.length; j++) {
+                                        console.log(resData.account_list[j].prod_name);
+                                        console.log(resData.account_list[j].account_num);
+
+                                        console.log(resData.account_list);
+
+                                        let div_1 = document.createElement("div");
+                                        div_1.className = "accountList " + reqData.org_code;
+
+                                        let div_2 = document.createElement("div");
+                                        div_2.className = "d-flex";
+                                        console.log("j = " + j);
 
 
-                                let bankName = document.createElement("div");
-                                bankName.innerText = resData.account_list[j].prod_name;
-                                let accountNum = document.createElement("div");
-                                let accNum = resData.account_list[j].account_num;
-                                accountNum.className = "text-muted";
-                                accountNum.innerText = "( " + accNum + " )";
-                                let balanceNum = "";
-                                for (let k = 0; k < balance.length; k += 2) {
-                                    if (accNum == balance[k].account_num) {
-                                        balanceNum = balance[k + 1].detail_list[0].balance_amt;
+                                        let bankName = document.createElement("div");
+                                        bankName.innerText = resData.account_list[j].prod_name;
+                                        let accountNum = document.createElement("div");
+                                        let accNum = resData.account_list[j].account_num;
+                                        console.log("***********")
+                                        console.log(accNum);
+                                        console.log("***************")
+                                        accountNum.className = "text-muted";
+                                        accountNum.innerText = "( " + accNum + " )";
+                                        let balanceNum = "";
+                                        for (let k = 0; k < balance.length; k += 2) {
+                                            console.log(balance[k].account_num)
+                                            if (accNum == balance[k].account_num) {
+                                                balanceNum = balance[k + 1].detail_list[0].balance_amt;
+                                                break;
+                                            } else {
+                                                balanceNum = "0";
+                                            }
+                                        }
+
+                                        let balanceDiv = document.createElement("div");
+                                        balanceDiv.className = "d-flex justify-content-end";
+                                        console.log("잔액 : " + balanceNum);
+
+                                        let balanceAccount = balanceNum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+                                        console.log(balanceAccount);
+
+                                        balanceDiv.innerText = balanceAccount + " 원";
+
+                                        let reqOrg = reqData.org_code;
+                                        console.log(reqOrg);
+                                        let target = document.getElementById(reqOrg);
+                                        if (reqOrg == orgCode) {
+                                            console.log("기관코드 같은 조건 들어옴");
+                                            $('#' + orgCode).css("background-color", "#f5f5f5");
+                                            div_2.append(bankName, accountNum);
+                                            div_1.append(div_2, balanceDiv);
+
+                                            target.append(div_1);
+
+                                        }
+
+                                        div_1.onclick = function () {
+                                            location.href = "/app/bank/transactions/" + resData.account_list[j].account_num;
+                                        }
+
                                     }
                                 }
 
-                                let balanceDiv = document.createElement("div");
-                                balanceDiv.className = "d-flex justify-content-end";
-                                console.log("잔액 : " +balanceNum);
+                            },
+                        });
+                    } else if (industry == "invest") {
+                        $.ajax({
+                            url: "/app/invest/myAccount",
+                            data: data,
+                            type: "post",
 
-                                let balanceAccount = balanceNum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                            success: (message) => {
+                                let balance = JSON.parse(message.balance);
+                                let investList = JSON.parse(message.investList);
+                                console.log(balance);
+                                console.log("==================");
+                                console.log(investList.length);
+                                for (let i = 0; i < investList.length; i += 2) {
+                                    let reqData = JSON.parse(message.investList)[i];
+                                    let resData = JSON.parse(message.investList)[i + 1];
 
-                                console.log(balanceAccount);
+                                    console.log(reqData);
+                                    console.log(resData);
+                                    console.log(resData.account_list)
+                                    console.log("=====================!!!!!!!")
+                                    console.log(resData.account_list.length);
+                                    console.log("=====================!!!!!!!")
 
-                                 balanceDiv.innerText = balanceAccount + " 원";
+                                    for (let j = 0; j < resData.account_list.length; j++) {
+                                        console.log(resData.account_list[j].account_name);
+                                        console.log(resData.account_list[j].account_num);
 
-                                let reqOrg = reqData.org_code;
-                                console.log(reqOrg);
-                                let target = document.getElementById(reqOrg);
-                                if (reqOrg == orgCode) {
-                                    console.log("기관코드 같은 조건 들어옴");
-                                    $('#' + orgCode).css("background-color", "#f5f5f5");
-                                    div_2.append(bankName, accountNum);
-                                    div_1.append(div_2, balanceDiv);
+                                        console.log(resData.account_list);
 
-                                    target.append(div_1);
+                                        let div_1 = document.createElement("div");
+                                        div_1.className = "accountList " + reqData.org_code;
 
+                                        let div_2 = document.createElement("div");
+                                        div_2.className = "d-flex";
+                                        console.log("j = " + j);
+
+
+                                        let agencyName = document.createElement("div");
+                                        agencyName.innerText = resData.account_list[j].account_name;
+                                        let accountNum = document.createElement("div");
+                                        let accNum = resData.account_list[j].account_num;
+                                        accountNum.className = "text-muted";
+                                        accountNum.innerText = "( " + accNum + " )";
+                                        let balanceNum = "";
+
+                                        for (let k = 0; k < balance.length; k += 2) {
+                                            if (accNum == balance[k].account_num) {
+                                                balanceNum = balance[k + 1].trans_list[balance[k + 1].trans_list.length - 1].balance_amt;
+                                                break;
+                                            } else {
+                                                balanceNum = "0";
+                                            }
+                                        }
+
+                                        let balanceDiv = document.createElement("div");
+                                        balanceDiv.className = "d-flex justify-content-end";
+                                        console.log("잔액 : " + balanceNum);
+
+                                        let balanceAccount = balanceNum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+                                        console.log(balanceAccount);
+
+                                        balanceDiv.innerText = balanceAccount + " 원";
+
+                                        let reqOrg = reqData.org_code;
+                                        console.log(reqOrg);
+                                        let target = document.getElementById(reqOrg);
+                                        if (reqOrg == orgCode) {
+                                            console.log("기관코드 같은 조건 들어옴");
+                                            $('#' + orgCode).css("background-color", "#f5f5f5");
+                                            div_2.append(agencyName, accountNum);
+                                            div_1.append(div_2, balanceDiv);
+
+                                            target.append(div_1);
+
+                                        }
+
+                                        div_1.onclick = function () {
+                                            location.href = "/app/invest/transactions/" + resData.account_list[j].account_num;
+                                        }
+
+                                    }
                                 }
 
-                                div_1.onclick = function () {
-                                    location.href = "/app/bank/transactions/" + resData.account_list[j].account_num;
-                                }
+                            },
+                        });
+                    } else if (industry == "insu") {
 
-                            }
-                        }
+                    }
 
-                    },
-                });
+
+                }
+
             }
 
-        }
+            function sorry() {
+                Swal.fire({
+                    title: "자산 연결은 은행 업권과 투자 업권에서만 가능합니다.",
+                })
+            }
+
+
     </script>
 </head>
 <body>
@@ -523,7 +688,8 @@
                 <div style="width: 95%;height: 100%;background-color: #fafafa99;border-radius: 10px;">
                     <div style="display: flex;justify-content: space-between;padding: 4%;margin-top: 2%;">
                         <h2>총자산</h2>
-                        <h2 class="font-weight-bold" th:text="|${#numbers.formatInteger(myProperty, 0, 'COMMA')} 원|"></h2>
+                        <h2 class="font-weight-bold"
+                            th:text="|${#numbers.formatInteger(myProperty, 0, 'COMMA')} 원|"></h2>
                     </div>
                 </div>
             </div>
@@ -577,17 +743,17 @@
                         보험
                     </div>
                 </div>
-<!--                <div id="phone" onclick="showCategory(this)" th:custnum="${user.ownNum}">-->
-<!--                    <svg xmlns="http://www.w3.org/2000/svg" width="70" height="70" fill="currentColor"-->
-<!--                         class="bi bi-shield-check"-->
-<!--                         viewBox="0 0 16 16">-->
-<!--                        <path d="M5.338 1.59a61.44 61.44 0 0 0-2.837.856.481.481 0 0 0-.328.39c-.554 4.157.726 7.19 2.253 9.188a10.725 10.725 0 0 0 2.287 2.233c.346.244.652.42.893.533.12.057.218.095.293.118a.55.55 0 0 0 .101.025.615.615 0 0 0 .1-.025c.076-.023.174-.061.294-.118.24-.113.547-.29.893-.533a10.726 10.726 0 0 0 2.287-2.233c1.527-1.997 2.807-5.031 2.253-9.188a.48.48 0 0 0-.328-.39c-.651-.213-1.75-.56-2.837-.855C9.552 1.29 8.531 1.067 8 1.067c-.53 0-1.552.223-2.662.524zM5.072.56C6.157.265 7.31 0 8 0s1.843.265 2.928.56c1.11.3 2.229.655 2.887.87a1.54 1.54 0 0 1 1.044 1.262c.596 4.477-.787 7.795-2.465 9.99a11.775 11.775 0 0 1-2.517 2.453 7.159 7.159 0 0 1-1.048.625c-.28.132-.581.24-.829.24s-.548-.108-.829-.24a7.158 7.158 0 0 1-1.048-.625 11.777 11.777 0 0 1-2.517-2.453C1.928 10.487.545 7.169 1.141 2.692A1.54 1.54 0 0 1 2.185 1.43 62.456 62.456 0 0 1 5.072.56z"/>-->
-<!--                        <path d="M10.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>-->
-<!--                    </svg>-->
-<!--                    <div class="texts">-->
-<!--                        통신-->
-<!--                    </div>-->
-<!--                </div>-->
+                <!--                <div id="phone" onclick="showCategory(this)" th:custnum="${user.ownNum}">-->
+                <!--                    <svg xmlns="http://www.w3.org/2000/svg" width="70" height="70" fill="currentColor"-->
+                <!--                         class="bi bi-shield-check"-->
+                <!--                         viewBox="0 0 16 16">-->
+                <!--                        <path d="M5.338 1.59a61.44 61.44 0 0 0-2.837.856.481.481 0 0 0-.328.39c-.554 4.157.726 7.19 2.253 9.188a10.725 10.725 0 0 0 2.287 2.233c.346.244.652.42.893.533.12.057.218.095.293.118a.55.55 0 0 0 .101.025.615.615 0 0 0 .1-.025c.076-.023.174-.061.294-.118.24-.113.547-.29.893-.533a10.726 10.726 0 0 0 2.287-2.233c1.527-1.997 2.807-5.031 2.253-9.188a.48.48 0 0 0-.328-.39c-.651-.213-1.75-.56-2.837-.855C9.552 1.29 8.531 1.067 8 1.067c-.53 0-1.552.223-2.662.524zM5.072.56C6.157.265 7.31 0 8 0s1.843.265 2.928.56c1.11.3 2.229.655 2.887.87a1.54 1.54 0 0 1 1.044 1.262c.596 4.477-.787 7.795-2.465 9.99a11.775 11.775 0 0 1-2.517 2.453 7.159 7.159 0 0 1-1.048.625c-.28.132-.581.24-.829.24s-.548-.108-.829-.24a7.158 7.158 0 0 1-1.048-.625 11.777 11.777 0 0 1-2.517-2.453C1.928 10.487.545 7.169 1.141 2.692A1.54 1.54 0 0 1 2.185 1.43 62.456 62.456 0 0 1 5.072.56z"/>-->
+                <!--                        <path d="M10.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>-->
+                <!--                    </svg>-->
+                <!--                    <div class="texts">-->
+                <!--                        통신-->
+                <!--                    </div>-->
+                <!--                </div>-->
             </div>
         </div>
 
@@ -600,7 +766,7 @@
             <hr class="mt-0">
             <div id="listBox">
                 <div class="p-4" id="listBox-1">
-                    <div class="oneBox">
+                    <div class="oneBox" th:if="${cardInfo.isEmpty()}">
                         <div class="fontXL noList">
                             <span>연결된 자산이 없습니다.</span>
                         </div>
@@ -614,7 +780,7 @@
             </div>
             <!-- 추가 해제 버튼 -->
             <div class="d-flex justify-content-center align-items-center" style="height: 11%;">
-                <button class="btn-plus" type="button" onclick="location.href='/app/card/insert'">+ 추가</button>
+                <button class="btn-plus" type="button" onclick="sorry()">+ 추가</button>
                 <button class="btn-minus" type="button">- 해제</button>
             </div>
 
