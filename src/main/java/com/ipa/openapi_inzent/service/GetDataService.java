@@ -17,6 +17,9 @@ public class GetDataService {
     public List<GetDataDTO> selectAll(String clientNum, String uri) {
         return getDataDao.selectAll(clientNum, uri);
     }
+    public List<GetDataDTO> selectAllIndustry(String clientNum, String uri, String industry) {
+        return getDataDao.selectAllIndustry(clientNum, uri, industry);
+    }
 
     public List<GetDataDTO> accountAll(String account, String clientNum, String uri) {
         return getDataDao.accountAll(account, clientNum , uri);
