@@ -28,4 +28,8 @@ public class GetDataService {
     public List<GetDataDTO> accountOne(String account, String clientNum, String uri) {
         return getDataDao.accountOne(account, clientNum , uri);
     }
+
+    public void deleteAccount(String org_code, String ownNum, String industry) {
+        getDataDao.deleteAccount(org_code, ownNum, industry);
+    }
 }

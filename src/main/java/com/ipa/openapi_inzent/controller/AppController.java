@@ -902,4 +902,19 @@ public class AppController {
 
         return "/app/sendReq";
     }
+
+    @ResponseBody
+    @PostMapping("/app/deleteAgency")
+    public void deleteAgency(List<String> choiceAgency,String industry, @AuthenticationPrincipal UserCustomDetails userDetails ) {
+        UserDTO logIn = userDetails.getUserDTO();
+        System.out.println("industry = " + industry);
+
+        System.out.println("choiceAgency = " + choiceAgency);
+
+        for (int i = 0; i < choiceAgency.size(); i++) {
+            // 삭제 일단 막아놓음
+            System.out.println("choiceAgency.get(i) = " + choiceAgency.get(i));
+//            getDataService.deleteAccount(choiceAgency.get(i), logIn.getOwnNum(), industry);
+        }
+    }
 }

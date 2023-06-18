@@ -37,6 +37,9 @@
             width: 90%;
             padding: 35px;
         }
+        input[type="checkbox"] {
+            zoom: 2.0;
+        }
 
         #iconBoxUnder {
             width: 100%;
@@ -89,6 +92,20 @@
             border-color: #86b7fe;
             font-size: xx-large;
             margin-left: 10px;
+        }
+        .btn-cancel {
+            width: 25%;
+            border-radius: 20%;
+            height: 85%;
+            background-color: #636e72;
+            color: #fafafa;
+            border-color: #636e72;
+            font-size: xx-large;
+            margin-left: 10px;
+        }
+
+        .btn:hover {
+            color: #f5f5f5 !important;
         }
 
         #targetBox {
@@ -187,8 +204,28 @@
             if (category == "card") {
                 // 목록 이름
                 document.getElementById('listName').innerText = "My 카드 목록";
-                $('.btn-plus').attr("onclick", "sorry()");
 
+                //버튼 생성 ( 추가 , 해제 )
+                let deleteBtn = document.createElement("button");
+                deleteBtn.className = "btn btn-minus";
+                deleteBtn.id = "btn-minus";
+                deleteBtn.type = "button";
+                deleteBtn.innerText = "- 해제";
+                // 업권하고, 기관코드 넣어줘야함/ 함수 만들고
+                $(deleteBtn).attr("onclick", "disconnectAcc(card)");
+
+                let plusBtn = document.createElement("button");
+                plusBtn.className = "btn btn-plus";
+                plusBtn.id = "btn-plus";
+                plusBtn.type = "button";
+                plusBtn.innerText = "+ 추가";
+                $(plusBtn).attr("onclick", "sorry()");
+
+                // 버튼 삭제 후 넣기
+
+                let btns = document.getElementById('plusMinus');
+                btns.innerHTML = "";
+                btns.append(plusBtn, deleteBtn);
 
                 // ajax로 목록 만들기
                 $.ajax({
@@ -219,13 +256,38 @@
                             div_1.append(div_2, div_3);
 
                             target.append(div_1);
+
+                            document.getElementById("btn-minus").disabled = true;
                         }
                     }
                 });
             } else if (category == "bank") {
                 // 목록 이름
                 document.getElementById('listName').innerText = " My 은행 목록";
-                $('.btn-plus').attr("onclick", "location.href='/app/bank/insert/bank'");
+
+                //버튼 생성 ( 추가 , 해제 )
+                let deleteBtn = document.createElement("button");
+                deleteBtn.className = "btn btn-minus";
+                deleteBtn.id = "btn-minus";
+                deleteBtn.type = "button";
+                deleteBtn.innerText = "- 해제";
+                // 업권하고, 기관코드 넣어줘야함/ 함수 만들고
+                console.log("cccccccccccccccccccccccccccccccccccccccccccccccccc")
+                console.log(category);
+                $(deleteBtn).attr("onclick", "disconnectAcc(bank)");
+
+                let plusBtn = document.createElement("button");
+                plusBtn.className = "btn btn-plus";
+                plusBtn.id = "btn-plus";
+                plusBtn.type = "button";
+                plusBtn.innerText = "+ 추가";
+                $(plusBtn).attr("onclick", "location.href='/app/bank/insert/bank'");
+
+                // 버튼 삭제 후 넣기
+
+                let btns = document.getElementById('plusMinus');
+                btns.innerHTML = "";
+                btns.append(plusBtn, deleteBtn);
 
                 $.ajax({
                     url: "/app/bank/myAccount",
@@ -259,7 +321,10 @@
                             div_1.append(div_2, div_3);
 
                             target.append(div_1);
+
+                            document.getElementById("btn-minus").disabled = true;
                         } else {
+                            document.getElementById("btn-minus").disabled = false;
                             console.log(agency);
                             // console.log(reqData)
                             // let reqList = JSON.parse(message)
@@ -329,7 +394,27 @@
                 console.log("금융투자!!!!!!!!!!!!!!!")
                 // 목록 이름
                 document.getElementById('listName').innerText = " My 투자 목록";
-                $('.btn-plus').attr("onclick", "location.href='/app/invest/insert/invest'");
+
+                //버튼 생성 ( 추가 , 해제 )
+                let deleteBtn = document.createElement("button");
+                deleteBtn.className = "btn btn-minus";
+                deleteBtn.id = "btn-minus";
+                deleteBtn.type = "button";
+                deleteBtn.innerText = "- 해제";
+                $(deleteBtn).attr("onclick", "disconnectAcc(invest)");
+
+                let plusBtn = document.createElement("button");
+                plusBtn.className = "btn btn-plus";
+                plusBtn.id = "btn-plus";
+                plusBtn.type = "button";
+                plusBtn.innerText = "+ 추가";
+                $(plusBtn).attr("onclick", "location.href='/app/invest/insert/invest'");
+
+                // 버튼 삭제 후 넣기
+
+                let btns = document.getElementById('plusMinus');
+                btns.innerHTML = "";
+                btns.append(plusBtn, deleteBtn);
 
                 // ajax로 목록 만들기
                 $.ajax({
@@ -363,7 +448,10 @@
                             div_1.append(div_2, div_3);
 
                             target.append(div_1);
+
+                            document.getElementById("btn-minus").disabled = true;
                         } else {
+                            document.getElementById("btn-minus").disabled = false;
                             console.log(agency);
                             console.log("===================== 금융투자!!!!!!!!!");
 
@@ -386,11 +474,7 @@
                                 let div_2 = document.createElement("div");
                                 div_2.className = "listHover";
                                 div_2.id = reqData.org_code + "1";
-                                for (let j = 0; j < resData.account_list.length; j++) {
-                                    console.log(resData.account_list[j].account_name);
-                                    console.log(resData.account_list[j].account_num);
 
-                                }
                                 let div_3 = document.createElement("div")
                                 div_3.className = "d-flex align-items-center";
 
@@ -429,7 +513,27 @@
             } else if (category == "insu") {
                 // 목록 이름
                 document.getElementById('listName').innerText = " My 보험 목록";
-                $('.btn-plus').attr("onclick", "sorry()");
+                //버튼 생성 ( 추가 , 해제 )
+                let deleteBtn = document.createElement("button");
+                deleteBtn.className = "btn btn-minus";
+                deleteBtn.id = "btn-minus";
+                deleteBtn.type = "button";
+                deleteBtn.innerText = "- 해제";
+                // 업권하고, 기관코드 넣어줘야함/ 함수 만들고
+                $(deleteBtn).attr("onclick", "disconnectAcc(insu)");
+
+                let plusBtn = document.createElement("button");
+                plusBtn.className = "btn btn-plus";
+                plusBtn.id = "btn-plus";
+                plusBtn.type = "button";
+                plusBtn.innerText = "+ 추가";
+                $(plusBtn).attr("onclick", "sorry()");
+
+                // 버튼 삭제 후 넣기
+
+                let btns = document.getElementById('plusMinus');
+                btns.innerHTML = "";
+                btns.append(plusBtn, deleteBtn);
 
                 // ajax로 목록 만들기
                 $.ajax({
@@ -460,238 +564,316 @@
                             div_1.append(div_2, div_3);
 
                             target.append(div_1);
+
+                            document.getElementById("btn-minus").disabled = true;
                         }
                     }
                 });
             }
         }
 
-            function showAccount(value) {
-                console.log(value);
-                let orgCode = value.getAttribute("id");
-                let industry = value.getAttribute("industry");
-                console.log(orgCode);
-                console.log(industry);
-                console.log("============================!!!!")
-                let cnt = document.getElementsByClassName(orgCode);
-                console.log($(cnt).length);
-                if ($(cnt).length != 0) {
-                    console.log("삭제 조건들어옴");
-                    console.log(cnt.length);
+        function showAccount(value) {
+            console.log(value);
+            let orgCode = value.getAttribute("id");
+            let industry = value.getAttribute("industry");
+            console.log(orgCode);
+            console.log(industry);
+            console.log("============================!!!!")
+            let cnt = document.getElementsByClassName(orgCode);
+            console.log($(cnt).length);
+            if ($(cnt).length != 0) {
+                console.log("삭제 조건들어옴");
+                console.log(cnt.length);
 
-                    for (let i = cnt.length - 1; i >= 0; i--) {
-                        console.log(i);
-                        console.log(cnt[i]);
+                for (let i = cnt.length - 1; i >= 0; i--) {
+                    console.log(i);
+                    console.log(cnt[i]);
 
-                        cnt[i].remove();
-                    }
-                    $('#' + orgCode).css("background-color", "transparent");
-                } else {
-                    let clientNum = [[${user.ownNum}]];
-                    console.log(clientNum);
-                    let data = {
-                        "clientNum": clientNum,
-                        "industry": industry,
-                    };
+                    cnt[i].remove();
+                }
+                $('#' + orgCode).css("background-color", "transparent");
+            } else {
+                let clientNum = [[${user.ownNum}]];
+                console.log(clientNum);
+                let data = {
+                    "clientNum": clientNum,
+                    "industry": industry,
+                };
 
-                    // ## 각 업권 별 계좌 리스트
-                    if (industry == "card") {
+                // ## 각 업권 별 계좌 리스트
+                if (industry == "card") {
 
-                    } else if (industry == "bank") {
-                        $.ajax({
-                            url: "/app/bank/myAccount",
-                            data: data,
-                            type: "post",
+                } else if (industry == "bank") {
+                    $.ajax({
+                        url: "/app/bank/myAccount",
+                        data: data,
+                        type: "post",
 
-                            success: (message) => {
-                                let balance = JSON.parse(message.balance);
-                                let bankList = JSON.parse(message.bankList);
-                                console.log(balance);
-                                console.log("==================");
-                                console.log(bankList.length);
-                                for (let i = 0; i < bankList.length; i += 2) {
-                                    let reqData = JSON.parse(message.bankList)[i];
-                                    let resData = JSON.parse(message.bankList)[i + 1];
+                        success: (message) => {
+                            let balance = JSON.parse(message.balance);
+                            let bankList = JSON.parse(message.bankList);
+                            console.log(balance);
+                            console.log("==================");
+                            console.log(bankList.length);
+                            for (let i = 0; i < bankList.length; i += 2) {
+                                let reqData = JSON.parse(message.bankList)[i];
+                                let resData = JSON.parse(message.bankList)[i + 1];
 
-                                    console.log(reqData);
-                                    console.log(resData);
-                                    console.log(resData.account_list)
-                                    console.log("=====================!!!!!!!")
-                                    console.log(resData.account_list.length);
-                                    console.log("=====================!!!!!!!")
+                                console.log(reqData);
+                                console.log(resData);
+                                console.log(resData.account_list)
+                                console.log("=====================!!!!!!!")
+                                console.log(resData.account_list.length);
+                                console.log("=====================!!!!!!!")
 
-                                    console.log("res_acc_list = " + resData.account_list);
+                                console.log("res_acc_list = " + resData.account_list);
 
-                                    for (let j = 0; j < resData.account_list.length; j++) {
-                                        console.log(resData.account_list[j].prod_name);
-                                        console.log(resData.account_list[j].account_num);
+                                for (let j = 0; j < resData.account_list.length; j++) {
+                                    console.log(resData.account_list[j].prod_name);
+                                    console.log(resData.account_list[j].account_num);
 
-                                        console.log(resData.account_list);
+                                    console.log(resData.account_list);
 
-                                        let div_1 = document.createElement("div");
-                                        div_1.className = "accountList " + reqData.org_code;
+                                    let div_1 = document.createElement("div");
+                                    div_1.className = "accountList " + reqData.org_code;
 
-                                        let div_2 = document.createElement("div");
-                                        div_2.className = "d-flex";
-                                        console.log("j = " + j);
+                                    let div_2 = document.createElement("div");
+                                    div_2.className = "d-flex";
+                                    console.log("j = " + j);
 
 
-                                        let bankName = document.createElement("div");
-                                        bankName.innerText = resData.account_list[j].prod_name;
-                                        let accountNum = document.createElement("div");
-                                        let accNum = resData.account_list[j].account_num;
-                                        console.log("***********")
-                                        console.log(accNum);
-                                        console.log("***************")
-                                        accountNum.className = "text-muted";
-                                        accountNum.innerText = "( " + accNum + " )";
-                                        let balanceNum = "";
-                                        for (let k = 0; k < balance.length; k += 2) {
-                                            console.log(balance[k].account_num)
-                                            if (accNum == balance[k].account_num) {
-                                                balanceNum = balance[k + 1].detail_list[0].balance_amt;
-                                                break;
-                                            } else {
-                                                balanceNum = "0";
-                                            }
+                                    let bankName = document.createElement("div");
+                                    bankName.innerText = resData.account_list[j].prod_name;
+                                    let accountNum = document.createElement("div");
+                                    let accNum = resData.account_list[j].account_num;
+                                    console.log("***********")
+                                    console.log(accNum);
+                                    console.log("***************")
+                                    accountNum.className = "text-muted";
+                                    accountNum.innerText = "( " + accNum + " )";
+                                    let balanceNum = "";
+                                    for (let k = 0; k < balance.length; k += 2) {
+                                        console.log(balance[k].account_num)
+                                        if (accNum == balance[k].account_num) {
+                                            balanceNum = balance[k + 1].detail_list[0].balance_amt;
+                                            break;
+                                        } else {
+                                            balanceNum = "0";
                                         }
+                                    }
 
-                                        let balanceDiv = document.createElement("div");
-                                        balanceDiv.className = "d-flex justify-content-end";
-                                        console.log("잔액 : " + balanceNum);
+                                    let balanceDiv = document.createElement("div");
+                                    balanceDiv.className = "d-flex justify-content-end";
+                                    console.log("잔액 : " + balanceNum);
 
-                                        let balanceAccount = balanceNum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                                    let balanceAccount = balanceNum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
-                                        console.log(balanceAccount);
+                                    console.log(balanceAccount);
 
-                                        balanceDiv.innerText = balanceAccount + " 원";
+                                    balanceDiv.innerText = balanceAccount + " 원";
 
-                                        let reqOrg = reqData.org_code;
-                                        console.log(reqOrg);
-                                        let target = document.getElementById(reqOrg);
-                                        if (reqOrg == orgCode) {
-                                            console.log("기관코드 같은 조건 들어옴");
-                                            $('#' + orgCode).css("background-color", "#f5f5f5");
-                                            div_2.append(bankName, accountNum);
-                                            div_1.append(div_2, balanceDiv);
+                                    let reqOrg = reqData.org_code;
+                                    console.log(reqOrg);
+                                    let target = document.getElementById(reqOrg);
+                                    if (reqOrg == orgCode) {
+                                        console.log("기관코드 같은 조건 들어옴");
+                                        $('#' + orgCode).css("background-color", "#f5f5f5");
+                                        div_2.append(bankName, accountNum);
+                                        div_1.append(div_2, balanceDiv);
 
-                                            target.append(div_1);
-
-                                        }
-
-                                        div_1.onclick = function () {
-                                            location.href = "/app/bank/transactions/" + resData.account_list[j].account_num;
-                                        }
+                                        target.append(div_1);
 
                                     }
+
+                                    div_1.onclick = function () {
+                                        location.href = "/app/bank/transactions/" + resData.account_list[j].account_num;
+                                    }
+
                                 }
+                            }
 
-                            },
-                        });
-                    } else if (industry == "invest") {
-                        $.ajax({
-                            url: "/app/invest/myAccount",
-                            data: data,
-                            type: "post",
+                        },
+                    });
+                } else if (industry == "invest") {
+                    $.ajax({
+                        url: "/app/invest/myAccount",
+                        data: data,
+                        type: "post",
 
-                            success: (message) => {
-                                let balance = JSON.parse(message.balance);
-                                let investList = JSON.parse(message.investList);
-                                console.log(balance);
-                                console.log("==================");
-                                console.log(investList.length);
-                                for (let i = 0; i < investList.length; i += 2) {
-                                    let reqData = JSON.parse(message.investList)[i];
-                                    let resData = JSON.parse(message.investList)[i + 1];
+                        success: (message) => {
+                            let balance = JSON.parse(message.balance);
+                            let investList = JSON.parse(message.investList);
+                            console.log(balance);
+                            console.log("==================");
+                            console.log(investList.length);
+                            for (let i = 0; i < investList.length; i += 2) {
+                                let reqData = JSON.parse(message.investList)[i];
+                                let resData = JSON.parse(message.investList)[i + 1];
 
-                                    console.log(reqData);
-                                    console.log(resData);
-                                    console.log(resData.account_list)
-                                    console.log("=====================!!!!!!!")
-                                    console.log(resData.account_list.length);
-                                    console.log("=====================!!!!!!!")
+                                console.log(reqData);
+                                console.log(resData);
+                                console.log(resData.account_list)
+                                console.log("=====================!!!!!!!")
+                                console.log(resData.account_list.length);
+                                console.log("=====================!!!!!!!")
 
-                                    for (let j = 0; j < resData.account_list.length; j++) {
-                                        console.log(resData.account_list[j].account_name);
-                                        console.log(resData.account_list[j].account_num);
+                                for (let j = 0; j < resData.account_list.length; j++) {
+                                    console.log(resData.account_list[j].account_name);
+                                    console.log(resData.account_list[j].account_num);
 
-                                        console.log(resData.account_list);
+                                    console.log(resData.account_list);
 
-                                        let div_1 = document.createElement("div");
-                                        div_1.className = "accountList " + reqData.org_code;
+                                    let div_1 = document.createElement("div");
+                                    div_1.className = "accountList " + reqData.org_code;
 
-                                        let div_2 = document.createElement("div");
-                                        div_2.className = "d-flex";
-                                        console.log("j = " + j);
+                                    let div_2 = document.createElement("div");
+                                    div_2.className = "d-flex";
+                                    console.log("j = " + j);
 
 
-                                        let agencyName = document.createElement("div");
-                                        agencyName.innerText = resData.account_list[j].account_name;
-                                        let accountNum = document.createElement("div");
-                                        let accNum = resData.account_list[j].account_num;
-                                        accountNum.className = "text-muted";
-                                        accountNum.innerText = "( " + accNum + " )";
-                                        let balanceNum = "";
+                                    let agencyName = document.createElement("div");
+                                    agencyName.innerText = resData.account_list[j].account_name;
+                                    let accountNum = document.createElement("div");
+                                    let accNum = resData.account_list[j].account_num;
+                                    accountNum.className = "text-muted";
+                                    accountNum.innerText = "( " + accNum + " )";
+                                    let balanceNum = "";
 
-                                        for (let k = 0; k < balance.length; k += 2) {
-                                            if (accNum == balance[k].account_num) {
-                                                if (balance[k + 1].trans_list.length == 0) {
-                                                    balanceNum = "0";
-                                                } else {
-                                                    balanceNum = balance[k + 1].trans_list[balance[k + 1].trans_list.length - 1].balance_amt;
-                                                }
-                                                break;
-                                            } else {
+                                    for (let k = 0; k < balance.length; k += 2) {
+                                        if (accNum == balance[k].account_num) {
+                                            if (balance[k + 1].trans_list.length == 0) {
                                                 balanceNum = "0";
+                                            } else {
+                                                balanceNum = balance[k + 1].trans_list[balance[k + 1].trans_list.length - 1].balance_amt;
                                             }
+                                            break;
+                                        } else {
+                                            balanceNum = "0";
                                         }
+                                    }
 
-                                        let balanceDiv = document.createElement("div");
-                                        balanceDiv.className = "d-flex justify-content-end";
-                                        console.log("잔액 : " + balanceNum);
+                                    let balanceDiv = document.createElement("div");
+                                    balanceDiv.className = "d-flex justify-content-end";
+                                    console.log("잔액 : " + balanceNum);
 
-                                        let balanceAccount = balanceNum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                                    let balanceAccount = balanceNum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
-                                        console.log(balanceAccount);
+                                    console.log(balanceAccount);
 
-                                        balanceDiv.innerText = balanceAccount + " 원";
+                                    balanceDiv.innerText = balanceAccount + " 원";
 
-                                        let reqOrg = reqData.org_code;
-                                        console.log(reqOrg);
-                                        let target = document.getElementById(reqOrg);
-                                        if (reqOrg == orgCode) {
-                                            console.log("기관코드 같은 조건 들어옴");
-                                            $('#' + orgCode).css("background-color", "#f5f5f5");
-                                            div_2.append(agencyName, accountNum);
-                                            div_1.append(div_2, balanceDiv);
+                                    let reqOrg = reqData.org_code;
+                                    console.log(reqOrg);
+                                    let target = document.getElementById(reqOrg);
+                                    if (reqOrg == orgCode) {
+                                        console.log("기관코드 같은 조건 들어옴");
+                                        $('#' + orgCode).css("background-color", "#f5f5f5");
+                                        div_2.append(agencyName, accountNum);
+                                        div_1.append(div_2, balanceDiv);
 
-                                            target.append(div_1);
-
-                                        }
-
-                                        div_1.onclick = function () {
-                                            location.href = "/app/invest/transactions/" + resData.account_list[j].account_num;
-                                        }
+                                        target.append(div_1);
 
                                     }
+
+                                    div_1.onclick = function () {
+                                        location.href = "/app/invest/transactions/" + resData.account_list[j].account_num;
+                                    }
+
                                 }
+                            }
 
-                            },
-                        });
-                    } else if (industry == "insu") {
-
-                    }
-
+                        },
+                    });
+                } else if (industry == "insu") {
 
                 }
 
+
             }
 
-            function sorry() {
-                Swal.fire({
-                    title: "자산 연결은 은행 업권과 투자 업권에서만 가능합니다.",
-                })
+        }
+
+        function sorry() {
+            Swal.fire({
+                title: "자산 연결은 은행 업권과 투자 업권에서만 가능합니다.",
+            })
+        }
+
+        // 해제 누르면 체크박스 생성 및 버튼 교환
+        function disconnectAcc(industry) {
+            console.log(industry);
+            let target = document.getElementsByClassName("listHover");
+            console.log("++++++++++++++++++")
+            console.log(target.length);
+            for (let i = target.length - 1; i >= 0; i--) {
+                // 체크박스 생성
+                let input = document.createElement("input");
+                input.className = "form-check bankOne";
+                input.type = "checkbox";
+                input.name = "bank";
+                target[i].append(input);
             }
+
+            // 버튼들 지우기
+            let btns = document.getElementById("plusMinus");
+            btns.innerHTML = "";
+
+            //버튼 생성 ( 해제 , 취소 )
+            let deleteBtn = document.createElement("button");
+            deleteBtn.className = "btn btn-minus";
+            deleteBtn.id = "btn-minus";
+            deleteBtn.type = "button";
+            deleteBtn.innerText = "연결 해제";
+            // 업권하고, 기관코드 넣어줘야함/ 함수 만들고
+            $(deleteBtn).attr("onclick", "deleteAcc("+industry+")");
+
+            let cancelBtn = document.createElement("button");
+            cancelBtn.className = "btn btn-cancel";
+            cancelBtn.id = "btn-cancel";
+            cancelBtn.type = "button";
+            cancelBtn.innerText = "취소";
+
+            // 해당 업권 클릭하게 해도 됨
+            $(cancelBtn).attr("onclick", "window.location.reload()");
+
+            btns.append(deleteBtn, cancelBtn);
+
+
+
+        }
+
+        // 자산 해제 마지막 단계 (delete)
+        function deleteAcc(industry) {
+            let chbox = document.getElementsByClassName('bankOne');
+            let total = chbox.length;
+            let list = [];
+            console.log(total);
+            for (let i = 0; i < total; i++) {
+                console.log(chbox[i].checked)
+                if (chbox[i].checked) {
+                    console.log(chbox[i].parentNode.parentNode.id);
+
+                    list.push(chbox[i].parentNode.parentNode.id);
+
+                }
+            }
+            console.log(list);
+            console.log(industry);
+            let data = {
+                "choiceAgency": list,
+                "industry": industry,
+            }
+
+            $.ajax({
+                url:"/app/deleteAgency",
+                data: data,
+                type:"post",
+
+                success : (message)=>{
+                    console.log("삭제 성공");
+                }
+            })
+        }
 
 
     </script>
@@ -805,9 +987,9 @@
                 </div>
             </div>
             <!-- 추가 해제 버튼 -->
-            <div class="d-flex justify-content-center align-items-center" style="height: 11%;">
-                <button class="btn-plus" type="button" onclick="sorry()">+ 추가</button>
-                <button class="btn-minus" type="button">- 해제</button>
+            <div class="d-flex justify-content-center align-items-center" style="height: 11%;" id="plusMinus">
+                <button class="btn btn-plus" id="btn-plus" type="button" onclick="sorry()">+ 추가</button>
+                <button class="btn btn-minus" id="btn-minus" type="button" onclick="disconnectAcc('card')" disabled>- 해제</button>
             </div>
 
 
