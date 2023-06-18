@@ -179,13 +179,11 @@ public class AppController {
         if (authentication != null) {
             new SecurityContextLogoutHandler().logout(request, response, authentication);
         }
-
         return "redirect:/";
     }
 
     @GetMapping("/app/agencyChoice")
     public String agencyChoice() {
-
         return "/app/agencyChoice";
     }
 
@@ -229,12 +227,38 @@ public class AppController {
 
     // ### 은행 ###
     @GetMapping("/app/bank/insert/{industry}")
-    public String bank(Model model, @PathVariable String industry) {
+    public String bank(Model model, @PathVariable String industry, @AuthenticationPrincipal UserCustomDetails userDetails) {
         List<MdAgencyDTO> agencyDTOList = mydataService.agencyIndustry(industry);
         System.out.println("agencyDTOList = " + agencyDTOList);
         System.out.println("agencyDTOList.size() = " + agencyDTOList.size());
+        UserDTO logIn = userDetails.getUserDTO();
 
+        String uri_1 = "/accounts";
 
+        List<GetDataDTO> org_codeList = getDataService.selectAllIndustry(logIn.getOwnNum(), uri_1, industry);
+        System.out.println("org_codeList = " + org_codeList);
+
+        // 자산 연결된 기관코드 저장할 빈 list
+        List<String> connectAgency = new ArrayList<>();
+        for (int i = 0; i < org_codeList.size(); i++) {
+            JsonObject object = (JsonObject) JsonParser.parseString(org_codeList.get(i).getRequestData());
+            String org_code = String.valueOf(object.get("org_code"));
+            String org = getString(org_code);
+            System.out.println("org = " + org);
+            connectAgency.add(org);
+        }
+
+        System.out.println("agencyDTOList1111 = " + agencyDTOList.size());
+        for (int i = 0; i < agencyDTOList.size(); i++) {
+            for (String agency : connectAgency) {
+                if (agency.equals(agencyDTOList.get(i).getCode())) {
+                    agencyDTOList.remove(i);
+                }
+            }
+        }
+        System.out.println("agencyDTOList 22222= " + agencyDTOList.size());
+
+        model.addAttribute("connectAgency", connectAgency);
         model.addAttribute("agencyList",agencyDTOList);
         return "/app/bankInsert";
     }
@@ -388,10 +412,42 @@ public class AppController {
     // ### 투자 ###
 
     @GetMapping("/app/invest/insert/{industry}")
-    public String invest(Model model, @PathVariable String industry) {
+    public String invest(Model model, @PathVariable String industry,@AuthenticationPrincipal UserCustomDetails userDetails) {
         List<MdAgencyDTO> agencyDTOList = mydataService.agencyIndustry(industry);
         System.out.println("agencyDTOList = " + agencyDTOList);
         System.out.println("agencyDTOList.size() = " + agencyDTOList.size());
+
+        //////////
+        UserDTO logIn = userDetails.getUserDTO();
+
+        String uri_1 = "/accounts";
+
+        List<GetDataDTO> org_codeList = getDataService.selectAllIndustry(logIn.getOwnNum(), uri_1, industry);
+        System.out.println("org_codeList = " + org_codeList);
+
+        // 자산 연결된 기관코드 저장할 빈 list
+        List<String> connectAgency = new ArrayList<>();
+        for (int i = 0; i < org_codeList.size(); i++) {
+            JsonObject object = (JsonObject) JsonParser.parseString(org_codeList.get(i).getRequestData());
+            String org_code = String.valueOf(object.get("org_code"));
+            String org = getString(org_code);
+            System.out.println("org = " + org);
+            connectAgency.add(org);
+        }
+
+        System.out.println("agencyDTOList1111 = " + agencyDTOList.size());
+        for (int i = 0; i < agencyDTOList.size(); i++) {
+            for (String agency : connectAgency) {
+                if (agency.equals(agencyDTOList.get(i).getCode())) {
+                    agencyDTOList.remove(i);
+                }
+            }
+        }
+        System.out.println("agencyDTOList 22222= " + agencyDTOList.size());
+
+        model.addAttribute("connectAgency", connectAgency);
+
+        ///////
 
         model.addAttribute("agencyList",agencyDTOList);
         return "/app/investInsert";
