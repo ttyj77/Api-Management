@@ -432,15 +432,37 @@
                 $('.btn-plus').attr("onclick", "sorry()");
 
                 // ajax로 목록 만들기
-                // $.ajax({
-                //     url:"app/cardList",
-                //     data:data,
-                //     type:"get",
-                //
-                //     success: (message) => {
-                //
-                //     }
-                // });
+                $.ajax({
+                    url: "/app/insu/myAccount",
+                    data: data,
+                    type: "post",
+
+                    success: (message) => {
+                        console.log("보험!!!!!!!!!!!!!!!!")
+                        let insuList = JSON.parse(message.insuList);
+                        console.log(insuList.length == 0)
+
+                        if (insuList.length == 0) {
+                            let div_1 = document.createElement("div");
+                            let div_2 = document.createElement("div");
+                            let div_3 = document.createElement("div");
+                            let span_1 = document.createElement("span");
+                            let span_2 = document.createElement("span");
+
+                            div_1.className = "oneBox";
+                            div_2.className = "fontXL noList";
+                            div_3.className = "fontL noList";
+                            span_1.innerText = "연결된 자산이 없습니다.";
+                            span_2.innerText = "자산을 추가하시려면 아래 추가 버튼을 눌러주세요.";
+
+                            div_2.append(span_1);
+                            div_3.append(span_2);
+                            div_1.append(div_2, div_3);
+
+                            target.append(div_1);
+                        }
+                    }
+                });
             }
         }
 
@@ -613,7 +635,11 @@
 
                                         for (let k = 0; k < balance.length; k += 2) {
                                             if (accNum == balance[k].account_num) {
-                                                balanceNum = balance[k + 1].trans_list[balance[k + 1].trans_list.length - 1].balance_amt;
+                                                if (balance[k + 1].trans_list.length == 0) {
+                                                    balanceNum = "0";
+                                                } else {
+                                                    balanceNum = balance[k + 1].trans_list[balance[k + 1].trans_list.length - 1].balance_amt;
+                                                }
                                                 break;
                                             } else {
                                                 balanceNum = "0";

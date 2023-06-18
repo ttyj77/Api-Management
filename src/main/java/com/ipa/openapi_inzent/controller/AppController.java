@@ -125,14 +125,15 @@ public class AppController {
 
             JsonObject jsonObject = (JsonObject) JsonParser.parseString(investList.get(i).getResponseData());
             JsonArray results = jsonObject.get("trans_list").getAsJsonArray();
-
-            System.out.println("results.size() = " + results.size());
-            // trans_list 마지막 거래 내역의 잔액을 총 자산에 더해주기
-            JsonObject tempJson = (JsonObject) results.get(results.size() - 1); // 마지막 리스트 잔액
-            System.out.println("tempJson = " + tempJson);
-            String balance = getString(String.valueOf(tempJson.get("balance_amt")));
-            System.out.println("balance = " + balance);
-            sum += Integer.parseInt(balance);
+            if (!results.isEmpty()) {
+                System.out.println("results.size() = " + results.size());
+                // trans_list 마지막 거래 내역의 잔액을 총 자산에 더해주기
+                JsonObject tempJson = (JsonObject) results.get(results.size() - 1); // 마지막 리스트 잔액
+                System.out.println("tempJson = " + tempJson);
+                String balance = getString(String.valueOf(tempJson.get("balance_amt")));
+                System.out.println("balance = " + balance);
+                sum += Integer.parseInt(balance);
+            }
         }
 
 
@@ -435,11 +436,14 @@ public class AppController {
 
             JsonObject jsonObject = (JsonObject) JsonParser.parseString(investList.get(i).getResponseData());
             JsonArray results = jsonObject.get("trans_list").getAsJsonArray();
-
-            System.out.println("results.size() = " + results.size());
-            // trans_list 마지막 거래 내역의 잔액을 총 자산에 더해주기
-            JsonObject tempJson = (JsonObject) results.get(results.size() - 1); // 마지막 리스트 잔액
-            balance.add(getString(String.valueOf(tempJson.get("balance_amt"))));
+            if (results.isEmpty()) {
+                balance.add("0");
+            } else {
+                System.out.println("results.size() = " + results.size());
+                // trans_list 마지막 거래 내역의 잔액을 총 자산에 더해주기
+                JsonObject tempJson = (JsonObject) results.get(results.size() - 1); // 마지막 리스트 잔액
+                balance.add(getString(String.valueOf(tempJson.get("balance_amt"))));
+            }
             System.out.println("balance = " + balance);
         }
 
@@ -489,7 +493,8 @@ public class AppController {
         String uri_2 = "/accounts/basic";
         String uri_3 = "/accounts/transactions";
 
-        List<GetDataDTO> balanceList = getDataService.accountAll(account, clientNum, uri_2);
+        List<GetDataDTO> accountInfo = getDataService.accountOne(account, clientNum, uri_1);
+        List<GetDataDTO> mortgageList = getDataService.accountAll(account, clientNum, uri_2);
         List<GetDataDTO> accountList = getDataService.accountAll(account, clientNum, uri_3);
         List<MdAgencyDTO> agencyDTOList = mydataService.mdAgencySelectAll();
 
@@ -497,7 +502,41 @@ public class AppController {
 
         System.out.println("accountList = " + accountList);
 
-        System.out.println("balanceList = " + balanceList);
+        // 계좌 상세 정보 조회 용
+        JsonObject accObject = (JsonObject) JsonParser.parseString(accountInfo.get(0).getResponseData());
+        JsonArray accArray = accObject.get("account_list").getAsJsonArray();
+        System.out.println("accArray = " + accArray);
+        System.out.println("accArray.size() = " + accArray.size());
+
+
+        SimpleDateFormat dayFormat = new SimpleDateFormat("yyyyMMdd");
+        AccountInfoDTO temp = new AccountInfoDTO();
+        JsonObject tempJson = (JsonObject) accArray.get(0);
+
+        temp.setCnt(String.valueOf(accArray.size()));
+        temp.setAccount_num(getString(String.valueOf(tempJson.get("account_num"))));
+        temp.setAccount_name(getString(String.valueOf(tempJson.get("account_name"))));
+        temp.setAccount_type(getString(String.valueOf(tempJson.get("account_type"))));
+        Date date = dayFormat.parse(getString(String.valueOf(tempJson.get("issue_date"))));
+        temp.setIssue_date(date);
+
+        model.addAttribute("accountInfo", temp);
+
+        // 신용 대출액 / 대출금 용
+        JsonObject mortgageObject = (JsonObject) JsonParser.parseString(mortgageList.get(0).getResponseData());
+        System.out.println("mortgageObject = " + mortgageObject);
+        JsonArray morArray = mortgageObject.get("basic_list").getAsJsonArray();
+        System.out.println("morArray = " + morArray);
+
+        JsonObject basicObj = (JsonObject) morArray.get(0);
+        System.out.println("basicObj = " + basicObj);
+
+        System.out.println("getString(String.valueOf(basicObj.get(\"mortgage_cmt\"))) = " + getString(String.valueOf(basicObj.get("mortgage_cmt"))));
+        System.out.println("getString(String.valueOf(basicObj.get(\"credit_loan_am\"))) = " + getString(String.valueOf(basicObj.get("credit_loan_am"))));
+
+        model.addAttribute("mortgage_cmt", getString(String.valueOf(basicObj.get("mortgage_amt"))));
+        model.addAttribute("credit_loan_am", getString(String.valueOf(basicObj.get("credit_loan_amt"))));
+
 
         // 은행 명, logo 출력 용
         JsonObject object = (JsonObject) JsonParser.parseString(accountList.get(0).getRequestData());
@@ -518,43 +557,54 @@ public class AppController {
 
         System.out.println("results.size() = " + balanceArray.size());
         // trans_list 마지막 거래 내역의 잔액을 총 자산에 더해주기
-        JsonObject balanceJson = (JsonObject) balanceArray.get(balanceArray.size() - 1); // 마지막 리스트 잔액
-        String balance = getString(String.valueOf(balanceJson.get("balance_amt")));
-        System.out.println("balance = " + balance);
+        if (balanceArray.size() == 0) {
+            model.addAttribute("balance", "0");
+        } else {
+            JsonObject balanceJson = (JsonObject) balanceArray.get(balanceArray.size() - 1); // 마지막 리스트 잔액
+            String balance = getString(String.valueOf(balanceJson.get("balance_amt")));
+            System.out.println("balance = " + balance);
 
-        model.addAttribute("balance", balance);
+            model.addAttribute("balance", balance);
+        }
+
 
         // 거래 내역
         // 거래내역 response Data 넣을 DTO List
-//        List<TransactionDataDTO> transList = new ArrayList<>();
-//
-//        JsonObject jsonObject = (JsonObject) JsonParser.parseString(accountList.get(0).getResponseData());
-//        System.out.println("jsonObject = " + jsonObject);
-//
-//        JsonArray results1 = jsonObject.get("trans_list").getAsJsonArray();
-//        System.out.println("results1.size = " + results1.size());
-//        System.out.println("results1 = " + results1);
-//
-//        SimpleDateFormat dayFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-//
-//        for (int i = results1.size() - 1; i >= 0; i--) {
-//            TransactionDataDTO temp = new TransactionDataDTO();
-//
-//            JsonObject tempJson = (JsonObject) results1.get(i);
-//            temp.setTrans_amt(getString(String.valueOf(tempJson.get("trans_amt"))));
-//            temp.setTrans_type(getString(String.valueOf(tempJson.get("trans_type"))));
-//            temp.setBalance_amt(getString(String.valueOf(tempJson.get("balance_amt"))));
-//            temp.setTrans_class(getString(String.valueOf(tempJson.get("trans_class"))));
-//            Date date = dayFormat.parse(getString(String.valueOf(tempJson.get("trans_dtime"))));
-//            temp.setTrans_dtime(date);
-//            temp.setCurrency_code(getString(String.valueOf(tempJson.get("currency_code"))));
-//
-//            transList.add(temp);
-//        }
+        List<InvestTransactionDTO> transactionList = new ArrayList<>();
+
+        JsonObject transObject = (JsonObject) JsonParser.parseString(accountList.get(0).getResponseData());
+        System.out.println("jsonObject = " + transObject);
+
+        JsonArray trans_list = transObject.get("trans_list").getAsJsonArray();
+        System.out.println("results1.size = " + trans_list.size());
+        System.out.println("results1 = " + trans_list);
+
+        SimpleDateFormat dtimeFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+
+        for (int i = trans_list.size() - 1; i >= 0; i--) {
+            InvestTransactionDTO investDTO = new InvestTransactionDTO();
+
+            JsonObject investJson = (JsonObject) trans_list.get(i);
+            investDTO.setTrans_amt(getString(String.valueOf(investJson.get("trans_amt"))));
+            investDTO.setTrans_type(getString(String.valueOf(investJson.get("trans_type"))));
+            investDTO.setTrans_type_detail(getString(String.valueOf(investJson.get("trans_type_detail"))));
+            investDTO.setSettle_amt(getString(String.valueOf(investJson.get("settle_amt"))));
+            investDTO.setTrans_num(getString(String.valueOf(investJson.get("trans_num"))));
+
+            investDTO.setBalance_amt(getString(String.valueOf(investJson.get("balance_amt"))));
+            investDTO.setProd_code(getString(String.valueOf(investJson.get("prod_code"))));
+            investDTO.setProd_name(getString(String.valueOf(investJson.get("prod_name"))));
+            investDTO.setBase_amt(getString(String.valueOf(investJson.get("base_amt"))));
+            Date dtime = dtimeFormat.parse(getString(String.valueOf(investJson.get("trans_dtime"))));
+            investDTO.setTrans_dtime(dtime);
+            investDTO.setCurrency_code(getString(String.valueOf(investJson.get("currency_code"))));
+
+            transactionList.add(investDTO);
+        }
 
 //        System.out.println("transList = " + transList);
         model.addAttribute("accountNum", account);
-//        model.addAttribute("transList", transList);
+        model.addAttribute("transList", transactionList);
         System.out.println("model = " + model);
 
         return "/app/investDetail";
@@ -562,9 +612,29 @@ public class AppController {
 
 
     // ### 보험 ###
+    @PostMapping("/app/insu/myAccount")
+    @ResponseBody
+    public JsonObject myInsuAccount(String clientNum, String industry) {
+        JsonObject object = new JsonObject();
+        String uri_1 = "/insurances";
+        List<GetDataDTO> list1 = getDataService.selectAllIndustry(clientNum, uri_1, industry);
+        System.out.println("list1 = " + list1);
+        System.out.println("list1.isEmpty() = " + list1.isEmpty());
 
+        JsonArray array = new JsonArray();
+        for (GetDataDTO g : list1) {
+            JsonParser parser = new JsonParser();
+            JsonObject jsonObject = (JsonObject) parser.parse(g.getResponseData());
+            JsonObject jsonObject1 = (JsonObject) parser.parse(g.getRequestData());
 
-    // ### 통신 ###
+            array.add(jsonObject1);
+            array.add(jsonObject);
+        }
+
+        object.addProperty("insuList", array.toString());
+
+        return object;
+    }
 
 
     // ### 인증 페이지 ###

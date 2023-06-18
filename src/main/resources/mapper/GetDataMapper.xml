@@ -19,5 +19,11 @@
         where "requestData" ->> 'account_num' = #{account}
         and "clientNum" = #{clientNum} and uri = #{uri};
     </select>
+    <select id="accountOne" parameterType="string" resultType="com.ipa.openapi_inzent.model.GetDataDTO">
+        select *
+        from public.data
+        where "responseData" -> 'account_list' -> 0 ->> 'account_num' = #{account}
+        and "clientNum" = #{clientNum} and uri = #{uri};
+    </select>
 
 </mapper>

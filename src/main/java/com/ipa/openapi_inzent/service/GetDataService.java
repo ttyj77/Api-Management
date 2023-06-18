@@ -24,4 +24,8 @@ public class GetDataService {
     public List<GetDataDTO> accountAll(String account, String clientNum, String uri) {
         return getDataDao.accountAll(account, clientNum , uri);
     }
+
+    public List<GetDataDTO> accountOne(String account, String clientNum, String uri) {
+        return getDataDao.accountOne(account, clientNum , uri);
+    }
 }
