@@ -225,7 +225,7 @@
             } else if (category == "bank") {
                 // 목록 이름
                 document.getElementById('listName').innerText = " My 은행 목록";
-                $('.btn-plus').attr("onclick", "location.href='/app/bank/insert'");
+                $('.btn-plus').attr("onclick", "location.href='/app/bank/insert/bank'");
 
                 $.ajax({
                     url: "/app/bank/myAccount",
@@ -329,7 +329,7 @@
                 console.log("금융투자!!!!!!!!!!!!!!!")
                 // 목록 이름
                 document.getElementById('listName').innerText = " My 투자 목록";
-                $('.btn-plus').attr("onclick", "location.href='/app/invest/insert'");
+                $('.btn-plus').attr("onclick", "location.href='/app/invest/insert/invest'");
 
                 // ajax로 목록 만들기
                 $.ajax({

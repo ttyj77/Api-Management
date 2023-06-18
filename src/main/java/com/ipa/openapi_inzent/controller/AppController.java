@@ -45,8 +45,7 @@ public class AppController {
     }
 
     @GetMapping("/app/login")
-    public String login(@RequestParam(value = "error", required = false) String error,
-                        @RequestParam(value = "exception", required = false) String exception, Model model) {
+    public String login(@RequestParam(value = "error", required = false) String error, @RequestParam(value = "exception", required = false) String exception, Model model) {
         model.addAttribute("error", error);
         model.addAttribute("exception", exception);
         return "applogin";
@@ -229,9 +228,14 @@ public class AppController {
 
 
     // ### 은행 ###
-    @GetMapping("/app/bank/insert")
-    public String bank() {
+    @GetMapping("/app/bank/insert/{industry}")
+    public String bank(Model model, @PathVariable String industry) {
+        List<MdAgencyDTO> agencyDTOList = mydataService.agencyIndustry(industry);
+        System.out.println("agencyDTOList = " + agencyDTOList);
+        System.out.println("agencyDTOList.size() = " + agencyDTOList.size());
 
+
+        model.addAttribute("agencyList",agencyDTOList);
         return "/app/bankInsert";
     }
 
@@ -382,6 +386,16 @@ public class AppController {
 
 
     // ### 투자 ###
+
+    @GetMapping("/app/invest/insert/{industry}")
+    public String invest(Model model, @PathVariable String industry) {
+        List<MdAgencyDTO> agencyDTOList = mydataService.agencyIndustry(industry);
+        System.out.println("agencyDTOList = " + agencyDTOList);
+        System.out.println("agencyDTOList.size() = " + agencyDTOList.size());
+
+        model.addAttribute("agencyList",agencyDTOList);
+        return "/app/investInsert";
+    }
 
     @PostMapping("/app/invest/myAccount")
     @ResponseBody
@@ -686,12 +700,23 @@ public class AppController {
         }
         System.out.println("agencyList = " + agencyList);
 
+        List<MdAgencyDTO> agencyDTOList = mydataService.mdAgencySelectAll();
+
         String clientNum = userDetails.getUserDTO().getOwnNum();
 
-        String uri_1 = "/accounts";
-        List<GetDataDTO> list = getDataService.selectAll(clientNum, uri_1);
+        String industry = "";
 
-        List<MdAgencyDTO> agencyDTOList = mydataService.mdAgencySelectAll();
+        // 업권 확인
+        for (MdAgencyDTO m : agencyDTOList) {
+            // agencyList는 다 같은 업권이므로 아무 하나만 골라 업권 찾기
+            if (m.getCode().equals(agencyList.get(0))) {
+                industry = m.getIndustry();
+            }
+        }
+
+        // 계좌정보 가져오기
+        String uri_1 = "/accounts";
+        List<GetDataDTO> list = getDataService.selectAllIndustry(clientNum, uri_1, industry);
 
         System.out.println("agencyDTOList = " + agencyDTOList);
 
@@ -703,32 +728,63 @@ public class AppController {
 
         List<AddPropertyDTO> accountList = new ArrayList<>();
 
-        // 자산연결 선택한 기관 돌고
-        for (String str : agencyList) {
-            // 각 은행 마다 돌고
-            for (int i = 0; i < list.size(); i++) {
-                JsonObject object = (JsonObject) JsonParser.parseString(list.get(i).getRequestData());
-                String org_code = String.valueOf(object.get("org_code"));
-                String org = getString(org_code);
-                if (str.equals(org)) {
-                    JsonObject resObj = (JsonObject) JsonParser.parseString(list.get(i).getResponseData());
-                    System.out.println("resObj = " + resObj);
-                    JsonArray array = resObj.get("account_list").getAsJsonArray();
-                    // 계좌 마다 돌고
-                    for (int j = 0; j < array.size(); j++) {
-                        AddPropertyDTO addPropertyDTO = new AddPropertyDTO();
+        if (industry.equals("bank")) {
+            // 자산연결 선택한 기관 돌고
+            for (String str : agencyList) {
+                // 각 은행 마다 돌고
+                for (int i = 0; i < list.size(); i++) {
+                    JsonObject object = (JsonObject) JsonParser.parseString(list.get(i).getRequestData());
+                    String org_code = String.valueOf(object.get("org_code"));
+                    String org = getString(org_code);
+                    if (str.equals(org)) {
+                        JsonObject resObj = (JsonObject) JsonParser.parseString(list.get(i).getResponseData());
+                        System.out.println("resObj = " + resObj);
+                        JsonArray array = resObj.get("account_list").getAsJsonArray();
+                        // 계좌 마다 돌고
+                        for (int j = 0; j < array.size(); j++) {
+                            AddPropertyDTO addPropertyDTO = new AddPropertyDTO();
 
-                        JsonObject tempJson = (JsonObject) array.get(j);
-                        addPropertyDTO.setOrg_code(org);
-                        addPropertyDTO.setProd_name(getString(String.valueOf(tempJson.get("prod_name"))));
-                        addPropertyDTO.setAccount_num(getString(String.valueOf(tempJson.get("account_num"))));
+                            JsonObject tempJson = (JsonObject) array.get(j);
+                            addPropertyDTO.setOrg_code(org);
+                            addPropertyDTO.setProd_name(getString(String.valueOf(tempJson.get("prod_name"))));
+                            addPropertyDTO.setAccount_num(getString(String.valueOf(tempJson.get("account_num"))));
 
-                        accountList.add(addPropertyDTO);
+                            accountList.add(addPropertyDTO);
+                        }
+
                     }
+                }
+            }
+        } else if (industry.equals("invest")) {
+            // 자산연결 선택한 기관 돌고
+            for (String str : agencyList) {
+                // 각 은행 마다 돌고
+                for (int i = 0; i < list.size(); i++) {
+                    JsonObject object = (JsonObject) JsonParser.parseString(list.get(i).getRequestData());
+                    String org_code = String.valueOf(object.get("org_code"));
+                    String org = getString(org_code);
+                    if (str.equals(org)) {
+                        JsonObject resObj = (JsonObject) JsonParser.parseString(list.get(i).getResponseData());
+                        System.out.println("resObj = " + resObj);
+                        JsonArray array = resObj.get("account_list").getAsJsonArray();
+                        // 계좌 마다 돌고
+                        for (int j = 0; j < array.size(); j++) {
+                            AddPropertyDTO addPropertyDTO = new AddPropertyDTO();
 
+                            JsonObject tempJson = (JsonObject) array.get(j);
+                            addPropertyDTO.setOrg_code(org);
+                            addPropertyDTO.setProd_name(getString(String.valueOf(tempJson.get("account_name"))));
+                            addPropertyDTO.setAccount_num(getString(String.valueOf(tempJson.get("account_num"))));
+
+                            accountList.add(addPropertyDTO);
+                        }
+
+                    }
                 }
             }
         }
+
+
         System.out.println("accountList = " + accountList);
 
         // 선택한 기관들 정보 가지고 있을 List
@@ -742,6 +798,8 @@ public class AppController {
             }
         }
         System.out.println("choiceAgency = " + choiceAgency);
+        model.addAttribute("industry", industry);
+        System.out.println("industry = " + industry);
 
         // 중복 제거
         List<MdAgencyDTO> mdAgencyDTOList = choiceAgency.stream().distinct().collect(Collectors.toList());
@@ -787,10 +845,5 @@ public class AppController {
         model.addAttribute("agencyList", list);
 
         return "/app/sendReq";
-    }
-
-    @GetMapping("/app/b")
-    public String b() {
-        return "/app/b";
     }
 }
