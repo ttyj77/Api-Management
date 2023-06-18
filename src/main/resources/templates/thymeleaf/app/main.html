@@ -37,6 +37,7 @@
             width: 90%;
             padding: 35px;
         }
+
         input[type="checkbox"] {
             zoom: 2.0;
         }
@@ -93,6 +94,17 @@
             font-size: xx-large;
             margin-left: 10px;
         }
+        .btn-delete {
+            width: 25%;
+            border-radius: 20%;
+            height: 85%;
+            background-color: #86b7fe;
+            color: #fafafa;
+            border-color: #86b7fe;
+            font-size: xx-large;
+            margin-left: 10px;
+        }
+
         .btn-cancel {
             width: 25%;
             border-radius: 20%;
@@ -811,6 +823,7 @@
                 input.className = "form-check bankOne";
                 input.type = "checkbox";
                 input.name = "bank";
+                $(input).attr("onclick", "cntCheck()");
                 target[i].append(input);
             }
 
@@ -820,12 +833,13 @@
 
             //버튼 생성 ( 해제 , 취소 )
             let deleteBtn = document.createElement("button");
-            deleteBtn.className = "btn btn-minus";
-            deleteBtn.id = "btn-minus";
+            deleteBtn.className = "btn btn-delete";
+            deleteBtn.id = "btn-delete";
             deleteBtn.type = "button";
             deleteBtn.innerText = "연결 해제";
+            deleteBtn.disabled = true;
             // 업권하고, 기관코드 넣어줘야함/ 함수 만들고
-            $(deleteBtn).attr("onclick", "deleteAcc("+industry+")");
+            $(deleteBtn).attr("onclick", "deleteAcc(" + industry + ")");
 
             let cancelBtn = document.createElement("button");
             cancelBtn.className = "btn btn-cancel";
@@ -837,7 +851,6 @@
             $(cancelBtn).attr("onclick", "window.location.reload()");
 
             btns.append(deleteBtn, cancelBtn);
-
 
 
         }
@@ -865,14 +878,36 @@
             }
 
             $.ajax({
-                url:"/app/deleteAgency",
+                url: "/app/deleteAgency",
                 data: data,
-                type:"post",
+                type: "post",
 
-                success : (message)=>{
+                success: (message) => {
                     console.log("삭제 성공");
                 }
             })
+        }
+
+        // 체크박스 체크되면 버튼 disabled 비활성화
+        function cntCheck() {
+            console.log("cntcheck!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            let cnt = 0;
+            let checkboxes = document.getElementsByName('bank');
+            checkboxes.forEach((checkbox) => {
+                console.log(checkbox.checked);
+                    if (checkbox.checked) {
+                        cnt = cnt + 1;
+                    }
+                }
+            )
+
+            console.log(cnt);
+
+            if (cnt > 0) {
+                document.getElementById('btn-delete').disabled = false;
+            } else {
+                document.getElementById('btn-delete').disabled = true;
+            }
         }
 
 
@@ -989,7 +1024,9 @@
             <!-- 추가 해제 버튼 -->
             <div class="d-flex justify-content-center align-items-center" style="height: 11%;" id="plusMinus">
                 <button class="btn btn-plus" id="btn-plus" type="button" onclick="sorry()">+ 추가</button>
-                <button class="btn btn-minus" id="btn-minus" type="button" onclick="disconnectAcc('card')" disabled>- 해제</button>
+                <button class="btn btn-minus" id="btn-minus" type="button" onclick="disconnectAcc('card')" disabled>-
+                    해제
+                </button>
             </div>
 
 
