@@ -16,4 +16,5 @@ public interface GetDataDao {
 
     List<GetDataDTO> accountOne(String account, String clientNum, String uri) throws DataAccessException;
 
+    void deleteAccount(String orgCode, String ownNum, String industry) throws DataAccessException;
 }

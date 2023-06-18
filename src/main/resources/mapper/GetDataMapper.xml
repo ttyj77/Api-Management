@@ -25,5 +25,10 @@
         where "responseData" -> 'account_list' -> 0 ->> 'account_num' = #{account}
         and "clientNum" = #{clientNum} and uri = #{uri};
     </select>
+    <delete id="deleteAccount" parameterType="string">
+        delete from public.data
+        where "requestData" ->> 'org_code' = #{org_code}
+        and "clientNum" = #{clientNum} and industry = #{industry};
+    </delete>
 
 </mapper>
