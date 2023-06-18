@@ -50,4 +50,5 @@ public interface MydataDao {
 
     List<MdProviderDTO> mdProviderSearch(String keyword) throws DataAccessException;
 
+    List<MdAgencyDTO> agencyIndustry(String industry) throws DataAccessException;
 }

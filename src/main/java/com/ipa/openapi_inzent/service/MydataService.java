@@ -211,5 +211,9 @@ public class MydataService {
         return list;
 
     }
+
+    public List<MdAgencyDTO> agencyIndustry(String industry) {
+        return mydataDao.agencyIndustry(industry);
+    }
 }
 

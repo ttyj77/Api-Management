@@ -97,6 +97,11 @@
     <select id="mdAgencySelectAll" resultType="com.ipa.openapi_inzent.model.MdAgencyDTO">
         SELECT * FROM public."mdAgency";
     </select>
+    <!-- 업권별 기관 selectALl -->
+    <select id="agencyIndustry" resultType="com.ipa.openapi_inzent.model.MdAgencyDTO">
+        SELECT * FROM public."mdAgency"
+        where industry = #{industry};
+    </select>
     <!-- 모달 - mdService 상세 -->
     <select id="mdServiceSelectModal" parameterType="int" resultMap="mdService">
         select ms.id, ms."agencyId",ms."clientId", ms.name as "mdServiceName" , ma.code,
@@ -180,8 +185,10 @@
 
     <insert id="mdProviderInsert" parameterType="com.ipa.openapi_inzent.model.MdProviderDTO">
         INSERT INTO public."providerHistory"(
-        "reqDate", runtime, "resCode", "apiCode", "customerNum", "regularTransmission", "uniqueNum", "statusInfo", "apiResources", "reqHeader", "resMsg", "resData", "reqInfoId")
-        VALUES (NOW(), #{runtime}, #{resCode}, #{apiCode}, #{customerNum}, #{regularTransmission}, #{uniqueNum}, #{statusInfo}, #{apiResources}, #{reqHeader}, #{resMsg}, #{resData} , #{reqInfoId});
+        "reqDate", runtime, "resCode", "apiCode", "customerNum", "regularTransmission", "uniqueNum", "statusInfo",
+        "apiResources", "reqHeader", "resMsg", "resData", "reqInfoId")
+        VALUES (NOW(), #{runtime}, #{resCode}, #{apiCode}, #{customerNum}, #{regularTransmission}, #{uniqueNum},
+        #{statusInfo}, #{apiResources}, #{reqHeader}, #{resMsg}, #{resData} , #{reqInfoId});
     </insert>
 
     <select id="mdProviderCustomerList" parameterType="string" resultType="com.ipa.openapi_inzent.model.MdProviderDTO">
@@ -223,8 +230,10 @@
 
     <insert id="mdCollectorInsert" parameterType="com.ipa.openapi_inzent.model.MdCollectorDTO">
         INSERT INTO public."collectorHistory"(
-        "reqDate", runtime, "resCode", "apiCode", "regularTransmission", "targetHost", "uniqueNum", "apiResources", "reqHeader", "resMsg", "resData")
-        VALUES (#{reqDate}, #{runtime}, #{resCode}, #{apiCode}, #{regularTransmission}, #{targetHost}, #{uniqueNum}, #{apiResources}, #{reqHeader}, #{resMsg}, #{resData});
+        "reqDate", runtime, "resCode", "apiCode", "regularTransmission", "targetHost", "uniqueNum", "apiResources",
+        "reqHeader", "resMsg", "resData")
+        VALUES (#{reqDate}, #{runtime}, #{resCode}, #{apiCode}, #{regularTransmission}, #{targetHost}, #{uniqueNum},
+        #{apiResources}, #{reqHeader}, #{resMsg}, #{resData});
     </insert>
 
     <!--    //////////////////////////////////-->
@@ -233,7 +242,8 @@
     <select id="mdAstList" resultMap="mdAST">
         select mt.id as "tokenId", mt."mdServiceId", mt."mdServiceId", mt."consumerNum",mt."createDate",
         mt."endDate", mt."accessToken", ms.id, ms."agencyId" ,ms."clientId", ms."name" as "mdServiceName"
-        , ms."callbackUrl", ma.code,ma.division, ma.name,ma.industry, ma.address, ma."domainName", ma."publicApiIp", ma."authenticationMethod",
+        , ms."callbackUrl", ma.code,ma.division, ma.name,ma.industry, ma.address, ma."domainName", ma."publicApiIp",
+        ma."authenticationMethod",
         ma."TLSNum", ma."agencyIp", ma."agencyPort"
         from public."mdToken" as mt inner join public."mdService" as ms
         on ms.id = mt."mdServiceId" inner join public."mdAgency" as ma on ma.id = ms."agencyId"
@@ -252,12 +262,13 @@
     <select id="mdTokenSearch" parameterType="string" resultMap="mdAST">
         select mt.id as "tokenId", mt."mdServiceId", mt."mdServiceId", mt."consumerNum",mt."createDate",
         mt."endDate", mt."accessToken", ms.id, ms."agencyId" ,ms."clientId", ms."name" as "mdServiceName"
-        , ms."callbackUrl", ma.code,ma.division, ma.name,ma.industry, ma.address, ma."domainName", ma."publicApiIp", ma."authenticationMethod",
+        , ms."callbackUrl", ma.code,ma.division, ma.name,ma.industry, ma.address, ma."domainName", ma."publicApiIp",
+        ma."authenticationMethod",
         ma."TLSNum", ma."agencyIp", ma."agencyPort"
         from public."mdToken" as mt inner join public."mdService" as ms
         on ms.id = mt."mdServiceId" inner join public."mdAgency" as ma on ma.id = ms."agencyId"
         where mt."consumerNum" ILIKE CONCAT('%', #{keyword},'%')
-        OR  ms.name ILIKE CONCAT('%', #{keyword},'%')
+        OR ms.name ILIKE CONCAT('%', #{keyword},'%')
         OR ma.code ILIKE CONCAT('%', #{keyword},'%')
         OR ma.name ILIKE CONCAT('%', #{keyword},'%');
     </select>
