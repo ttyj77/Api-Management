@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -54,14 +55,14 @@ public class AppController {
 
 
     @GetMapping("/app/main")
-    public String main(Model model, @AuthenticationPrincipal UserCustomDetails userCustomDetails, HttpSession session) throws UnsupportedEncodingException {
+    public String main(Model model, @AuthenticationPrincipal UserCustomDetails userDetails, HttpSession session) throws UnsupportedEncodingException {
         List<String> list1 = (List<String>) session.getAttribute("choiceAgency");
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserDTO userDTO = new UserDTO();
         if (principal instanceof UserDetails) {
             //일반로그인
             String username = ((UserDetails) principal).getUsername();
-            userDTO = userCustomDetails.getUserDTO();
+            userDTO = userDetails.getUserDTO();
         } else {
             //인젠트 로그인
             UserDTO logIn = (UserDTO) session.getAttribute("logIn");
@@ -95,10 +96,8 @@ public class AppController {
 
         UserDTO logIn = userDetails.getUserDTO();
 
-        String uri_2 = "/accounts/deposit/detail";
         String uri_3 = "/accounts/transactions";
 
-        List<GetDataDTO> list = getDataService.selectAll(logIn.getOwnNum(), uri_2);
         List<GetDataDTO> investList = getDataService.selectAll(logIn.getOwnNum(), uri_3);
         System.out.println("investList = " + investList);
 
@@ -906,7 +905,7 @@ public class AppController {
 
     @ResponseBody
     @PostMapping("/app/deleteAgency")
-    public void deleteAgency(@RequestParam (value = "choiceAgency[]") ArrayList<String> choiceAgency, String industry, @AuthenticationPrincipal UserCustomDetails userDetails) {
+    public void deleteAgency(@RequestParam(value = "choiceAgency[]") ArrayList<String> choiceAgency, String industry, @AuthenticationPrincipal UserCustomDetails userDetails) {
         UserDTO logIn = userDetails.getUserDTO();
         System.out.println("industry = " + industry);
 
