@@ -680,6 +680,9 @@ public class AppController {
             }
         }
 
+        // 잠깐 확인용으로 codeList에 인젠트 기관코드 넣겠음 addProperty 확인용 지워야함
+        codeList.add("A1AAAIN000");
+
         HttpSession session = httpServletRequest.getSession();
         session.setAttribute("choiceAgency", codeList);
 
@@ -837,7 +840,6 @@ public class AppController {
 
                             accountList.add(addPropertyDTO);
                         }
-
                     }
                 }
             }

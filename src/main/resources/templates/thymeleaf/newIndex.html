@@ -98,8 +98,8 @@
     svg,
     video {
         display: block;
-        max-width: 100%;
-        width: 100%;
+        /*max-width: 100%;*/
+        /*width: 100%;*/
     }
 
     img {
@@ -164,9 +164,9 @@
         position: relative;
         top: 0;
         left: 0;
-        width: 100vw;
-        height: 0.9rem;
-        padding: 0 0.32rem;
+        /*width: 100vw;*/
+        /*height: 0.9rem;*/
+        /*padding: 0 0.32rem;*/
     }
 
     .header .flex-wrapper {
@@ -197,6 +197,7 @@
         display: flex;
         align-items: center;
         list-style-type: none;
+        justify-content: space-between;
     }
 
     .header .header-menu__item {
@@ -208,23 +209,35 @@
     }
 
     .hero {
-        width: 100vw;
+        /*width: 100vw;*/
         height: 100vh;
-        position: relative;
+        /*position: relative;*/
         overflow: hidden;
     }
 
     .hero .container {
         display: flex;
         align-items: center;
+        justify-content: center;
     }
 
-    .hero .hero-video {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        z-index: -1;
+    @media only screen and (max-width: 1300px) {
+        .hero .hero-video {
+            position: absolute;
+            /*top: 0;*/
+            /*left: 0;*/
+            /*width: 100%;*/
+            z-index: -1;
+        }
+    }
+    @media only screen and (min-width: 1300px) {
+        .hero .hero-video {
+            position: absolute;
+            /*top: 0;*/
+            /*left: 0;*/
+            width: 100%;
+            z-index: -1;
+        }
     }
 
     .hero .title-block {
@@ -340,25 +353,66 @@
         display: flex;
     }
 
+
+    .btnOrange.btnPush {
+        box-shadow: 0px 5px 0px 0px #751107a8;
+    }
+
+    .btnPurple.btnPush {
+        box-shadow: 0px 5px 0px 0px #cbcbcb57;
+    }
+
+    .btnPush:hover {
+        margin-top: 15px;
+        margin-bottom: 5px;
+    }
+
+    .btnOrange.btnPush:hover {
+        box-shadow: 0px 0px 0px 0px #A66615;
+    }
+
+    .btnPurple.btnPush:hover {
+        box-shadow: 0px 0px 0px 0px #6D184B;
+    }
+    .btnOrange {
+        background: #e35646;
+    }
+
+    .btnPurple {
+        background: #a9a9a9;
+    }
+    a.button {
+        display: block;
+        position: relative;
+        float: left;
+        padding: 0px 10px;
+        margin: 10px 20px 10px 0;
+        font-weight: 600;
+        text-align: center;
+        line-height: 50px;
+        color: #FFF;
+        border-radius: 5px;
+        transition: all 0.2s ;
+    }
+    a,
+    a:visited {
+        text-decoration: none;
+        color: #f5f5f5;
+    }
+
 </style>
-<body>
+    <script src="https://kit.fontawesome.com/24311b556d.js" crossOrigin="anonymous"></script>
+<body style="overflow-x: hidden">
 <header class="header">
-    <ul class="header-menu">
-        <img src="../images/logo4.png" style="width: 200px; margin-left: 1%; cursor: pointer;"
+    <div class="header-menu">
+        <img src="../images/logo4.png" style="margin-left: 1%; cursor: pointer;"
              onclick="location.href='/newIndex'">
-        <li class="header-menu__item header-text-1" sec:authorize="isAnonymous()" onclick="checkWeb()">
-            login &nbsp;<i class="fa-solid fa-user"></i>
-        </li>
-    </ul>
-    <!--    <ul class="header-menu">-->
-    <!--        <li class="header-menu__item header-text-1" sec:authorize="isAnonymous()" onclick="checkWeb()">-->
-    <!--            login &nbsp;<i class="fa-solid fa-user"></i>-->
-    <!--        </li>-->
-    <!--        <li class="header-menu__item header-text-1" sec:authorize="isAuthenticated()"-->
-    <!--            onclick="location.href='/logout'">-->
-    <!--            register &nbsp;<i class="fa-solid fa-arrow-right-from-bracket"></i>-->
-    <!--        </li>-->
-    <!--    </ul>-->
+        <div style="font-size: 15%;">
+            <a title="Button push orange" class="button btnPush btnOrange" sec:authorize="isAnonymous()" onclick="checkWeb()">LOGIN</button></a>
+            <a title="Button push purple" class="button btnPush btnPurple" sec:authorize="isAuthenticated()"
+               onclick="location.href='/logout'">LOGOUT</a>
+        </div>
+    </div>
 </header>
 <section class="hero">
     <video class="hero-video" autoplay muted loop>
