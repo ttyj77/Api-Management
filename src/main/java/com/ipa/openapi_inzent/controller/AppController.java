@@ -47,7 +47,8 @@ public class AppController {
     }
 
     @GetMapping("/app/login")
-    public String login(@RequestParam(value = "error", required = false) String error, @RequestParam(value = "exception", required = false) String exception, Model model) {
+    public String login(@RequestParam(value = "error", required = false) String error,
+                        @RequestParam(value = "exception", required = false) String exception, Model model) {
         model.addAttribute("error", error);
         model.addAttribute("exception", exception);
         return "applogin";
@@ -179,11 +180,13 @@ public class AppController {
         if (authentication != null) {
             new SecurityContextLogoutHandler().logout(request, response, authentication);
         }
+
         return "redirect:/";
     }
 
     @GetMapping("/app/agencyChoice")
     public String agencyChoice() {
+
         return "/app/agencyChoice";
     }
 
