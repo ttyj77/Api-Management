@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -162,20 +163,7 @@ public class MydataController {
     }
 
 
-    @GetMapping("/statistics-Daily")
-    public String statistics_Daily() {
-        return "/mydata/statistics-Daily";
-    }
 
-    @GetMapping("/statistics-7Day")
-    public String statistics_7Day() {
-        return "/mydata/statistics-7Day";
-    }
-
-    @GetMapping("/statistics")
-    public String statistics() {
-        return "/mydata/statistics";
-    }
 
 
     /////////////////////////////////////////////////
@@ -558,6 +546,53 @@ public class MydataController {
 
     @GetMapping("/chart")
     public String showChart() {
+
         return "/mydata/chart";
+    }
+    @GetMapping("/statistics-Daily")
+    public String statistics_Daily() {
+        return "/mydata/statistics-Daily";
+    }
+
+    @GetMapping("/statistics-7Day")
+    public String statistics_7Day() {
+        return "/mydata/statistics-7Day";
+    }
+
+    @GetMapping("/statistics/{orgCode}")
+    public String statistics(Model model,@PathVariable String orgCode) {
+        System.out.println("MydataController.showChart");
+        System.out.println("orgCode = " + orgCode);
+
+        List<MdAgencyDTO> mdAgency = mydataService.mdAgencyServiceOne(orgCode);
+        // 만약 한 기관이 가지고 있는 서비스가 한개 이상이면 통계 합 해줘야함
+        System.out.println("mdAgency = " + mdAgency);
+
+        // 서비스 하나 일때
+        if (mdAgency.size() == 1) {
+            // 통계 내용 할 것도 같이 쏴줘야함... DTO 하나 만들어서 쏘던지 아니면 각각 쏘기
+            model.addAttribute("mdAgency", mdAgency.get(0));
+        } else { // 서비스가 하나 이상
+            for (MdAgencyDTO m : mdAgency) {
+                // 통계만 더해주면 됨; 서비스 안에 내용은 같음
+            }
+        }
+
+        return "/mydata/statistics";
+    }
+
+    @GetMapping("/dailyStatistics")
+    public String showDaily(Model model) {
+
+        System.out.println("MydataController.showDaily");
+        List<MdAgencyDTO> agen_serviceList = mydataService.mdAgencyService();
+        System.out.println("agen_serviceList = " + agen_serviceList);
+        System.out.println("agen_serviceList.size() = " + agen_serviceList.size());
+        List<MdAgencyDTO> agencyDTOList = mydataService.mdAgencySelectAll();
+        System.out.println("agencyDTOList = " + agencyDTOList);
+
+        model.addAttribute("list",agen_serviceList);
+
+        return "/mydata/dailyStatistics";
     }
 }

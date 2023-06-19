@@ -272,6 +272,27 @@
         OR ma.code ILIKE CONCAT('%', #{keyword},'%')
         OR ma.name ILIKE CONCAT('%', #{keyword},'%');
     </select>
+    <!-- mdAgency + mdService -->
+    <select id="mdAgencyService" resultMap="mdServiceAgency">
+        select
+        ms.id, ms."agencyId" ,ms."clientId", ms."name" as "mdServiceName"
+        , ms."callbackUrl", ma.code,ma.division, ma.name,ma.industry, ma.address, ma."domainName", ma."publicApiIp",
+        ma."authenticationMethod",
+        ma."TLSNum", ma."agencyIp", ma."agencyPort"
+        from public."mdService" as ms
+        inner join public."mdAgency" as ma on ma.id = ms."agencyId"
+    </select>
+
+    <select id="mdAgencyServiceOne" resultMap="mdServiceAgency">
+        select
+        ms.id, ms."agencyId" ,ms."clientId", ms."name" as "mdServiceName"
+        , ms."callbackUrl", ma.code,ma.division, ma.name,ma.industry, ma.address, ma."domainName", ma."publicApiIp",
+        ma."authenticationMethod",
+        ma."TLSNum", ma."agencyIp", ma."agencyPort"
+        from public."mdService" as ms
+        inner join public."mdAgency" as ma on ma.id = ms."agencyId"
+        where ma.code = #{orgCode};
+    </select>
 
 
 </mapper>

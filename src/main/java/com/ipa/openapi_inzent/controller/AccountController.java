@@ -48,6 +48,7 @@ public class AccountController {
     @ResponseBody
     public JsonObject requestSearch(String keyword) {
         JsonObject object = new JsonObject();
+
         List<UserDTO> list = userService.accountListSearch(keyword);
         System.out.println("keyword = " + keyword);
         System.out.println("list = " + list);
@@ -116,7 +117,6 @@ public class AccountController {
             }
             object.addProperty("userList", userArr.toString());
         }
-
         return object;
     }
 }

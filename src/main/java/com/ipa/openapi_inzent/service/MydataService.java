@@ -216,5 +216,13 @@ public class MydataService {
     public List<MdAgencyDTO> agencyIndustry(String industry) {
         return mydataDao.agencyIndustry(industry);
     }
+
+    public List<MdAgencyDTO> mdAgencyService() {
+        return mydataDao.mdAgencyService();
+    }
+
+    public List<MdAgencyDTO> mdAgencyServiceOne(String orgCode) {
+        return mydataDao.mdAgencyServiceOne(orgCode);
+    }
 }
 
