@@ -94,6 +94,7 @@
             font-size: xx-large;
             margin-left: 10px;
         }
+
         .btn-delete {
             width: 25%;
             border-radius: 20%;
@@ -198,7 +199,55 @@
         }
     </style>
     <script>
+        function disconnectAcc(industry) {
+            console.log(industry);
+            let target = document.getElementsByClassName("listHover");
+            console.log("++++++++++++++++++")
+            console.log(target.length);
+            for (let i = target.length - 1; i >= 0; i--) {
+                // 체크박스 생성
+                let input = document.createElement("input");
+                input.className = "form-check bankOne";
+                input.type = "checkbox";
+                input.name = "bank";
+                $(input).attr("onclick", "cntCheck()");
+                target[i].append(input);
+            }
+
+            // 버튼들 지우기
+            let btns = document.getElementById("plusMinus");
+            btns.innerHTML = "";
+
+            //버튼 생성 ( 해제 , 취소 )
+            let deleteBtn = document.createElement("button");
+            deleteBtn.className = "btn btn-delete";
+            deleteBtn.id = "btn-delete";
+            deleteBtn.type = "button";
+            deleteBtn.innerText = "연결 해제";
+            deleteBtn.disabled = true;
+            // 업권하고, 기관코드 넣어줘야함/ 함수 만들고
+            // $(deleteBtn).attr("onclick", "deleteAcc(" + industry + ")");
+            deleteBtn.onclick = function () {
+                deleteAcc(industry);
+            }
+
+            let cancelBtn = document.createElement("button");
+            cancelBtn.className = "btn btn-cancel";
+            cancelBtn.id = "btn-cancel";
+            cancelBtn.type = "button";
+            cancelBtn.innerText = "취소";
+
+            // 해당 업권 클릭하게 해도 됨
+            // id 값이 industry 로 찾아가 클릭 이벤트 주면 될듯
+            $(cancelBtn).attr("onclick", "window.location.reload()");
+
+            btns.append(deleteBtn, cancelBtn);
+
+
+        }
+
         // 각 카테고리 버튼
+
         function showCategory(value) {
             let target = document.getElementById('listBox-1');
             // 목록 초기화
@@ -224,7 +273,7 @@
                 deleteBtn.type = "button";
                 deleteBtn.innerText = "- 해제";
                 // 업권하고, 기관코드 넣어줘야함/ 함수 만들고
-                $(deleteBtn).attr("onclick", "disconnectAcc(card)");
+                $(deleteBtn).attr("onclick", "disconnectAcc('card')");
 
                 let plusBtn = document.createElement("button");
                 plusBtn.className = "btn btn-plus";
@@ -286,7 +335,7 @@
                 // 업권하고, 기관코드 넣어줘야함/ 함수 만들고
                 console.log("cccccccccccccccccccccccccccccccccccccccccccccccccc")
                 console.log(category);
-                $(deleteBtn).attr("onclick", "disconnectAcc(bank)");
+                $(deleteBtn).attr("onclick", "disconnectAcc('bank')");
 
                 let plusBtn = document.createElement("button");
                 plusBtn.className = "btn btn-plus";
@@ -413,7 +462,7 @@
                 deleteBtn.id = "btn-minus";
                 deleteBtn.type = "button";
                 deleteBtn.innerText = "- 해제";
-                $(deleteBtn).attr("onclick", "disconnectAcc(invest)");
+                $(deleteBtn).attr("onclick", "disconnectAcc('invest')");
 
                 let plusBtn = document.createElement("button");
                 plusBtn.className = "btn btn-plus";
@@ -532,7 +581,7 @@
                 deleteBtn.type = "button";
                 deleteBtn.innerText = "- 해제";
                 // 업권하고, 기관코드 넣어줘야함/ 함수 만들고
-                $(deleteBtn).attr("onclick", "disconnectAcc(insu)");
+                $(deleteBtn).attr("onclick", "disconnectAcc('insu')");
 
                 let plusBtn = document.createElement("button");
                 plusBtn.className = "btn btn-plus";
@@ -812,48 +861,6 @@
         }
 
         // 해제 누르면 체크박스 생성 및 버튼 교환
-        function disconnectAcc(industry) {
-            console.log(industry);
-            let target = document.getElementsByClassName("listHover");
-            console.log("++++++++++++++++++")
-            console.log(target.length);
-            for (let i = target.length - 1; i >= 0; i--) {
-                // 체크박스 생성
-                let input = document.createElement("input");
-                input.className = "form-check bankOne";
-                input.type = "checkbox";
-                input.name = "bank";
-                $(input).attr("onclick", "cntCheck()");
-                target[i].append(input);
-            }
-
-            // 버튼들 지우기
-            let btns = document.getElementById("plusMinus");
-            btns.innerHTML = "";
-
-            //버튼 생성 ( 해제 , 취소 )
-            let deleteBtn = document.createElement("button");
-            deleteBtn.className = "btn btn-delete";
-            deleteBtn.id = "btn-delete";
-            deleteBtn.type = "button";
-            deleteBtn.innerText = "연결 해제";
-            deleteBtn.disabled = true;
-            // 업권하고, 기관코드 넣어줘야함/ 함수 만들고
-            $(deleteBtn).attr("onclick", "deleteAcc(" + industry + ")");
-
-            let cancelBtn = document.createElement("button");
-            cancelBtn.className = "btn btn-cancel";
-            cancelBtn.id = "btn-cancel";
-            cancelBtn.type = "button";
-            cancelBtn.innerText = "취소";
-
-            // 해당 업권 클릭하게 해도 됨
-            $(cancelBtn).attr("onclick", "window.location.reload()");
-
-            btns.append(deleteBtn, cancelBtn);
-
-
-        }
 
         // 자산 해제 마지막 단계 (delete)
         function deleteAcc(industry) {
@@ -872,11 +879,12 @@
             }
             console.log(list);
             console.log(industry);
+            // let arraylist = []
             let data = {
                 "choiceAgency": list,
                 "industry": industry,
             }
-
+            // arraylist.push(data)
             $.ajax({
                 url: "/app/deleteAgency",
                 data: data,
@@ -894,7 +902,7 @@
             let cnt = 0;
             let checkboxes = document.getElementsByName('bank');
             checkboxes.forEach((checkbox) => {
-                console.log(checkbox.checked);
+                    console.log(checkbox.checked);
                     if (checkbox.checked) {
                         cnt = cnt + 1;
                     }
