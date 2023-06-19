@@ -190,7 +190,7 @@
             font-size: x-large;
         }
 
-        .noList{
+        .noList {
             /*border-bottom: 1px solid black;*/
             padding: 40px 20px;
             display: flex;
@@ -864,6 +864,7 @@
 
         // 자산 해제 마지막 단계 (delete)
         function deleteAcc(industry) {
+
             let chbox = document.getElementsByClassName('bankOne');
             let total = chbox.length;
             let list = [];
@@ -884,16 +885,33 @@
                 "choiceAgency": list,
                 "industry": industry,
             }
-            // arraylist.push(data)
-            $.ajax({
-                url: "/app/deleteAgency",
-                data: data,
-                type: "post",
 
-                success: (message) => {
-                    console.log("삭제 성공");
+            Swal.fire({
+                title: "정말 연결해제 하시겠습니까?",
+                cancelButtonText: "취소",
+                showCancelButton: true,
+                confirmButtonText: "예",
+                icon: "warning",
+
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // arraylist.push(data)
+                    $.ajax({
+                        url: "/app/deleteAgency",
+                        data: data,
+                        type: "post",
+
+                        success: (message) => {
+                            console.log("삭제 성공");
+                            Swal.fire({
+                                title:"삭제 성공"
+                            })
+                        }
+                    });
                 }
-            })
+            });
+
+
         }
 
         // 체크박스 체크되면 버튼 disabled 비활성화
