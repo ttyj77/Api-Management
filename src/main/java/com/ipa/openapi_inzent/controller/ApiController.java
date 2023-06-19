@@ -16,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.thymeleaf.util.StringUtils;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -545,6 +546,39 @@ public class ApiController {
                     }
                 }
 //                2-3. resParam 넣으려면 response table id값 필요
+                System.out.println("//////////////////reqData/////////////////////");
+                System.out.println(obj.get("reqData"));
+                System.out.println(obj.get("reqData").getClass());
+//                System.out.println(String.valueOf(obj.get("reqData")).replaceAll("'\\\'", ""));
+                System.out.println(String.valueOf(obj.get("reqData")).replaceAll("\\\\", ""));
+                String req = String.valueOf(obj.get("reqData")).replaceAll("\\\\", "");
+
+
+                System.out.println(req.substring(1));
+                System.out.println(req.substring(0, req.length() - 1));
+                req = req.substring(1);
+                req = req.substring(0, req.length() - 1);
+
+                System.out.println(req);
+
+                JsonObject jsonObject = (JsonObject) JsonParser.parseString(req);
+                System.out.println("jsonObject = " + jsonObject);
+                System.out.println("jsonObject = " + jsonObject.keySet().getClass());
+                System.out.println(jsonObject.get("org_code"));
+                System.out.println("jsonObject = " + jsonObject.getClass());
+                /* key를 뽑아서 리스트로 변환*/
+                List<String> keys = new ArrayList<>(jsonObject.keySet());
+                System.out.println(keys.getClass());
+                System.out.println("keys.get(0) = " + keys.get(0));
+
+                for (int j = 0; j < jsonObject.keySet().size(); j++) {
+                    BodyDTO bodyDTO = new BodyDTO();
+                    bodyDTO.setApiDetailsId(apiDetailsId);
+                    bodyDTO.setKey(keys.get(j));
+                    bodyDTO.setValue(jsonObject.get(keys.get(j)).toString().replaceAll("\"", ""));
+                    apiDetailsService.insertBody(bodyDTO);
+                }
+                System.out.println();
             }
         }
     }
@@ -554,6 +588,7 @@ public class ApiController {
     public JsonObject detailModal(int id) {
         JsonObject object = new JsonObject();
         ApiDetailsDTO detailList = apiDetailsService.searchDetail(id);
+
 
         System.out.println("detailList = " + detailList);
         object.addProperty("id", detailList.getId());
@@ -576,7 +611,7 @@ public class ApiController {
         JsonArray paramArray = new JsonArray();
         List<ParameterDTO> list = apiDetailsService.searchParameter(id);
         System.out.println("id" + id);
-        System.out.println("list = " + list);
+        System.out.println("list parma = " + list);
         for (int i = 0; i < list.size(); i++) {
             JsonObject param = new JsonObject();
             param.addProperty("id", list.get(i).getId());
@@ -590,11 +625,27 @@ public class ApiController {
             paramArray.add(param);
         }
 
+
+        //        parameter jsonArray
+        JsonArray bodyArray = new JsonArray();
+        List<BodyDTO> bodyList = apiDetailsService.selectBody(id);
+
+        System.out.println("bodyList parma = " + bodyList);
+        for (int i = 0; i < bodyList.size(); i++) {
+            JsonObject param = new JsonObject();
+            param.addProperty("id", bodyList.get(i).getId());
+            param.addProperty("apiDetailsId", bodyList.get(i).getApiDetailsId());
+            param.addProperty("key", bodyList.get(i).getKey());
+            param.addProperty("value", bodyList.get(i).getValue());
+            bodyArray.add(param);
+        }
+
+
 //       resCode JsonArray
         JsonArray resCodeArray = new JsonArray();
-//        List<>
 
         object.addProperty("parameterList", paramArray.toString());
+        object.addProperty("bodyReqList", bodyArray.toString());
 
         return object;
     }
@@ -710,7 +761,6 @@ public class ApiController {
         if (responseList.size() > 0) {
             System.out.println("응답코드 존재");
 
-
             for (ResponseDTO res : responseList) {
                 JsonObject response = new JsonObject();
                 System.out.println("res.getId() = " + res.getId());
@@ -735,9 +785,12 @@ public class ApiController {
                 }
             }
         }
+        /*여기서 req body 값 넣어서 보냄*/
 
         object.addProperty("responseList", resArr.toString());
         object.addProperty("resParamList", resParamArr.toString());
+
+
         System.out.println("object = " + object);
         return object;
     }
@@ -757,6 +810,13 @@ public class ApiController {
         System.out.println("ApiController.removeResParam");
         System.out.println("id   " + id);
         apiDetailsService.removeResParam(id);
+    }
+
+    @GetMapping("/delete/resBody")
+    @ResponseBody
+    public void removeResBody(int id) {
+        System.out.println("ApiController.removeResBody");
+        apiDetailsService.removeResBody(id);
     }
 }
 

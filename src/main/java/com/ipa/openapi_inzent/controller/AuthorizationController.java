@@ -1,13 +1,20 @@
 package com.ipa.openapi_inzent.controller;
 
+import com.ipa.openapi_inzent.config.auth.UserCustomDetails;
 import com.ipa.openapi_inzent.model.RoleDTO;
+import com.ipa.openapi_inzent.model.UserDTO;
 import com.ipa.openapi_inzent.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import javax.servlet.http.HttpSession;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,8 +53,23 @@ public class AuthorizationController {
 
     /* APP 인젠트 인증 페이지*/
     @GetMapping("/appAuthorization")
-    public String inzentAuthorization() {
+    public String inzentAuthorization(Model model, @AuthenticationPrincipal UserCustomDetails userCustomDetails, HttpSession session) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDTO userDTO = new UserDTO();
+        if (principal instanceof UserDetails) {
+            //일반로그인
+            String username = ((UserDetails) principal).getUsername();
+            userDTO = userCustomDetails.getUserDTO();
+        } else {
+            //인젠트 로그인
+            UserDTO logIn = (UserDTO) session.getAttribute("logIn");
+            String username = principal.toString();
+            userDTO = logIn;
+        }
+
+        model.addAttribute("user", userDTO);
+
         System.out.println("인젠트 인증 페이지");
-        return "inzentAuthorization";
+        return "/app/inzentAuthorization";
     }
 }

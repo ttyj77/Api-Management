@@ -40,6 +40,7 @@ public class ApiDetailsService {
     public List<ResourceDTO> goTrashResource() {
         return apiDetailsDao.goTrashResource();
     }
+
     public List<ResourceDTO> resourceTrashList() {
         return apiDetailsDao.resourceTrashList();
     }
@@ -133,5 +134,17 @@ public class ApiDetailsService {
 
     public void removeResParam(int id) {
         apiDetailsDao.removeResParam(id);
+    }
+
+    public void insertBody(BodyDTO bodyDTO) {
+        apiDetailsDao.insertBody(bodyDTO);
+    }
+
+    public List<BodyDTO> selectBody(int id) {
+        return apiDetailsDao.selectBody(id);
+    }
+
+    public void removeResBody(int id) {
+        apiDetailsDao.removeResBody(id);
     }
 }

@@ -114,8 +114,10 @@
     </select>
     <!--trash = true인 리스트 (details 만 쓰레기통에 있을 경우 리스트) -->
     <select id="goTrashResource" resultType="com.ipa.openapi_inzent.model.ResourceDTO">
-        select distinct ad."resourceId" as id, uri from public."apiDetails" as ad left join public."resource" as re on re.id = ad."resourceId" where ad."resourceId" In (select id
-        from public.resource as re where exists(select 1 from public."apiDetails" as ad where re.id=ad."resourceId" and ad.trash = true)) and re.garbage = false
+        select distinct ad."resourceId" as id, uri from public."apiDetails" as ad left join public."resource" as re on
+        re.id = ad."resourceId" where ad."resourceId" In (select id
+        from public.resource as re where exists(select 1 from public."apiDetails" as ad where re.id=ad."resourceId" and
+        ad.trash = true)) and re.garbage = false
     </select>
     <!--  trash 페이지 resource의 garbage = true인 리스트  -->
     <select id="resourceTrashList" resultType="com.ipa.openapi_inzent.model.ResourceDTO">
@@ -214,6 +216,18 @@
     <select id="selectResParamList" parameterType="int" resultType="com.ipa.openapi_inzent.model.ResParamDTO">
         select * from public."resParam" where "resId" = #{id}
     </select>
+    <!-- reqBody Insert -->
+    <insert id="insertBody" parameterType="com.ipa.openapi_inzent.model.BodyDTO">
+        INSERT INTO public.body(
+        key, value, "apiDetailsId")
+        VALUES (#{key},#{value},#{apiDetailsId});
+    </insert>
+
+    <!--    resBody 데이터 가져오기 -->
+    <select id="selectBody" parameterType="int" resultType="com.ipa.openapi_inzent.model.BodyDTO">
+        SELECT*
+        FROM public.body where "apiDetailsId" = #{id};
+    </select>
 
     <!-- 응답코드 삭제   -->
     <select id="removeResCode" parameterType="int">
@@ -222,5 +236,11 @@
     <!-- 응답코드파라미터 삭제   -->
     <select id="removeResParam" parameterType="int">
         delete from public."resParam" where id = #{id}
+    </select>
+
+    <!--응답 바디 삭제-->
+    <select id="removeResBody" parameterType="int">
+        DELETE FROM public.body
+        WHERE id = #{id};
     </select>
 </mapper>

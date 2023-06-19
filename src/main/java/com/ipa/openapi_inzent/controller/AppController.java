@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.ParseException;
@@ -54,16 +56,27 @@ public class AppController {
 
 
     @GetMapping("/app/main")
-    public String main(Model model, @AuthenticationPrincipal UserCustomDetails userDetails) throws UnsupportedEncodingException {
-        System.out.println("userDetails = " + userDetails);
+    public String main(Model model, @AuthenticationPrincipal UserCustomDetails userCustomDetails, HttpSession session) throws UnsupportedEncodingException {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDTO userDTO = new UserDTO();
+        if (principal instanceof UserDetails) {
+            //일반로그인
+            String username = ((UserDetails) principal).getUsername();
+            userDTO = userCustomDetails.getUserDTO();
+        } else {
+            //인젠트 로그인
+            UserDTO logIn = (UserDTO) session.getAttribute("logIn");
+            String username = principal.toString();
+            userDTO = logIn;
+        }
 
-        UserDTO logIn = userDetails.getUserDTO();
+//        UserDTO logIn = userDTO;
 
         String uri_2 = "/accounts/deposit/detail";
-        List<GetDataDTO> list = getDataService.selectAll(logIn.getOwnNum(), uri_2);
+        List<GetDataDTO> list = getDataService.selectAll(userDTO.getOwnNum(), uri_2);
 
 
-        if (userDetails == null) {
+        if (userDTO == null) {
             System.out.println("앱 에러페이지 드가쟈!!!!!!!!!");
             String errorMessage = "아이디와 비밀번호를 확인해주세요.";
 
@@ -86,7 +99,7 @@ public class AppController {
         }
 
         model.addAttribute("myProperty", sum);
-        model.addAttribute("user", userDetails.getUserDTO());
+        model.addAttribute("user", userDTO);
         return "/app/main";
     }
 

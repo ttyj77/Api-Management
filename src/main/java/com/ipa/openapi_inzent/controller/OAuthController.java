@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.view.RedirectView;
 import springfox.documentation.spring.web.json.Json;
 
 import javax.servlet.http.HttpServletRequest;
@@ -122,8 +123,9 @@ public class OAuthController {
         headers1.add("Authorization", "Bearer " + token);
         HttpEntity<String> entity = new HttpEntity<>(headers1);
         ResponseEntity<String> responseResource = null;
+        System.out.println("checkPoint 1 ");
         responseResource = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
-
+        System.out.println("checkPoint 2");
         System.out.println("responseResource = " + responseResource.getBody());
 //        UserDetails body = responseResource.getBody().get;
         System.out.println("responseResource = " + responseResource.getStatusCodeValue());
@@ -195,32 +197,42 @@ public class OAuthController {
     }
 
     @GetMapping("/accessTokenCheck")
-    @ResponseBody
-    public void check(HttpSession session, @AuthenticationPrincipal UserCustomDetails userCustomDetails) {
+    public String check(HttpSession session, @AuthenticationPrincipal UserCustomDetails userCustomDetails) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserDTO userDTO = new UserDTO();
 
         if (principal instanceof UserDetails) {
             //일반로그인
+            System.out.println(" 일반로그인 사용자는 인젠트 로그인을 사용하려면 인젠트에 로그인 또는 가입을 해야된다.");
+            System.out.println("인젠트 회원가입 화면 보여주기");
+            System.out.println("OAuthController.check if userDto == null");
+
+
             String username = ((UserDetails) principal).getUsername();
             System.out.println("username 1 = " + username);
             System.out.println((UserDetails) principal);
             userDTO = userCustomDetails.getUserDTO();
+            System.out.println("userDTO = " + userDTO);
+            return "redirect:/inzentRegister";
+
         } else {
             //인젠트 로그인
             UserDTO logIn = (UserDTO) session.getAttribute("logIn");
-            System.out.println("==============" + logIn);
             String username = principal.toString();
-            System.out.println("username 2  = " + username);
-            System.out.println("userinfo 2  " + principal);
             userDTO = logIn;
         }
+        System.out.println(userDTO == null);
+        if (userDTO == null) {
+            userDTO = authLogin(userCustomDetails, session);
+        }
+//        authLogin();
+        System.out.println("userDTO?? = " + userDTO);
 
         RestTemplate restTemplate = new RestTemplate();
         String url = "http://localhost:8000/resource/check";
         String token = userService.findToken(userDTO.getId());
+        System.out.println("===================================Token====================");
         System.out.println("token = " + token);
-
         // Use the access token for authentication
         HttpHeaders headers1 = new HttpHeaders();
         headers1.add("Authorization", "Bearer " + token);
@@ -228,9 +240,56 @@ public class OAuthController {
         ResponseEntity<String> responseResource = null;
         responseResource = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
 
-//        System.out.println("responseResource = " + responseResource.getBody());
-////        UserDetails body = responseResource.getBody().get;
-//        System.out.println("responseResource = " + responseResource.getStatusCodeValue());
+        System.out.println("responseResource = " + responseResource.getBody());
+//        UserDetails body = responseResource.getBody().get;
+        System.out.println("responseResource = " + responseResource.getStatusCodeValue()); // 200  인젠트 인증 성공
+        int statusCodeValue = responseResource.getStatusCodeValue();
+        if (statusCodeValue == 200) {
+            System.out.println("인증성공");
+            // 자산 리스트를 보여주고 선택이 가능한 페이지로 가야됨
+            // 자산 리스트 보여주는 방법
+            return "redirect:/app/addProperty";
+        } else {
+            System.out.println("인증실패");
+            //인증이 실패하면 다시 main으로 가야됨 ==  로그인의 문제가 있기 떄문, 만약에 풀린거라면 main에서 로그인으로 보내기
+            return "redirect:/app/main";
+        }
     }
 
+    @GetMapping("/inzentRegister")
+    public RedirectView inzentRegister() {
+        System.out.println("OAuthController.inzentRegister");
+
+        return new RedirectView("http://localhost:9000/login");
+    }
+
+    public UserDTO authLogin(@AuthenticationPrincipal UserCustomDetails userCustomDetails, HttpSession session) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDTO userDTO = new UserDTO();
+        System.out.println("OAuthController.authLogin");
+        System.out.println(userCustomDetails.getUserDTO());
+        if (principal instanceof UserDetails) {
+            System.out.println("일반로그인");
+            //일반로그인
+            String username = ((UserDetails) principal).getUsername();
+            userDTO = userCustomDetails.getUserDTO();
+        } else {
+            System.out.println("인젠트로그인");
+            //인젠트 로그인
+            UserDTO logIn = (UserDTO) session.getAttribute("logIn");
+            String username = principal.toString();
+            userDTO = logIn;
+        }
+        System.out.println(userDTO);
+        return userDTO;
+
+    }
+
+    @GetMapping("/userInfo")
+    @ResponseBody
+    public String userINfo(@AuthenticationPrincipal UserCustomDetails userCustomDetails) {
+        System.out.println("userCustomDetails = " + userCustomDetails);
+        System.out.println("userCustomDetails = " + userCustomDetails.getUserDTO());
+        return "userINfo";
+    }
 }

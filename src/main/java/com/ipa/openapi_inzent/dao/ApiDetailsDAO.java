@@ -65,4 +65,10 @@ public interface ApiDetailsDAO {
     void removeResCode(int id) throws DataAccessException;
 
     void removeResParam(int id) throws DataAccessException;
+
+    void insertBody(BodyDTO bodyDTO) throws DataAccessException;
+
+    List<BodyDTO> selectBody(int id) throws DataAccessException;
+
+    void removeResBody(int id) throws DataAccessException;
 }

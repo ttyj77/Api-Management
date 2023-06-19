@@ -62,9 +62,48 @@ function detailModal(value) {
 
             }
             // document.getElementById("dModal_parameter_Name").innerText = message
-
+            let bodyReqList = JSON.parse(message.bodyReqList)
+            console.log(bodyReqList)
             //  요청Body 정보
+            console.log(bodyReqList.length > 0)
+            // 요청 BODY 부분 시작
+            if (bodyReqList.length > 0) { // 응답 데이터가 있다면
+                let table = document.getElementById("resBodyTable")
+                table.innerHTML = ""
+                console.log(table)
+                for (let i = 0; i < bodyReqList.length; i++) {
+                    console.log(i)
+                    console.log(bodyReqList[i].key)
+                    let tr = document.createElement("tr")
+                    let key = document.createElement("td")
+                    let type = document.createElement("td")
+                    let value = document.createElement("td")
 
+                    let trash = document.createElement("td")
+                    let icon = document.createElement("i")
+                    icon.className = "fa-solid fa-trash-can"
+                    icon.style.color = "#797a7c"
+                    icon.style.fontWeight = "100"
+                    trash.id = bodyReqList[i].id
+                    trash.append(icon)
+                    trash.onclick = function () {
+                        resTableDeleteCheck(this);
+                    }
+
+
+                    key.innerText = bodyReqList[i].key
+                    value.innerText = bodyReqList[i].value.replaceAll("\"", "");
+                    type.innerText = "String"
+                    tr.append(key, type, value, trash)
+                    table.append(tr)
+                }
+            } else {
+                let table = document.getElementById("resBodyTable")
+                table.innerHTML = ""
+                table.append("    <tr>\n" +
+                    "                                                    <td class=\"col-4\">아직 데이터가 없습니다.</td>\n" +
+                    "                                                </tr>")
+            }
             //  응답
 
 
@@ -73,6 +112,48 @@ function detailModal(value) {
         }
     })
     showResData(value)
+}
+
+function resTableDeleteCheck(value) {
+    /* 응답 body 개별삭제 */
+    console.log(value.id)
+    let id = value.id
+    Swal.fire({
+        showCancelButton: true,
+        cancelButtonText: "취소",
+        confirmButtonText: "삭제",
+        icon: 'warning',
+        text: "요청 Body 파라미터를 삭제하시겠습니까?"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Swal.fire({
+                title: '삭제 성공',
+                icon: 'success'
+            }).then(() => {
+                resBodyDelete(id)
+            })
+        }
+    });
+}
+
+function resBodyDelete(id) {
+    console.log("==============resBodyDelete=============")
+    let data = {
+        "id": id
+    }
+    $.ajax({
+        url: "/api/delete/resBody",
+        data: data,
+        method: "get",
+
+        success: (message) => {
+            console.log("삭제성공")
+            location.reload()
+        }, error: (e) => {
+            console.log("출력실패", e)
+        }
+    })
+
 }
 
 function showResData(id) {
@@ -101,9 +182,11 @@ function showResData(id) {
             }
 
             let resParamList = JSON.parse(message.resParamList)
-            console.log("????????????")
             console.log(resList)
+            console.log()
             console.log(resParamList)
+
+            // 요청 BODY 부분 끝
 
             document.getElementById("accordionExample").innerHTML = ""
             for (let d = 0; d < resList.length; d++) {
@@ -155,7 +238,6 @@ function showResData(id) {
                                                 <tbody class="table-group-divider" id="resParamTbody` + resList[d].id + `">
                                                 <!-- res paramter for문 시작  -->
                                                 <!-- res의 id 와 resparam 의 resId 와 같으면 출력 -->
-
                                                 <!-- res paramter for문 끝 -->
                                                 </tbody>
                                             </table>
@@ -480,6 +562,13 @@ function insertPath(e) {
 
     }
 
+}
+
+/* resBody 큼직한 삭제 */
+function removeResBody(value) {
+    console.log("응답 바디 삭제 ")
+    console.log(value.parentNode)
+    console.log(value.parentNode.parentNode)
 }
 
 
