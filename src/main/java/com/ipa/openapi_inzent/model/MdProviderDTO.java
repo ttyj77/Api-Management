@@ -31,4 +31,9 @@ public class MdProviderDTO {
 
     private MdReqInfoDTO mdReqInfoDTO;
 
+    //* header 정보 */
+    private String x_api_type;
+    private String x_api_tran_id;
+    private String org_code;
+
 }

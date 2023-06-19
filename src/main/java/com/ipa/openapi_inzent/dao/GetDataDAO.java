@@ -7,7 +7,7 @@ import org.springframework.dao.DataAccessException;
 import java.util.List;
 
 @Mapper
-public interface GetDataDao {
+public interface GetDataDAO {
 
     List<GetDataDTO> selectAllIndustry(String clientNum, String uri, String industry) throws DataAccessException;
     List<GetDataDTO> selectAll(String clientNum, String uri) throws DataAccessException;

@@ -1,6 +1,6 @@
 package com.ipa.openapi_inzent.service;
 
-import com.ipa.openapi_inzent.dao.MydataDao;
+import com.ipa.openapi_inzent.dao.MydataDAO;
 import com.ipa.openapi_inzent.model.*;
 import org.springframework.stereotype.Service;
 
@@ -13,9 +13,9 @@ import java.util.List;
 @Service
 public class MydataService {
 
-    private MydataDao mydataDao;
+    private MydataDAO mydataDao;
 
-    public MydataService(MydataDao mydataDao) {
+    public MydataService(MydataDAO mydataDao) {
         this.mydataDao = mydataDao;
     }
 
@@ -76,12 +76,14 @@ public class MydataService {
                 cal.setTime(forMatDate);
                 cal.add(Calendar.MILLISECOND, m.getRuntime()); // 요청일에 응답시간(runtime)을 더함 => 응답일자
                 m.setResDate(dfFormat.format(cal.getTime())); //응답일자 ex) 2021-11-23 15:18:16.642
+
             }
         } catch (ParseException e) {
             e.printStackTrace();
         }
         return list;
     }
+
     public List<MdProviderDTO> mdReqList() {
         List<MdProviderDTO> list = mydataDao.mdReqList();
         SimpleDateFormat dfFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
@@ -114,6 +116,7 @@ public class MydataService {
     public MdProviderDTO mdProviderSelectOne(int id) {
         return mydataDao.mdProviderSelectOne(id);
     }
+
     ///////////////////////////////////////////////////////////////////////////////////////////
     //                            (oﾟvﾟ)ノ  Collector Page  (oﾟvﾟ)ノ                           //
     ///////////////////////////////////////////////////////////////////////////////////////////
@@ -162,9 +165,7 @@ public class MydataService {
         }
         return list;
     }
-    
-    
-    
+
 
     public List<MdTokenDTO> mdAstList() {
         return mydataDao.mdAstList();

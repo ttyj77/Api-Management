@@ -1,6 +1,6 @@
 package com.ipa.openapi_inzent.service;
 
-import com.ipa.openapi_inzent.dao.ApiDetailsDao;
+import com.ipa.openapi_inzent.dao.ApiDetailsDAO;
 import com.ipa.openapi_inzent.model.*;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -10,9 +10,9 @@ import java.util.List;
 
 @Service
 public class ApiDetailsService {
-    private ApiDetailsDao apiDetailsDao;
+    private ApiDetailsDAO apiDetailsDao;
 
-    public ApiDetailsService(@Qualifier("apiDetailsDao") ApiDetailsDao apiDetailsDao) {
+    public ApiDetailsService(@Qualifier("apiDetailsDAO") ApiDetailsDAO apiDetailsDao) {
         this.apiDetailsDao = apiDetailsDao;
     }
 
@@ -40,6 +40,7 @@ public class ApiDetailsService {
     public List<ResourceDTO> goTrashResource() {
         return apiDetailsDao.goTrashResource();
     }
+
     public List<ResourceDTO> resourceTrashList() {
         return apiDetailsDao.resourceTrashList();
     }
@@ -133,5 +134,17 @@ public class ApiDetailsService {
 
     public void removeResParam(int id) {
         apiDetailsDao.removeResParam(id);
+    }
+
+    public void insertBody(BodyDTO bodyDTO) {
+        apiDetailsDao.insertBody(bodyDTO);
+    }
+
+    public List<BodyDTO> selectBody(int id) {
+        return apiDetailsDao.selectBody(id);
+    }
+
+    public void removeResBody(int id) {
+        apiDetailsDao.removeResBody(id);
     }
 }

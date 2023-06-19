@@ -32,7 +32,7 @@ public class SwaggerConfig implements WebMvcConfigurer {
                 .securitySchemes(Arrays.asList(apiKey()))
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.ipa.openapi_inzent"))
-                .paths(PathSelectors.ant("/mydata/**"))
+                .paths(PathSelectors.ant("/mydata/api/**"))
                 .build()
                 .useDefaultResponseMessages(false);
     }

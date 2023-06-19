@@ -61,8 +61,8 @@ public class SecurityConfig {
         public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
             http.csrf().disable();
             http.authorizeRequests() //authorizeRequests
-                    .antMatchers(HttpMethod.GET, "/error/*", "/newIndex", "/login", "/login_proc", "/user/login", "/user/register", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**", "/authorized").permitAll() // 설정된 url은 인증되지 않더라도 누구든 접근 가능
-                    .antMatchers("/api ", "/api/details").authenticated()
+                    .antMatchers(HttpMethod.GET, "/spring-cloud-service/**", "/spring-cloud-gateway/**", "/error/*", "/**", "/newIndex", "/login", "/login_proc", "/user/login", "/user/register", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**", "/authorized", "/appAuthorization", "/userInfo").permitAll() // 설정된 url은 인증되지 않더라도 누구든 접근 가능
+                    .antMatchers("/api ", "/api/details", "/mydata/chart").authenticated()
                     .antMatchers("/api/trash", "/requestPage").hasAnyRole("PROVIDER", "ADMIN", "MYDATA")
                     .antMatchers("/accountList", "/authorization").hasRole("ADMIN")
                     .antMatchers("/mydata/**").hasAnyRole("MYDATA", "PROVIDER")
@@ -95,7 +95,7 @@ public class SecurityConfig {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().antMatchers("/images/**", "/js/**", "/css/**", "/scss/**", "/vendor/**");
+        return (web) -> web.ignoring().antMatchers("/images/**", "/js/**", "/spring-cloud-service/css/**", "/scss/**", "/vendor/**");
     }
 
 }

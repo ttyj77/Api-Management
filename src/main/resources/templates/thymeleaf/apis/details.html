@@ -297,8 +297,6 @@
                     jsonArr.push(obj)
                 }
                 // console.log(document.getElementById("searchPathTbody").children[0])
-                console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-                console.log(document.getElementById("path").value)
                 // [요청 json 데이터 선언]
                 let jsonData = { // Body에 첨부할 json 데이터
                     "idx": document.getElementById("apiId").value, //api index
@@ -783,9 +781,9 @@
                                     &nbsp;&nbsp;&nbsp;|&nbsp; <span th:text="${index.uri}"></span> </span>
                                 </div>
                                 <div>
-<!--                                    <i class="fa-solid fa-arrows-rotate renew" data-toggle="tooltip"-->
-<!--                                       title="리소스 갱신"-->
-<!--                                       onclick="location.href='#'; event.stopPropagation()"></i>-->
+                                    <!--                                    <i class="fa-solid fa-arrows-rotate renew" data-toggle="tooltip"-->
+                                    <!--                                       title="리소스 갱신"-->
+                                    <!--                                       onclick="location.href='#'; event.stopPropagation()"></i>-->
                                     <!-- <div id="tooltipRenew">리소스 갱신</div>-->
                                     <i class="fa-solid fa-file-word doc" data-toggle="tooltip"
                                        title="Swagger 문서"
@@ -795,7 +793,8 @@
                                        title="Swagger UI"
                                        class="fa-solid fa-globe ui"></i>
                                     <!-- <div id="tooltipUI">Swagger UI</div>-->
-                                    <i th:resourceId="${index.id}" onclick="goTrashResource(this)" sec:authorize="hasAnyRole('ADMIN','MYDATA','PROVIDER')"
+                                    <i th:resourceId="${index.id}" onclick="goTrashResource(this)"
+                                       sec:authorize="hasAnyRole('ADMIN','MYDATA','PROVIDER')"
                                        style="cursor: pointer;"
                                        data-toggle="tooltip"
                                        title="삭제"
@@ -855,7 +854,8 @@
                                                data-toggle="tooltip"
                                                title="Swagger UI"
                                                class="fa-solid fa-globe ui"></i>
-                                            <i sec:authorize="hasAnyRole('ADMIN','MYDATA','PROVIDER')" th:detailId="${detail.id}" th:detailName="${detail?.summary}"
+                                            <i sec:authorize="hasAnyRole('ADMIN','MYDATA','PROVIDER')"
+                                               th:detailId="${detail.id}" th:detailName="${detail?.summary}"
                                                onclick="goTrash(this)" style="cursor: pointer;"
                                                data-toggle="tooltip"
                                                title="삭제"
@@ -1832,7 +1832,8 @@
     <div class="modal fade tab" id="detailModal" tabindex="-1">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
-                <div class="modal-header" style="align-items: flex-start !important; flex-direction: column !important;">
+                <div class="modal-header"
+                     style="align-items: flex-start !important; flex-direction: column !important;">
                     <div class="d-flex justify-content-between align-items-center w-100">
                         <h4 id="methodUrl"></h4>
                         <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
@@ -1978,35 +1979,25 @@
                                     </thead>
                                     <tbody class="table-group-divider">
                                     <tr style="text-align: center">
-                                        <td style="vertical-align: middle;">Mark</td>
+                                        <td style="vertical-align: middle;">application/json; charset=UTF-8</td>
                                         <td>
                                             <table class="table">
                                                 <thead style="background-color: #1c294e21">
                                                 <tr>
-                                                    <th scope="col">키</th>
+                                                    <th scope="col">키sssss</th>
                                                     <th scope="col">타입</th>
                                                     <th scope="col">샘플</th>
                                                     <th scope="col">비고</th>
                                                 </tr>
                                                 </thead>
-                                                <tbody class="table-group-divider">
-                                                <tr>
-                                                    <td>Mark</td>
-                                                    <td>
-                                                        <select class="form-select" aria-label="Default select example">
-                                                            <option value="1">One</option>
-                                                            <option value="2">Two</option>
-                                                            <option value="3">Three</option>
-                                                        </select>
-                                                    </td>
-
-                                                </tr>
+                                                <tbody class="table-group-divider" id="resBodyTable">
 
                                                 </tbody>
                                             </table>
                                         </td>
                                         <td><i class="fa-solid fa-trash-can"
-                                               style="color: #797a7c;font-weight: 100;"></i></td>
+                                               style="color: #797a7c;font-weight: 100;" onclick="removeResBody(this)"></i>
+                                        </td>
                                     </tr>
 
                                     </tbody>

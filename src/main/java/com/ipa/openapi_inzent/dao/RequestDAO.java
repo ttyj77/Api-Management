@@ -7,7 +7,7 @@ import org.springframework.dao.DataAccessException;
 import java.util.List;
 
 @Mapper
-public interface RequestDao {
+public interface RequestDAO {
     List<RequestDTO> selectAll() throws DataAccessException;
 
     List<RequestDTO> reqUserList() throws DataAccessException;

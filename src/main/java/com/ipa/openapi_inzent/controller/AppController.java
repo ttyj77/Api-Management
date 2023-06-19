@@ -12,11 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -46,7 +47,8 @@ public class AppController {
     }
 
     @GetMapping("/app/login")
-    public String login(@RequestParam(value = "error", required = false) String error, @RequestParam(value = "exception", required = false) String exception, Model model) {
+    public String login(@RequestParam(value = "error", required = false) String error,
+                        @RequestParam(value = "exception", required = false) String exception, Model model) {
         model.addAttribute("error", error);
         model.addAttribute("exception", exception);
         return "applogin";
@@ -54,10 +56,26 @@ public class AppController {
 
 
     @GetMapping("/app/main")
-    public String main(Model model, @AuthenticationPrincipal UserCustomDetails userDetails, HttpSession session) throws UnsupportedEncodingException {
+    public String main(Model model, @AuthenticationPrincipal UserCustomDetails userCustomDetails, HttpSession session) throws UnsupportedEncodingException {
         List<String> list1 = (List<String>) session.getAttribute("choiceAgency");
-        System.out.println("list = " + list1);
-        if (userDetails == null) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDTO userDTO = new UserDTO();
+        if (principal instanceof UserDetails) {
+            //일반로그인
+            String username = ((UserDetails) principal).getUsername();
+            userDTO = userCustomDetails.getUserDTO();
+        } else {
+            //인젠트 로그인
+            UserDTO logIn = (UserDTO) session.getAttribute("logIn");
+            String username = principal.toString();
+            userDTO = logIn;
+        }
+
+//        UserDTO logIn = userDTO;
+
+
+
+        if (userDTO == null) {
             System.out.println("앱 에러페이지 드가쟈!!!!!!!!!");
             String errorMessage = "아이디와 비밀번호를 확인해주세요.";
 
@@ -73,9 +91,9 @@ public class AppController {
 //        businessList.add("insu");
 
         session.removeAttribute("choiceAgency");
-        System.out.println("userDetails = " + userDetails);
+        System.out.println("userDetails = " + userCustomDetails);
 
-        UserDTO logIn = userDetails.getUserDTO();
+        UserDTO logIn = userCustomDetails.getUserDTO();
 
         String uri_2 = "/accounts/deposit/detail";
         String uri_3 = "/accounts/transactions";
@@ -146,6 +164,7 @@ public class AppController {
         model.addAttribute("user", userDetails.getUserDTO());
 
 
+        model.addAttribute("user", userDTO);
         return "/app/main";
     }
 
@@ -164,11 +183,13 @@ public class AppController {
         if (authentication != null) {
             new SecurityContextLogoutHandler().logout(request, response, authentication);
         }
+
         return "redirect:/";
     }
 
     @GetMapping("/app/agencyChoice")
     public String agencyChoice() {
+
         return "/app/agencyChoice";
     }
 
@@ -890,7 +911,7 @@ public class AppController {
 
     @ResponseBody
     @PostMapping("/app/deleteAgency")
-    public void deleteAgency(@RequestParam (value = "choiceAgency[]") ArrayList<String> choiceAgency, String industry, @AuthenticationPrincipal UserCustomDetails userDetails) {
+    public void deleteAgency(@RequestParam(value = "choiceAgency[]") ArrayList<String> choiceAgency, String industry, @AuthenticationPrincipal UserCustomDetails userDetails) {
         UserDTO logIn = userDetails.getUserDTO();
         System.out.println("industry = " + industry);
 

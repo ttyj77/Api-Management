@@ -3,14 +3,13 @@ package com.ipa.openapi_inzent.controller;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.ipa.openapi_inzent.model.DataDTO;
-import com.ipa.openapi_inzent.service.MydataService;
-import org.apache.tomcat.util.json.JSONParser;
+import com.ipa.openapi_inzent.model.MdProviderDTO;
+import com.ipa.openapi_inzent.model.MdReqInfoDTO;
+import com.ipa.openapi_inzent.service.MydataApiService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -18,10 +17,24 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.sql.Time;
+import java.text.SimpleDateFormat;
+import java.time.LocalTime;
+import java.util.Date;
+import java.util.UUID;
 
 @RestController
-@RequestMapping("/mydata")
+@RequestMapping("/mydata/api")
 public class MydataApiController {
+
+    //
+
+    private MydataApiService mydataApiService;
+
+    @Autowired
+    public MydataApiController(MydataApiService mydataApiService) {
+        this.mydataApiService = mydataApiService;
+    }
 
     @GetMapping("/invest/accounts")
     @ResponseBody
@@ -29,6 +42,11 @@ public class MydataApiController {
 
         long start = System.currentTimeMillis();
         System.out.println("start = " + start);
+        System.out.println(Time.valueOf(LocalTime.now()));
+        System.out.println(Time.valueOf(LocalTime.now()).getClass());
+        Date date = new Date();
+        System.out.println("date = " + date);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 
         System.out.println(header.getHeader("Authorization"));
@@ -38,7 +56,10 @@ public class MydataApiController {
 
         header.getHeaderNames().asIterator().forEachRemaining(
                 headerName -> System.out.println(headerName + ": " + header.getHeader(headerName))
+
         );
+//        System.out.println(header.getHeaderNames().asIterator().forEachRemaining(header.getHeader( =)));
+
 
         System.out.println("====Header===end");
         System.out.println("token = " + token);
@@ -71,39 +92,65 @@ public class MydataApiController {
                 br = new BufferedReader(new InputStreamReader(con.getErrorStream()));
             }
 
+
             String inputLine;
             response = new StringBuffer();
 
             while ((inputLine = br.readLine()) != null) {
                 response.append(inputLine);
             }
+            // 특정 코드 실행 되고 난 후 시간
+            long end = System.currentTimeMillis();
+            System.out.println("end = " + end);
 
+            // 초 단위 실행시간
+            double result = (end - start) / 1000.0;
+//            System.out.println("result = " + Integer.parseInt(String.valueOf(result)));
+
+            UUID uuid = UUID.randomUUID();
             br.close();
             JsonParser jsonParser = new JsonParser();
             JsonObject jsonObject = (JsonObject) jsonParser.parse(response.toString());
             System.out.println("jsonObject = " + jsonObject);
-            System.out.println(jsonObject.get("account_list").toString());
 
-            DataDTO dataDTO = new DataDTO();
-            dataDTO.setResponse(jsonObject.get("account_list").toString());
-            dataDTO.setX_api_type(x_api_type);
-            dataDTO.setX_api_tran_id(x_api_tran_id);
-            dataDTO.setOrg_code(org_code);
+            System.out.println(jsonObject.get("account_list").toString()); // 200 아닐 때 생각해야됨
+
+            MdReqInfoDTO mdReqInfoDTO = new MdReqInfoDTO();
+            mdReqInfoDTO.setCode("WOAAAINW00");
+            mdReqInfoDTO.setAgencyName("농업협동조합중앙회");
+            mdReqInfoDTO.setServiceName("마이데이터 서비스");
+            mdReqInfoDTO.setReqType("마이데이터");
+            mdReqInfoDTO.setClientNum("9704261153");
+            int reqId = mydataApiService.reqInfoInsert(mdReqInfoDTO);
+
+            MdProviderDTO mdProviderDTO = new MdProviderDTO();
+            mdProviderDTO.setResCode(jsonObject.get("account_list").toString());
+            mdProviderDTO.setX_api_type(x_api_type);
+            mdProviderDTO.setX_api_tran_id(x_api_tran_id);
+            mdProviderDTO.setOrg_code(org_code);
+            mdProviderDTO.setApiResources("/v1/invest/accounts/basic");
+            mdProviderDTO.setResCode(String.valueOf(responseCode));
+            mdProviderDTO.setUniqueNum(String.valueOf(uuid));
+            mdProviderDTO.setCustomerNum("9704261153");
+            mdProviderDTO.setReqInfoId(reqId);
+            mdProviderDTO.setRuntime((int) Math.round(result));
+            mdProviderDTO.setReqHeader("{\n" +
+                    "  \"accept\": \"application/json; charset=UTF-8\",\n" +
+                    "  \"x-api-type\": \"user-search\",\n" +
+                    "  \"X-FSI-MEM-NO\": \"FSI00002899\",\n" +
+                    "  \"x-api-tran-id\": \"1168119031SAA202303171424\",\n" +
+                    "  \"X-FSI-UTCT-TYPE\": \"TGC00001\",\n" +
+                    "  \"X-FSI-BUS-SEQ-NO\": \"105\",\n" +
+                    "  \"X-FSI-SVC-DATA-KEY\": \"Y\"\n" +
+                    "}");
 
 //          DB insert
-//            dataService.insert(dataDTO);
+            mydataApiService.providerHistoryInsert(mdProviderDTO);
 
         } catch (Exception e) {
             System.out.println(e);
         }
 
-        // 특정 코드 실행 되고 난 후 시간
-        long end = System.currentTimeMillis();
-        System.out.println("end = " + end);
-
-        // 초 단위 실행시간
-        double result = (end - start) / 1000.0;
-        System.out.println("result = " + result);
 
         return response;
     }
@@ -113,6 +160,7 @@ public class MydataApiController {
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         return con;
     }
+
 
     // 금투-002
     @PostMapping("/invest/accounts/basic")
@@ -159,6 +207,8 @@ public class MydataApiController {
             String result = response.toString();
             JsonParser parser = new JsonParser();
             JsonObject jsonObject = (JsonObject) parser.parse(result); // response
+
+
             JsonObject org_code = (JsonObject) parser.parse(body); // org_code
             DataDTO dataDTO = new DataDTO();
             dataDTO.setResponse(jsonObject.get("basic_list").toString());
@@ -173,67 +223,67 @@ public class MydataApiController {
         }
         return response;
     }
+//
+//
+//   금투 - 003
+@PostMapping("/invest/accounts/transactions")
+@ResponseBody
+public StringBuffer transactionsAPi(@RequestBody String body, HttpServletRequest header) {
+    String token = header.getHeader("Authorization");
+    String x_api_tran_id = "1168119031SAA202303171424";
+    String x_api_type = "user-search";
+    StringBuffer response = null;
+    try {
+        StringBuilder urlBuilder = new StringBuilder("https://developers.mydatakorea.org:9443/v1/invest/accounts/transactions"); //URL
 
+        HttpURLConnection con = getHttpURLConnection(urlBuilder);
+        con.setRequestMethod("POST");
+        con.setRequestProperty("Authorization", token);
+        con.setRequestProperty("x-api-tran-id", x_api_tran_id);
+        con.setRequestProperty("x-api-type", x_api_type);
+        con.setRequestProperty("User-Agent", "PostmanRuntime/7.32.2");
+        con.setRequestProperty("Content-Type", "application/json");
+        con.setRequestProperty("accept", "application/json; charset=UTF-8");
+        con.setRequestProperty("X-FSI-SVC-DATA-KEY", "Y");
+        con.setDoOutput(true);
 
-    //   금투 - 003
-    @PostMapping("/invest/accounts/transactions")
-    @ResponseBody
-    public StringBuffer transactionsAPi(@RequestBody String body, HttpServletRequest header) {
-        String token = header.getHeader("Authorization");
-        String x_api_tran_id = "1168119031SAA202303171424";
-        String x_api_type = "user-search";
-        StringBuffer response = null;
-        try {
-            StringBuilder urlBuilder = new StringBuilder("https://developers.mydatakorea.org:9443/v1/invest/accounts/transactions"); //URL
+        OutputStream os = con.getOutputStream();
+        os.write(body.getBytes("utf-8")); //request body
 
-            HttpURLConnection con = getHttpURLConnection(urlBuilder);
-            con.setRequestMethod("POST");
-            con.setRequestProperty("Authorization", token);
-            con.setRequestProperty("x-api-tran-id", x_api_tran_id);
-            con.setRequestProperty("x-api-type", x_api_type);
-            con.setRequestProperty("User-Agent", "PostmanRuntime/7.32.2");
-            con.setRequestProperty("Content-Type", "application/json");
-            con.setRequestProperty("accept", "application/json; charset=UTF-8");
-            con.setRequestProperty("X-FSI-SVC-DATA-KEY", "Y");
-            con.setDoOutput(true);
+        os.flush();
+        os.close();
 
-            OutputStream os = con.getOutputStream();
-            os.write(body.getBytes("utf-8")); //request body
+        int responseCode = con.getResponseCode();
+        BufferedReader br;
+        if (responseCode == 200) { // H 정상 호출
+            br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+        } else { // 2
+            br = new BufferedReader(new InputStreamReader(con.getErrorStream()));
+        }
 
-            os.flush();
-            os.close();
+        String inputLine;
+        response = new StringBuffer();
+        while ((inputLine = br.readLine()) != null) {
+            response.append(inputLine);
+        }
+        br.close();
 
-            int responseCode = con.getResponseCode();
-            BufferedReader br;
-            if (responseCode == 200) { // H 정상 호출
-                br = new BufferedReader(new InputStreamReader(con.getInputStream()));
-            } else { // 2
-                br = new BufferedReader(new InputStreamReader(con.getErrorStream()));
-            }
-
-            String inputLine;
-            response = new StringBuffer();
-            while ((inputLine = br.readLine()) != null) {
-                response.append(inputLine);
-            }
-            br.close();
-
-            JsonParser jsonParser = new JsonParser();
-            JsonObject jsonObject = (JsonObject) jsonParser.parse(response.toString()); //response
-            JsonObject org_code = (JsonObject) jsonParser.parse(body); // org_code
-            DataDTO dataDTO = new DataDTO();
-            dataDTO.setResponse(jsonObject.get("trans_list").toString());
-            dataDTO.setX_api_tran_id(x_api_tran_id);
-            dataDTO.setX_api_type(x_api_type);
-            dataDTO.setOrg_code(org_code.get("org_code").toString());
+        JsonParser jsonParser = new JsonParser();
+        JsonObject jsonObject = (JsonObject) jsonParser.parse(response.toString()); //response
+        JsonObject org_code = (JsonObject) jsonParser.parse(body); // org_code
+        DataDTO dataDTO = new DataDTO();
+        dataDTO.setResponse(jsonObject.get("trans_list").toString());
+        dataDTO.setX_api_tran_id(x_api_tran_id);
+        dataDTO.setX_api_type(x_api_type);
+        dataDTO.setOrg_code(org_code.get("org_code").toString());
 
 //            DB insert
 //            dataService.insert(dataDTO);
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-        return response;
+    } catch (Exception e) {
+        System.out.println(e);
     }
+    return response;
+}
 
 }
 

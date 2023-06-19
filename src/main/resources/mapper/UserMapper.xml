@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ipa.openapi_inzent.dao.UserDao">
+<mapper namespace="com.ipa.openapi_inzent.dao.UserDAO">
     <resultMap id="userRole" type="com.ipa.openapi_inzent.model.UserDTO">
         <result property="userId" column="userId"/>
         <result property="roleId" column="roleId"/>
@@ -20,8 +20,8 @@
         order by id asc;
     </select>
     <insert id="register" parameterType="com.ipa.openapi_inzent.model.UserDTO" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO public."user"(username,nickname, password, activate ,"createDate", email,approve,"ownNum")
-        VALUES (#{username},#{nickname} , #{password}, false ,NOW(),#{email}, false,${ownNum})
+        INSERT INTO public."user"(username,nickname, password, activate ,"createDate", email,approve,"ownNum",token)
+        VALUES (#{username},#{nickname} , #{password}, false ,NOW(),#{email}, false,${ownNum},#{token})
     </insert>
     <select id="findByUsername" parameterType="String" resultType="com.ipa.openapi_inzent.model.UserDTO">
         SELECT
@@ -113,5 +113,11 @@
         username, nickname, "createDate", role, password)
         VALUES (#{username}, #{nickname},NOW(),#{role},#{password});
     </insert>
+
+    <!--find by token : 토큰을 찾아서 resource 서버에 인증 보냄-->
+    <select id="findToken" parameterType="int" resultType="string">
+        SELECT token
+        FROM public."user" where id = #{id};
+    </select>
 </mapper>
 

@@ -1,6 +1,6 @@
 package com.ipa.openapi_inzent.service;
 
-import com.ipa.openapi_inzent.dao.GetDataDao;
+import com.ipa.openapi_inzent.dao.GetDataDAO;
 import com.ipa.openapi_inzent.model.GetDataDTO;
 import org.springframework.stereotype.Service;
 
@@ -8,9 +8,9 @@ import java.util.List;
 
 @Service
 public class GetDataService {
-    private GetDataDao getDataDao;
+    private GetDataDAO getDataDao;
 
-    public GetDataService(GetDataDao getDataDao) {
+    public GetDataService(GetDataDAO getDataDao) {
         this.getDataDao = getDataDao;
     }
 

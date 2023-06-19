@@ -3,15 +3,13 @@ package com.ipa.openapi_inzent.dao;
 import com.ipa.openapi_inzent.model.AppUserDTO;
 import com.ipa.openapi_inzent.model.UserDTO;
 import com.ipa.openapi_inzent.model.UserRoleDTO;
-import org.apache.catalina.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.dao.DataAccessException;
 
-import javax.xml.crypto.Data;
 import java.util.List;
 
 @Mapper
-public interface UserDao {
+public interface UserDAO {
     void register(UserDTO userDTO);
 
     List<UserDTO> findByUsername(String username) throws DataAccessException;
@@ -47,4 +45,6 @@ public interface UserDao {
     AppUserDTO findByAppUsername(String username) throws DataAccessException;
 
     void appRegister(AppUserDTO appUserDTO) throws DataAccessException;
+
+    String findToken(int id) throws DataAccessException;
 }

@@ -38,7 +38,6 @@ public class MydataController {
     }
 
 
-
     /* 마이데이터 기관 목록의 기관정보 모달 */
     @GetMapping("/agencyTable/modal")
     @ResponseBody
@@ -245,11 +244,11 @@ public class MydataController {
         String endDate = sdf.format(mdOne.getMdTokenDTO().getEndDate());
 
 
-        object.addProperty("tokenId",mdOne.getMdTokenDTO().getTokenId());
-        object.addProperty("consumerNum",mdOne.getMdTokenDTO().getConsumerNum());
+        object.addProperty("tokenId", mdOne.getMdTokenDTO().getTokenId());
+        object.addProperty("consumerNum", mdOne.getMdTokenDTO().getConsumerNum());
         object.addProperty("createDate", entryDate);
         object.addProperty("endDate", endDate);
-        object.addProperty("accessToken",mdOne.getMdTokenDTO().getAccessToken());
+        object.addProperty("accessToken", mdOne.getMdTokenDTO().getAccessToken());
 
 
         System.out.println("object = " + object);
@@ -332,7 +331,7 @@ public class MydataController {
         System.out.println("end = " + end);
 
         // 초 단위 실행시간
-        double result = (end-start)/1000.0;
+        double result = (end - start) / 1000.0;
         System.out.println("result = " + result);
 
         // to_json으로 db들어가기전에 타입 변환해줘야함
@@ -374,7 +373,7 @@ public class MydataController {
         object.addProperty("consumerNum", mdProviderDTO.getCustomerNum()); //통합고객번호
         object.addProperty("code", mdProviderDTO.getMdReqInfoDTO().getCode());//거래고유번호
         object.addProperty("reqType", mdProviderDTO.getMdReqInfoDTO().getReqType()); //전송요구타입
-        object.addProperty("uniqueNum",mdProviderDTO.getUniqueNum());
+        object.addProperty("uniqueNum", mdProviderDTO.getUniqueNum());
 
         if (mdProviderDTO.getMdReqInfoDTO().getTokenExpiryDate() == null) {
             object.addProperty("tokenExpiryDate", ""); //토큰유효기간
@@ -394,7 +393,6 @@ public class MydataController {
 
         return "/mydata/mdProviderTable";
     }
-
 
 
     ///////////////////////////////////////////////////////////////////////////////////////////
@@ -419,7 +417,7 @@ public class MydataController {
     @GetMapping("/mydataSendReq")
     public String mydataSendReq(Model model) {
         List<MdReqInfoDTO> list = mydataService.mdReqAll();
-
+        System.out.println("MydataController.mydataSendReq");
         model.addAttribute("list", list);
         System.out.println("list = " + list);
 
@@ -441,7 +439,7 @@ public class MydataController {
         JsonArray providerArray = new JsonArray();
         for (MdProviderDTO mdProviderDTO : list) {
             JsonObject r = new JsonObject();
-            r.addProperty("id",mdProviderDTO.getId());
+            r.addProperty("id", mdProviderDTO.getId());
             r.addProperty("reqDate", mdProviderDTO.getReqDate());
             r.addProperty("reqTime", mdProviderDTO.getReqTime());
             r.addProperty("resDate", mdProviderDTO.getResDate());
@@ -492,7 +490,7 @@ public class MydataController {
 
                     JsonObject r = new JsonObject();
 
-                    r.addProperty("id",mdProviderDTO.getId());
+                    r.addProperty("id", mdProviderDTO.getId());
 
                     r.addProperty("reqDate", reqDate);
                     r.addProperty("reqTime", mdProviderDTO.getReqTime());
@@ -557,4 +555,9 @@ public class MydataController {
         return jsonObject;
     }
 
+
+    @GetMapping("/chart")
+    public String showChart() {
+        return "/mydata/chart";
+    }
 }
