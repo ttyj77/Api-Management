@@ -12,6 +12,8 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -76,13 +78,31 @@ public class RequestController {
     }
 
     @GetMapping("/refuse/{id}")
-    public String refuse(@PathVariable int id, @AuthenticationPrincipal UserCustomDetails userDetails) {
-        UserDTO logIn = userDetails.getUserDTO();
-        if (logIn == null) {
+    public String refuse(@PathVariable int id, @AuthenticationPrincipal UserCustomDetails userDetails, HttpSession session) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDTO userDTO = new UserDTO();
+
+        if (principal instanceof UserDetails) {
+            //일반로그인
+            String username = ((UserDetails) principal).getUsername();
+            System.out.println("username 1 = " + username);
+            System.out.println((UserDetails) principal);
+            userDTO = userDetails.getUserDTO();
+        } else {
+            //인젠트 로그인
+            UserDTO logIn = (UserDTO) session.getAttribute("logIn");
+            System.out.println("==============" + logIn);
+            String username = principal.toString();
+            System.out.println("username 2  = " + username);
+            System.out.println("userinfo 2  " + principal);
+            userDTO = logIn;
+        }
+
+        if (userDTO == null) {
             return "redirect:/user/login";
         }
         System.out.println("id = " + id);
-        System.out.println("logIn = " + logIn);
+        System.out.println("logIn = " + userDTO);
         RequestDTO requestDTO = requestService.selectUserId(id);
         System.out.println("requestDTO = " + requestDTO);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -92,7 +112,7 @@ public class RequestController {
         // 계정 거절
         requestDTO.setStatus(false);
         requestDTO.setProcDate(procDate);
-        requestDTO.setProcUsername(logIn.getUsername());
+        requestDTO.setProcUsername(userDTO.getUsername());
 
         requestService.updateRequest(requestDTO);
         userService.delete(id);
@@ -100,9 +120,27 @@ public class RequestController {
     }
 
     @GetMapping("/approve/{id}")
-    public String approve(@PathVariable int id, @AuthenticationPrincipal UserCustomDetails userDetails) {
-        UserDTO logIn = userDetails.getUserDTO();
-        if (logIn == null) {
+    public String approve(@PathVariable int id, @AuthenticationPrincipal UserCustomDetails userDetails, HttpSession session) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDTO userDTO = new UserDTO();
+
+        if (principal instanceof UserDetails) {
+            //일반로그인
+            String username = ((UserDetails) principal).getUsername();
+            System.out.println("username 1 = " + username);
+            System.out.println((UserDetails) principal);
+            userDTO = userDetails.getUserDTO();
+        } else {
+            //인젠트 로그인
+            UserDTO logIn = (UserDTO) session.getAttribute("logIn");
+            System.out.println("==============" + logIn);
+            String username = principal.toString();
+            System.out.println("username 2  = " + username);
+            System.out.println("userinfo 2  " + principal);
+            userDTO = logIn;
+        }
+
+        if (userDTO == null) {
             return "redirect:/user/login";
         }
         System.out.println("id = " + id);
@@ -115,13 +153,13 @@ public class RequestController {
         // 계정 승인
         requestDTO.setStatus(true);
         requestDTO.setProcDate(procDate);
-        requestDTO.setProcUsername(logIn.getUsername());
+        requestDTO.setProcUsername(userDTO.getUsername());
 
         // 계정 활성화
-        UserDTO userDTO = userService.userOne(requestDTO.getUserId());
-        userDTO.setActivate(true);
-        userDTO.setApprove(true);
-        userService.update(userDTO);
+        UserDTO userDTO2 = userService.userOne(requestDTO.getUserId());
+        userDTO2.setActivate(true);
+        userDTO2.setApprove(true);
+        userService.update(userDTO2);
 
         requestService.updateRequest(requestDTO);
         return "redirect:/requestPage";

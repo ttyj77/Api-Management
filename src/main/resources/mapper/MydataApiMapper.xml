@@ -18,5 +18,11 @@
         code, "agencyName", "serviceName", "reqType", "reqSEQ", "tokenExpiryDate", "clientNum")
         VALUES (#{code} , #{agencyName},#{serviceName},#{reqType},#{reqSEQ},#{tokenExpiryDate},#{clientNum});
     </insert>
+    <insert id="dataInsert" parameterType="com.ipa.openapi_inzent.model.GetDataDTO">
+        INSERT INTO public.data(
+        "requestData", "responseData", uri, "apiId", "clientNum", industry)
+        VALUES (to_json(#{requestData}::json), to_json(#{responseData}::json), #{uri}, #{apiId}, #{clientNum},
+        #{industry});
+    </insert>
 
 </mapper>

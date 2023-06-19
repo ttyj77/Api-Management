@@ -73,6 +73,8 @@
 
     </style>
     <script>
+        let org_code = []
+
         function endAdd() {
             Swal.fire({
                 showCancelButton: true,
@@ -90,7 +92,7 @@
 
 
         // input box 갯수 세기
-        function cntCheck() {
+        function cntCheck(value) {
             console.log("check 들어옴")
             let cnt = 0;
             let checkboxes = document.getElementsByName('property');
@@ -105,9 +107,27 @@
             } else {
                 document.getElementById('nextBtn').disabled = true;
             }
+            /*선택한 금융상품의 기관 코드 가져오기 */
+            console.log(value)
+            console.log(value.parentNode)
+            console.log(value.parentNode.id)
+
+            org_code.push(value.parentNode.id)
+            console.log(org_code)
+
+
         }
 
         function connectProperty() {
+
+            /* 코드 중복제거 */
+            const set = new Set(org_code);
+            const uniqueOrgArr = [...set];
+
+
+            console.log("orgCode !! ")
+            console.log(uniqueOrgArr)
+
             let chbox = document.getElementsByClassName('bankOne');
             let total = chbox.length;
             let list = [];
@@ -117,10 +137,13 @@
                     list.push(chbox[i].parentNode.children[0].children[1].innerText);
                 }
             }
-            console.log(list);
 
+            console.log(list);
+            // let org_code = ;
             let data = {
                 "accountList": list,
+                "org_code_list": uniqueOrgArr,
+
             }
             // 자산 연결
             $.ajax({
@@ -130,13 +153,14 @@
 
                 success: () => {
                     console.log("성공");
+                    location.href = '/app/main';
                 }
             })
             // 스케쥴링 하는가에 따라 달라짐
-            location.href = '/app/sendReq';
+            // location.href = '/app/sendReq';
 
         }
-    </script>
+    </script>6
 </head>
 <body>
 <div class="container-xl">
@@ -179,8 +203,9 @@
                 </div>
             </div>
             <th:block th:each="account:${accountList}" th:if="${account.org_code==agency.code}">
-                <div class="d-flex justify-content-center target" style="height: 8rem">
-                    <div class="d-flex p-5 inBox justify-content-between align-items-center">
+                <div class="d-flex justify-content-center target" style="height: 8rem" th:id="${account.org_code}">
+                    <div class="d-flex p-5 inBox justify-content-between align-items-center"
+                         th:id="${account.org_code}">
                         <div class="w-100">
                             <h3 th:text="${account.prod_name}">
                                 인젠트 주거래 통장
@@ -189,7 +214,7 @@
                                 ( 101010101010101010 )
                             </h4>
                         </div>
-                        <input type="checkbox" class="form-check bankOne" name="property" onclick="cntCheck()">
+                        <input type="checkbox" class="form-check bankOne" name="property" onclick="cntCheck(this)">
                     </div>
                 </div>
             </th:block>

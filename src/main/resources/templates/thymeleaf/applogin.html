@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
           crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/css/login.css}"/>
     <style>
         * {
             padding: 0;
@@ -74,6 +75,7 @@
             background-repeat: no-repeat;
             background-size: contain;
         }
+
     </style>
 
 </head>
@@ -97,10 +99,22 @@
             <input class="h2" type="checkbox" id="remember-check" name="remember-me">&nbsp;로그인 유지
         </label>
         <h3 th:if="${error != null}" th:text="|${exception}|"
-           style="color: #E23137; margin-bottom: 0!important;"></h3>
+            style="color: #E23137; margin-bottom: 0!important;"></h3>
 
         <input type="submit" value="Login" style="margin-top: 40px; height: 70px" id="send" onclick="btnClick()"/>
+
     </form>
+    <a class="inzent_login_btn" href="http://localhost:9000/oauth2/authorize
+?client_id=client
+&redirect_uri=http://localhost:8080/app/authorized
+&scope=openid
+&response_type=code
+&response_mode=form_post
+&code_challenge_method=S256
+&code_challenge=DQJMSJKBRbJ2HM0iB23mAY7HIxDxOxIAxn3RuPH44EQ
+&state=oy3rwjvk1z
+&nonce=13wvazekn9o"><span class="box"><img class="profile shadow-lg" src="/images/bank/inzent.png"></span>인젠트
+        로그인</a>
 </div>
 <script>
     let send = document.getElementById("send");

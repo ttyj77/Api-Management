@@ -6,6 +6,7 @@ import com.google.gson.JsonParser;
 import com.ipa.openapi_inzent.config.auth.UserCustomDetails;
 import com.ipa.openapi_inzent.model.*;
 import com.ipa.openapi_inzent.service.GetDataService;
+import com.ipa.openapi_inzent.service.MydataApiService;
 import com.ipa.openapi_inzent.service.MydataService;
 import com.ipa.openapi_inzent.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import springfox.documentation.spring.web.json.Json;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -38,12 +40,14 @@ public class AppController {
     UserService userService;
     GetDataService getDataService;
     MydataService mydataService;
+    MydataApiService mydataApiService;
 
     @Autowired
-    public AppController(UserService userService, GetDataService getDataService, MydataService mydataService) {
+    public AppController(UserService userService, GetDataService getDataService, MydataService mydataService, MydataApiService mydataApiService) {
         this.getDataService = getDataService;
         this.userService = userService;
         this.mydataService = mydataService;
+        this.mydataApiService = mydataApiService;
     }
 
     @GetMapping("/app/login")
@@ -85,21 +89,12 @@ public class AppController {
             return "redirect:/app/login?error=true&exception=" + errorMessage;
         }
 
-//        // 우리가 서비스 하고 있는 업권 LIST
-//        List<String> businessList = new ArrayList<>();
-//        businessList.add("card");
-//        businessList.add("bank");
-//        businessList.add("invest");
-//        businessList.add("insu");
-
         session.removeAttribute("choiceAgency");
         System.out.println("userDetails = " + userDetails);
 
-        UserDTO logIn = userDetails.getUserDTO();
-
         String uri_3 = "/accounts/transactions";
 
-        List<GetDataDTO> investList = getDataService.selectAll(logIn.getOwnNum(), uri_3);
+        List<GetDataDTO> investList = getDataService.selectAll(userDTO.getOwnNum(), uri_3);
         System.out.println("investList = " + investList);
 
         int sum = 0;
@@ -143,7 +138,7 @@ public class AppController {
 
 
         String uri_1 = "/cards";
-        List<GetDataDTO> cardList = getDataService.selectAllIndustry(logIn.getOwnNum(), uri_1, "card");
+        List<GetDataDTO> cardList = getDataService.selectAllIndustry(userDTO.getOwnNum(), uri_1, "card");
         System.out.println("AppController.myCardAccount");
         System.out.println("list1 = " + cardList);
         System.out.println("list1.isEmpty() = " + cardList.isEmpty());
@@ -230,15 +225,33 @@ public class AppController {
 
     // ### 은행 ###
     @GetMapping("/app/bank/insert/{industry}")
-    public String bank(Model model, @PathVariable String industry, @AuthenticationPrincipal UserCustomDetails userDetails) {
+    public String bank(Model model, @PathVariable String industry, @AuthenticationPrincipal UserCustomDetails userDetails, HttpSession session) {
         List<MdAgencyDTO> agencyDTOList = mydataService.agencyIndustry(industry);
         System.out.println("agencyDTOList = " + agencyDTOList);
         System.out.println("agencyDTOList.size() = " + agencyDTOList.size());
-        UserDTO logIn = userDetails.getUserDTO();
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDTO userDTO = new UserDTO();
+
+        if (principal instanceof UserDetails) {
+            //일반로그인
+            String username = ((UserDetails) principal).getUsername();
+            System.out.println("username 1 = " + username);
+            System.out.println((UserDetails) principal);
+            userDTO = userDetails.getUserDTO();
+        } else {
+            //인젠트 로그인
+            UserDTO logIn = (UserDTO) session.getAttribute("logIn");
+            System.out.println("==============" + logIn);
+            String username = principal.toString();
+            System.out.println("username 2  = " + username);
+            System.out.println("userinfo 2  " + principal);
+            userDTO = logIn;
+        }
+
 
         String uri_1 = "/accounts";
 
-        List<GetDataDTO> org_codeList = getDataService.selectAllIndustry(logIn.getOwnNum(), uri_1, industry);
+        List<GetDataDTO> org_codeList = getDataService.selectAllIndustry(userDTO.getOwnNum(), uri_1, industry);
         System.out.println("org_codeList = " + org_codeList);
 
         // 자산 연결된 기관코드 저장할 빈 list
@@ -415,17 +428,37 @@ public class AppController {
     // ### 투자 ###
 
     @GetMapping("/app/invest/insert/{industry}")
-    public String invest(Model model, @PathVariable String industry, @AuthenticationPrincipal UserCustomDetails userDetails) {
+    public String invest(Model model, @PathVariable String industry, @AuthenticationPrincipal UserCustomDetails userDetails, HttpSession session) {
+        System.out.println("AppController.invest!!!!!!!!!!!!!!!!!!!");
         List<MdAgencyDTO> agencyDTOList = mydataService.agencyIndustry(industry);
         System.out.println("agencyDTOList = " + agencyDTOList);
         System.out.println("agencyDTOList.size() = " + agencyDTOList.size());
 
-        //////////
-        UserDTO logIn = userDetails.getUserDTO();
+//        UserDTO logIn = userDetails.getUserDTO();
+
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDTO userDTO = new UserDTO();
+
+        if (principal instanceof UserDetails) {
+            //일반로그인
+            String username = ((UserDetails) principal).getUsername();
+            System.out.println("username 1 = " + username);
+            System.out.println((UserDetails) principal);
+            userDTO = userDetails.getUserDTO();
+        } else {
+            //인젠트 로그인
+            UserDTO logIn = (UserDTO) session.getAttribute("logIn");
+            System.out.println("==============" + logIn);
+            String username = principal.toString();
+            System.out.println("username 2  = " + username);
+            System.out.println("userinfo 2  " + principal);
+            userDTO = logIn;
+        }
+
 
         String uri_1 = "/accounts";
 
-        List<GetDataDTO> org_codeList = getDataService.selectAllIndustry(logIn.getOwnNum(), uri_1, industry);
+        List<GetDataDTO> org_codeList = getDataService.selectAllIndustry(userDTO.getOwnNum(), uri_1, industry);
         System.out.println("org_codeList = " + org_codeList);
 
         // 자산 연결된 기관코드 저장할 빈 list
@@ -566,6 +599,7 @@ public class AppController {
         String uri_2 = "/accounts/basic";
         String uri_3 = "/accounts/transactions";
 
+
         List<GetDataDTO> accountInfo = getDataService.accountOne(account, clientNum, uri_1);
         List<GetDataDTO> mortgageList = getDataService.accountAll(account, clientNum, uri_2);
         List<GetDataDTO> accountList = getDataService.accountAll(account, clientNum, uri_3);
@@ -574,6 +608,8 @@ public class AppController {
         System.out.println("agencyDTOList = " + agencyDTOList);
 
         System.out.println("accountList = " + accountList);
+
+        System.out.println("mortgageList = " + mortgageList);
 
         // 계좌 상세 정보 조회 용
         JsonObject accObject = (JsonObject) JsonParser.parseString(accountInfo.get(0).getResponseData());
@@ -752,18 +788,59 @@ public class AppController {
 
     @GetMapping("/app/addProperty")
     public String addProperty(Model model, HttpSession session, @AuthenticationPrincipal UserCustomDetails userDetails) {
+        /* add code */
+        // 1. 진짜토근일때
+        // 2. 가짜 토큰일때
+
         // 선택한 기관들
         List<String> agencyList = (List<String>) session.getAttribute("choiceAgency");
+
+
         if (agencyList == null) {
             return "redirect:/app/main";
         }
         System.out.println("agencyList = " + agencyList);
+        JsonObject responseObj = new JsonObject();
+        JsonObject requestObj = new JsonObject();
 
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDTO userDTO = new UserDTO();
+
+        if (principal instanceof UserDetails) {
+            //일반로그인
+            String username = ((UserDetails) principal).getUsername();
+            System.out.println("username 1 = " + username);
+            System.out.println((UserDetails) principal);
+            userDTO = userDetails.getUserDTO();
+        } else {
+            //인젠트 로그인
+            UserDTO logIn = (UserDTO) session.getAttribute("logIn");
+            System.out.println("==============" + logIn);
+            String username = principal.toString();
+            System.out.println("username 2  = " + username);
+            System.out.println("userinfo 2  " + principal);
+            userDTO = logIn;
+        }
+        if (agencyList.get(0).equals("INVEST0009")) {
+            System.out.println("===========================================JSONOBJECT");
+            String token = userDTO.getToken();
+
+            responseObj = mydataApiService.invest001(agencyList.get(0), "100", token);
+
+            /* request data Json 형태 */
+            requestObj.addProperty("org_code", agencyList.get(0));
+            requestObj.addProperty("limit", "100");
+
+            System.out.println("jsonObject = " + responseObj);
+            System.out.println("requestObj = " + requestObj);
+
+        }
         List<MdAgencyDTO> agencyDTOList = mydataService.mdAgencySelectAll();
 
-        String clientNum = userDetails.getUserDTO().getOwnNum();
+        String clientNum = userDTO.getOwnNum();
 
         String industry = "";
+
 
         // 업권 확인
         for (MdAgencyDTO m : agencyDTOList) {
@@ -774,16 +851,11 @@ public class AppController {
         }
 
         // 계좌정보 가져오기
+
+
+        /* 요청 데이터에 맞는 계좌 정보 호출 후 넣을 LIST*/
         String uri_1 = "/accounts";
-        List<GetDataDTO> list = getDataService.selectAllIndustry(clientNum, uri_1, industry);
-
-        System.out.println("agencyDTOList = " + agencyDTOList);
-
-        System.out.println("list = " + list);
-        System.out.println("list.size() 2= " + list.size());
-
-        System.out.println("list.get(0) = " + list.get(0));
-        System.out.println("list.get(1) = " + list.get(1));
+        List<GetDataDTO> list = new ArrayList<>();
 
         List<AddPropertyDTO> accountList = new ArrayList<>();
 
@@ -815,6 +887,19 @@ public class AppController {
                 }
             }
         } else if (industry.equals("invest")) {
+
+            GetDataDTO temp = new GetDataDTO();
+            temp.setUri(uri_1);
+            temp.setClientNum(userDTO.getOwnNum());
+            temp.setIndustry(industry);
+            temp.setApiId("금투-001");
+            String reqData = requestObj.toString();
+            temp.setRequestData(reqData);
+            String resData = responseObj.toString();
+            temp.setResponseData(resData);
+            list.add(temp);
+
+
             // 자산연결 선택한 기관 돌고
             for (String str : agencyList) {
                 // 각 은행 마다 돌고
@@ -826,6 +911,7 @@ public class AppController {
                         JsonObject resObj = (JsonObject) JsonParser.parseString(list.get(i).getResponseData());
                         System.out.println("resObj = " + resObj);
                         JsonArray array = resObj.get("account_list").getAsJsonArray();
+
                         // 계좌 마다 돌고
                         for (int j = 0; j < array.size(); j++) {
                             AddPropertyDTO addPropertyDTO = new AddPropertyDTO();
@@ -866,6 +952,7 @@ public class AppController {
         System.out.println("mdAgencyDTOList = " + mdAgencyDTOList);
 
         model.addAttribute("accountList", accountList);
+
         model.addAttribute("mdAgencyDTOList", mdAgencyDTOList);
 
         return "/app/addProperty";
@@ -873,11 +960,101 @@ public class AppController {
 
     @ResponseBody
     @PostMapping("/app/connectAgency")
-    public String connectAgency(List<String> accountList) {
-        System.out.println("accountList = " + accountList);
+    public void connectAgency(@RequestParam(value = "accountList[]") ArrayList<String> accountList, @RequestParam(value = "org_code_list[]") ArrayList<String> orgList, @AuthenticationPrincipal UserCustomDetails userDetails, HttpSession session) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDTO userDTO = new UserDTO();
+
+        if (principal instanceof UserDetails) {
+            //일반로그인
+            String username = ((UserDetails) principal).getUsername();
+            System.out.println("username 1 = " + username);
+            System.out.println((UserDetails) principal);
+            userDTO = userDetails.getUserDTO();
+        } else {
+            //인젠트 로그인
+            UserDTO logIn = (UserDTO) session.getAttribute("logIn");
+            System.out.println("==============" + logIn);
+            String username = principal.toString();
+            System.out.println("username 2  = " + username);
+            System.out.println("userinfo 2  " + principal);
+            userDTO = logIn;
+        }
+
+        System.out.println("accountList = " + accountList); // 계좌번호
+        System.out.println("orgList = " + orgList); // 기관 코드
+
+        /*invest001을 여기서 적재를 하는데 조건은 위의 accountList 랑 invest001을 호출해서 얻어온 account_num 의 데이터가 같으면 진행 */
+        JsonObject responseObj = mydataApiService.invest001(orgList.get(0), "100", userDTO.getToken());
+        JsonArray jsonArray = (JsonArray) responseObj.get("account_list");
+        JsonObject jsonObject = (JsonObject) jsonArray.get(0);
+        String choiceAccountNum = accountList.get(0).replaceAll("\"", "");
+        String accountNum = jsonObject.get("account_num").toString().replaceAll("\"", "");
+        JsonObject requestObj = new JsonObject();
+        /* request data Json 형태 */
+        requestObj.addProperty("org_code", orgList.get(0));
+        requestObj.addProperty("limit", "100");
 
 
-        return "redirect:/app/main";
+        /* 여기서 시작! */
+        JsonObject body = new JsonObject();
+        if (!orgList.get(0).isEmpty()) { // org 코드값이 존재한다면
+
+            /* 금투-001 insert */
+            if (choiceAccountNum.equals(accountNum)) {
+                System.out.println("AppController.connectAgency");
+
+                GetDataDTO getDataDTO = new GetDataDTO();
+                getDataDTO.setRequestData(requestObj.toString());
+                getDataDTO.setResponseData(responseObj.toString());
+                getDataDTO.setUri("/accounts");
+                getDataDTO.setIndustry("invest");
+                getDataDTO.setApiId("금투-001");
+                getDataDTO.setClientNum(userDTO.getOwnNum());
+                mydataApiService.insertResult(getDataDTO); // 금투 123 모두 들어갈 수 있음
+            }
+
+            body.addProperty("org_code", orgList.get(0));
+            body.addProperty("account_num", accountList.get(0) + " ");
+            body.addProperty("search_timestamp", "0");
+
+
+            System.out.println();
+            System.out.println(mydataApiService.invest002(body.toString(), userDTO.getToken()));
+            GetDataDTO getDataDTO = new GetDataDTO();
+            getDataDTO.setUri("/accounts/basic");
+            getDataDTO.setResponseData(mydataApiService.invest002(body.toString(), userDTO.getToken()).toString());
+            getDataDTO.setIndustry("invest");
+            getDataDTO.setApiId("금투-002");
+
+            body.addProperty("account_num", accountList.get(0));
+            getDataDTO.setRequestData(body.toString());
+
+            getDataDTO.setClientNum(userDTO.getOwnNum());
+            /* 금투-002 insert  */
+            mydataApiService.insertResult(getDataDTO);
+
+            if (!orgList.get(0).isEmpty()) { // org 코드값이 존재한다면
+                body.addProperty("from_date", "20211017");
+                body.addProperty("to_date", "20221017");
+                body.addProperty("next_page", "");
+                body.addProperty("limit", "100");
+            }
+
+            System.out.println();
+            System.out.println("금투003");
+            body.addProperty("account_num", accountList.get(0) + " ");
+            System.out.println(mydataApiService.invest003(body.toString(), userDTO.getToken()));
+
+            getDataDTO.setResponseData(mydataApiService.invest003(body.toString(), userDTO.getToken()).toString());
+            getDataDTO.setUri("/accounts/transactions");
+            getDataDTO.setApiId("금투-003");
+//            String data = body.get("account_num").toString().replaceAll(" ", "");
+            body.addProperty("account_num", accountList.get(0));
+            getDataDTO.setRequestData(body.toString());
+            mydataApiService.insertResult(getDataDTO);
+            System.out.println("적재 완료오 !!! ");
+//        return "redirect:/app/main";
+        }
     }
 
 
@@ -908,8 +1085,26 @@ public class AppController {
 
     @ResponseBody
     @PostMapping("/app/deleteAgency")
-    public void deleteAgency(@RequestParam(value = "choiceAgency[]") ArrayList<String> choiceAgency, String industry, @AuthenticationPrincipal UserCustomDetails userDetails) {
-        UserDTO logIn = userDetails.getUserDTO();
+    public void deleteAgency(@RequestParam(value = "choiceAgency[]") ArrayList<String> choiceAgency, String industry, @AuthenticationPrincipal UserCustomDetails userDetails, HttpSession session) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDTO userDTO = new UserDTO();
+
+        if (principal instanceof UserDetails) {
+            //일반로그인
+            String username = ((UserDetails) principal).getUsername();
+            System.out.println("username 1 = " + username);
+            System.out.println((UserDetails) principal);
+            userDTO = userDetails.getUserDTO();
+        } else {
+            //인젠트 로그인
+            UserDTO logIn = (UserDTO) session.getAttribute("logIn");
+            System.out.println("==============" + logIn);
+            String username = principal.toString();
+            System.out.println("username 2  = " + username);
+            System.out.println("userinfo 2  " + principal);
+            userDTO = logIn;
+        }
+
         System.out.println("industry = " + industry);
 
         System.out.println("choiceAgency = " + choiceAgency);
@@ -917,7 +1112,7 @@ public class AppController {
         for (int i = 0; i < choiceAgency.size(); i++) {
             // 삭제 일단 막아놓음
             System.out.println("choiceAgency.get(i) = " + choiceAgency.get(i));
-//            getDataService.deleteAccount(choiceAgency.get(i), logIn.getOwnNum(), industry);
+            getDataService.deleteAccount(choiceAgency.get(i), userDTO.getOwnNum(), industry);
         }
     }
 }
