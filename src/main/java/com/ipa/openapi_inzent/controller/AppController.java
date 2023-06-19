@@ -28,6 +28,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
@@ -243,7 +244,7 @@ public class AppController {
         System.out.println("agencyDTOList 22222= " + agencyDTOList.size());
 
         model.addAttribute("connectAgency", connectAgency);
-        model.addAttribute("agencyList",agencyDTOList);
+        model.addAttribute("agencyList", agencyDTOList);
         return "/app/bankInsert";
     }
 
@@ -396,7 +397,7 @@ public class AppController {
     // ### 투자 ###
 
     @GetMapping("/app/invest/insert/{industry}")
-    public String invest(Model model, @PathVariable String industry,@AuthenticationPrincipal UserCustomDetails userDetails) {
+    public String invest(Model model, @PathVariable String industry, @AuthenticationPrincipal UserCustomDetails userDetails) {
         List<MdAgencyDTO> agencyDTOList = mydataService.agencyIndustry(industry);
         System.out.println("agencyDTOList = " + agencyDTOList);
         System.out.println("agencyDTOList.size() = " + agencyDTOList.size());
@@ -433,7 +434,7 @@ public class AppController {
 
         ///////
 
-        model.addAttribute("agencyList",agencyDTOList);
+        model.addAttribute("agencyList", agencyDTOList);
         return "/app/investInsert";
     }
 
@@ -889,7 +890,7 @@ public class AppController {
 
     @ResponseBody
     @PostMapping("/app/deleteAgency")
-    public void deleteAgency(List<String> choiceAgency,String industry, @AuthenticationPrincipal UserCustomDetails userDetails ) {
+    public void deleteAgency(@RequestParam (value = "choiceAgency[]") ArrayList<String> choiceAgency, String industry, @AuthenticationPrincipal UserCustomDetails userDetails) {
         UserDTO logIn = userDetails.getUserDTO();
         System.out.println("industry = " + industry);
 
