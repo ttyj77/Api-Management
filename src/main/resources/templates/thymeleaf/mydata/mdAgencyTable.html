@@ -50,6 +50,7 @@
                     data: data,
 
                     success: (message) => {
+                        /*마이데이터 가관목록에서 우측 버튼 클릭 시 서비스 정보 모달 나오는 부분*/
                         $('#etcModal').modal('show');
                         document.getElementById("etcModalTbody").innerHTML = ""
                         let array = JSON.parse(message.responseText);
@@ -327,7 +328,7 @@
                         <th>기관명</th>
                         <th>업권</th>
                         <th>비고</th>
-<!--                        <th>삭제</th>-->
+                        <!--                        <th>삭제</th>-->
                     </tr>
                     </thead>
                     <tbody id="agencyListTbody">
@@ -341,11 +342,10 @@
                         <!--                                                                                 style="cursor: pointer"></i></td>-->
                         <td onclick="infoModal(this)" th:id="${agencyList.id}"><i class="fa-solid fa-braille"
                                                                                   style="cursor: pointer"></i></td>
-<!--                        <td>-->
-<!--                            <button class="btn-sm btn-danger" onclick="deleteRow(this)">삭제</button>-->
-<!--                        </td>-->
+                        <!--                        <td>-->
+                        <!--                            <button class="btn-sm btn-danger" onclick="deleteRow(this)">삭제</button>-->
+                        <!--                        </td>-->
                     </tr>
-
 
                     </tbody>
                 </table>
@@ -442,34 +442,6 @@
                                     </div>
                                     <div class="border mb-3">
                                         <div class="border-bottom">
-                                            <h5 class="text-muted p-3 m-0">인증</h5>
-                                        </div>
-                                        <div class="p-4">
-                                            <table class="table table-borderless">
-                                                <tbody>
-                                                <tr>
-                                                    <td class="tdHead">
-                                                        제공 인증방식
-                                                    </td>
-                                                    <td class="tdContent" id="authenticationMethod">
-
-                                                    </td>
-                                                </tr>
-                                                <tr class="borderTop">
-                                                    <td class="tdHead">
-                                                        TLS 인증서 시리얼넘버
-                                                    </td>
-                                                    <td class="tdContent" id="TLSNum">
-
-                                                    </td>
-                                                </tr>
-
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                    <div class="border mb-3">
-                                        <div class="border-bottom">
                                             <h5 class="text-muted p-3 m-0">IP</h5>
                                         </div>
                                         <div class="p-4">
@@ -480,7 +452,6 @@
                                                         IP 및 PORT
                                                     </td>
                                                     <td class="tdContent" id="ipPort">
-
                                                     </td>
                                                 </tr>
                                                 </tbody>
