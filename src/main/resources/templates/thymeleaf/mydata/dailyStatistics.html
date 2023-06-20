@@ -173,18 +173,17 @@
                                         <td>성공한API호출 횟수</td>
                                         <td>실패한 API호출 횟수</td>
 
-
                                     </tr>
                                     </thead>
 
                                     <tbody id="userNumTbody">
-                                    <tr th:each="list:${list}"
-                                        th:onclick="'location.href=\'/mydata/statistics/'+ @{${list.code}} + '\''">
-                                        <td>20211116</td>
+                                    <tr th:each="list:${dailyApiList}"
+                                        th:onclick="'location.href=\'/mydata/statistics/'+ @{${list.code}} +'/'+ @{${list.date}} + '\''">
+                                        <td th:text="${list.date}">20211116</td>
                                         <td th:text="${list.name}">교보생명보험(주)</td>
                                         <td th:text="${list.code}">ZVAAAI0000</td>
-                                        <td>8963</td>
-                                        <td>23</td>
+                                        <td th:text="${list.successCnt}">8963</td>
+                                        <td th:text="${list.failCnt}">23</td>
                                     </tr>
                                     </tbody>
                                 </table>
