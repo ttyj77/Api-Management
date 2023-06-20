@@ -5,174 +5,201 @@
       layout:decorate="~{layout/layout}">
 
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="">
-  <meta name="author" content="">
-  <style>
-    .tdContent:hover {
-      background-color: #f5f6fb;
-    }
-
-    .tdHead {
-      background-color: #f5f5f5;
-    }
-  </style>
-
-  <title>통계</title>
-
-  <th:block layout:fragment="css">
-    <link
-            href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-            rel="stylesheet">
-    <link href="/css/sb-admin-2.min.css" rel="stylesheet">
-  </th:block>
-
-  <th:block layout:fragment="script">
-    <script src="https://kit.fontawesome.com/24311b556d.js" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
-            crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-            crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js"
-            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
-            crossorigin="anonymous"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script>
-
-      // 달력
-      function input() {
-        let tbody = document.getElementById("userNumTbody");
-        tbody.innerHTML = "";
-        let dday = document.getElementById("input_date").value;
-        console.log(dday);
-        let data = {
-          "dday": dday,
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <style>
+        .tdContent:hover {
+            background-color: #f5f6fb;
         }
-        $.ajax({
-          url: "/mydata/statistics/calendar",
-          type: "get",
-          data: data,
 
-          success: (message) => {
+        .tdHead {
+            background-color: #f5f5f5;
+        }
+    </style>
 
-            console.log("calendar!!!!!!!!!!!!!!!!!!!!!!!!!!")
-            let alist = JSON.parse(message.AgencyList);
-            console.log(alist);
-            let col_cnt = Object.keys(alist[0]).length;
-            console.log(col_cnt);
-            for (let i = 0; i < alist.length; i++) {
-              let keys = Object.keys(alist[i]);
-              let tr = document.createElement("tr");
-              tr.className = "trContent";
-              tr.id = alist[i]["id"];
-              $(tr).attr({
-                "data-bs-toggle": "modal",
-                "data-bs-target": "#providerModal",
-                "onclick": "providerModal(this)"
-              });
-              for (let j = 1; j < col_cnt; j++) {
-                let key = keys[j];
+    <title>1일 통계</title>
 
-                let td = document.createElement("td");
-                td.innerText = alist[i][key];
-                tr.append(td);
-              }
-              tbody.append(tr);
+    <th:block layout:fragment="css">
+        <link
+                href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+                rel="stylesheet">
+        <link href="/css/sb-admin-2.min.css" rel="stylesheet">
+    </th:block>
+
+    <th:block layout:fragment="script">
+        <script src="https://kit.fontawesome.com/24311b556d.js" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+                integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+                crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+                integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+                crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js"
+                integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+                crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script>
+
+            // 달력
+            function input() {
+                let tbody = document.getElementById("userNumTbody");
+                tbody.innerHTML = "";
+                let dday = document.getElementById("input_date").value;
+                console.log(dday);
+                let data = {
+                    "dday": dday,
+                }
+                $.ajax({
+                    url: "/mydata/statistics/calendar",
+                    type: "get",
+                    data: data,
+
+                    success: (message) => {
+
+                        console.log("calendar!!!!!!!!!!!!!!!!!!!!!!!!!!")
+                        let alist = JSON.parse(message.AgencyList);
+                        console.log(alist);
+                        let col_cnt = Object.keys(alist[0]).length;
+                        console.log(col_cnt);
+                        for (let i = 0; i < alist.length; i++) {
+                            let keys = Object.keys(alist[i]);
+                            let tr = document.createElement("tr");
+                            tr.className = "trContent";
+                            tr.id = alist[i]["id"];
+                            $(tr).attr({
+                                "data-bs-toggle": "modal",
+                                "data-bs-target": "#providerModal",
+                                "onclick": "providerModal(this)"
+                            });
+                            for (let j = 1; j < col_cnt; j++) {
+                                let key = keys[j];
+
+                                let td = document.createElement("td");
+                                td.innerText = alist[i][key];
+                                tr.append(td);
+                            }
+                            tbody.append(tr);
+                        }
+                    }
+                })
+
             }
-          }
-        })
 
+            function createElement() {
+                let tbody = document.getElementById("userNumTbody");
+                tbody.innerHTML = "";
+                for (let i = 0; i <list.size(); i++) {
+                    let tr = document.createElement("tr");
+                    // 리스트 컬럼 5개
+                    let td_1 = document.createElement("td");
+                    let td_2 = document.createElement("td");
+                    let td_3 = document.createElement("td");
+                    let td_4 = document.createElement("td");
+                    let td_5 = document.createElement("td");
+                    td_1.innerText = "값들 하나씩";
+                    td_2.innerText = "값들 하나씩";
+                    td_3.innerText = "값들 하나씩";
+                    td_4.innerText = "값들 하나씩";
+                    td_5.innerText = "값들 하나씩";
 
-      }
-    </script>
+                    tr.append(td_1,td_2,td_3,td_4,td_5);
+                    tr.onclick = function () {
+                        location.href = "/mydata/statistics/" + "기관코드";
+                    };
+                    tbody.append(tr);
+                }
 
-  </th:block>
+            }
+
+        </script>
+
+    </th:block>
 
 </head>
 
 <body>
 <div layout:fragment="content">
 
-  <div id="wrapper">
+    <div id="wrapper">
 
-    <!-- Content Wrapper -->
-    <div id="content-wrapper" class="d-flex flex-column">
-      <!-- Main Content -->
-      <div id="content">
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+            <!-- Main Content -->
+            <div id="content">
 
-        <!-- Begin Page Content -->
-        <div class="container-fluid">
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
 
-          <!-- Page Heading -->
-          <h1 class="h3 mb-2 text-gray-800">Daily 통계</h1>
-          <p class="mb-4"></p>
+                    <!-- Page Heading -->
+                    <h1 class="h3 mb-2 text-gray-800">1일 통계</h1>
+                    <p class="mb-4"></p>
 
-          <!-- DataTales Example -->
-          <div class="card shadow mb-4">
-            <!-- Topbar Search -->
-            <div class=" row" style="    display: flex;justify-content: space-between;">
-              <div class="col-md-7 m-3">
-                <label for="input_date">&nbsp;&nbsp;조회날짜</label>
-                <input type="date" id="input_date" name="input_date"
-                       style="width: 220px; text-align: center;">
-                <input type="submit" onclick="input(this)" id="input_submit" value="조회">
-              </div>
-              <!-- Topbar Search -->
-              <form action="/mydata/AgencySearch" method="get" class="col input-group mt-3 mr-3" style="width: 40%; align-self: end;">
-                <input type="text" class="form-control m-0"
-                       placeholder="검색어를 입력해주세요( 기관명, 서비스명 )"
-                       aria-label="Search" name="keyword">
-                <div class="input-group-append">
-                  <button class="btn btn-sm" type="submit" style="background-color: black; color: white" >
-                    <i class="fa-solid fa-magnifying-glass" style="color: #ffffff;"></i> 조회
-                  </button>
+                    <!-- DataTales Example -->
+                    <div class="card shadow mb-4">
+                        <!-- Topbar Search -->
+                        <div class=" row" style="    display: flex;justify-content: space-between;">
+                            <div class="col-md-7 m-3">
+                                <label for="input_date">&nbsp;&nbsp;조회날짜</label>
+                                <input type="date" id="input_date" name="input_date"
+                                       style="width: 220px; text-align: center;">
+                                <input type="submit" onclick="input(this)" id="input_submit" value="조회">
+                            </div>
+                            <!-- Topbar Search -->
+                            <form action="/mydata/AgencySearch" method="get" class="col input-group mt-3 mr-3"
+                                  style="width: 40%; align-self: end;">
+                                <input type="text" class="form-control m-0"
+                                       placeholder="검색어를 입력해주세요( 기관명, 서비스명 )"
+                                       aria-label="Search" name="keyword">
+                                <div class="input-group-append">
+                                    <button class="btn btn-sm" type="submit"
+                                            style="background-color: black; color: white">
+                                        <i class="fa-solid fa-magnifying-glass" style="color: #ffffff;"></i> 조회
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover" id="dataTable"
+                                       style="text-align: center; font-size: 13px">
+                                    <thead>
+                                    <tr style=" width: -webkit-fill-available; font-weight: bold; background-color: #f5f6fb;">
+                                        <td>통계일자</td>
+                                        <td>기관명</td>
+                                        <td>기관코드</td>
+                                        <td>성공한API호출 횟수</td>
+                                        <td>실패한 API호출 횟수</td>
+
+
+                                    </tr>
+                                    </thead>
+
+                                    <tbody id="userNumTbody">
+                                    <tr th:each="list:${list}"
+                                        th:onclick="'location.href=\'/mydata/statistics/'+ @{${list.code}} + '\''">
+                                        <td>20211116</td>
+                                        <td th:text="${list.name}">교보생명보험(주)</td>
+                                        <td th:text="${list.code}">ZVAAAI0000</td>
+                                        <td>8963</td>
+                                        <td>23</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </form>
+                <!-- /.container-fluid -->
+
             </div>
-            <div class="card-body">
-              <div class="table-responsive">
-                <table class="table table-hover" id="dataTable"
-                       style="text-align: center; font-size: 13px">
-                  <thead>
-                  <tr style=" width: -webkit-fill-available; font-weight: bold; background-color: #f5f6fb;">
-                    <td>통계일자</td>
-                    <td>기관명</td>
-                    <td>서비스명</td>
-                    <td>기관코드</td>
-                    <td>성공한API호출 횟수</td>
-                    <td>실패한 API호출 횟수</td>
-
-
-                  </tr>
-                  </thead>
-
-                  <tbody id="userNumTbody">
-                  <tr th:each="list:${list}" th:onclick="'location.href=\'/mydata/statistics/'+ @{${list.code}} + '\''">
-                    <td>20211116</td>
-                    <td th:text="${list.name}">교보생명보험(주)</td>
-                    <td th:text="${list.mdServiceDTO.mdServiceName}">교보마이데이터사업자</td>
-                    <td th:text="${list.code}">ZVAAAI0000</td>
-                    <td>8963</td>
-                    <td>23</td>
-                  </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
+            <!-- End of Main Content -->
         </div>
-        <!-- /.container-fluid -->
-
-      </div>
-      <!-- End of Main Content -->
+        <!-- End of Content Wrapper -->
     </div>
-    <!-- End of Content Wrapper -->
-  </div>
-  <!-- End of Page Wrapper -->
+    <!-- End of Page Wrapper -->
 </div>
 </body>
 

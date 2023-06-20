@@ -11,7 +11,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>통계(1일)</title>
+    <title>오늘 통계</title>
 
     <th:block layout:fragment="css">
         <link
@@ -88,7 +88,7 @@
                     <h1 class="h3 mb-4">API 통계</h1>
                     <h5>2023-06-15</h5>
                     <div class="mb-4 d-flex"><h5 class="backBox mr-2"><img class="profile"
-                                                                           src="/images/bank/inzent.png"><span>인젠트뱅크</span>
+                                                                           th:src="|/images/${agency.industry}/${agency.logo}|"><span th:text="${agency.name}">인젠트뱅크</span>
                     </h5>
                         <h5 class="d-flex align-items-center">
                             총 API 호출 수 :&nbsp; <span style="color: #0c4128; font-weight: bolder">3517</span>
@@ -106,7 +106,6 @@
                         <div class="shadow-lg boxTwo d-flex justify-content-around">
                             <canvas id="run-chart" width="800" height="500"></canvas>
                         </div>
-
 
                     </div>
                     <div class="d-flex justify-content-around">

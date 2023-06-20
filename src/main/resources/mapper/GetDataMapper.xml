@@ -30,5 +30,11 @@
         where "requestData" ->> 'org_code' = #{org_code}
         and "clientNum" = #{clientNum} and industry = #{industry};
     </delete>
+    <select id="getAccount" parameterType="string" resultType="com.ipa.openapi_inzent.model.GetDataDTO">
+        select * from public.data
+        where "clientNum" = #{clientNum}
+        and uri = #{uri}
+        and "requestData" ->> 'org_code' = #{orgCode};
+    </select>
 
 </mapper>

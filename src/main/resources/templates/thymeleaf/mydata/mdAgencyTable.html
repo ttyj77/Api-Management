@@ -178,7 +178,7 @@
                     let division = document.createElement("td")
                     let industry = document.createElement("td")
                     let note = document.createElement("td")
-                    let deleteTd = document.createElement("td")
+                    // let deleteTd = document.createElement("td")
                     let btn = document.createElement("button")
 
 
@@ -201,11 +201,11 @@
                     // <td onClick="infoModal(this)" th:id="${agencyList.id}"><i className="fa-solid fa-braille"
                     // style="cursor: pointer"></i></td>
 
-                    btn.className = "btn-sm btn-danger rounded-pill";
-                    $(btn).attr("onclick", "deleteRow(this)");
-                    btn.innerText = "삭제"
-
-                    deleteTd.append(btn);
+                    // btn.className = "btn-sm btn-danger rounded-pill";
+                    // $(btn).attr("onclick", "deleteRow(this)");
+                    // btn.innerText = "삭제"
+                    //
+                    // deleteTd.append(btn);
 
                     note.onclick = function () {
                         infoModal(this);
@@ -217,7 +217,7 @@
                     note.append(icon)
 
                     tr.id = array[i].id
-                    tr.append(agCode, division, name, industry, note, deleteTd);
+                    tr.append(agCode, division, name, industry, note);
 
                     document.getElementById("agencyListTbody").append(tr)
                 }
@@ -307,13 +307,13 @@
                 <!--     select box           -->
                 <select class="custom-select" style="width: 30%" onchange="selectChange(value)">
                     <option selected>전체</option>
-                    <option value="정보제공자(API 자체구축)">정보제공자(API 자체구축)</option>
-                    <option value="정보제공자(중계기관이용)">정보제공자(중계기관이용)</option>
+<!--                    <option value="정보제공자(API 자체구축)">정보제공자(API 자체구축)</option>-->
+                    <option value="정보제공자">정보제공자</option>
                     <option value="마이데이터사업자">마이데이터사업자</option>
-                    <option value="중계기관">중계기관</option>
+<!--                    <option value="중계기관">중계기관</option>-->
                     <option value="통합인증기관(인증서 본인확인 기관)">통합인증기관(인증서 본인확인 기관)</option>
-                    <option value="통합인증기관(전자서명인증사업자)">통합인증기관(전자서명인증사업자)</option>
-                    <option value="종합포털">종합포털</option>
+<!--                    <option value="통합인증기관(전자서명인증사업자)">통합인증기관(전자서명인증사업자)</option>-->
+<!--                    <option value="종합포털">종합포털</option>-->
                     <option value="기타">기타</option>
                 </select>
             </div>

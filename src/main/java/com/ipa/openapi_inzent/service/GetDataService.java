@@ -32,4 +32,9 @@ public class GetDataService {
     public void deleteAccount(String org_code, String ownNum, String industry) {
         getDataDao.deleteAccount(org_code, ownNum, industry);
     }
+
+    public GetDataDTO getAccount(String clientNum, String uri, String orgCode) {
+
+        return getDataDao.getAccount(clientNum, uri, orgCode);
+    }
 }

@@ -39,7 +39,7 @@
         }
 
         input[type="checkbox"] {
-            zoom: 2.0;
+            zoom: 2.5;
         }
 
         #iconBoxUnder {
@@ -443,7 +443,7 @@
                     }
                 });
             } else if (category == "invest") {
-                console.log("금융투자!!!!!!!!!!!!!!!")
+                console.log("금융투자!!!!!!!!!!!!!!!");
                 // 목록 이름
                 document.getElementById('listName').innerText = " My 투자 목록";
 
@@ -477,8 +477,6 @@
                     success: (message) => {
                         // 데이터
                         console.log(JSON.parse(message.investList));
-                        // let reqData = JSON.parse(message.bankList);
-                        // let resData = JSON.parse(message.bankList);
                         let agency = JSON.parse(message.agency);
                         let investList = JSON.parse(message.investList);
                         // 해당 업권에 계좌 정보가 하나도 없을 때
@@ -895,8 +893,13 @@
                         success: (message) => {
                             console.log("삭제 성공");
                             Swal.fire({
-                                title:"삭제 성공"
+                                title:"삭제 성공",
+                            }).then(()=>{
+                                // 여기 클릭하게
+                                // location.href = '/app/main';
+                                $('#' + industry).click();
                             })
+
                         }
                     });
                 }
@@ -926,7 +929,6 @@
                 document.getElementById('btn-delete').disabled = true;
             }
         }
-
 
     </script>
 </head>

@@ -198,6 +198,61 @@
 
             }
 
+            function showAcc(value) {
+                let target = document.getElementById("pushAccount");
+                target.innerHTML = "";
+                let clientNum = value.getAttribute("client");
+                let orgCode = value.getAttribute("code");
+                console.log(clientNum);
+                console.log(orgCode);
+
+                let data = {
+                    "clientNum": clientNum,
+                    "orgCode": orgCode,
+                }
+
+                $.ajax({
+                    url: "/mydata/mdTakeAccount",
+                    data: data,
+                    type: 'post',
+
+                    success: (message) => {
+
+                        console.log("성공");
+                        let accountList = JSON.parse(message.accountList);
+                        console.log(accountList);
+                        for (let i = 0; i < accountList.length; i++) {
+                            let tr = document.createElement("tr");
+                            let td_1 = document.createElement("td");
+                            let td_2 = document.createElement("td");
+                            let input = document.createElement("input");
+
+                            td_1.innerText = accountList[i];
+                            input.type = "checkbox";
+                            input.className = "form-check";
+                            input.disabled = true;
+                            input.checked = true;
+
+                            td_2.append(input);
+                            tr.append(td_1, td_2);
+                            target.append(tr);
+
+                        }
+                    },
+                    error:(e)=>{
+                        console.log("통신 실패", e);
+                        let tr = document.createElement("tr");
+                        let td_1 = document.createElement("td");
+                        td_1.innerText = "데이터가 없습니다."
+                        tr.append(td_1);
+                        target.append(tr);
+                    }
+                })
+
+
+
+            }
+
         </script>
     </th:block>
 
@@ -294,9 +349,9 @@
                                         <td data-bs-toggle="modal" data-bs-target="#providerModal"
                                             th:text="${#dates.format(list.tokenExpiryDate, 'yyyy-MM-dd')}"></td>
                                         <!--                                        <td data-bs-toggle="modal" data-bs-target="#providerModal"></td>-->
-                                        <td><i class="fa-solid fa-file-lines" style="cursor: pointer; margin-right: 5px"
+                                        <td><i class="fa-solid fa-file-lines" style="cursor: pointer; margin-right: 5px" th:client="${list.clientNum}", th:code="${list.code}"
                                                data-toggle="tooltip" data-bs-toggle="modal" data-bs-target="#assetModal"
-                                               title="자산목록"></i> <i class="fa-solid fa-file-shield"
+                                               title="자산목록" onclick="showAcc(this)"></i> <i class="fa-solid fa-file-shield"
                                                                     data-bs-toggle="modal" data-bs-target="#tokenModal"
                                                                     style="cursor: pointer" data-toggle="tooltip"
                                                                     title="발급 토큰 정보"></i></td>
@@ -451,77 +506,25 @@
                             <div class="modal-body" style="overflow-x: hidden">
                                 <div class="border mb-3">
                                     <div class="border-bottom">
-                                        <h5 class="text-muted p-3 m-0">&nbsp;&nbsp;보험계좌</h5>
+                                        <h5 class="text-muted p-3 m-0">&nbsp;&nbsp;계좌 목록</h5>
                                     </div>
                                     <div class="p-4">
                                         <table class="table table-borderless table-hover">
                                             <thead>
                                             <tr>
-                                                <th>보험계좌</th>
-                                                <th>전송요구 여부</th>
+                                                <th style="width: 50%">계좌</th>
+                                                <th style="width: 50%">전송요구 여부</th>
                                             </tr>
                                             </thead>
-                                            <tbody>
-                                            <tr>
-                                                <td id="insuAccount">1234123123</td>
-                                                <td><input type="checkbox" class="form-check" disabled checked></td>
-                                            </tr>
-                                            <tr>
-                                                <td id="">1234sadfa23</td>
-                                                <td><input type="checkbox" class="form-check" disabled checked></td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-
-                                <div class="border mb-3">
-                                    <div class="border-bottom">
-                                        <h5 class="text-muted p-3 m-0">&nbsp;&nbsp;IRP 계좌</h5>
-                                    </div>
-                                    <div class="p-4">
-                                        <table class="table table-borderless table-hover">
-                                            <thead>
-                                            <tr>
-                                                <th>IRP 계좌</th>
-                                                <th>전송요구 여부</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <tr>
-                                                <td>1234123123</td>
-                                                <td><input type="checkbox" class="form-check" disabled checked></td>
-                                            </tr>
-                                            <tr>
-                                                <td>1234sadfa23</td>
-                                                <td><input type="checkbox" class="form-check" disabled checked></td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-
-                                <div class="border mb-3">
-                                    <div class="border-bottom">
-                                        <h5 class="text-muted p-3 m-0">&nbsp;&nbsp;대출계좌</h5>
-                                    </div>
-                                    <div class="p-4">
-                                        <table class="table table-borderless table-hover">
-                                            <thead>
-                                            <tr>
-                                                <th>대출계좌</th>
-                                                <th>전송요구 여부</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <tr>
-                                                <td>1234123123</td>
-                                                <td><input type="checkbox" class="form-check" disabled checked></td>
-                                            </tr>
-                                            <tr>
-                                                <td>1234sadfa23</td>
-                                                <td><input type="checkbox" class="form-check" disabled checked></td>
-                                            </tr>
+                                            <tbody id="pushAccount">
+<!--                                            <tr>-->
+<!--                                                <td id="insuAccount"></td>-->
+<!--                                                <td><input type="checkbox" class="form-check" disabled checked></td>-->
+<!--                                            </tr>-->
+<!--                                            <tr>-->
+<!--                                                <td id=""></td>-->
+<!--                                                <td><input type="checkbox" class="form-check" disabled checked></td>-->
+<!--                                            </tr>-->
                                             </tbody>
                                         </table>
                                     </div>

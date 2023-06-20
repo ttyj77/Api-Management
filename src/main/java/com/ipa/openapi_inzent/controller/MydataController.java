@@ -5,14 +5,12 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.ipa.openapi_inzent.model.*;
+import com.ipa.openapi_inzent.service.GetDataService;
 import com.ipa.openapi_inzent.service.MydataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -24,10 +22,12 @@ import java.util.List;
 public class MydataController {
 
     private MydataService mydataService;
+    GetDataService getDataService;
 
     @Autowired
-    public MydataController(MydataService mydataService) {
+    public MydataController(MydataService mydataService, GetDataService getDataService) {
         this.mydataService = mydataService;
+        this.getDataService = getDataService;
     }
 
 
@@ -397,15 +397,58 @@ public class MydataController {
         List<MdReqInfoDTO> list = mydataService.mdReqAll();
         System.out.println("MydataController.mydataSendReq");
         model.addAttribute("list", list);
+
         System.out.println("list = " + list);
 
         System.out.println("list.size() = " + list.size());
         return "/mydata/mydataSendReq";
     }
 
+    @PostMapping("/mdTakeAccount")
+    @ResponseBody
+    public JsonObject mdTakeAccount(String clientNum, String orgCode) {
+        System.out.println("MydataController.mdTakeAccount======================");
+        // 계좌번호 넣을 JSON
+        JsonObject object = new JsonObject();
+
+        System.out.println("clientNum = " + clientNum);
+        System.out.println("orgCode = " + orgCode);
+        String uri_1 = "/accounts";
+
+        GetDataDTO getDataDTO = getDataService.getAccount(clientNum, uri_1, orgCode);
+
+        System.out.println("getDataDTO = " + getDataDTO);
+
+        JsonArray array = new JsonArray();
+
+        JsonObject jsonObject = (JsonObject) JsonParser.parseString(getDataDTO.getResponseData());
+        System.out.println("jsonObject = " + jsonObject);
+        System.out.println("jsonObject.get(\"account_list\") = " + jsonObject.get("account_list"));
+        array = jsonObject.get("account_list").getAsJsonArray();
+        System.out.println("array = " + array);
+
+        System.out.println("array.size() = " + array.size());
+
+        JsonArray accountList = new JsonArray();
+        for (int i = 0; i < array.size(); i++) {
+            JsonObject accJson = (JsonObject) array.get(i);
+            accountList.add(getString(String.valueOf(accJson.get("account_num"))));
+        }
+
+        System.out.println("accountList = " + accountList);
+
+        object.addProperty("accountList",accountList.toString());
+
+        System.out.println("object = " + object);
+
+
+        return object;
+    }
+
     @GetMapping("/provider/customerList")
     @ResponseBody
     public JsonObject customerList(String customerNum) {
+
         JsonObject object = new JsonObject();
         List<MdProviderDTO> list = mydataService.mdProviderCustomerList(customerNum);
         System.out.println("customerNum = " + customerNum);
@@ -554,6 +597,9 @@ public class MydataController {
         System.out.println("MydataController.showChart");
         System.out.println("orgCode = " + orgCode);
 
+        MdAgencyDTO mdAgencyDTO = mydataService.mdAgencyCode(orgCode);
+        System.out.println("mdAgencyDTO = " + mdAgencyDTO);
+
         List<MdAgencyDTO> mdAgency = mydataService.mdAgencyServiceOne(orgCode);
         // 만약 한 기관이 가지고 있는 서비스가 한개 이상이면 통계 합 해줘야함
         System.out.println("mdAgency = " + mdAgency);
@@ -567,6 +613,8 @@ public class MydataController {
                 // 통계만 더해주면 됨; 서비스 안에 내용은 같음
             }
         }
+
+        model.addAttribute("agency", mdAgencyDTO);
 
         return "/mydata/statistics";
     }
@@ -584,5 +632,11 @@ public class MydataController {
         model.addAttribute("list",agen_serviceList);
 
         return "/mydata/dailyStatistics";
+    }
+
+    // "" 없애주는 function
+    private static String getString(String str) {
+        String newStr = str.replaceAll("\\\"", "");
+        return newStr;
     }
 }
