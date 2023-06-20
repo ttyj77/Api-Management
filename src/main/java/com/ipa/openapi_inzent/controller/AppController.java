@@ -82,7 +82,6 @@ public class AppController {
 
 
         if (userDTO == null) {
-            System.out.println("앱 에러페이지 드가쟈!!!!!!!!!");
             String errorMessage = "아이디와 비밀번호를 확인해주세요.";
 
             errorMessage = URLEncoder.encode(errorMessage, "UTF-8");
@@ -90,16 +89,13 @@ public class AppController {
         }
 
         session.removeAttribute("choiceAgency");
-        System.out.println("userDetails = " + userDetails);
 
         String uri_3 = "/accounts/transactions";
 
         List<GetDataDTO> investList = getDataService.selectAll(userDTO.getOwnNum(), uri_3);
-        System.out.println("investList = " + investList);
 
         int sum = 0;
 
-        System.out.println("list = " + list);
         // 고객이 가지고 있는 모든 계좌 조회해서 잔액 더해서 순자산 값 구하기
 
         for (int i = 0; i < list.size(); i++) {
@@ -107,41 +103,29 @@ public class AppController {
             JsonArray results = jsonObject.get("detail_list").getAsJsonArray();
             JsonObject tempJson = (JsonObject) results.get(0);
             String balance = getString(String.valueOf(tempJson.get("balance_amt")));
-            System.out.println("balance = " + balance);
             sum += Integer.parseInt(balance);
 
         }
 
-        System.out.println("sum = " + sum);
 
-
-        System.out.println("investList = " + investList.size());
         for (int i = 0; i < investList.size(); i++) {
 
             JsonObject jsonObject = (JsonObject) JsonParser.parseString(investList.get(i).getResponseData());
             JsonArray results = jsonObject.get("trans_list").getAsJsonArray();
             if (!results.isEmpty()) {
-                System.out.println("results.size() = " + results.size());
                 // trans_list 마지막 거래 내역의 잔액을 총 자산에 더해주기
                 JsonObject tempJson = (JsonObject) results.get(results.size() - 1); // 마지막 리스트 잔액
-                System.out.println("tempJson = " + tempJson);
                 String balance = getString(String.valueOf(tempJson.get("balance_amt")));
-                System.out.println("balance = " + balance);
                 sum += Integer.parseInt(balance);
             }
         }
 
-
-        System.out.println("sum = " + sum);
 
         // card 업권 목록 내용
 
 
         String uri_1 = "/cards";
         List<GetDataDTO> cardList = getDataService.selectAllIndustry(userDTO.getOwnNum(), uri_1, "card");
-        System.out.println("AppController.myCardAccount");
-        System.out.println("list1 = " + cardList);
-        System.out.println("list1.isEmpty() = " + cardList.isEmpty());
 
         JsonArray array = new JsonArray();
         for (GetDataDTO g : cardList) {
@@ -150,9 +134,6 @@ public class AppController {
 
             array.add(jsonObjectRes);
         }
-
-        System.out.println("array = " + array);
-        System.out.println("array.isEmpty() = " + array.isEmpty());
 
         model.addAttribute("cardInfo", array);
         model.addAttribute("myProperty", sum);
@@ -198,8 +179,6 @@ public class AppController {
         JsonObject object = new JsonObject();
         String uri_1 = "/cards";
         List<GetDataDTO> list1 = getDataService.selectAllIndustry(clientNum, uri_1, industry);
-        System.out.println("list1 = " + list1);
-        System.out.println("list1.isEmpty() = " + list1.isEmpty());
 
         JsonArray array = new JsonArray();
         for (GetDataDTO g : list1) {
@@ -227,24 +206,17 @@ public class AppController {
     @GetMapping("/app/bank/insert/{industry}")
     public String bank(Model model, @PathVariable String industry, @AuthenticationPrincipal UserCustomDetails userDetails, HttpSession session) {
         List<MdAgencyDTO> agencyDTOList = mydataService.agencyIndustry(industry);
-        System.out.println("agencyDTOList = " + agencyDTOList);
-        System.out.println("agencyDTOList.size() = " + agencyDTOList.size());
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserDTO userDTO = new UserDTO();
 
         if (principal instanceof UserDetails) {
             //일반로그인
             String username = ((UserDetails) principal).getUsername();
-            System.out.println("username 1 = " + username);
-            System.out.println((UserDetails) principal);
             userDTO = userDetails.getUserDTO();
         } else {
             //인젠트 로그인
             UserDTO logIn = (UserDTO) session.getAttribute("logIn");
-            System.out.println("==============" + logIn);
             String username = principal.toString();
-            System.out.println("username 2  = " + username);
-            System.out.println("userinfo 2  " + principal);
             userDTO = logIn;
         }
 
@@ -252,7 +224,6 @@ public class AppController {
         String uri_1 = "/accounts";
 
         List<GetDataDTO> org_codeList = getDataService.selectAllIndustry(userDTO.getOwnNum(), uri_1, industry);
-        System.out.println("org_codeList = " + org_codeList);
 
         // 자산 연결된 기관코드 저장할 빈 list
         List<String> connectAgency = new ArrayList<>();
@@ -260,11 +231,9 @@ public class AppController {
             JsonObject object = (JsonObject) JsonParser.parseString(org_codeList.get(i).getRequestData());
             String org_code = String.valueOf(object.get("org_code"));
             String org = getString(org_code);
-            System.out.println("org = " + org);
             connectAgency.add(org);
         }
 
-        System.out.println("agencyDTOList1111 = " + agencyDTOList.size());
         for (int i = 0; i < agencyDTOList.size(); i++) {
             for (String agency : connectAgency) {
                 if (agency.equals(agencyDTOList.get(i).getCode())) {
@@ -272,7 +241,6 @@ public class AppController {
                 }
             }
         }
-        System.out.println("agencyDTOList 22222= " + agencyDTOList.size());
 
         model.addAttribute("connectAgency", connectAgency);
         model.addAttribute("agencyList", agencyDTOList);
@@ -294,8 +262,6 @@ public class AppController {
         JsonObject object = new JsonObject();
 
         JsonArray array = new JsonArray();
-        System.out.println("list1 = " + list1);
-        System.out.println("list2 = " + list2);
         for (GetDataDTO g : list1) {
             JsonParser parser = new JsonParser();
             JsonObject jsonObject = (JsonObject) parser.parse(g.getResponseData());
@@ -331,9 +297,7 @@ public class AppController {
         object.addProperty("bankList", array.toString());
         object.addProperty("agency", array1.toString());
         object.addProperty("balance", array2.toString());
-        System.out.println("array2.toString() = " + array2.toString());
 
-        System.out.println("object = " + object);
         return object;
     }
 
@@ -354,37 +318,24 @@ public class AppController {
         List<GetDataDTO> accountList = getDataService.accountAll(account, clientNum, uri_3);
         List<MdAgencyDTO> agencyDTOList = mydataService.mdAgencySelectAll();
 
-        System.out.println("agencyDTOList = " + agencyDTOList);
-
-        System.out.println("accountList = " + accountList);
-
-        System.out.println("balanceList = " + balanceList);
 
         // 은행 명, logo 출력 용
         JsonObject object = (JsonObject) JsonParser.parseString(accountList.get(0).getRequestData());
         String org_code = String.valueOf(object.get("org_code"));
         String org = getString(org_code);
-        System.out.println("org = " + org);
 
         for (MdAgencyDTO agencyDTO : agencyDTOList) {
             if (agencyDTO.getCode().equals(org)) {
                 model.addAttribute("agencyDTO", agencyDTO);
-                System.out.println("agencyDTO = " + agencyDTO);
             }
         }
 
         // 잔액 용
         JsonObject object1 = (JsonObject) JsonParser.parseString(balanceList.get(0).getResponseData());
-        System.out.println("================================");
-        System.out.println(object1.get("detail_list"));
         JsonArray results = object1.get("detail_list").getAsJsonArray();
-        System.out.println("results = " + results);
         JsonObject object2 = (JsonObject) results.get(0);
-        System.out.println("object2 = " + object2);
         String balance_amt = String.valueOf(object2.get("balance_amt"));
-        System.out.println("balance = " + balance_amt);
         String balance = getString(balance_amt);
-        System.out.println("balance = " + balance);
 
         model.addAttribute("balance", balance);
 
@@ -416,10 +367,8 @@ public class AppController {
             transList.add(temp);
         }
 
-        System.out.println("transList = " + transList);
         model.addAttribute("accountNum", account);
         model.addAttribute("transList", transList);
-        System.out.println("model = " + model);
 
         return "/app/bankDetail";
     }
@@ -429,10 +378,7 @@ public class AppController {
 
     @GetMapping("/app/invest/insert/{industry}")
     public String invest(Model model, @PathVariable String industry, @AuthenticationPrincipal UserCustomDetails userDetails, HttpSession session) {
-        System.out.println("AppController.invest!!!!!!!!!!!!!!!!!!!");
         List<MdAgencyDTO> agencyDTOList = mydataService.agencyIndustry(industry);
-        System.out.println("agencyDTOList = " + agencyDTOList);
-        System.out.println("agencyDTOList.size() = " + agencyDTOList.size());
 
 //        UserDTO logIn = userDetails.getUserDTO();
 
@@ -442,16 +388,11 @@ public class AppController {
         if (principal instanceof UserDetails) {
             //일반로그인
             String username = ((UserDetails) principal).getUsername();
-            System.out.println("username 1 = " + username);
-            System.out.println((UserDetails) principal);
             userDTO = userDetails.getUserDTO();
         } else {
             //인젠트 로그인
             UserDTO logIn = (UserDTO) session.getAttribute("logIn");
-            System.out.println("==============" + logIn);
             String username = principal.toString();
-            System.out.println("username 2  = " + username);
-            System.out.println("userinfo 2  " + principal);
             userDTO = logIn;
         }
 
@@ -459,7 +400,6 @@ public class AppController {
         String uri_1 = "/accounts";
 
         List<GetDataDTO> org_codeList = getDataService.selectAllIndustry(userDTO.getOwnNum(), uri_1, industry);
-        System.out.println("org_codeList = " + org_codeList);
 
         // 자산 연결된 기관코드 저장할 빈 list
         List<String> connectAgency = new ArrayList<>();
@@ -467,11 +407,9 @@ public class AppController {
             JsonObject object = (JsonObject) JsonParser.parseString(org_codeList.get(i).getRequestData());
             String org_code = String.valueOf(object.get("org_code"));
             String org = getString(org_code);
-            System.out.println("org = " + org);
             connectAgency.add(org);
         }
 
-        System.out.println("agencyDTOList1111 = " + agencyDTOList.size());
         for (int i = 0; i < agencyDTOList.size(); i++) {
             for (String agency : connectAgency) {
                 if (agency.equals(agencyDTOList.get(i).getCode())) {
@@ -479,11 +417,9 @@ public class AppController {
                 }
             }
         }
-        System.out.println("agencyDTOList 22222= " + agencyDTOList.size());
 
         model.addAttribute("connectAgency", connectAgency);
 
-        ///////
 
         model.addAttribute("agencyList", agencyDTOList);
         return "/app/investInsert";
@@ -493,8 +429,6 @@ public class AppController {
     @ResponseBody
     public JsonObject myInvestAccount(String clientNum, String industry) {
 
-        System.out.println("industry = " + industry);
-        System.out.println("clientNum = " + clientNum);
         // 계좌 정보 조회 api resources
         String uri_1 = "/accounts";
         String uri_2 = "/accounts/basic";
@@ -505,13 +439,9 @@ public class AppController {
         List<MdAgencyDTO> agencyDTOList = mydataService.mdAgencySelectAll();
         List<GetDataDTO> investList = getDataService.selectAll(clientNum, uri_3);
 
-        System.out.println("investList = " + investList);
-
         JsonObject object = new JsonObject();
 
         JsonArray array = new JsonArray();
-        System.out.println("list1 = " + list1);
-        System.out.println("list2 = " + list2);
 
         // 계좌 정보
         for (GetDataDTO g : list1) {
@@ -545,12 +475,10 @@ public class AppController {
             if (results.isEmpty()) {
                 balance.add("0");
             } else {
-                System.out.println("results.size() = " + results.size());
                 // trans_list 마지막 거래 내역의 잔액을 총 자산에 더해주기
                 JsonObject tempJson = (JsonObject) results.get(results.size() - 1); // 마지막 리스트 잔액
                 balance.add(getString(String.valueOf(tempJson.get("balance_amt"))));
             }
-            System.out.println("balance = " + balance);
         }
 
         JsonArray balanceArray = new JsonArray();
@@ -582,7 +510,6 @@ public class AppController {
         object.addProperty("agency", array1.toString());
         object.addProperty("balance", balanceArray.toString());
 
-        System.out.println("object = " + object);
         return object;
     }
 
@@ -633,15 +560,9 @@ public class AppController {
 
         // 신용 대출액 / 대출금 용
         JsonObject mortgageObject = (JsonObject) JsonParser.parseString(mortgageList.get(0).getResponseData());
-        System.out.println("mortgageObject = " + mortgageObject);
         JsonArray morArray = mortgageObject.get("basic_list").getAsJsonArray();
-        System.out.println("morArray = " + morArray);
 
         JsonObject basicObj = (JsonObject) morArray.get(0);
-        System.out.println("basicObj = " + basicObj);
-
-        System.out.println("getString(String.valueOf(basicObj.get(\"mortgage_cmt\"))) = " + getString(String.valueOf(basicObj.get("mortgage_cmt"))));
-        System.out.println("getString(String.valueOf(basicObj.get(\"credit_loan_am\"))) = " + getString(String.valueOf(basicObj.get("credit_loan_am"))));
 
         model.addAttribute("mortgage_cmt", getString(String.valueOf(basicObj.get("mortgage_amt"))));
         model.addAttribute("credit_loan_am", getString(String.valueOf(basicObj.get("credit_loan_amt"))));
@@ -651,12 +572,10 @@ public class AppController {
         JsonObject object = (JsonObject) JsonParser.parseString(accountList.get(0).getRequestData());
         String org_code = String.valueOf(object.get("org_code"));
         String org = getString(org_code);
-        System.out.println("org = " + org);
 
         for (MdAgencyDTO agencyDTO : agencyDTOList) {
             if (agencyDTO.getCode().equals(org)) {
                 model.addAttribute("agencyDTO", agencyDTO);
-                System.out.println("agencyDTO = " + agencyDTO);
             }
         }
 
@@ -664,14 +583,12 @@ public class AppController {
         JsonObject balanceObject = (JsonObject) JsonParser.parseString(accountList.get(0).getResponseData());
         JsonArray balanceArray = balanceObject.get("trans_list").getAsJsonArray();
 
-        System.out.println("results.size() = " + balanceArray.size());
         // trans_list 마지막 거래 내역의 잔액을 총 자산에 더해주기
         if (balanceArray.size() == 0) {
             model.addAttribute("balance", "0");
         } else {
             JsonObject balanceJson = (JsonObject) balanceArray.get(balanceArray.size() - 1); // 마지막 리스트 잔액
             String balance = getString(String.valueOf(balanceJson.get("balance_amt")));
-            System.out.println("balance = " + balance);
 
             model.addAttribute("balance", balance);
         }
@@ -682,11 +599,8 @@ public class AppController {
         List<InvestTransactionDTO> transactionList = new ArrayList<>();
 
         JsonObject transObject = (JsonObject) JsonParser.parseString(accountList.get(0).getResponseData());
-        System.out.println("jsonObject = " + transObject);
 
         JsonArray trans_list = transObject.get("trans_list").getAsJsonArray();
-        System.out.println("results1.size = " + trans_list.size());
-        System.out.println("results1 = " + trans_list);
 
         SimpleDateFormat dtimeFormat = new SimpleDateFormat("yyyyMMddHHmmss");
 

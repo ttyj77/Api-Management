@@ -68,7 +68,6 @@ public class MydataService {
         Calendar cal = Calendar.getInstance();
 
         try {
-            System.out.println("MydataService.mdProviderSelectAll");
             for (MdProviderDTO m : list) {
                 Date forMatDate = dfFormat.parse(m.getReqDate());
                 m.setReqDate(newFormat.format(forMatDate)); //요청일 ex) 2021-11-23
@@ -94,7 +93,6 @@ public class MydataService {
         Calendar cal = Calendar.getInstance();
 
         try {
-            System.out.println("MydataService.mdProviderSelectAll");
             for (MdProviderDTO m : list) {
                 Date forMatDate = dfFormat.parse(m.getReqDate());
                 m.setReqDate(newFormat.format(forMatDate)); //요청일 ex) 2021-11-23
@@ -197,7 +195,6 @@ public class MydataService {
         Calendar cal = Calendar.getInstance();
 
         try {
-            System.out.println("MydataService.mdProviderSelectAll");
             for (MdProviderDTO m : list) {
                 Date forMatDate = dfFormat.parse(m.getReqDate());
                 m.setReqDate(newFormat.format(forMatDate)); //요청일 ex) 2021-11-23

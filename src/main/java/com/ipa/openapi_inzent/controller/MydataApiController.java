@@ -39,25 +39,16 @@ public class MydataApiController {
     public StringBuffer invest_001(@RequestParam String org_code, @RequestParam String limit, HttpServletRequest header) {
 
         long start = System.currentTimeMillis();
-        System.out.println("start = " + start);
-        System.out.println(Time.valueOf(LocalTime.now()));
-        System.out.println(Time.valueOf(LocalTime.now()).getClass());
         Date date = new Date();
-        System.out.println("date = " + date);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 
-        System.out.println(header.getHeader("Authorization"));
-        System.out.println("org_code = " + org_code);
         String token = header.getHeader("Authorization");
-        System.out.println("====Header===Start");
 
         header.getHeaderNames().asIterator().forEachRemaining(
                 headerName -> System.out.println(headerName + ": " + header.getHeader(headerName))
 
         );
-//        System.out.println(header.getHeaderNames().asIterator().forEachRemaining(header.getHeader( =)));
-
 
         System.out.println("====Header===end");
         System.out.println("token = " + token);
@@ -109,9 +100,6 @@ public class MydataApiController {
             br.close();
             JsonParser jsonParser = new JsonParser();
             JsonObject jsonObject = (JsonObject) jsonParser.parse(response.toString());
-            System.out.println("jsonObject = " + jsonObject);
-
-            System.out.println(jsonObject.get("account_list").toString()); // 200 아닐 때 생각해야됨
 
             MdReqInfoDTO mdReqInfoDTO = new MdReqInfoDTO();
             mdReqInfoDTO.setCode("WOAAAINW00");

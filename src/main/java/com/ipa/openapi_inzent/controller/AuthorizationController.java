@@ -45,8 +45,6 @@ public class AuthorizationController {
     // 권한관리 역할 삭제
     @GetMapping("/roleDelete/{id}")
     public String roleDelete(@PathVariable int id) {
-        System.out.println("authorizationController.roleDelete");
-//        roleService.deleteRole(id);
 
         return "redirect:/authorization";
     }

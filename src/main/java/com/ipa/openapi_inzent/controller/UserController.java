@@ -45,12 +45,6 @@ public class UserController {
                         @RequestParam(value = "exception", required = false) String exception, Model model) {
         model.addAttribute("error", error);
         model.addAttribute("exception", exception);
-        System.out.println("error = " + error);
-        System.out.println("exception = " + exception);
-//        if (error.equals("true")) {
-//            System.out.println("error true조건");
-//            return "redirect:/user/login";
-//        }
         return "login";
     }
 
@@ -116,16 +110,11 @@ public class UserController {
         if (principal instanceof UserDetails) {
             //일반로그인
             String username = ((UserDetails) principal).getUsername();
-            System.out.println("username 1 = " + username);
-            System.out.println((UserDetails) principal);
             userDTO = userCustomDetails.getUserDTO();
         } else {
             //인젠트 로그인
             UserDTO logIn = (UserDTO) session.getAttribute("logIn");
-            System.out.println("==============" + logIn);
             String username = principal.toString();
-            System.out.println("username 2  = " + username);
-            System.out.println("userinfo 2  " + principal);
             userDTO = logIn;
         }
 
@@ -136,7 +125,6 @@ public class UserController {
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable int id, HttpSession session) {
         UserDTO logIn = (UserDTO) session.getAttribute("logIn");
-        System.out.println("UserController.delete");
         userService.delete(id);
         if (logIn.getId() == id) {
             // 회원탈퇴
@@ -190,7 +178,6 @@ public class UserController {
     public JsonObject selectOneRole(int userId) {
         JsonObject object = new JsonObject();
         List<UserDTO> userRoleList = userService.selectOne(userId);
-        System.out.println("userRoleList = " + userRoleList);
         JsonArray selectRoleArray = new JsonArray();
         for (UserDTO role : userRoleList) {
             JsonObject r = new JsonObject();
@@ -200,21 +187,11 @@ public class UserController {
             selectRoleArray.add(r);
         }
         object.addProperty("selectedRoleList", selectRoleArray.toString());
-        System.out.println("selectRoleArray = " + selectRoleArray);
         return object;
     }
 
     @PostMapping("/updateAccount")
     public String updateAccount(int id, String nickname, String email, String[] roleId) {
-
-        System.out.println("UserController.updateAccount");
-        System.out.println("id = " + id);
-        System.out.println("nickname = " + nickname);
-        System.out.println("email = " + email);
-
-        for (String role : roleId) {
-            System.out.println("role = " + role);
-        }
         // 유저 정보 갱신
         UserDTO temp = userService.userOne(id);
         temp.setNickname(nickname);
@@ -231,8 +208,6 @@ public class UserController {
             userService.insertRole(userRoleDTO);
         }
 
-        System.out.println(id + "의 갱신한 역할들" + userService.userRoles(id));
-
         return "redirect:/accountList";
     }
 
@@ -240,15 +215,10 @@ public class UserController {
     @PostMapping("/updateUser")
     public String updateUser(Model model, int id, String nickname, String email) {
 
-        System.out.println("UserController.updateAccount");
-        System.out.println("id = " + id);
-        System.out.println("nickname = " + nickname);
-        System.out.println("email = " + email);
         // 유저 정보 갱신
         UserDTO temp = userService.userOne(id);
         temp.setNickname(nickname);
         temp.setEmail(email);
-        System.out.println("temp = " + temp);
 
         userService.update(temp);
 

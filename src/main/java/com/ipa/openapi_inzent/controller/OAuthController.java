@@ -60,16 +60,6 @@ public class OAuthController {
         this.userService = userService;
     }
 
-//    @GetMapping("/authorized")
-//    public void authorized() {
-//        System.out.println("OAuthController.authorized");
-//    }
-
-
-//    @GetMapping(value = "/getEmployees")
-//    public ModelAndView getEmployeeInfo() {
-//        return new ModelAndView("getEmployees");
-//    }
 
     @GetMapping("/callback")
     public void callback() {
@@ -94,7 +84,6 @@ public class OAuthController {
 
 
         String encodedCredentials = new String(Base64.encodeBase64(credentials.getBytes()));
-        System.out.println("encodedCredentials = " + encodedCredentials);
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
         headers.add("Authorization", "Basic " + encodedCredentials);
@@ -114,8 +103,6 @@ public class OAuthController {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode node = mapper.readTree(response.getBody());
         String token = node.path("access_token").asText();
-        System.out.println("******************************************");
-        System.out.println("token = " + token);
 
         String url = "http://localhost:8000/resource/userInfo";
 
@@ -124,12 +111,7 @@ public class OAuthController {
         headers1.add("Authorization", "Bearer " + token);
         HttpEntity<String> entity = new HttpEntity<>(headers1);
         ResponseEntity<String> responseResource = null;
-        System.out.println("checkPoint 1 ");
         responseResource = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
-        System.out.println("checkPoint 2");
-        System.out.println("responseResource = " + responseResource.getBody());
-//        UserDetails body = responseResource.getBody().get;
-        System.out.println("responseResource = " + responseResource.getStatusCodeValue());
 
         // 회원가입 시키기
         //1. sub 데이터 뽑기
@@ -143,13 +125,9 @@ public class OAuthController {
         String nickname = String.valueOf(result.get("nickname")).replaceAll("\\\"", "");
         JsonArray roles = (JsonArray) result.get("roles");
 
-        System.out.println("=======================================================");
-        System.out.println(nickname);
-
         List<UserDTO> userDTO = userService.findByUsername("inzent_" + username);
 
         UserDTO userDTO1 = new UserDTO();
-        System.out.println("userDTO = " + userDTO);
 
         if (userDTO.isEmpty()) { // 첫 소셜로그인
             System.out.println("처음 로그인 함");
@@ -159,7 +137,6 @@ public class OAuthController {
             userDTO1.setNickname(nickname);
             userDTO1.setToken(token);
             userDTO.add(userDTO1);
-            System.out.println(userDTO);
 
             int id = userService.register(userDTO1);
 
@@ -172,20 +149,9 @@ public class OAuthController {
             System.out.println("이후 로그인 부터는 토큰만 업데이트 해주면 됨");
             UserDTO updateUser = userDTO.get(0);
             updateUser.setToken(token);
-            System.out.println("updateUser = " + updateUser);
             userService.update(updateUser);
-            System.out.println("업데이트 완료");
         }
-        System.out.println();
-        System.out.println();
-        System.out.println("======================");
-        System.out.println();
-        System.out.println("token = " + token);
-        System.out.println();
         UserCustomDetails userDetails = (UserCustomDetails) userCustomDetailsService.loadUserByUsername("inzent_" + username);
-        System.out.println("===========================================");
-        System.out.println("userDetails = " + userDetails.getUserDTO());
-        System.out.println("userDetails.getClass() = " + userDetails.getClass());
 
         Authentication auth = new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities());
         // 인증 객체를 현재 스레드의 SecurityContext에 저장
@@ -231,8 +197,6 @@ public class OAuthController {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode node = mapper.readTree(response.getBody());
         String token = node.path("access_token").asText();
-        System.out.println("******************************************");
-        System.out.println("token = " + token);
 
         String url = "http://localhost:8000/resource/userInfo";
 
@@ -241,12 +205,7 @@ public class OAuthController {
         headers1.add("Authorization", "Bearer " + token);
         HttpEntity<String> entity = new HttpEntity<>(headers1);
         ResponseEntity<String> responseResource = null;
-        System.out.println("checkPoint 1 ");
         responseResource = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
-        System.out.println("checkPoint 2");
-        System.out.println("responseResource = " + responseResource.getBody());
-//        UserDetails body = responseResource.getBody().get;
-        System.out.println("responseResource = " + responseResource.getStatusCodeValue());
 
         // 회원가입 시키기
         //1. sub 데이터 뽑기
@@ -260,13 +219,10 @@ public class OAuthController {
         String nickname = String.valueOf(result.get("nickname")).replaceAll("\\\"", "");
         JsonArray roles = (JsonArray) result.get("roles");
 
-        System.out.println("=======================================================");
-        System.out.println(nickname);
 
         List<UserDTO> userDTO = userService.findByUsername("inzent_" + username);
 
         UserDTO userDTO1 = new UserDTO();
-        System.out.println("userDTO = " + userDTO);
 
         if (userDTO.isEmpty()) { // 첫 소셜로그인
             System.out.println("처음 로그인 함");
@@ -276,7 +232,6 @@ public class OAuthController {
             userDTO1.setNickname(nickname);
             userDTO1.setToken(token);
             userDTO.add(userDTO1);
-            System.out.println(userDTO);
 
             int id = userService.register(userDTO1);
 
@@ -289,20 +244,9 @@ public class OAuthController {
             System.out.println("이후 로그인 부터는 토큰만 업데이트 해주면 됨");
             UserDTO updateUser = userDTO.get(0);
             updateUser.setToken(token);
-            System.out.println("updateUser = " + updateUser);
             userService.update(updateUser);
-            System.out.println("업데이트 완료");
         }
-        System.out.println();
-        System.out.println();
-        System.out.println("======================");
-        System.out.println();
-        System.out.println("token = " + token);
-        System.out.println();
         UserCustomDetails userDetails = (UserCustomDetails) userCustomDetailsService.loadUserByUsername("inzent_" + username);
-        System.out.println("===========================================");
-        System.out.println("userDetails = " + userDetails.getUserDTO());
-        System.out.println("userDetails.getClass() = " + userDetails.getClass());
 
         Authentication auth = new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities());
         // 인증 객체를 현재 스레드의 SecurityContext에 저장
@@ -330,16 +274,12 @@ public class OAuthController {
 
 
             String username = ((UserDetails) principal).getUsername();
-            System.out.println("username 1 = " + username);
-            System.out.println((UserDetails) principal);
             userDTO = userCustomDetails.getUserDTO();
             if (userDTO.getToken().isEmpty()) {
                 return "redirect:/inzentRegister";
             } else {
                 statusCodeValue = 200;
             }
-            System.out.println("userDTO = " + userDTO);
-
 
         } else {
             //인젠트 로그인
@@ -358,18 +298,12 @@ public class OAuthController {
             ResponseEntity<String> responseResource = null;
             responseResource = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
 
-            System.out.println("responseResource = " + responseResource.getBody());
-//        UserDetails body = responseResource.getBody().get;
-            System.out.println("responseResource = " + responseResource.getStatusCodeValue()); // 200  인젠트 인증 성공
             statusCodeValue = responseResource.getStatusCodeValue();
         }
         System.out.println(userDTO == null);
         if (userDTO == null) {
             userDTO = authLogin(userCustomDetails, session);
         }
-//        authLogin();
-        System.out.println("userDTO?? = " + userDTO);
-
 
         if (statusCodeValue == 200) {
             System.out.println("인증성공");
@@ -393,8 +327,6 @@ public class OAuthController {
     public UserDTO authLogin(@AuthenticationPrincipal UserCustomDetails userCustomDetails, HttpSession session) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserDTO userDTO = new UserDTO();
-        System.out.println("OAuthController.authLogin");
-        System.out.println(userCustomDetails.getUserDTO());
         if (principal instanceof UserDetails) {
             System.out.println("일반로그인");
             //일반로그인
@@ -407,7 +339,6 @@ public class OAuthController {
             String username = principal.toString();
             userDTO = logIn;
         }
-        System.out.println(userDTO);
         return userDTO;
 
     }

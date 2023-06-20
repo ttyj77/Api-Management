@@ -190,7 +190,7 @@
             font-size: x-large;
         }
 
-        .noList{
+        .noList {
             /*border-bottom: 1px solid black;*/
             padding: 40px 20px;
             display: flex;
@@ -200,10 +200,7 @@
     </style>
     <script>
         function disconnectAcc(industry) {
-            console.log(industry);
             let target = document.getElementsByClassName("listHover");
-            console.log("++++++++++++++++++")
-            console.log(target.length);
             for (let i = target.length - 1; i >= 0; i--) {
                 // 체크박스 생성
                 let input = document.createElement("input");
@@ -297,7 +294,6 @@
                     success: (message) => {
                         console.log("카드!!!!!!!!!!!!!!!!")
                         let cardList = JSON.parse(message.cardList);
-                        console.log(cardList.length == 0)
 
                         if (cardList.length == 0) {
                             let div_1 = document.createElement("div");
@@ -333,8 +329,6 @@
                 deleteBtn.type = "button";
                 deleteBtn.innerText = "- 해제";
                 // 업권하고, 기관코드 넣어줘야함/ 함수 만들고
-                console.log("cccccccccccccccccccccccccccccccccccccccccccccccccc")
-                console.log(category);
                 $(deleteBtn).attr("onclick", "disconnectAcc('bank')");
 
                 let plusBtn = document.createElement("button");
@@ -358,9 +352,6 @@
                     success: (message) => {
 
                         // 데이터
-                        console.log(JSON.parse(message.bankList));
-                        // let reqData = JSON.parse(message.bankList);
-                        // let resData = JSON.parse(message.bankList);
                         let agency = JSON.parse(message.agency);
                         let bankList = JSON.parse(message.bankList);
                         // 해당 업권에 계좌 정보가 하나도 없을 때

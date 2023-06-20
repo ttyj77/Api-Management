@@ -22,7 +22,6 @@ public class UserService {
     }
 
     public int register(UserDTO userDTO) {
-        System.out.println("UserService.register");
         userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         // 정보 주체 번호 부여
         Random random = new Random();
@@ -31,13 +30,6 @@ public class UserService {
         int id = userDTO.getId();
         return id;
     }
-
-//    public Optional<UserDTO> findByProviderAndProviderId(String provider, String providerId) {
-//
-//        Optional<UserDTO> providerInfo = userDao.findByProviderAndProviderId(provider, providerId);
-//        System.out.print("이건 뭘로 나오나 userservice" + userDao.findByProviderAndProviderId(provider, providerId));
-//        return providerInfo;
-//    }
 
     public List<UserDTO> findByUsername(String username) {
         return userDao.findByUsername(username);

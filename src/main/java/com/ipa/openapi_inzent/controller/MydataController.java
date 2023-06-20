@@ -287,8 +287,6 @@ public class MydataController {
 
     @GetMapping("/service/search")
     public String serviceSearch(Model model, String keyword) {
-        System.out.println("keyword : " + keyword);
-        System.out.println(mydataService.mdServiceSearchKeyword(keyword));
         model.addAttribute("list", mydataService.mdServiceSearchKeyword(keyword));
         return "/mydata/mdServiceControl";
     }
@@ -300,16 +298,8 @@ public class MydataController {
 
     @GetMapping("/providerTable")
     public String mdProviderSelectAll(Model model) {
-
         List<MdProviderDTO> list = mydataService.mdProviderSelectAll();
-
         model.addAttribute("list", list);
-        System.out.println("MydataController.mdProviderSelectAll==========");
-        System.out.println(list);
-
-        System.out.println("list.size() = " + list.size());
-
-
         return "/mydata/mdProviderTable";
     }
 
