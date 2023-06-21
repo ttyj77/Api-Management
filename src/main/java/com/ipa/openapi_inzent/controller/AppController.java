@@ -1026,7 +1026,9 @@ public class AppController {
         for (int i = 0; i < choiceAgency.size(); i++) {
             // 삭제 일단 막아놓음
             System.out.println("choiceAgency.get(i) = " + choiceAgency.get(i));
-//            getDataService.deleteAccount(choiceAgency.get(i), userDTO.getOwnNum(), industry);
+            getDataService.deleteAccount(choiceAgency.get(i), userDTO.getOwnNum(), industry);
         }
     }
+
+
 }

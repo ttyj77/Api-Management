@@ -61,4 +61,12 @@ public class GetDataService {
     public List<DailyApiStatisticsDTO> dailyTimeCall(String code, String date) {
         return getDataDao.dailyTimeCall(code, date);
     }
+
+    public List<DailyApiStatisticsDTO> dailyStatisticsDate(String dday) {
+        return getDataDao.dailyStatisticsDate(dday);
+    }
+
+    public List<DailyApiStatisticsDTO> dailyStatisticsSearch(String keyword) {
+        return getDataDao.dailyStatisticsSearch(keyword);
+    }
 }

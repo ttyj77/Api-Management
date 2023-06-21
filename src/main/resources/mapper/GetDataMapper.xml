@@ -92,4 +92,24 @@
         table2."cnHour" where table1.code = #{code} and date = #{date} order by hh asc;
     </select>
 
+    <select id="dailyStatisticsDate" parameterType="string" resultType="com.ipa.openapi_inzent.model.DailyApiStatisticsDTO">
+        select table1."cnDate" as date, ma.name, table1.code, table1."totalRequest",table1."successCnt",
+        table1."failCnt", ma.logo, ma.industry from
+        (select to_char(ph."reqDate", 'yyyyMMDD') "cnDate",ri."code", count(*) as "totalRequest", count(1)FILTER(where
+        ph."resCode" = '200' ) as "successCnt",count(1)FILTER(where ph."resCode" != '200' ) as "failCnt" from
+        public."providerHistory" as ph join public."reqInfo" as ri on ri.id = ph."reqInfoId"
+        group by ri."code", "cnDate") as table1 join public."mdAgency" as ma on ma.code = table1.code
+        where table1."cnDate" = #{date};
+    </select>
+
+    <select id="dailyStatisticsSearch" parameterType="string" resultType="com.ipa.openapi_inzent.model.DailyApiStatisticsDTO">
+        select table1."cnDate" as date, ma.name, table1.code, table1."totalRequest",table1."successCnt",
+        table1."failCnt", ma.logo, ma.industry from
+        (select to_char(ph."reqDate", 'yyyyMMDD') "cnDate",ri."code", count(*) as "totalRequest", count(1)FILTER(where
+        ph."resCode" = '200' ) as "successCnt",count(1)FILTER(where ph."resCode" != '200' ) as "failCnt" from
+        public."providerHistory" as ph join public."reqInfo" as ri on ri.id = ph."reqInfoId"
+        group by ri."code", "cnDate") as table1 join public."mdAgency" as ma on ma.code = table1.code
+        where table1.code ILIKE CONCAT('%', #{keyword}, '%') or ma.name ILIKE CONCAT('%', #{keyword}, '%');
+    </select>
+
 </mapper>

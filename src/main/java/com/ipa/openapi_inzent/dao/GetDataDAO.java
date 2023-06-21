@@ -31,4 +31,8 @@ public interface GetDataDAO {
     List<ErrorDTO> errorAll() throws DataAccessException;
 
     List<DailyApiStatisticsDTO> dailyTimeCall(String code, String date) throws DataAccessException;
+
+    List<DailyApiStatisticsDTO> dailyStatisticsDate(String dday) throws DataAccessException;
+
+    List<DailyApiStatisticsDTO> dailyStatisticsSearch(String keyword) throws DataAccessException;
 }

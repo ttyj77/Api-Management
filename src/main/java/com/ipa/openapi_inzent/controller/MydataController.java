@@ -165,9 +165,6 @@ public class MydataController {
     }
 
 
-
-
-
     /////////////////////////////////////////////////
     // TOKEN start
     /////////////////////////////////////////////////
@@ -439,7 +436,7 @@ public class MydataController {
 
         System.out.println("accountList = " + accountList);
 
-        object.addProperty("accountList",accountList.toString());
+        object.addProperty("accountList", accountList.toString());
 
         System.out.println("object = " + object);
 
@@ -584,6 +581,7 @@ public class MydataController {
 
         return "/mydata/chart";
     }
+
     @GetMapping("/statistics-Daily")
     public String statistics_Daily() {
         return "/mydata/statistics-Daily";
@@ -595,7 +593,7 @@ public class MydataController {
     }
 
     @GetMapping("/statistics/{orgCode}/{date}")
-    public String statistics(Model model,@PathVariable String orgCode, @PathVariable String date) throws ParseException {
+    public String statistics(Model model, @PathVariable String orgCode, @PathVariable String date) throws ParseException {
         System.out.println("MydataController.showChart");
         System.out.println("orgCode = " + orgCode);
         System.out.println("date = " + date);
@@ -615,7 +613,7 @@ public class MydataController {
         // 에러코드 빈도 수
         List<DailyApiErrorDTO> dailyApiError = getDataService.dailyApiError(orgCode, date);
         System.out.println("dailyApiError = " + dailyApiError);
-        
+
         // 에러코드 내용 출력
         List<ErrorDTO> errorList = getDataService.errorAll();
         System.out.println("errorList = " + errorList);
@@ -661,7 +659,7 @@ public class MydataController {
             tArr.addProperty("date", d.getDate());
             tArr.addProperty("code", d.getCode());
             tArr.addProperty("hh", d.getHh());
-            tArr.addProperty("successCnt",d.getSuccessCnt());
+            tArr.addProperty("successCnt", d.getSuccessCnt());
             tArr.addProperty("failCnt", d.getFailCnt());
             timeArr.add(tArr);
         }
@@ -673,8 +671,8 @@ public class MydataController {
         JsonArray resourcesArr = new JsonArray();
         for (DailyApiSeqDTO d : dailyApiSeq) {
             JsonObject rArr = new JsonObject();
-            rArr.addProperty("apiResource",d.getApiResources());
-            rArr.addProperty("seq",d.getSeq());
+            rArr.addProperty("apiResource", d.getApiResources());
+            rArr.addProperty("seq", d.getSeq());
             resourcesArr.add(rArr);
         }
         object.addProperty("resourcesSeq", resourcesArr.toString());
@@ -704,18 +702,88 @@ public class MydataController {
         JsonArray errorArr = new JsonArray();
         for (ErrorDTO e : errorSeqList) {
             JsonObject err = new JsonObject();
-            err.addProperty("error",e.getError());
-            err.addProperty("reason",e.getReason());
-            err.addProperty("seq",e.getSeq());
+            err.addProperty("error", e.getError());
+            err.addProperty("reason", e.getReason());
+            err.addProperty("seq", e.getSeq());
             errorArr.add(err);
         }
         object.addProperty("errorSeq", errorArr.toString());
 
-
-
         return object;
     }
 
+    @GetMapping("/statistics/calendar")
+    @ResponseBody
+    public JsonObject statisticsCalendar(String dday) throws ParseException {
+
+        List<DailyApiStatisticsDTO> dailyApiList = getDataService.dailyAPIStatistics();
+        System.out.println("d = " + dday);
+
+        System.out.println("MydataController.statisticsCalendar");
+        JsonObject object = new JsonObject();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat dayFormat = new SimpleDateFormat("yyyyMMdd");
+        System.out.println("dailyApiList = " + dailyApiList);
+
+
+        JsonArray array = new JsonArray();
+        for (DailyApiStatisticsDTO d : dailyApiList) {
+            if (dday.equals("") || dday.equals(d.getDate())) {
+                JsonObject dObj = new JsonObject();
+//            Date date = dayFormat.parse(String.valueOf(d.getDate()));
+//            System.out.println("date = " + date);
+//            String day = sdf.format(date);
+
+                dObj.addProperty("date", d.getDate());
+                dObj.addProperty("name", d.getName());
+                dObj.addProperty("code", d.getCode());
+                dObj.addProperty("logo", d.getLogo());
+                dObj.addProperty("industry", d.getIndustry());
+                dObj.addProperty("totalRequest", d.getTotalRequest());
+                dObj.addProperty("successCnt", d.getSuccessCnt());
+                dObj.addProperty("failCnt", d.getFailCnt());
+
+                array.add(dObj);
+            }
+        }
+        object.addProperty("dailyApiList", array.toString());
+
+        return object;
+
+    }
+
+    @GetMapping("/statistics/search")
+    @ResponseBody
+    public JsonObject statisticsSearch(String keyword) {
+        List<DailyApiStatisticsDTO> dailyApiList = getDataService.dailyStatisticsSearch(keyword);
+        System.out.println("keyword = " + keyword);
+
+        System.out.println("MydataController.statisticsSearch");
+        JsonObject object = new JsonObject();
+
+        System.out.println("dailyApiList = " + dailyApiList);
+
+        JsonArray array = new JsonArray();
+        for (DailyApiStatisticsDTO d : dailyApiList) {
+            JsonObject dObj = new JsonObject();
+
+            dObj.addProperty("date", d.getDate());
+            dObj.addProperty("name", d.getName());
+            dObj.addProperty("code", d.getCode());
+            dObj.addProperty("logo", d.getLogo());
+            dObj.addProperty("industry", d.getIndustry());
+            dObj.addProperty("totalRequest", d.getTotalRequest());
+            dObj.addProperty("successCnt", d.getSuccessCnt());
+            dObj.addProperty("failCnt", d.getFailCnt());
+
+            array.add(dObj);
+        }
+        object.addProperty("dailyApiList", array.toString());
+
+        return object;
+
+    }
 
     @GetMapping("/dailyStatistics")
     public String showDaily(Model model) {

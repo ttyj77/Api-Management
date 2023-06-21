@@ -48,9 +48,10 @@
                 let tbody = document.getElementById("userNumTbody");
                 tbody.innerHTML = "";
                 let dday = document.getElementById("input_date").value;
+                let date = dday.replaceAll("-", "");
                 console.log(dday);
                 let data = {
-                    "dday": dday,
+                    "dday": date,
                 }
                 $.ajax({
                     url: "/mydata/statistics/calendar",
@@ -60,38 +61,87 @@
                     success: (message) => {
 
                         console.log("calendar!!!!!!!!!!!!!!!!!!!!!!!!!!")
-                        let alist = JSON.parse(message.AgencyList);
-                        console.log(alist);
-                        let col_cnt = Object.keys(alist[0]).length;
-                        console.log(col_cnt);
-                        for (let i = 0; i < alist.length; i++) {
-                            let keys = Object.keys(alist[i]);
-                            let tr = document.createElement("tr");
-                            tr.className = "trContent";
-                            tr.id = alist[i]["id"];
-                            $(tr).attr({
-                                "data-bs-toggle": "modal",
-                                "data-bs-target": "#providerModal",
-                                "onclick": "providerModal(this)"
-                            });
-                            for (let j = 1; j < col_cnt; j++) {
-                                let key = keys[j];
+                        let dailyList = JSON.parse(message.dailyApiList);
+                        console.log(dailyList);
 
-                                let td = document.createElement("td");
-                                td.innerText = alist[i][key];
-                                tr.append(td);
-                            }
+                        for (let i = 0; i < dailyList.length; i++) {
+                            let tr = document.createElement("tr");
+                            // 리스트 컬럼 5개
+                            let td_1 = document.createElement("td");
+                            let td_2 = document.createElement("td");
+                            let td_3 = document.createElement("td");
+                            let td_4 = document.createElement("td");
+                            let td_5 = document.createElement("td");
+                            td_1.innerText = dailyList[i].date;
+                            td_2.innerText = dailyList[i].name;
+                            td_3.innerText = dailyList[i].code;
+                            td_4.innerText = dailyList[i].successCnt;
+                            td_5.innerText = dailyList[i].failCnt;
+
+                            tr.append(td_1, td_2, td_3, td_4, td_5);
+                            tr.onclick = function () {
+                                location.href = "/mydata/statistics/" + dailyList[i].code + "/" + dailyList[i].date;
+                            };
+                            tbody.append(tr);
+                        }
+                    }
+                })
+            }
+
+            function statisticsSearch() {
+                let tbody = document.getElementById("userNumTbody");
+                tbody.innerHTML = "";
+
+                let keyword = document.getElementById("statistics").value;
+                console.log(keyword);
+
+                let data = {
+                    "keyword": keyword,
+                }
+
+                $.ajax({
+                    url: "/mydata/statistics/search",
+                    type: "get",
+                    data: data,
+
+                    success: (message) => {
+
+                        console.log("search!!!!!!!!!!!!!!!!!!!!!!!!!!")
+                        let dailyList = JSON.parse(message.dailyApiList);
+                        console.log(dailyList);
+
+                        for (let i = 0; i < dailyList.length; i++) {
+                            let tr = document.createElement("tr");
+                            // 리스트 컬럼 5개
+                            let td_1 = document.createElement("td");
+                            let td_2 = document.createElement("td");
+                            let td_3 = document.createElement("td");
+                            let td_4 = document.createElement("td");
+                            let td_5 = document.createElement("td");
+                            td_1.innerText = dailyList[i].date;
+                            td_2.innerText = dailyList[i].name;
+                            td_3.innerText = dailyList[i].code;
+                            td_4.innerText = dailyList[i].successCnt;
+                            td_5.innerText = dailyList[i].failCnt;
+
+                            tr.append(td_1, td_2, td_3, td_4, td_5);
+                            tr.onclick = function () {
+                                location.href = "/mydata/statistics/" + dailyList[i].code + "/" + dailyList[i].date;
+                            };
                             tbody.append(tr);
                         }
                     }
                 })
 
+
             }
+
+            // 검색
 
             function createElement() {
                 let tbody = document.getElementById("userNumTbody");
                 tbody.innerHTML = "";
-                for (let i = 0; i <list.size(); i++) {
+                for (let i = 0; i < list.size(); i++) {
                     let tr = document.createElement("tr");
                     // 리스트 컬럼 5개
                     let td_1 = document.createElement("td");
@@ -99,13 +149,13 @@
                     let td_3 = document.createElement("td");
                     let td_4 = document.createElement("td");
                     let td_5 = document.createElement("td");
-                    td_1.innerText = "값들 하나씩";
+                    td_1.innerText = "";
                     td_2.innerText = "값들 하나씩";
                     td_3.innerText = "값들 하나씩";
                     td_4.innerText = "값들 하나씩";
                     td_5.innerText = "값들 하나씩";
 
-                    tr.append(td_1,td_2,td_3,td_4,td_5);
+                    tr.append(td_1, td_2, td_3, td_4, td_5);
                     tr.onclick = function () {
                         location.href = "/mydata/statistics/" + "기관코드";
                     };
@@ -148,18 +198,18 @@
                                 <input type="submit" onclick="input(this)" id="input_submit" value="조회">
                             </div>
                             <!-- Topbar Search -->
-                            <form action="/mydata/AgencySearch" method="get" class="col input-group mt-3 mr-3"
-                                  style="width: 40%; align-self: end;">
-                                <input type="text" class="form-control m-0"
-                                       placeholder="검색어를 입력해주세요( 기관명, 서비스명 )"
+                            <div class="col input-group mt-3 mr-3"
+                                 style="width: 40%; align-self: end;">
+                                <input type="text" class="form-control m-0" id="statistics"
+                                       placeholder="검색어를 입력해주세요( 기관명, 기관코드 )"
                                        aria-label="Search" name="keyword">
                                 <div class="input-group-append">
-                                    <button class="btn btn-sm" type="submit"
+                                    <button class="btn btn-sm" type="button" onclick="statisticsSearch()"
                                             style="background-color: black; color: white">
                                         <i class="fa-solid fa-magnifying-glass" style="color: #ffffff;"></i> 조회
                                     </button>
                                 </div>
-                            </form>
+                            </div>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
