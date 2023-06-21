@@ -47,4 +47,6 @@ public interface UserDAO {
     void appRegister(AppUserDTO appUserDTO) throws DataAccessException;
 
     String findToken(int id) throws DataAccessException;
+
+    void tokenExpireDate(int id) throws DataAccessException;
 }

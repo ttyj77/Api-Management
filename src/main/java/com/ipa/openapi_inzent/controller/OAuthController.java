@@ -231,6 +231,7 @@ public class OAuthController {
             userDTO1.setPassword(passwordEncoder.encode("password"));
             userDTO1.setNickname(nickname);
             userDTO1.setToken(token);
+
             userDTO.add(userDTO1);
 
             int id = userService.register(userDTO1);

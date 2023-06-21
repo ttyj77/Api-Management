@@ -2,6 +2,7 @@ package com.ipa.openapi_inzent.service;
 
 import com.ipa.openapi_inzent.dao.RequestDAO;
 import com.ipa.openapi_inzent.model.RequestDTO;
+import com.ipa.openapi_inzent.model.UserDTO;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
@@ -44,5 +45,9 @@ public class RequestService {
 
     public List<RequestDTO> requestSearch(String keyword) {
         return requestDao.requestSearch(keyword);
+    }
+
+    public UserDTO selectToken(String ownNum){
+        return requestDao.selectToken(ownNum);
     }
 }

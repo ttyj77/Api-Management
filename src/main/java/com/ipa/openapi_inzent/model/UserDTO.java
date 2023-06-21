@@ -12,6 +12,9 @@ public class UserDTO {
     private String password;
     private String nickname;
     private String token;
+    private Date issueDate;
+    private Date expireDate;
+
     private String email;
     private boolean activate;
     private Date createDate;
@@ -28,6 +31,7 @@ public class UserDTO {
     // role
     private String code;
     private String name;
+
 
 
 }

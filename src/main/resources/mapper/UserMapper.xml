@@ -20,8 +20,9 @@
         order by id asc;
     </select>
     <insert id="register" parameterType="com.ipa.openapi_inzent.model.UserDTO" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO public."user"(username,nickname, password, activate ,"createDate", email,approve,"ownNum",token)
-        VALUES (#{username},#{nickname} , #{password}, false ,NOW(),#{email}, false,${ownNum},#{token})
+        INSERT INTO public."user"(username,nickname, password, activate ,"createDate",
+        email,approve,"ownNum",token,"issueDate")
+        VALUES (#{username},#{nickname} , #{password}, false ,NOW(),#{email}, false,${ownNum},#{token},NOW())
     </insert>
     <select id="findByUsername" parameterType="String" resultType="com.ipa.openapi_inzent.model.UserDTO">
         SELECT
@@ -119,5 +120,10 @@
         SELECT token
         FROM public."user" where id = #{id};
     </select>
+
+    <!-- 토큰 만료기간 삽입 ( 만료기간 now() + 1 ) -->
+    <update id="tokenExpireDate" parameterType="int">
+        update public."user" set "expireDate" = now()::DATE + 1 where id = #{id}
+    </update>
 </mapper>
 
