@@ -2,13 +2,15 @@ package com.ipa.openapi_inzent.service;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.ipa.openapi_inzent.config.auth.UserCustomDetails;
 import com.ipa.openapi_inzent.dao.GetDataDAO;
 import com.ipa.openapi_inzent.dao.MydataApiDAO;
 import com.ipa.openapi_inzent.dao.MydataDAO;
-import com.ipa.openapi_inzent.model.DataDTO;
-import com.ipa.openapi_inzent.model.GetDataDTO;
-import com.ipa.openapi_inzent.model.MdProviderDTO;
-import com.ipa.openapi_inzent.model.MdReqInfoDTO;
+import com.ipa.openapi_inzent.model.*;
+import org.apache.catalina.session.StandardSession;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import springfox.documentation.spring.web.json.Json;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
@@ -36,9 +39,9 @@ public class MydataApiService {
         this.mydataApiDAO = mydataApiDAO;
     }
 
-    public void providerHistoryInsert(MdProviderDTO mdProviderDTO) {
-        System.out.println("MydataApiService.providerHistoryInsert");
-        System.out.println("dataDTO = " + mdProviderDTO);
+    public void reqHistoryInsert(MdProviderDTO mdProviderDTO) {
+        System.out.println("MydataApiService.reqHistoryInsert");
+        System.out.println(mdProviderDTO);
         mydataApiDAO.providerHistoryInsert(mdProviderDTO);
     }
 
@@ -226,4 +229,56 @@ public class MydataApiService {
     public void insertResult(GetDataDTO getDataDTO) {
         mydataApiDAO.dataInsert(getDataDTO);
     }
+
+    public void invest001Insert(String org_code,
+                                int responseCode, double result, JsonObject jsonObject, String apiCode, String apiResouceUri) {
+        System.out.println("MydataApiService.invest001Insert");
+
+        String x_api_tran_id = "1168119031SAA202303171424";
+        String x_api_type = "user-search";
+        UUID uuid = UUID.randomUUID();
+
+        MdReqInfoDTO mdReqInfoDTO = new MdReqInfoDTO();
+        mdReqInfoDTO.setCode(org_code);
+        mdReqInfoDTO.setAgencyName("농업협동조합중앙회");
+
+        mdReqInfoDTO.setServiceName("마이데이터 서비스");
+        mdReqInfoDTO.setReqType("마이데이터");
+        mdReqInfoDTO.setClientNum("9704261153");
+
+        int reqId = reqInfoInsert(mdReqInfoDTO);
+        MdProviderDTO mdProviderDTO = new MdProviderDTO();
+        mdProviderDTO.setX_api_type(x_api_type);
+        mdProviderDTO.setX_api_tran_id(x_api_tran_id);
+        mdProviderDTO.setOrg_code(org_code);
+        mdProviderDTO.setApiResources(apiResouceUri);
+        mdProviderDTO.setResCode(String.valueOf(responseCode));
+        mdProviderDTO.setUniqueNum(String.valueOf(uuid));
+        mdProviderDTO.setCustomerNum("9704261153");
+        mdProviderDTO.setReqInfoId(reqId);
+        mdProviderDTO.setRuntime((int) Math.round(result));
+        mdProviderDTO.setReqHeader("{\n" +
+                "  \"accept\": \"application/json; charset=UTF-8\",\n" +
+                "  \"x-api-type\": \"user-search\",\n" +
+                "  \"X-FSI-MEM-NO\": \"FSI00002899\",\n" +
+                "  \"x-api-tran-id\": \"1168119031SAA202303171424\",\n" +
+                "  \"X-FSI-UTCT-TYPE\": \"TGC00001\",\n" +
+                "  \"X-FSI-BUS-SEQ-NO\": \"105\",\n" +
+                "  \"X-FSI-SVC-DATA-KEY\": \"Y\"\n" +
+                "}");
+
+//          DB insert
+        mdProviderDTO.setResData(jsonObject.toString());
+        mdProviderDTO.setApiCode(apiCode);
+        if (responseCode == 200) {
+            mdProviderDTO.setResMsg("성공");
+        } else {
+            mdProviderDTO.setResMsg("실패");
+        }
+        mdProviderDTO.setStatusInfo("(통합인증)자산선택");
+
+        System.out.println("mdProviderDTO = " + mdProviderDTO);
+        reqHistoryInsert(mdProviderDTO);
+    }
+
 }

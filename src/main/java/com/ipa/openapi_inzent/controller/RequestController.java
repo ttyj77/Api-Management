@@ -40,7 +40,7 @@ public class RequestController {
         List<RequestDTO> list = requestService.selectAll();
 
         model.addAttribute("list", list);
-        return "requestPage";
+        return "/requestPage";
     }
 
     @GetMapping("/selectOne/{id}")

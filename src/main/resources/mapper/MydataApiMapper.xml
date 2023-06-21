@@ -9,7 +9,7 @@
         "reqHeader", "resMsg", "resData", "customerNum", "reqInfoId")
         VALUES
         (NOW(),#{runtime},#{resCode},#{apiCode},#{regularTransmission},#{uniqueNum},#{statusInfo},#{apiResources},
-        to_json(#{reqHeader}::json),#{resMsg},#{resData},#{customerNum},#{reqInfoId});
+        to_json(#{reqHeader}::json),#{resMsg}, to_json(#{resData}::json),#{customerNum},#{reqInfoId});
     </insert>
 
     <insert id="reqInfoInsert" parameterType="com.ipa.openapi_inzent.model.MdReqInfoDTO" useGeneratedKeys="true"

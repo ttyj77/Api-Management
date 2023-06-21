@@ -2,11 +2,13 @@ package com.ipa.openapi_inzent.controller;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.ipa.openapi_inzent.config.auth.UserCustomDetails;
 import com.ipa.openapi_inzent.model.DataDTO;
 import com.ipa.openapi_inzent.model.MdProviderDTO;
 import com.ipa.openapi_inzent.model.MdReqInfoDTO;
 import com.ipa.openapi_inzent.service.MydataApiService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,9 +19,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.sql.Time;
 import java.text.SimpleDateFormat;
-import java.time.LocalTime;
 import java.util.Date;
 import java.util.UUID;
 
@@ -94,44 +94,17 @@ public class MydataApiController {
 
             // 초 단위 실행시간
             double result = (end - start) / 1000.0;
-//            System.out.println("result = " + Integer.parseInt(String.valueOf(result)));
+//            System.out.println("result = " + Integer.parseInts(String.valueOf(result)));
 
-            UUID uuid = UUID.randomUUID();
+            System.out.println("result = " + result);
+
             br.close();
             JsonParser jsonParser = new JsonParser();
             JsonObject jsonObject = (JsonObject) jsonParser.parse(response.toString());
-
-            MdReqInfoDTO mdReqInfoDTO = new MdReqInfoDTO();
-            mdReqInfoDTO.setCode("WOAAAINW00");
-            mdReqInfoDTO.setAgencyName("농업협동조합중앙회");
-            mdReqInfoDTO.setServiceName("마이데이터 서비스");
-            mdReqInfoDTO.setReqType("마이데이터");
-            mdReqInfoDTO.setClientNum("9704261153");
-            int reqId = mydataApiService.reqInfoInsert(mdReqInfoDTO);
-
-            MdProviderDTO mdProviderDTO = new MdProviderDTO();
-            mdProviderDTO.setResCode(jsonObject.get("account_list").toString());
-            mdProviderDTO.setX_api_type(x_api_type);
-            mdProviderDTO.setX_api_tran_id(x_api_tran_id);
-            mdProviderDTO.setOrg_code(org_code);
-            mdProviderDTO.setApiResources("/v1/invest/accounts/basic");
-            mdProviderDTO.setResCode(String.valueOf(responseCode));
-            mdProviderDTO.setUniqueNum(String.valueOf(uuid));
-            mdProviderDTO.setCustomerNum("9704261153");
-            mdProviderDTO.setReqInfoId(reqId);
-            mdProviderDTO.setRuntime((int) Math.round(result));
-            mdProviderDTO.setReqHeader("{\n" +
-                    "  \"accept\": \"application/json; charset=UTF-8\",\n" +
-                    "  \"x-api-type\": \"user-search\",\n" +
-                    "  \"X-FSI-MEM-NO\": \"FSI00002899\",\n" +
-                    "  \"x-api-tran-id\": \"1168119031SAA202303171424\",\n" +
-                    "  \"X-FSI-UTCT-TYPE\": \"TGC00001\",\n" +
-                    "  \"X-FSI-BUS-SEQ-NO\": \"105\",\n" +
-                    "  \"X-FSI-SVC-DATA-KEY\": \"Y\"\n" +
-                    "}");
-
-//          DB insert
-            mydataApiService.providerHistoryInsert(mdProviderDTO);
+            String apiCode = "금투-001";
+            String apiResouceUri = "/accounts";
+            /* data insert */
+            mydataApiService.invest001Insert(org_code, responseCode, result, jsonObject, apiCode, apiResouceUri);
 
         } catch (Exception e) {
             System.out.println(e);
@@ -140,6 +113,7 @@ public class MydataApiController {
 
         return response;
     }
+
 
     private static HttpURLConnection getHttpURLConnection(StringBuilder urlBuilder) throws IOException {
         URL url = new URL(urlBuilder.toString());
@@ -152,6 +126,7 @@ public class MydataApiController {
     @PostMapping("/invest/accounts/basic")
     @ResponseBody
     public StringBuffer getData2(@RequestBody String body, HttpServletRequest header) {
+        long start = System.currentTimeMillis();
         String token = header.getHeader("Authorization");
         String x_api_tran_id = "1168119031SAA202303171424";
         String x_api_type = "user-search";
@@ -188,8 +163,18 @@ public class MydataApiController {
                 response.append(inputLine);
             }
 
+            // 특정 코드 실행 되고 난 후 시간
+            long end = System.currentTimeMillis();
+            System.out.println("end = " + end);
+
+            // 초 단위 실행시간
+            double timeResult = (end - start) / 1000.0;
+//            System.out.println("result = " + Integer.parseInts(String.valueOf(result)));
+
+            System.out.println("result = " + timeResult);
 
             br.close();
+
             String result = response.toString();
             JsonParser parser = new JsonParser();
             JsonObject jsonObject = (JsonObject) parser.parse(result); // response
@@ -197,11 +182,11 @@ public class MydataApiController {
             System.out.println(jsonObject);
 
             JsonObject org_code = (JsonObject) parser.parse(body); // org_code
-            DataDTO dataDTO = new DataDTO();
-            dataDTO.setResponse(jsonObject.get("basic_list").toString());
-            dataDTO.setOrg_code(org_code.get("org_code").toString());
-            dataDTO.setX_api_type(x_api_type);
-            dataDTO.setX_api_tran_id(x_api_tran_id);
+
+            String apiCode = "금투-002";
+            String apiResouceUri = "/accounts/basic";
+            /* data insert */
+            mydataApiService.invest001Insert(org_code.toString(), responseCode, timeResult, jsonObject, apiCode, apiResouceUri);
 
 //          DB insert
 //          dataService.insert(dataDTO);
@@ -217,6 +202,7 @@ public class MydataApiController {
     @PostMapping("/invest/accounts/transactions")
     @ResponseBody
     public StringBuffer transactionsAPi(@RequestBody String body, HttpServletRequest header) {
+        long start = System.currentTimeMillis();
         String token = header.getHeader("Authorization");
         String x_api_tran_id = "1168119031SAA202303171424";
         String x_api_type = "user-search";
@@ -254,25 +240,34 @@ public class MydataApiController {
             while ((inputLine = br.readLine()) != null) {
                 response.append(inputLine);
             }
+
+            // 특정 코드 실행 되고 난 후 시간
+            long end = System.currentTimeMillis();
+            System.out.println("end = " + end);
+
+            // 초 단위 실행시간
+            double timeResult = (end - start) / 1000.0;
+//            System.out.println("result = " + Integer.parseInts(String.valueOf(result)));
+
+            System.out.println("result = " + timeResult);
+
+
             br.close();
 
             String result = response.toString();
             JsonParser parser = new JsonParser();
             JsonObject jsonObject = (JsonObject) parser.parse(result); // response
-
+            System.out.println("jsonObject ====================================");
             System.out.println(jsonObject);
 
-//            JsonParser jsonParser = new JsonParser();
-//            JsonObject jsonObject = (JsonObject) jsonParser.parse(response.toString()); //response
-//            JsonObject org_code = (JsonObject) jsonParser.parse(body); // org_code
-//            DataDTO dataDTO = new DataDTO();
-//            dataDTO.setResponse(jsonObject.get("trans_list").toString());
-//            dataDTO.setX_api_tran_id(x_api_tran_id);
-//            dataDTO.setX_api_type(x_api_type);
-//            dataDTO.setOrg_code(org_code.get("org_code").toString());
+            JsonObject org_code = (JsonObject) parser.parse(body); // org_code
+            System.out.println("org_code = " + org_code.get("org_code"));
 
-//            DB insert
-//            dataService.insert(dataDTO);
+            String apiCode = "금투-003";
+            String apiResouceUri = "/accounts/transactions";
+            /*Db insert */
+            mydataApiService.invest001Insert(org_code.get("org_code").toString(), responseCode, timeResult, jsonObject, apiCode, apiResouceUri);
+
         } catch (Exception e) {
             System.out.println(e);
         }

@@ -1,4 +1,4 @@
-package com.ipa.openapi_inzent.config.swagger;
+package com.ipa.openapi_inzent.config;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSerializationContext;

@@ -134,7 +134,6 @@ public class ApiController {
                 }
             }
         }
-
         // 역할에 맞게 APIs들 보임
         for (UserRoleDTO userRoleDTO : userRoleList) {
             for (RoleDTO roleDTO : noShowRoles) {
@@ -144,19 +143,7 @@ public class ApiController {
                 }
             }
         }
-
-
-        System.out.println("nothing = " + nothing);
-
-        System.out.println("noShowRoles = " + noShowRoles);
-        System.out.println("userRoleList = " + userRoleList);
-        System.out.println("session = " + userDTO);
-        System.out.println("-------------------------");
-
-
-        System.out.println("passList = " + passList);
         model.addAttribute("list", passList);
-
         return "/apis/index";
     }
 
@@ -479,15 +466,7 @@ public class ApiController {
                 // 파라미터가 있다면 등록
                 if (paramArr.size() != 0) {
                     for (int k = 0; k < paramArr.size(); k++) {
-                        System.out.println(paramArr.get(k).getClass());
-                        System.out.println();
                         JsonObject param = (JsonObject) paramArr.get(k);
-                        System.out.println(param.get("name"));
-                        System.out.println(param.get("transferMethod"));
-                        System.out.println(param.get("explanation"));
-                        System.out.println(param.get("required"));
-                        System.out.println(param.get("type"));
-                        System.out.println(param.get("sample"));
 
                         ParameterDTO parameterDTO = new ParameterDTO();
                         parameterDTO.setApiDetailsId(apiDetailsId);
@@ -506,21 +485,15 @@ public class ApiController {
                 }
 
                 System.out.println("//////////////////resCode/////////////////////");
-                System.out.println(obj.get("resCode"));
                 JsonArray resParamArr = (JsonArray) obj.get("resCode");
-                System.out.println("resParamArr = " + resParamArr);
                 if (resParamArr.size() != 0) {
                     for (int k = 0; k < paramArr.size(); k++) {
                         JsonObject resParam = (JsonObject) resParamArr.get(k);
-                        System.out.println("resParam = " + resParam.get("paramKey"));
-                        System.out.println("resParam = " + resParam.get("paramValue"));
-                        System.out.println("resParam = " + resParam.get("paramType"));
 
                         String[] paramKeyList = String.valueOf(resParam.get("paramKey")).split(",");
                         String[] paramValueList = String.valueOf(resParam.get("paramValue")).split(",");
                         String[] paramTypeList = String.valueOf(resParam.get("paramType")).split(",");
 
-                        System.out.println("++++++++++++++++++++++++++++++");
 //                        2. 분리 후 FOR문을 통해 DB에 넣는다.
 //                2-1. response 에 넣기 위해서는 apiDetails id 필요
                         ResponseDTO responseDTO = new ResponseDTO();
@@ -528,7 +501,6 @@ public class ApiController {
                         responseDTO.setRespCode(String.valueOf(resParam.get("code")));
                         responseDTO.setRespMsg(String.valueOf(resParam.get("explanation")));
                         responseDTO.setType(String.valueOf(resParam.get("type")));
-                        System.out.println("responseDTO = " + responseDTO);
                         int responsId = apiDetailsService.insertResponse(responseDTO);
 //                2-2. 키와 VALUE 값을 콤마를 기준으로 분리한다.
                         for (int j = 0; j < paramKeyList.length; j++) {
@@ -537,8 +509,6 @@ public class ApiController {
                             resParamDTO.setKey(paramKeyList[j]);
                             resParamDTO.setValue(paramValueList[j]);
                             resParamDTO.setType(paramTypeList[j]);
-                            System.out.println("j = " + j);
-                            System.out.println("resParamDTO = " + resParamDTO);
 
                             // 응답 파라미터 등록
                             apiDetailsService.insertResParam(resParamDTO);
@@ -547,29 +517,17 @@ public class ApiController {
                 }
 //                2-3. resParam 넣으려면 response table id값 필요
                 System.out.println("//////////////////reqData/////////////////////");
-                System.out.println(obj.get("reqData"));
-                System.out.println(obj.get("reqData").getClass());
-//                System.out.println(String.valueOf(obj.get("reqData")).replaceAll("'\\\'", ""));
-                System.out.println(String.valueOf(obj.get("reqData")).replaceAll("\\\\", ""));
                 String req = String.valueOf(obj.get("reqData")).replaceAll("\\\\", "");
 
 
-                System.out.println(req.substring(1));
-                System.out.println(req.substring(0, req.length() - 1));
                 req = req.substring(1);
                 req = req.substring(0, req.length() - 1);
 
                 System.out.println(req);
 
                 JsonObject jsonObject = (JsonObject) JsonParser.parseString(req);
-                System.out.println("jsonObject = " + jsonObject);
-                System.out.println("jsonObject = " + jsonObject.keySet().getClass());
-                System.out.println(jsonObject.get("org_code"));
-                System.out.println("jsonObject = " + jsonObject.getClass());
                 /* key를 뽑아서 리스트로 변환*/
                 List<String> keys = new ArrayList<>(jsonObject.keySet());
-                System.out.println(keys.getClass());
-                System.out.println("keys.get(0) = " + keys.get(0));
 
                 for (int j = 0; j < jsonObject.keySet().size(); j++) {
                     BodyDTO bodyDTO = new BodyDTO();
@@ -590,7 +548,6 @@ public class ApiController {
         ApiDetailsDTO detailList = apiDetailsService.searchDetail(id);
 
 
-        System.out.println("detailList = " + detailList);
         object.addProperty("id", detailList.getId());
         object.addProperty("resourceId", detailList.getResourceId());
         object.addProperty("method", detailList.getMethod());

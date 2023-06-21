@@ -55,7 +55,7 @@ public class AppController {
                         @RequestParam(value = "exception", required = false) String exception, Model model) {
         model.addAttribute("error", error);
         model.addAttribute("exception", exception);
-        return "applogin";
+        return "/applogin";
     }
 
 
@@ -914,12 +914,10 @@ public class AppController {
         /* 여기서 시작! */
         JsonObject body = new JsonObject();
         if (!orgList.get(0).isEmpty()) { // org 코드값이 존재한다면
-
+            GetDataDTO getDataDTO = new GetDataDTO();
             /* 금투-001 insert */
             if (choiceAccountNum.equals(accountNum)) {
                 System.out.println("AppController.connectAgency");
-
-                GetDataDTO getDataDTO = new GetDataDTO();
                 getDataDTO.setRequestData(requestObj.toString());
                 getDataDTO.setResponseData(responseObj.toString());
                 getDataDTO.setUri("/accounts");
@@ -929,6 +927,9 @@ public class AppController {
                 mydataApiService.insertResult(getDataDTO); // 금투 123 모두 들어갈 수 있음
             }
 
+            /* 금투-001 - ProviderHistory table  */
+            mydataApiService.invest001Insert(orgList.get(0), 200, 0, jsonObject, getDataDTO.getApiId(), getDataDTO.getUri());
+
             body.addProperty("org_code", orgList.get(0));
             body.addProperty("account_num", accountList.get(0) + " ");
             body.addProperty("search_timestamp", "0");
@@ -936,7 +937,6 @@ public class AppController {
 
             System.out.println();
             System.out.println(mydataApiService.invest002(body.toString(), userDTO.getToken()));
-            GetDataDTO getDataDTO = new GetDataDTO();
             getDataDTO.setUri("/accounts/basic");
             getDataDTO.setResponseData(mydataApiService.invest002(body.toString(), userDTO.getToken()).toString());
             getDataDTO.setIndustry("invest");
@@ -948,6 +948,8 @@ public class AppController {
             getDataDTO.setClientNum(userDTO.getOwnNum());
             /* 금투-002 insert  */
             mydataApiService.insertResult(getDataDTO);
+            /* 금투-002 - ProviderHistory table  */
+            mydataApiService.invest001Insert(orgList.get(0), 200, 0, jsonObject, getDataDTO.getApiId(), getDataDTO.getUri());
 
             if (!orgList.get(0).isEmpty()) { // org 코드값이 존재한다면
                 body.addProperty("from_date", "20211017");
@@ -967,7 +969,11 @@ public class AppController {
 //            String data = body.get("account_num").toString().replaceAll(" ", "");
             body.addProperty("account_num", accountList.get(0));
             getDataDTO.setRequestData(body.toString());
+            /* 금투-003 적재 완료 */
             mydataApiService.insertResult(getDataDTO);
+            /* 금투-002 - ProviderHistory table  */
+            mydataApiService.invest001Insert(orgList.get(0), 200, 0, jsonObject, getDataDTO.getApiId(), getDataDTO.getUri());
+
             System.out.println("적재 완료오 !!! ");
 //        return "redirect:/app/main";
         }
