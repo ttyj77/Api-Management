@@ -330,6 +330,7 @@ public class MydataController {
         JsonObject object = new JsonObject();
         object.addProperty("id", mdProviderDTO.getId());
         object.addProperty("reqSEQ", mdProviderDTO.getMdReqInfoDTO().getReqSEQ());
+        System.out.println("mdProviderDTO.getMdReqInfoDTO().getReqSEQ() = " + mdProviderDTO.getMdReqInfoDTO().getReqSEQ());
         // api 리소스 명에 contracts 있으면 provider 상세 정보에 피보험자 순번 column 추가
         String apiResources = mdProviderDTO.getApiResources();
         boolean contain = false;
