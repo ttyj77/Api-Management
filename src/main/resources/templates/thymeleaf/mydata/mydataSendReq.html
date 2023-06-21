@@ -115,6 +115,7 @@
 
             // 거래 이력별 만들어진 tr태그에 모달
             function providerDetailInfo(value) {
+                console.log("제공자디테일 정보 들어옴!")
                 let tbody = document.getElementById("userNumTbody");
                 tbody.innerHTML = "";
                 let id = value.getAttribute("id");
@@ -138,7 +139,10 @@
                             document.getElementById("uniqueNum").innerText = message.uniqueNum;
                             document.getElementById("apiResources").innerText = message.apiResources;
                             // 증권번호 ( 계좌 번호 ) resData에서 가져와야함 !!!(여기에요)
-                            document.getElementById("accountNum").innerText = "계좌번호가 들어가야함 자산목록에 뜨는"
+                            // if (!message.apiResources.equals("/accounts")){
+                            //
+                            // }
+                            // document.getElementById("accountNum").innerText = "계좌번호가 들어가야함 자산목록에 뜨는"
                             document.getElementById("resMsg").innerText = message.resMsg;
                             document.getElementById("resdata").innerText = message.resData;
 
@@ -397,7 +401,7 @@
                                             <td>응답 Code</td>
                                             <td>요청API</td>
                                             <td>통합고객번호</td>
-                                            <td>정기적 전송</td>
+<!--                                            <td>정기적 전송</td>-->
                                         </tr>
                                         </thead>
                                         <tbody id="userNumTbody">
@@ -455,11 +459,11 @@
                                             <td colspan="3" class="tdContent" id="apiResources"></td>
                                         </tr>
 
-                                        <tr>
-                                            <td class="tdHead">증권번호</td>
-                                            <td class="tdContent" id="accountNum">
-                                            </td>
-                                        </tr>
+<!--                                        <tr>-->
+<!--                                            <td class="tdHead">증권번호</td>-->
+<!--                                            <td class="tdContent" id="accountNum">-->
+<!--                                            </td>-->
+<!--                                        </tr>-->
 
                                         <tr>
                                             <td class="tdHead">응답메시지</td>
@@ -468,7 +472,7 @@
                                         </tr>
 
                                         <tr>
-                                            <td class="tdHead" style="vertical-align: middle">resdata
+                                            <td class="tdHead" style="vertical-align: middle">응답데이터
                                             </td>
                                             <td class="tdContent p-0">
                                                 <textarea style="height: 120px" class="w-100" id="resdata" disabled>

@@ -14,7 +14,7 @@
         <result property="status" column="status"/>
     </resultMap>
     <select id="selectAll" resultType="com.ipa.openapi_inzent.model.RequestDTO">
-        select * from public."userReqList"
+        select * from public."userReqList" order by id desc;
     </select>
     <select id="reqUserList" resultMap="user">
         select * from public."userReqList" as ur

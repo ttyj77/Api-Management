@@ -28,15 +28,18 @@ import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Service
 public class MydataApiService {
+    private MydataService mydataService;
 
     private MydataApiDAO mydataApiDAO;
 
-    public MydataApiService(MydataApiDAO mydataApiDAO) {
+    public MydataApiService(MydataApiDAO mydataApiDAO,MydataService mydataService) {
         this.mydataApiDAO = mydataApiDAO;
+        this.mydataService = mydataService;
     }
 
     public void reqHistoryInsert(MdProviderDTO mdProviderDTO) {
@@ -237,14 +240,77 @@ public class MydataApiService {
         String x_api_tran_id = "1168119031SAA202303171424";
         String x_api_type = "user-search";
         UUID uuid = UUID.randomUUID();
+        /////////////////// 하나뿐인 조원이 건든 파트 시작
+        // 여기에요!!! 중복돼서 나오는 거 전송요구 내역 전체리스트 돌면서 만약 정보주체 번호와 기관코드 같은 내역 있으면
+        // mdreqInfo 추가 안하고 해당 reqInfo id값을 provider테이블에 reqInfoId에 넣기 => 그럼 묶여서 나올듯
+        List<MdReqInfoDTO> reqInfoList = mydataService.mdReqAll();
+        System.out.println("reqInfoList = " + reqInfoList);
+        for (int i = 0; i < reqInfoList.size(); i++) {
+            if (reqInfoList.get(i).getClientNum().equals("9704261153")) {
+
+                int reqId = reqInfoList.get(i).getId();
+
+//                int reqId = reqInfoInsert(mdReqInfoDTO);
+                MdProviderDTO mdProviderDTO = new MdProviderDTO();
+                mdProviderDTO.setX_api_type(x_api_type);
+                mdProviderDTO.setX_api_tran_id(x_api_tran_id);
+                mdProviderDTO.setOrg_code(org_code);
+                mdProviderDTO.setApiResources(apiResouceUri);
+                mdProviderDTO.setResCode(String.valueOf(responseCode));
+                mdProviderDTO.setUniqueNum(String.valueOf(uuid));
+                mdProviderDTO.setCustomerNum("9704261153");
+                mdProviderDTO.setReqInfoId(reqId);
+                mdProviderDTO.setRuntime((int) Math.round(result));
+                mdProviderDTO.setReqHeader("{\n" +
+                        "  \"accept\": \"application/json; charset=UTF-8\",\n" +
+                        "  \"x-api-type\": \"user-search\",\n" +
+                        "  \"X-FSI-MEM-NO\": \"FSI00002899\",\n" +
+                        "  \"x-api-tran-id\": \"1168119031SAA202303171424\",\n" +
+                        "  \"X-FSI-UTCT-TYPE\": \"TGC00001\",\n" +
+                        "  \"X-FSI-BUS-SEQ-NO\": \"105\",\n" +
+                        "  \"X-FSI-SVC-DATA-KEY\": \"Y\"\n" +
+                        "}");
+
+//          DB insert
+                mdProviderDTO.setResData(jsonObject.toString());
+                mdProviderDTO.setApiCode(apiCode);
+                if (responseCode == 200) {
+                    mdProviderDTO.setResMsg("성공");
+                } else {
+                    mdProviderDTO.setResMsg("실패");
+                }
+                mdProviderDTO.setStatusInfo("(통합인증)자산선택");
+
+                System.out.println("mdProviderDTO = " + mdProviderDTO);
+                reqHistoryInsert(mdProviderDTO);
+            } else{
+                // 같은 기관 코드와 같은 정보주체 번호를 가진 전송요구테이블이 없을 때에는 reqInfo 추가
+                MdReqInfoDTO mdReqInfoDTO = new MdReqInfoDTO();
+                mdReqInfoDTO.setCode(org_code);
+                mdReqInfoDTO.setAgencyName("인젠트금융투자");
+                mdReqInfoDTO.setReqSEQ(String.valueOf(uuid));
+
+                mdReqInfoDTO.setServiceName("마이데이터 서비스");
+                mdReqInfoDTO.setReqType("마이데이터");
+                mdReqInfoDTO.setClientNum("9704261153");
+            }
+        }
+
+
+
+
+
+        /////////////////// 하나뿐인 조원이 건든 파트 끝
 
         MdReqInfoDTO mdReqInfoDTO = new MdReqInfoDTO();
         mdReqInfoDTO.setCode(org_code);
-        mdReqInfoDTO.setAgencyName("농업협동조합중앙회");
+        mdReqInfoDTO.setAgencyName("인젠트금융투자");
+        mdReqInfoDTO.setReqSEQ(String.valueOf(uuid));
 
         mdReqInfoDTO.setServiceName("마이데이터 서비스");
         mdReqInfoDTO.setReqType("마이데이터");
         mdReqInfoDTO.setClientNum("9704261153");
+
 
         int reqId = reqInfoInsert(mdReqInfoDTO);
         MdProviderDTO mdProviderDTO = new MdProviderDTO();
