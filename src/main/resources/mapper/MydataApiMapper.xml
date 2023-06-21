@@ -12,8 +12,13 @@
         to_json(#{reqHeader}::json),#{resMsg}, to_json(#{resData}::json),#{customerNum},#{reqInfoId});
     </insert>
 
-    <insert id="reqInfoInsert" parameterType="com.ipa.openapi_inzent.model.MdReqInfoDTO" useGeneratedKeys="true"
-            keyProperty="id" keyColumn="id">
+<!--    <insert id="reqInfoInsert" parameterType="com.ipa.openapi_inzent.model.MdReqInfoDTO" useGeneratedKeys="true"-->
+<!--            keyProperty="id" keyColumn="id">-->
+<!--        INSERT INTO public."reqInfo"(-->
+<!--        code, "agencyName", "serviceName", "reqType", "reqSEQ", "tokenExpiryDate", "clientNum")-->
+<!--        VALUES (#{code} , #{agencyName},#{serviceName},#{reqType},#{reqSEQ},#{tokenExpiryDate},#{clientNum});-->
+<!--    </insert>-->
+    <insert id="reqInfoInsert" parameterType="com.ipa.openapi_inzent.model.MdReqInfoDTO">
         INSERT INTO public."reqInfo"(
         code, "agencyName", "serviceName", "reqType", "reqSEQ", "tokenExpiryDate", "clientNum")
         VALUES (#{code} , #{agencyName},#{serviceName},#{reqType},#{reqSEQ},#{tokenExpiryDate},#{clientNum});

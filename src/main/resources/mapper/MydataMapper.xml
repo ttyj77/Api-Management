@@ -162,7 +162,7 @@
     <select id="mdProviderSelectAll" resultType="com.ipa.openapi_inzent.model.MdProviderDTO">
         SELECT id, "reqDate", runtime, "resCode", "apiCode", "customerNum", "regularTransmission", "uniqueNum",
         "statusInfo", "apiResources", "reqHeader", "resMsg", "resData" , "reqInfoId"
-        FROM public."providerHistory";
+        FROM public."providerHistory" order by id desc;
     </select>
 
     <select id="mdReqList" resultMap="providerInfo">
