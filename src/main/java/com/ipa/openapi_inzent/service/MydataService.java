@@ -2,12 +2,14 @@ package com.ipa.openapi_inzent.service;
 
 import com.ipa.openapi_inzent.dao.MydataDAO;
 import com.ipa.openapi_inzent.model.*;
+import org.apache.coyote.RequestInfo;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -141,8 +143,11 @@ public class MydataService {
         return list;
     }
 
-    public List<MdProviderDTO> mdProviderCustomerList(String customerNum) {
-        List<MdProviderDTO> list = mydataDao.mdProviderCustomerList(customerNum);
+    public List<MdProviderDTO> mdProviderCustomerList(String customerNum, String code) {
+        MdProviderDTO mdProviderDTO = new MdProviderDTO();
+        mdProviderDTO.setCustomerNum(customerNum);
+        mdProviderDTO.setCode(code);
+        List<MdProviderDTO> list = mydataDao.mdProviderCustomerList(mdProviderDTO);
         SimpleDateFormat dfFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
         SimpleDateFormat newFormat = new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss:SSS");
@@ -224,6 +229,14 @@ public class MydataService {
 
     public MdAgencyDTO mdAgencyCode(String orgCode) {
         return mydataDao.mdAgencyCode(orgCode);
+    }
+
+    public int selectReqInfoId(String cliNum, String orgCode) {
+
+        MdReqInfoDTO reqInfoDTO = new MdReqInfoDTO();
+        reqInfoDTO.setClientNum(cliNum);
+        reqInfoDTO.setCode(orgCode);
+        return mydataDao.selectReqInfoId(reqInfoDTO);
     }
 }
 

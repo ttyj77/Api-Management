@@ -191,8 +191,8 @@
     </insert>
 
     <select id="mdProviderCustomerList" parameterType="string" resultType="com.ipa.openapi_inzent.model.MdProviderDTO">
-        select * from public."providerHistory"
-        where "customerNum" = #{customerNum};
+        select * from public."providerHistory" as ph join public."reqInfo" as ri on ri.id = ph."reqInfoId"
+        where "customerNum" = #{customerNum} and ri.code = #{code};
     </select>
 
     <select id="mdReqAll" resultType="com.ipa.openapi_inzent.model.MdReqInfoDTO">
@@ -299,6 +299,8 @@
         where code = #{orgCode};
     </select>
 
-
+    <select id="selectReqInfoId" parameterType="com.ipa.openapi_inzent.model.MdReqInfoDTO" resultType="int">
+        select id from public."reqInfo" where code = #{code} and "clientNum" = #{clientNum}
+    </select>
 </mapper>
 

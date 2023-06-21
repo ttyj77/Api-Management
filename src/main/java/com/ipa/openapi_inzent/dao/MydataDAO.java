@@ -42,7 +42,7 @@ public interface MydataDAO {
 
     List<MdProviderDTO> mdReqList() throws DataAccessException;
 
-    List<MdProviderDTO> mdProviderCustomerList(String customerNum) throws DataAccessException;
+    List<MdProviderDTO> mdProviderCustomerList(MdProviderDTO mdProviderDTO) throws DataAccessException;
 
     List<MdReqInfoDTO> mdReqAll() throws DataAccessException;
 
@@ -57,4 +57,6 @@ public interface MydataDAO {
     List<MdAgencyDTO> mdAgencyServiceOne(String orgCode) throws DataAccessException;
 
     MdAgencyDTO mdAgencyCode(String orgCode) throws DataAccessException;
+
+    int selectReqInfoId(MdReqInfoDTO mdReqInfoDTO) throws DataAccessException;
 }

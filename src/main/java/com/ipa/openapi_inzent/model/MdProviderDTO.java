@@ -35,5 +35,6 @@ public class MdProviderDTO {
     private String x_api_type;
     private String x_api_tran_id;
     private String org_code;
+    private String code;
 
 }

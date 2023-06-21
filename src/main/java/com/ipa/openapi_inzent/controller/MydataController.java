@@ -446,10 +446,10 @@ public class MydataController {
 
     @GetMapping("/provider/customerList")
     @ResponseBody
-    public JsonObject customerList(String customerNum) {
+    public JsonObject customerList(String customerNum, String code) {
 
         JsonObject object = new JsonObject();
-        List<MdProviderDTO> list = mydataService.mdProviderCustomerList(customerNum);
+        List<MdProviderDTO> list = mydataService.mdProviderCustomerList(customerNum, code);
         System.out.println("customerNum = " + customerNum);
         System.out.println("MydataController.customerList-=-=-=-=-");
 //        System.out.println("list = " + list);
