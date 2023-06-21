@@ -11,7 +11,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>통계(1일)</title>
+    <title>오늘 통계</title>
 
     <th:block layout:fragment="css">
         <link
@@ -35,7 +35,7 @@
                 crossorigin="anonymous"></script>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
-
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> <!-- 필수 -->
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     </th:block>
@@ -70,6 +70,8 @@
         }
 
     </style>
+    <script>
+    </script>
 
 </head>
 
@@ -86,12 +88,12 @@
             <div id="content">
                 <div class="container-fluid">
                     <h1 class="h3 mb-4">API 통계</h1>
-                    <h5>2023-06-15</h5>
+                    <h5 th:text="${#dates.format(day,'yyyy-MM-dd')}" id="date">2023-06-15</h5>
                     <div class="mb-4 d-flex"><h5 class="backBox mr-2"><img class="profile"
-                                                                           src="/images/bank/inzent.png"><span>인젠트뱅크</span>
+                                                                           th:src="|/images/${dailyApiOne.industry}/${dailyApiOne.logo}|"><span id="orgCode" th:value="${dailyApiOne.code}" th:text="${dailyApiOne.name}">인젠트뱅크</span>
                     </h5>
                         <h5 class="d-flex align-items-center">
-                            총 API 호출 수 :&nbsp; <span style="color: #0c4128; font-weight: bolder">3517</span>
+                            총 API 호출 수 :&nbsp; <span style="color: #0c4128; font-weight: bolder" th:text="${dailyApiOne.totalRequest}">3517</span>
                         </h5>
                     </div>
                     <div class="d-flex justify-content-around">
@@ -106,7 +108,6 @@
                         <div class="shadow-lg boxTwo d-flex justify-content-around">
                             <canvas id="run-chart" width="800" height="500"></canvas>
                         </div>
-
 
                     </div>
                     <div class="d-flex justify-content-around">
@@ -130,50 +131,10 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td>40101</td>
-                                    <td>유효하지 않은 접근토큰</td>
-                                    <td>92</td>
-                                </tr>
-                                <tr>
-                                    <td>40001</td>
-                                    <td>요청 파라미터 문제</td>
-                                    <td>78</td>
-                                </tr>
-                                <tr>
-                                    <td>40301</td>
-                                    <td>올바르지 않은 API 호출</td>
-                                    <td>51</td>
-                                </tr>
-                                <tr>
-                                    <td>40405</td>
-                                    <td>자산 정보조회 권한 없음</td>
-                                    <td>48</td>
-                                </tr>
-                                <tr>
-                                    <td>40401</td>
-                                    <td>요청한 엔드포인트 미존재</td>
-                                    <td>31</td>
-                                </tr>
-                                <tr>
-                                    <td>40402</td>
-                                    <td>유효한 자산이 아님</td>
-                                    <td>26</td>
-                                </tr>
-                                <tr>
-                                    <td>40403</td>
-                                    <td>정보주체 미존재</td>
-                                    <td>23</td>
-                                </tr>
-                                <tr>
-                                    <td>40501</td>
-                                    <td>허용되지 않은 HTTP Method</td>
-                                    <td>11</td>
-                                </tr>
-                                <tr>
-                                    <td>40203</td>
-                                    <td>일시적 클라이언트 요청 제한</td>
-                                    <td>8</td>
+                                <tr th:each="list:${errorSeqList}">
+                                    <td th:text="${list.error}">40101</td>
+                                    <td th:text="${list.reason}">유효하지 않은 접근토큰</td>
+                                    <td th:text="${list.seq}">92</td>
                                 </tr>
                                 </tbody>
                             </table>

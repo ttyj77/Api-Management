@@ -221,5 +221,9 @@ public class MydataService {
     public List<MdAgencyDTO> mdAgencyServiceOne(String orgCode) {
         return mydataDao.mdAgencyServiceOne(orgCode);
     }
+
+    public MdAgencyDTO mdAgencyCode(String orgCode) {
+        return mydataDao.mdAgencyCode(orgCode);
+    }
 }
 

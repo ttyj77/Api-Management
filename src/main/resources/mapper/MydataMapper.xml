@@ -92,7 +92,6 @@
         <result property="tokenExpiryDate" column="tokenExpiryDate"/>
     </resultMap>
 
-
     <!-- mdAgency  -->
     <select id="mdAgencySelectAll" resultType="com.ipa.openapi_inzent.model.MdAgencyDTO">
         SELECT * FROM public."mdAgency";
@@ -292,6 +291,12 @@
         from public."mdService" as ms
         inner join public."mdAgency" as ma on ma.id = ms."agencyId"
         where ma.code = #{orgCode};
+    </select>
+
+    <!-- mdAgency -->
+    <select id="mdAgencyCode" resultType="com.ipa.openapi_inzent.model.MdAgencyDTO">
+        select * from public."mdAgency"
+        where code = #{orgCode};
     </select>
 
 

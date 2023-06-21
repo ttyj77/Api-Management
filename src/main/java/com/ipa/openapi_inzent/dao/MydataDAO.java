@@ -55,4 +55,6 @@ public interface MydataDAO {
     List<MdAgencyDTO> mdAgencyService() throws DataAccessException;
 
     List<MdAgencyDTO> mdAgencyServiceOne(String orgCode) throws DataAccessException;
+
+    MdAgencyDTO mdAgencyCode(String orgCode) throws DataAccessException;
 }

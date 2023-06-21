@@ -30,5 +30,86 @@
         where "requestData" ->> 'org_code' = #{org_code}
         and "clientNum" = #{clientNum} and industry = #{industry};
     </delete>
+    <select id="getAccount" parameterType="string" resultType="com.ipa.openapi_inzent.model.GetDataDTO">
+        select * from public.data
+        where "clientNum" = #{clientNum}
+        and uri = #{uri}
+        and "requestData" ->> 'org_code' = #{orgCode};
+    </select>
+
+    <!-- chart.js part -->
+    <select id="dailyAPIStatistics" parameterType="string"
+            resultType="com.ipa.openapi_inzent.model.DailyApiStatisticsDTO">
+        select table1."cnDate" as date, ma.name, table1.code, table1."totalRequest",table1."successCnt",
+        table1."failCnt", ma.logo, ma.industry from
+        (select to_char(ph."reqDate", 'yyyyMMDD') "cnDate",ri."code", count(*) as "totalRequest", count(1)FILTER(where
+        ph."resCode" = '200' ) as "successCnt",count(1)FILTER(where ph."resCode" != '200' ) as "failCnt" from
+        public."providerHistory" as ph join public."reqInfo" as ri on ri.id = ph."reqInfoId"
+        group by ri."code", "cnDate") as table1 join public."mdAgency" as ma on ma.code = table1.code;
+    </select>
+    <select id="dailyAPIStatisticsOne" parameterType="string"
+            resultType="com.ipa.openapi_inzent.model.DailyApiStatisticsDTO">
+        select table1."cnDate" as date, ma.name, table1.code, table1."totalRequest",table1."successCnt",
+        table1."failCnt", ma.logo, ma.industry from
+        (select to_char(ph."reqDate", 'yyyyMMDD') "cnDate",ri."code", count(*) as "totalRequest", count(1)FILTER(where
+        ph."resCode" = '200' ) as "successCnt",count(1)FILTER(where ph."resCode" != '200' ) as "failCnt" from
+        public."providerHistory" as ph join public."reqInfo" as ri on ri.id = ph."reqInfoId"
+        group by ri."code", "cnDate") as table1 join public."mdAgency" as ma on ma.code = table1.code where
+        table1."cnDate" = #{date} and table1.code = #{orgCode};
+    </select>
+
+    <select id="dailyApiSeq" parameterType="string" resultType="com.ipa.openapi_inzent.model.DailyApiSeqDTO">
+        select count(*) as seq, "apiResources" from public."providerHistory" as ph
+        join public."reqInfo" as ri on ri.id = ph."reqInfoId"
+        where ri.code = #{orgCode} and to_char(ph."reqDate",
+        'yyyyMMDD') = #{date}
+        group by "apiResources";
+    </select>
+
+    <select id="dailyApiError" parameterType="string" resultType="com.ipa.openapi_inzent.model.DailyApiErrorDTO">
+        select "resCode", count(*) from public."providerHistory" as ph join public."reqInfo" as ri on ri.id =
+        ph."reqInfoId"
+        where ri.code = #{orgCode} and to_char("reqDate", 'yyyyMMDD') = #{date}
+        group by "resCode";
+    </select>
+
+    <select id="errorAll" resultType="com.ipa.openapi_inzent.model.ErrorDTO">
+        select * from public."errorCode" order by error asc;
+    </select>
+
+    <select id="dailyTimeCall" parameterType="string" resultType="com.ipa.openapi_inzent.model.DailyApiStatisticsDTO">
+        select table1.date,table1.code, table1.hh, table2."totalRequest",table2."successCnt", table2."failCnt" from
+        (SELECT to_char(ph."reqDate",'yyyyMMDD') date, ri.code, hh FROM public."providerHistory" as ph
+        cross JOIN (SELECT to_char(generate_series( TO_CHAR(NOW(),'YYYYMMDD 00:00')::timestamp, TO_CHAR(NOW(),'YYYYMMDD
+        23:00')::timestamp, '1 hours'),'HH24:MI') as "hh") AS "time"
+        join public."reqInfo" as ri on ri.id = ph."reqInfoId"
+        group by to_char(ph."reqDate", 'yyyyMMDD'), ri.code,hh
+        ) as "table1" left join (select to_char(ph."reqDate", 'yyyyMMDD') "cnDate",to_char(ph."reqDate", 'HH24:00')
+        "cnHour",ri."code", count(*) as "totalRequest", count(1)FILTER(where ph."resCode" = '200' ) as
+        "successCnt",count(1)FILTER(where ph."resCode" != '200' ) as "failCnt" from public."providerHistory" as ph join
+        public."reqInfo" as ri on ri.id = ph."reqInfoId"
+        group by ri."code", "cnDate", "cnHour") as "table2" on table1."date" = table2."cnDate" and table1.hh =
+        table2."cnHour" where table1.code = #{code} and date = #{date} order by hh asc;
+    </select>
+
+    <select id="dailyStatisticsDate" parameterType="string" resultType="com.ipa.openapi_inzent.model.DailyApiStatisticsDTO">
+        select table1."cnDate" as date, ma.name, table1.code, table1."totalRequest",table1."successCnt",
+        table1."failCnt", ma.logo, ma.industry from
+        (select to_char(ph."reqDate", 'yyyyMMDD') "cnDate",ri."code", count(*) as "totalRequest", count(1)FILTER(where
+        ph."resCode" = '200' ) as "successCnt",count(1)FILTER(where ph."resCode" != '200' ) as "failCnt" from
+        public."providerHistory" as ph join public."reqInfo" as ri on ri.id = ph."reqInfoId"
+        group by ri."code", "cnDate") as table1 join public."mdAgency" as ma on ma.code = table1.code
+        where table1."cnDate" = #{date};
+    </select>
+
+    <select id="dailyStatisticsSearch" parameterType="string" resultType="com.ipa.openapi_inzent.model.DailyApiStatisticsDTO">
+        select table1."cnDate" as date, ma.name, table1.code, table1."totalRequest",table1."successCnt",
+        table1."failCnt", ma.logo, ma.industry from
+        (select to_char(ph."reqDate", 'yyyyMMDD') "cnDate",ri."code", count(*) as "totalRequest", count(1)FILTER(where
+        ph."resCode" = '200' ) as "successCnt",count(1)FILTER(where ph."resCode" != '200' ) as "failCnt" from
+        public."providerHistory" as ph join public."reqInfo" as ri on ri.id = ph."reqInfoId"
+        group by ri."code", "cnDate") as table1 join public."mdAgency" as ma on ma.code = table1.code
+        where table1.code ILIKE CONCAT('%', #{keyword}, '%') or ma.name ILIKE CONCAT('%', #{keyword}, '%');
+    </select>
 
 </mapper>

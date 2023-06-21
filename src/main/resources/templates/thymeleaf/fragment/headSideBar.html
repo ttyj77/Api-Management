@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -41,25 +41,25 @@
                             <ion-icon name="home-outline" class="nav__icon"></ion-icon>
                             <span class="nav_name">APIs</span>
                         </a>
-                        <a href="/api/trash" class="nav__link">
+                        <a href="/api/trash" class="nav__link" sec:authorize="hasAnyRole('ADMIN','MYDATA','PROVIDER')">
                             <ion-icon name="chatbubbles-outline" class="nav__icon"></ion-icon>
                             <span class="nav_name">휴지통 관리</span>
                         </a>
 
-                        <a href="/requestPage" class="nav__link">
+                        <a href="/requestPage" class="nav__link" sec:authorize="hasAnyRole('ADMIN','MYDATA','PROVIDER')">
                             <ion-icon name="folder-outline" class="nav__icon"></ion-icon>
                             <span class="nav_name">요청 관리</span>
                         </a>
-                        <a href="/accountList" class="nav__link">
+                        <a href="/accountList" class="nav__link" sec:authorize="hasAnyRole('ADMIN')">
                             <ion-icon name="pie-chart-outline" class="nav__icon"></ion-icon>
                             <span class="nav_name">계정 관리</span>
                         </a>
-                        <a href="/authorization" class="nav__link">
+                        <a href="/authorization" class="nav__link" sec:authorize="hasAnyRole('ADMIN')">
                             <ion-icon name="log-out-outline" class="nav__icon"></ion-icon>
                             <span class="nav_name">권한 관리</span>
                         </a>
 
-                        <div href="#" class="nav__link collapse2">
+                        <div href="#" class="nav__link collapse2" sec:authorize="hasAnyRole('MYDATA','PROVIDER')">
                             <ion-icon name="people-outline" class="nav__icon"></ion-icon>
                             <span class="nav_name">마이데이터</span>
 
@@ -86,7 +86,7 @@
 <!--                                     class="collapse__sublink2 accordion_div">-->
 <!--                                    거래이력(사업자)-->
 <!--                                </div>-->
-                                <div onclick="location.href='/mydata/statistics'"
+                                <div onclick="location.href='/mydata/dailyStatistics'"
                                      class="collapse__sublink2 accordion_div">
                                     API 통계
                                 </div>
