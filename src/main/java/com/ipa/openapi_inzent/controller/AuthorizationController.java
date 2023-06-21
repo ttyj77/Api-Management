@@ -50,7 +50,7 @@ public class AuthorizationController {
     }
 
     /* APP 인젠트 인증 페이지*/
-    @GetMapping("/appAuthorization")
+    @GetMapping("/app/authorization")
     public String inzentAuthorization(Model model, @AuthenticationPrincipal UserCustomDetails userCustomDetails, HttpSession session) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserDTO userDTO = new UserDTO();

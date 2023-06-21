@@ -1,8 +1,11 @@
 package com.ipa.openapi_inzent.controller;
 
+import com.ipa.openapi_inzent.model.UserDTO;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpSession;
 
 @Controller
 public class IndexController {
@@ -10,14 +13,9 @@ public class IndexController {
     @GetMapping("")
     public String index() {
 //        @AuthenticationPrincipal UserCustomDetails details   로그인 된 사용자 정보 가져옴
-        return "newIndex";
+        return "/newIndex";
     }
 
-    @GetMapping("newIndex")
-    public String newIndex() {
-//        @AuthenticationPrincipal UserCustomDetails details   로그인 된 사용자 정보 가져옴
-        return "newIndex";
-    }
 
     @GetMapping("/headSideBar")
     public String apisTest() {
@@ -26,8 +24,10 @@ public class IndexController {
 
     @GetMapping("/test")
     @ResponseBody
-    public String test() {
-        return "tables";
+    public UserDTO test(HttpSession session) {
+        UserDTO logIn = (UserDTO) session.getAttribute("logIn");
+        System.out.println("logIn = " + logIn);
+        return logIn;
     }
 
     @GetMapping("/main")

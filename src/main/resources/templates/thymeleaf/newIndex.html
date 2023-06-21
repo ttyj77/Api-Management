@@ -164,9 +164,9 @@
         position: relative;
         top: 0;
         left: 0;
-        /*width: 100vw;*/
-        /*height: 0.9rem;*/
-        /*padding: 0 0.32rem;*/
+        width: 100vw;
+        height: 0.9rem;
+        padding: 0 0.32rem;
     }
 
     .header .flex-wrapper {
@@ -241,7 +241,6 @@
     }
 
     .hero .title-block {
-        padding-left: 1.48rem;
         position: relative;
     }
 
@@ -401,20 +400,21 @@
     }
 
 </style>
-    <script src="https://kit.fontawesome.com/24311b556d.js" crossOrigin="anonymous"></script>
-<body style="overflow-x: hidden">
+<script src="https://kit.fontawesome.com/24311b556d.js" crossOrigin="anonymous"></script>
+<body style="overflow: hidden">
 <header class="header">
     <div class="header-menu">
-        <img src="../images/logo4.png" style="margin-left: 1%; cursor: pointer;"
+        <img src="../images/logo_img.png" style="margin-left: 1%; width: 150px cursor: pointer;"
              onclick="location.href='/newIndex'">
         <div style="font-size: 15%;">
-            <a title="Button push orange" class="button btnPush btnOrange" sec:authorize="isAnonymous()" onclick="checkWeb()">LOGIN</button></a>
+            <a title="Button push orange" class="button btnPush btnOrange" sec:authorize="isAnonymous()"
+               onclick="checkWeb()">LOGIN</button></a>
             <a title="Button push purple" class="button btnPush btnPurple" sec:authorize="isAuthenticated()"
                onclick="location.href='/logout'">LOGOUT</a>
         </div>
     </div>
 </header>
-<section class="hero">
+<section class="hero" style="height: 94vh">
     <video class="hero-video" autoplay muted loop>
         <source src="https://cdn.zajno.com/dev/codepen/fossil/fossil.mp4" type="video/mp4"/>
     </video>

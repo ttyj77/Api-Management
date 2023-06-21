@@ -45,12 +45,12 @@ public class UserController {
                         @RequestParam(value = "exception", required = false) String exception, Model model) {
         model.addAttribute("error", error);
         model.addAttribute("exception", exception);
-        return "login";
+        return "/login";
     }
 
     @GetMapping("/register")
     public String register() {
-        return "login";
+        return "/login";
     }
 
     @PostMapping("/register")
@@ -119,7 +119,7 @@ public class UserController {
         }
 
         model.addAttribute("user", userDTO);
-        return "mypage";
+        return "/mypage";
     }
 
     @GetMapping("/delete/{id}")
@@ -224,7 +224,7 @@ public class UserController {
 
         model.addAttribute("user", temp);
 
-        return "mypage";
+        return "/mypage";
     }
 
     @GetMapping("/oauth2Login")

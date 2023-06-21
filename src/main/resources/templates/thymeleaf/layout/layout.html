@@ -8,14 +8,14 @@
     <meta charset="UTF-8"/>
 
     <!-- config fragment 사용 -->
-    <th:block th:replace="~{fragment/config :: configFragment}"></th:block>
+    <th:block th:replace="~{/fragment/config :: configFragment}"></th:block>
 </head>
 
 <body>
 <div style="overflow-x: hidden;">
-    <th:block th:replace="~{fragment/headSideBar :: headerFragment}"></th:block>
+    <th:block th:replace="~{/fragment/headSideBar :: headerFragment}"></th:block>
     <div id="body-pd" style="display: flex">
-        <th:block th:replace="~{fragment/headSideBar :: sideBarFragment}"></th:block>
+        <th:block th:replace="~{/fragment/headSideBar :: sideBarFragment}"></th:block>
         <div class="mt-5" style="width: 100%" id="contentBody">
             <th:block layout:fragment="content"></th:block>
         </div>
