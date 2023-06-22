@@ -27,7 +27,7 @@
     <select id="findByUsername" parameterType="String" resultType="com.ipa.openapi_inzent.model.UserDTO">
         SELECT
         us.id,us.username,us.password,us.nickname,us.token,us.activate,us."createDate",us.email,us.approve,ro.code as
-        "role", us."ownNum"
+        "role", us."ownNum", us."issueDate" , us."expireDate"
         FROM public."user" as us
         join public."userRole" as ur on ur."userId" = us.id
         join public.role as ro on ro.id = ur."roleId"

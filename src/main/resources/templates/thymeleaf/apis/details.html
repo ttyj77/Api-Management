@@ -551,6 +551,7 @@
                         tbody[i].append(tr);
                     }
                 }
+
             }
 
             //     url 실시간 검색
@@ -696,8 +697,23 @@
                 let pathid = document.getElementById("pathid")
                 pathid.value = "0" // 선택한 uri id , 새로 생성 시 0
 
+                // 라라라ㅏ
+                console.log("저장 버트 activate 확인ㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹ")
+                let resourceBtn = document.getElementById("resourceBtn");
+                if ($("path").val()) {
+                    console.log("잠김")
+                    resourceBtn.disabled = true;
+                } else {
+                    console.log("풀림")
+                    resourceBtn.disabled = false;
+                }
+
                 $("#resourceModal").modal("show")
 
+            }
+
+            function checkPath() {
+                let btnActivate = document.getElementById("")
             }
 
             function tabHidden() {
@@ -736,9 +752,6 @@
                     <h3 th:text="${api.context}"></h3>
                     <h3>&nbsp)</h3>
                 </div>
-                <div>
-                    <button class="btn btn-dark btn-sm" onclick="location.reload()">전체 리소스 갱신</button>
-                </div>
 
             </div>
             <div class="d-flex mb-3">
@@ -762,12 +775,15 @@
                     <!--                        <option>deprecate</option>-->
                     <!--                        <option>out_of_service</option>-->
                     <!--                    </select>-->
-                    <form class="d-flex" style="width: 70%">
-                        <input type="text" class="form-control m-0" placeholder="검색어를 입력해주세요.">
-                        <button type="submit" class="btn btn-dark btn-sm" style=" width: 25%">
-                            <i class="fa-solid fa-magnifying-glass" style="color: #ffffff;"></i> 조회
-                        </button>
-                    </form>
+                    <!--                    <form class="d-flex" style="width: 70%">-->
+                    <!--                        <input type="text" class="form-control m-0" placeholder="검색어를 입력해주세요.">-->
+                    <!--                        <button type="submit" class="btn btn-dark btn-sm" style=" width: 25%">-->
+                    <!--                            <i class="fa-solid fa-magnifying-glass" style="color: #ffffff;"></i> 조회-->
+                    <!--                        </button>-->
+                    <!--                    </form>-->
+                    <div>
+                        <button class="btn btn-dark btn-sm" onclick="location.reload()">전체 리소스 갱신</button>
+                    </div>
                 </div>
             </div>
             <!-- 리소스 정보들 -->
@@ -877,23 +893,6 @@
                 </div>
             </div>
             <!--  리소스 정보 끝   -->
-            <div class="w-100 d-flex justify-content-center">
-                <ul class="pagination">
-                    <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Previous">
-                            <span aria-hidden="true">«</span>
-                        </a>
-                    </li>
-                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Next">
-                            <span aria-hidden="true">»</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
         </div>
 
     </div>
@@ -968,7 +967,7 @@
                                         <!--                                             style="font-size: 18px"></div>-->
                                         <input style="height: 46px;align-self: center;"
                                                class="input-group rounded pl-3 p-2" type="text"
-                                               id="path" disabled
+                                               id="path" disabled onchange="btnActivate(this.value)"
                                                th:name="${api.context}">
                                         <input type="hidden" value="0" id="pathid">
                                         <input type="hidden" th:value="${api.id}" id="apiId">
@@ -1617,7 +1616,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" disabled id="resourceBtn"
                             onclick="insertResource()">저장
                     </button>
                 </div>
@@ -1632,7 +1631,8 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel2">파라미터 추가</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-toggle="modal"
+                            data-bs-target="#resourceModal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
@@ -1693,7 +1693,8 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="resCodeModalShowLabel">응답코드 추가</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-toggle="modal"
+                            data-bs-target="#resourceModal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
@@ -1751,7 +1752,8 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="insertResCodeJsonModalShowLabel">필드추가</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-toggle="modal"
+                            data-bs-target="#insertResCodeModal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
@@ -1793,7 +1795,8 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="searchPathModalLabel">path 검색</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-toggle="modal"
+                            data-bs-target="#resourceModal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <label for="parameter-name" class="col-form-label">path * </label>
@@ -1827,7 +1830,7 @@
                 </div>
                 <div class="modal-footer code">
                     <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
-                            data-bs-target="#resourceModal">취소
+                            data-bs-target="#resourceModal" onclick="checkPath()">취소
                     </button>
 
                 </div>

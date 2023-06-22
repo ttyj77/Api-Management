@@ -570,6 +570,16 @@ function insertPath(e) {
     console.log(e.target.parentNode.childNodes[1].textContent) // 클릭한 uri
     console.log(e.target.parentNode.childNodes[3].textContent) // 클릭한 uri의 impossibleMethod
 
+    console.log("저장 버트 activate 확인ㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹ")
+    let resourceBtn = document.getElementById("resourceBtn");
+    if ($("path").val()) {
+        console.log("풀림")
+        resourceBtn.disabled = true;
+    } else {
+        console.log("잠김")
+        resourceBtn.disabled = false;
+    }
+
     $("#searchPathModal").modal('hide')
     $("#resourceModal").modal('show')
 

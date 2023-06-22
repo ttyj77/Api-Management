@@ -89,7 +89,7 @@
         "successCnt",count(1)FILTER(where ph."resCode" != '200' ) as "failCnt" from public."providerHistory" as ph join
         public."reqInfo" as ri on ri.id = ph."reqInfoId"
         group by ri."code", "cnDate", "cnHour") as "table2" on table1."date" = table2."cnDate" and table1.hh =
-        table2."cnHour" where table1.code = #{code} and date = #{date} order by hh asc;
+        table2."cnHour" and table1.code = table2.code where table1.code = #{code} and date = #{date} order by hh asc;
     </select>
 
     <select id="dailyStatisticsDate" parameterType="string" resultType="com.ipa.openapi_inzent.model.DailyApiStatisticsDTO">

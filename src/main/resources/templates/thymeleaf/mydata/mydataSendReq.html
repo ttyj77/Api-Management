@@ -72,6 +72,7 @@
                 // date 조회 할 때 고객번호 param으로 사용하기 위해
                 let forDate = document.getElementById("input_submit");
                 $(forDate).attr("cnum", clientNum);
+                $('#input_submit').attr("orgCode", org_code);
 
                 let data = {
                     "customerNum": clientNum,
@@ -85,7 +86,7 @@
                     success: (message) => {
                         let plist = JSON.parse(message.providerList);
                         console.log(plist);
-                        let col_cnt = Object.keys(plist[0]).length;
+                        let col_cnt = Object.keys(plist[0]).length-1;
                         for (let i = 0; i < plist.length; i++) {
                             let tr = document.createElement("tr");
                             tr.style.fontSize = '14px';
@@ -102,6 +103,7 @@
                                 "data-bs-toggle": "modal",
                                 "data-bs-target": "#detailModal",
                                 "onclick": "providerDetailInfo(this)"
+
                             });
                             tr.id = plist[i]["id"];
                             for (let j = 1; j < col_cnt; j++) {
@@ -119,7 +121,6 @@
 
             // 거래 이력별 만들어진 tr태그에 모달
             function providerDetailInfo(value) {
-                console.log("제공자디테일 정보 들어옴!")
                 let tbody = document.getElementById("userNumTbody");
                 tbody.innerHTML = "";
                 let id = value.getAttribute("id");
@@ -137,7 +138,10 @@
                         console.log(message)
                         console.log("디테일인포들어옴")
                         for (let i = 0; i < cn.length; i++) {
-                            $(cn).attr("client_num", message.consumerNum);
+                            $(cn).attr({
+                                "client_num": message.consumerNum,
+                                "org_code" : message.code
+                            });
 
                             document.getElementById("reqSEQ").innerText = message.reqSEQ;
                             document.getElementById("uniqueNum").innerText = message.uniqueNum;
@@ -160,6 +164,7 @@
                 let tbody = document.getElementById("userNumTbody");
                 tbody.innerHTML = "";
                 let dday = document.getElementById("input_date").value;
+                let org_code = value.getAttribute("orgCode");
                 let cnum = value.getAttribute("cnum");
                 console.log("!!!!!!!!!!!!!!!")
                 console.log(cnum);
@@ -167,6 +172,7 @@
                 let data = {
                     "dday": dday,
                     "customerNum": cnum,
+                    "org_code": org_code,
                 }
                 $.ajax({
                     url: "/mydata/calendarSend",
@@ -365,7 +371,8 @@
                                     </thead>
 
                                     <tbody>
-                                    <tr th:each="list:${list}" th:client_num="${list.clientNum}" th:org_code="${list.code}"
+                                    <tr th:each="list:${list}" th:client_num="${list.clientNum}"
+                                        th:org_code="${list.code}"
                                         onclick="providerDetailModal(this)">
                                         <td data-bs-toggle="modal" data-bs-target="#providerModal"
                                             th:text="${list.code}" id="orgCode"></td>
@@ -439,7 +446,7 @@
                                             <td>응답 Code</td>
                                             <td>요청API</td>
                                             <td>통합고객번호</td>
-<!--                                            <td>정기적 전송</td>-->
+                                            <!--                                            <td>정기적 전송</td>-->
                                         </tr>
                                         </thead>
                                         <tbody id="userNumTbody">
@@ -497,11 +504,11 @@
                                             <td colspan="3" class="tdContent" id="apiResources"></td>
                                         </tr>
 
-<!--                                        <tr>-->
-<!--                                            <td class="tdHead">증권번호</td>-->
-<!--                                            <td class="tdContent" id="accountNum">-->
-<!--                                            </td>-->
-<!--                                        </tr>-->
+                                        <!--                                        <tr>-->
+                                        <!--                                            <td class="tdHead">증권번호</td>-->
+                                        <!--                                            <td class="tdContent" id="accountNum">-->
+                                        <!--                                            </td>-->
+                                        <!--                                        </tr>-->
 
                                         <tr>
                                             <td class="tdHead">응답메시지</td>

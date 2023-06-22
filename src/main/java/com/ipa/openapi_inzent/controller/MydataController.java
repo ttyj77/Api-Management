@@ -415,7 +415,8 @@ public class MydataController {
         System.out.println("orgCode = " + orgCode);
         String uri_1 = "/accounts";
 
-        GetDataDTO getDataDTO = getDataService.getAccount(clientNum, uri_1, orgCode);
+        // 일단 fix시킴 정보주체번호
+        GetDataDTO getDataDTO = getDataService.getAccount("943578", uri_1, orgCode);
 
         System.out.println("getDataDTO = " + getDataDTO);
 
@@ -493,11 +494,12 @@ public class MydataController {
 
     @GetMapping("/calendarSend")
     @ResponseBody
-    public JsonObject calendarInSendReq(String dday, String customerNum) {
+    public JsonObject calendarInSendReq(String dday, String customerNum, String org_code) {
         JsonObject object = new JsonObject();
         List<MdProviderDTO> list = mydataService.mdReqList();
         System.out.println("dday = " + dday);
         System.out.println("MydataController.calendar=-=-=-=-");
+        System.out.println("o = " + org_code);
 
         JsonArray providerArray = new JsonArray();
         for (MdProviderDTO mdProviderDTO : list) {
@@ -505,8 +507,10 @@ public class MydataController {
             String reqDate = mdProviderDTO.getReqDate();
             System.out.println("reqDate.equals(dday) = " + reqDate.equals(dday));
             System.out.println(dday.equals(reqDate) && customerNum.equals(mdProviderDTO.getCustomerNum()));
+            System.out.println("mdProviderDTO = " + mdProviderDTO);
+            System.out.println("mdProviderDTO = " + mdProviderDTO.getMdReqInfoDTO().getCode());
             if (dday.equals("") || dday.equals(reqDate)) {
-                if (customerNum.equals(mdProviderDTO.getCustomerNum())) {
+                if (customerNum.equals(mdProviderDTO.getCustomerNum())&& mdProviderDTO.getMdReqInfoDTO().getCode().equals(org_code)) {
                     System.out.println("들어옴");
 
                     JsonObject r = new JsonObject();
