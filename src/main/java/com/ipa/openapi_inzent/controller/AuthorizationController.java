@@ -45,7 +45,8 @@ public class AuthorizationController {
     // 권한관리 역할 삭제
     @GetMapping("/roleDelete/{id}")
     public String roleDelete(@PathVariable int id) {
-
+        System.out.println("AuthorizationController.roleDelete");
+        roleService.deleteRole(id);
         return "redirect:/authorization";
     }
 
@@ -54,6 +55,8 @@ public class AuthorizationController {
     public String inzentAuthorization(Model model, @AuthenticationPrincipal UserCustomDetails userCustomDetails, HttpSession session) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserDTO userDTO = new UserDTO();
+
+
         if (principal instanceof UserDetails) {
             //일반로그인
             String username = ((UserDetails) principal).getUsername();
@@ -63,6 +66,13 @@ public class AuthorizationController {
             UserDTO logIn = (UserDTO) session.getAttribute("logIn");
             String username = principal.toString();
             userDTO = logIn;
+        }
+
+        System.out.println("userDTO.getExpireDate() = " + userDTO.getExpireDate());
+        System.out.println("userDTO = " + userDTO);
+
+        if (userDTO.getExpireDate() == null) {
+            return "redirect:/app/main";
         }
 
         model.addAttribute("user", userDTO);

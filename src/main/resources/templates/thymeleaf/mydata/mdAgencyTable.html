@@ -119,6 +119,8 @@
 
 
             function createAgencyModal(list) {
+                console.log("ㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹ")
+                console.log(list);
                 //ipPort 초기화
                 document.getElementById("ipPort").innerHTML = "";
 
@@ -129,8 +131,8 @@
                 document.getElementById("address").innerText = list.address
                 document.getElementById("domainName").innerText = list.domainName
                 document.getElementById("publicApiIp").innerText = list.publicApiIp
-                document.getElementById("authenticationMethod").innerText = list.authenticationMethod
-                document.getElementById("TLSNum").innerText = list.TLSNum
+                // document.getElementById("authenticationMethod").innerText = list.authenticationMethod
+                // document.getElementById("TLSNum").innerText = list.TLSNum
                 document.getElementById("ipPort").append(list.agencyIp)
                 if (list.agencyPort != null) {
                     // document.append(" : ")

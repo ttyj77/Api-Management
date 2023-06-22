@@ -24,7 +24,7 @@
         ON public.role.id = public."apisRole"."roleId"
         WHERE public."apisRole"."apisId" = #{id}
     </select>
-    <delete id="roleDelete" parameterType="int">
+    <delete id="deleteRole" parameterType="int">
         delete from public.role
         where id = #{id};
     </delete>

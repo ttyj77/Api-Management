@@ -23,6 +23,7 @@ import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RequestMapping("/api")
 @Controller
@@ -143,7 +144,13 @@ public class ApiController {
                 }
             }
         }
-        model.addAttribute("list", passList);
+
+        List<ApiDTO> newList = passList.stream().distinct().collect(Collectors.toList());
+        System.out.println("passList.size() = " + passList.size());
+        System.out.println("newList.size() = " + newList.size());
+
+        System.out.println("passList = " + newList);
+        model.addAttribute("list", newList);
         return "/apis/index";
     }
 
