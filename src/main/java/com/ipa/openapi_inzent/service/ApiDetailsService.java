@@ -90,8 +90,9 @@ public class ApiDetailsService {
 
     public int insertApiDetail(ApiDetailsDTO apiDetailsDTO) {
         apiDetailsDao.insertApiDetail(apiDetailsDTO);
+        System.out.println("apiDetailsDTO = " + apiDetailsDTO);
         int id = apiDetailsDTO.getId();
-        System.out.println("apiDetailsId" + id);
+        System.out.println("apiDetailsId  = " + id);
         return id;
     }
 
@@ -146,5 +147,13 @@ public class ApiDetailsService {
 
     public void removeResBody(int id) {
         apiDetailsDao.removeResBody(id);
+    }
+
+    public void removeParam(int id) {
+        apiDetailsDao.removeParam(id);
+    }
+
+    public void allResParamDelete(int id) {
+        apiDetailsDao.allResParamDelete(id);
     }
 }

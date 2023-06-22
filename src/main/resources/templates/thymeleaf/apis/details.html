@@ -346,7 +346,6 @@
             function insertParameter(value) {
                 let method = value.parentNode.id.split("-")[0]
                 let tbody = document.getElementById(method + "ParameterItemBody")
-
                 let name_val = document.getElementById("parameter-name").value
                 let explanation_val = document.getElementById("explanation").value
 
@@ -378,7 +377,7 @@
                     delUpdate.className = "delUpdate"
 
                     th.scope = "row";
-                    th.innerText = "1"
+                    th.innerText = tbody.childElementCount + 1
 
                     name.innerText = document.getElementById("parameter-name").value;
 
@@ -392,7 +391,9 @@
 
                     sample.innerText = document.getElementById("sample").value;
                     delUpdate.innerHTML = "<i class=\"fa-solid fa-pen mr-2\" style=\"color: #797a7c;\"></i><i class=\"fa-solid fa-trash-can\" style=\"color: #797a7c; cursor: pointer\"/>"
-
+                    delUpdate.onclick = function () {
+                        resDeleteBeforeInsert(this);
+                    }
                     tr.append(th, name, transferMethod, explanation, required, type, sample, delUpdate)
                     tbody.append(tr)
 
@@ -417,6 +418,8 @@
                 let code_val = document.getElementById("code-name").value
                 let explanation_val = document.getElementById("code-explanation").value
 
+                console.log(tbody)
+                console.log(tbody.childElementCount)
                 if (code_val == "") {
                     document.getElementById("code-name").parentNode.children[0].style.color = "#1d61ff";
                     document.getElementById("code-name").focus()
@@ -487,7 +490,7 @@
 
 
                     th.scope = "row";
-                    th.innerText = "1"
+                    th.innerText = tbody.childElementCount + 1
 
                     code.innerText = document.getElementById("code-name").value;
 
@@ -496,7 +499,9 @@
                     type.innerText = document.getElementById("contentType").value;
 
                     delUpdate.innerHTML = "<i class=\"fa-solid fa-pen mr-2\" style=\"color: #797a7c;\"></i><i class=\"fa-solid fa-trash-can\" style=\"color: #797a7c; cursor: pointer\"/>"
-
+                    delUpdate.onclick = function () {
+                        resDeleteBeforeInsert(this);
+                    }
                     tr.append(th, code, explanation, type, delUpdate, resParamKey, resParamValue, resParamType)
 
                     tbody.append(tr)
@@ -510,6 +515,8 @@
                         $(value).val('')
                     });
 
+                    // 추가로 응답 코드 테이블도 삭제해야 됨
+                    document.getElementById("appendJsonResCode").innerHTML = ""
                 }
             }
 
@@ -550,12 +557,11 @@
             function searchPath(value) {
                 let keyword = value.value
                 let apisId = document.getElementById("apiId").value
+
                 if (keyword.charAt(0) == "/") {
                     console.log("첫글자 슬래시")
                     keyword = keyword.slice(1)
                 }
-
-
                 let data = {
                     "keyword": keyword,
                     "apisId": apisId,
@@ -773,6 +779,7 @@
                     <div class="accordion-item"
                          th:each="index:${resourceIndex}"
                          th:if="${#lists.size(resourceIndex) != 0} and ${index.garbage==false}">
+                        <!--<h2 th:text="${index}"></h2>-->
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 th:data-bs-target="'#flush-collapse'+${index.id}" aria-expanded="false"
                                 th:aria-controls="'flush-collapse'+${index.id}">
@@ -1959,7 +1966,6 @@
                                         <td><i class="fa-solid fa-trash-can"
                                                style="color: #797a7c;font-weight: 100;"></i></td>
                                     </tr>
-
                                     </tbody>
                                 </table>
                             </div>
@@ -1972,19 +1978,19 @@
                                 <table class="table">
                                     <thead>
                                     <tr style="text-align: -webkit-center;">
-                                        <th scope="col">Content-Type</th>
-                                        <th scope="col">Body</th>
-                                        <th scope="col">비고</th>
+                                        <th scope="col" style="width: 40%">Content-Type</th>
+                                        <th scope="col" style="width: 50%">Body</th>
+                                        <th scope="col" style="width: 10%">비고</th>
                                     </tr>
                                     </thead>
                                     <tbody class="table-group-divider">
-                                    <tr style="text-align: center">
+                                    <tr style="text-align: center" name="allBodyParam">
                                         <td style="vertical-align: middle;">application/json; charset=UTF-8</td>
                                         <td>
                                             <table class="table">
                                                 <thead style="background-color: #1c294e21">
                                                 <tr>
-                                                    <th scope="col">키sssss</th>
+                                                    <th scope="col">키</th>
                                                     <th scope="col">타입</th>
                                                     <th scope="col">샘플</th>
                                                     <th scope="col">비고</th>
@@ -1996,7 +2002,8 @@
                                             </table>
                                         </td>
                                         <td><i class="fa-solid fa-trash-can"
-                                               style="color: #797a7c;font-weight: 100;" onclick="removeResBody(this)"></i>
+                                               style="color: #797a7c;font-weight: 100;"
+                                               onclick="removeResBody(this)"></i>
                                         </td>
                                     </tr>
 

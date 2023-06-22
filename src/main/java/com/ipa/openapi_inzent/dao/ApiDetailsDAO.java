@@ -71,4 +71,8 @@ public interface ApiDetailsDAO {
     List<BodyDTO> selectBody(int id) throws DataAccessException;
 
     void removeResBody(int id) throws DataAccessException;
+
+    void removeParam(int id) throws DataAccessException;
+
+    void allResParamDelete(int id) throws DataAccessException;
 }

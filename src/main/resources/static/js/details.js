@@ -49,15 +49,26 @@ function detailModal(value) {
 
                 let type = document.createElement("td");
                 type.append(type_select())
-                let sample = document.createElement("td");
 
+                let sample = document.createElement("td");
+                let trash = document.createElement("td")
+
+                let icon = document.createElement("i")
+                icon.className = "fa-solid fa-trash-can"
+                icon.style.color = "#797a7c"
+                icon.style.fontWeight = "100"
+
+                trash.append(icon)
+                trash.onclick = function () {
+                    paramterDelete(parameterList[i]);
+                }
                 name.innerText = parameterList[i].name.replace(/\"/gi, "");
 
                 explanation.innerText = parameterList[i].explanation.replace(/\"/gi, "");
                 sample.innerText = parameterList[i].sample.replace(/\"/gi, "");
 
 
-                tr.append(name, transferMethod, explanation, required, type, sample)
+                tr.append(name, transferMethod, explanation, required, type, sample, trash)
                 tbody.append(tr)
 
             }
@@ -70,11 +81,15 @@ function detailModal(value) {
             if (bodyReqList.length > 0) { // 응답 데이터가 있다면
                 let table = document.getElementById("resBodyTable")
                 table.innerHTML = ""
-                console.log(table)
                 for (let i = 0; i < bodyReqList.length; i++) {
-                    console.log(i)
-                    console.log(bodyReqList[i].key)
                     let tr = document.createElement("tr")
+                    console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!table!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+                    console.log(bodyReqList[i].apiDetailsId)
+                    let allBody = document.getElementsByName("allBodyParam")
+                    console.log(allBody)
+                    $(allBody).attr("id", bodyReqList[i].apiDetailsId)
+                    // allBody.id = bodyReqList[i].apiDetailsId
+
                     let key = document.createElement("td")
                     let type = document.createElement("td")
                     let value = document.createElement("td")
@@ -87,7 +102,7 @@ function detailModal(value) {
                     trash.id = bodyReqList[i].id
                     trash.append(icon)
                     trash.onclick = function () {
-                        resTableDeleteCheck(this);
+                        resTableDeleteCheck(bodyReqList[i]);
                     }
 
 
@@ -100,9 +115,12 @@ function detailModal(value) {
             } else {
                 let table = document.getElementById("resBodyTable")
                 table.innerHTML = ""
-                table.append("    <tr>\n" +
-                    "                                                    <td class=\"col-4\">아직 데이터가 없습니다.</td>\n" +
-                    "                                                </tr>")
+                let tr = document.createElement("tr")
+                let td = document.createElement("td")
+                td.innerText = "아직 데이터가 없습니다"
+                td.colSpan = "4"
+                tr.append(td)
+                table.append(td)
             }
             //  응답
 
@@ -116,8 +134,8 @@ function detailModal(value) {
 
 function resTableDeleteCheck(value) {
     /* 응답 body 개별삭제 */
-    console.log(value.id)
     let id = value.id
+    let apiId = value.apiDetailsId
     Swal.fire({
         showCancelButton: true,
         cancelButtonText: "취소",
@@ -131,10 +149,39 @@ function resTableDeleteCheck(value) {
                 icon: 'success'
             }).then(() => {
                 resBodyDelete(id)
+                setTimeout(() => detailModal(apiId), 80);
             })
         }
     });
 }
+
+function paramterDelete(value) {
+    console.log("paramterDelete")
+    let id = value.id
+    let apiId = value.apiDetailsId
+
+    /* 응답 body 개별삭제 */
+    console.log(id)
+    console.log(apiId)
+    Swal.fire({
+        showCancelButton: true,
+        cancelButtonText: "취소",
+        confirmButtonText: "삭제",
+        icon: 'warning',
+        text: "파라미터를 삭제하시겠습니까?"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Swal.fire({
+                title: '삭제 성공',
+                icon: 'success'
+            }).then(() => {
+                paramDelete(id, apiId)
+                setTimeout(() => detailModal(apiId), 80);
+            })
+        }
+    });
+}
+
 
 function resBodyDelete(id) {
     console.log("==============resBodyDelete=============")
@@ -148,7 +195,6 @@ function resBodyDelete(id) {
 
         success: (message) => {
             console.log("삭제성공")
-            location.reload()
         }, error: (e) => {
             console.log("출력실패", e)
         }
@@ -366,6 +412,25 @@ function resParamDelete(id, apiDetailsId) {
 
 }
 
+function paramDelete(id, apiDetailsId) {
+    let data = {
+        "id": id
+    }
+    $.ajax({
+        url: "/api/remove/param",
+        data: data,
+        method: "get",
+
+        success: (message) => {
+        }, error: (e) => {
+            console.log("출력실패", e)
+        }
+    })
+
+
+}
+
+
 function resDelete(id) {
     let data = {
         "id": id
@@ -567,8 +632,52 @@ function insertPath(e) {
 /* resBody 큼직한 삭제 */
 function removeResBody(value) {
     console.log("응답 바디 삭제 ")
+    console.log(value)
     console.log(value.parentNode)
-    console.log(value.parentNode.parentNode)
+    console.log(value.parentNode.parentNode.id)
+    let id = value.parentNode.parentNode.id
+    Swal.fire({
+        showCancelButton: true,
+        cancelButtonText: "취소",
+        confirmButtonText: "삭제",
+        icon: 'warning',
+        text: "삭제하시겠습니까?"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Swal.fire({
+                title: '삭제 성공',
+                icon: 'success'
+            }).then(() => {
+                allResParamDelete(id)
+                setTimeout(() => detailModal(id), 80);
+            })
+        }
+    });
 }
 
+function allResParamDelete(id) {
+    console.log("==============resBodyDelete=============")
+    let data = {
+        "id": id
+    }
+    $.ajax({
+        url: "/api/delete/allResParamDelete",
+        data: data,
+        method: "get",
 
+        success: (message) => {
+            console.log("삭제성공")
+        }, error: (e) => {
+            console.log("출력실패", e)
+        }
+    })
+
+}
+
+function resDeleteBeforeInsert(value) {
+    console.log("resDeleteBeforeInsert")
+    console.log(value)
+    console.log(value.parentNode)
+    value.parentNode.remove()
+
+}

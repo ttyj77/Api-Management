@@ -401,22 +401,30 @@ public class ApiController {
         System.out.println("=======================================");
         System.out.println("\n");
 
-        int apiId = Integer.parseInt(paramMap.get("uriId"));
-        getTagId(paramMap, apiId);
+        System.out.println(paramMap);
+        int resourceId = 0;
+        System.out.println((paramMap.get("resourceId")).equals(""));
+        if (!(paramMap.get("resourceId")).equals("")) {
+            resourceId = Integer.parseInt(paramMap.get("resourceId")); // 리소스 아이디
+        }
+        int apiId = Integer.parseInt(paramMap.get("idx")); // APIS 아이디
+        System.out.println("apiId = " + apiId);
+
+        getTagId(paramMap, apiId, resourceId);
 
     }
 
-    private void getTagId(Map<String, String> paramMap, int apiId) {
+    private void getTagId(Map<String, String> paramMap, int apiId, int resourceId) {
         ResourceDTO resourceDTO = new ResourceDTO();
-        resourceDTO.setApisId(apiId);
+        resourceDTO.setApisId(resourceId);
         int uriId = Integer.parseInt(paramMap.get("uriId"));
         System.out.println("uriId = " + uriId);
         System.out.println("==================================RESOURCEID");
-
+        System.out.println("array = " + array);
         System.out.println(String.valueOf(paramMap.get("resourceId")).isEmpty());
 //        int resourceId = Integer.parseInt(paramMap.get("resourceId"));
         String resId = String.valueOf(paramMap.get("resourceId"));
-        int resourceId = 0;
+
         for (int i = 0; i < array.length; i++) {
 
             JsonObject obj = (JsonObject) JsonParser.parseString(paramMap.get(array[i]));
@@ -429,8 +437,10 @@ public class ApiController {
                     int tagId = Integer.parseInt(obj.get("tag").toString().replaceAll("[^\\w+]", ""));
                     resourceDTO.setTagId(tagId);
                 }
+                System.out.println("===============111111111111111===================");
+                System.out.println("resourceId = " + resourceId);
                 // uri 아이디가 넘어오지 않는다면 리소스가 새롭게 등록되어야 되지만
-                if (resId.equals("")) { //기존의 리소스가 아니라 새로 등록이라면 apiDetails 전에 resource 먼저 등록
+                if (resourceId == 0) { //기존의 리소스가 아니라 새로 등록이라면 apiDetails 전에 resource 먼저 등록
                     System.out.println("리소스 새로등록");
                     resourceDTO.setApisId(Integer.parseInt(paramMap.get("idx"))); // apis 아이디
                     System.out.println("resourceDTO = " + resourceDTO);
@@ -438,13 +448,11 @@ public class ApiController {
                     resourceId = apiDetailsService.insertResource(resourceDTO); // 리소스 생성
                     System.out.println("resourceId = " + resourceId);
                 } else { ///있는 리소스라면 받아온 리소스 아이디 입력
-                    resourceId = Integer.parseInt(paramMap.get("resourceId"));
+                    System.out.println("기존 리소스 사용");
                 }
                 System.out.println("++++++++++++++++++++++++++++++");
                 ApiDetailsDTO apiDetailsDTO = new ApiDetailsDTO();
-
-                System.out.println(obj.get("operation"));
-                System.out.println(obj.get("summary"));
+                System.out.println("resourceId = " + resourceId);
 
 
                 apiDetailsDTO.setOperationId(obj.get("operation").toString());
@@ -457,7 +465,7 @@ public class ApiController {
                 System.out.println("apiDetailsDTO = " + apiDetailsDTO);
 
 
-                int apiDetailsId = apiDetailsService.insertApiDetail(apiDetailsDTO);
+                int apiDetailsId = apiDetailsService.insertApiDetail(apiDetailsDTO);  // 페이지 아이디?
                 System.out.println("//////////////////param/////////////////////");
 
                 System.out.println(obj.get("param"));
@@ -486,14 +494,21 @@ public class ApiController {
 
                 System.out.println("//////////////////resCode/////////////////////");
                 JsonArray resParamArr = (JsonArray) obj.get("resCode");
-                if (resParamArr.size() != 0) {
-                    for (int k = 0; k < paramArr.size(); k++) {
-                        JsonObject resParam = (JsonObject) resParamArr.get(k);
+                System.out.println(resParamArr);
+                System.out.println(resParamArr.size());
+                if (resParamArr.size() > 0) {
+                    System.out.println("응답코드 등록");
 
+                    for (int k = 0; k < resParamArr.size(); k++) {
+                        System.out.println("??????????????");
+                        JsonObject resParam = (JsonObject) resParamArr.get(k);
+                        System.out.println("resParam  : " + resParam);
                         String[] paramKeyList = String.valueOf(resParam.get("paramKey")).split(",");
                         String[] paramValueList = String.valueOf(resParam.get("paramValue")).split(",");
                         String[] paramTypeList = String.valueOf(resParam.get("paramType")).split(",");
 
+                        System.out.println("paramMap = " + paramMap + ", apiId = " + apiId + ", resourceId = " + resourceId);
+                        System.out.println("apiDetailsId : " + apiDetailsId);
 //                        2. 분리 후 FOR문을 통해 DB에 넣는다.
 //                2-1. response 에 넣기 위해서는 apiDetails id 필요
                         ResponseDTO responseDTO = new ResponseDTO();
@@ -502,6 +517,7 @@ public class ApiController {
                         responseDTO.setRespMsg(String.valueOf(resParam.get("explanation")));
                         responseDTO.setType(String.valueOf(resParam.get("type")));
                         int responsId = apiDetailsService.insertResponse(responseDTO);
+                        System.out.println("responsId = " + responsId);
 //                2-2. 키와 VALUE 값을 콤마를 기준으로 분리한다.
                         for (int j = 0; j < paramKeyList.length; j++) {
                             ResParamDTO resParamDTO = new ResParamDTO();
@@ -515,28 +531,34 @@ public class ApiController {
                         }
                     }
                 }
-//                2-3. resParam 넣으려면 response table id값 필요
+//                2-3. resParam 넣으려면 response table id값 필요 JSON으로 바꿔서 넣기
                 System.out.println("//////////////////reqData/////////////////////");
-                String req = String.valueOf(obj.get("reqData")).replaceAll("\\\\", "");
 
+                if (String.valueOf(obj.get("reqData")).replaceAll("\\\\", "") == null) {
+                    System.out.println("데이터 없음");
+                } else if (String.valueOf(obj.get("reqData")) == "null") {
+                    System.out.println("데이터 없음2");
+                } else {
+                    System.out.println("res 존재");
 
-                req = req.substring(1);
-                req = req.substring(0, req.length() - 1);
+                    String req = String.valueOf(obj.get("reqData")).replaceAll("\\\\", "");
+                    req = req.substring(1);
+                    req = req.substring(0, req.length() - 1);
 
-                System.out.println(req);
+                    JsonObject jsonObject = (JsonObject) JsonParser.parseString(req);
 
-                JsonObject jsonObject = (JsonObject) JsonParser.parseString(req);
-                /* key를 뽑아서 리스트로 변환*/
-                List<String> keys = new ArrayList<>(jsonObject.keySet());
+                    /* key를 뽑아서 리스트로 변환*/
+                    List<String> keys = new ArrayList<>(jsonObject.keySet());
 
-                for (int j = 0; j < jsonObject.keySet().size(); j++) {
-                    BodyDTO bodyDTO = new BodyDTO();
-                    bodyDTO.setApiDetailsId(apiDetailsId);
-                    bodyDTO.setKey(keys.get(j));
-                    bodyDTO.setValue(jsonObject.get(keys.get(j)).toString().replaceAll("\"", ""));
-                    apiDetailsService.insertBody(bodyDTO);
+                    for (int j = 0; j < jsonObject.keySet().size(); j++) {
+                        BodyDTO bodyDTO = new BodyDTO();
+                        bodyDTO.setApiDetailsId(apiDetailsId);
+                        bodyDTO.setKey(keys.get(j));
+                        bodyDTO.setValue(jsonObject.get(keys.get(j)).toString().replaceAll("\"", ""));
+                        apiDetailsService.insertBody(bodyDTO);
+                    }
+                    System.out.println();
                 }
-                System.out.println();
             }
         }
     }
@@ -761,6 +783,7 @@ public class ApiController {
         apiDetailsService.removeResCode(id);
     }
 
+    /*응답 파라미터 삭제*/
     @GetMapping("/remove/resParam")
     @ResponseBody
     public void removeResParam(int id) {
@@ -769,11 +792,27 @@ public class ApiController {
         apiDetailsService.removeResParam(id);
     }
 
+    /*parameter 삭제 (파라미터 그 자체) */
+    @GetMapping("/remove/param")
+    @ResponseBody
+    public void removeparam(int id) {
+        System.out.println("ApiController.removeparam");
+        System.out.println("id   " + id);
+        apiDetailsService.removeParam(id);
+    }
+
     @GetMapping("/delete/resBody")
     @ResponseBody
     public void removeResBody(int id) {
         System.out.println("ApiController.removeResBody");
         apiDetailsService.removeResBody(id);
+    }
+
+    @GetMapping("/delete/allResParamDelete")
+    @ResponseBody
+    public void allResParamDelete(int id) {
+        System.out.println("ApiController.allResParamDelete");
+        apiDetailsService.allResParamDelete(id);
     }
 }
 

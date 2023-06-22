@@ -149,8 +149,11 @@
         <!-- uri,method 받아오면 된다. /v1/insu -->
         SELECT ap.id, ap.method,ap.uri,ap."resourceId"
         FROM public."apiDetails" as ap join public."resource" as res on res.id = ap."resourceId" where res."apisId" =
-        #{apisId} and ap.uri ILIKE CONCAT('%', #{keyword},'%') and ap.trash = false
-        and res."garbage" = false order by ap.id
+        #{apisId}
+        and ap.uri ILIKE CONCAT('%', #{keyword},'%')
+        and res."garbage" = false or res."apisId" = #{apisId}
+        and ap.uri ILIKE CONCAT('%', #{keyword},'%') and
+        ap.trash = false order by ap.id
     </select>
     <!-- 신규 리소스 등록   -->
     <insert id="insertResource" parameterType="com.ipa.openapi_inzent.model.ResourceDTO" useGeneratedKeys="true"
@@ -243,4 +246,14 @@
         DELETE FROM public.body
         WHERE id = #{id};
     </select>
+
+    <select id="removeParam" parameterType="int">
+        DELETE FROM public."parameters" where id = #{id}
+    </select>
+
+    <select id="allResParamDelete" parameterType="int">
+        DELETE FROM public."body" where "apiDetailsId" = #{id}
+    </select>
+
+
 </mapper>
