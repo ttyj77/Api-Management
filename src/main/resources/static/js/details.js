@@ -38,17 +38,20 @@ function detailModal(value) {
             tbody.innerHTML = ""
             // 파라미터 개수의 따라서 table 생성
             for (let i = 0; i < parameterList.length; i++) {
+                console.log("=1=1=1=1=1=1=1=1 param list =1=1=1=1=1==1=1")
+                console.log(parameterList[i])
+                console.log("==================================")
                 let tr = document.createElement("tr")
                 let name = document.createElement("td");
                 let transferMethod = document.createElement("td")
-                transferMethod.append(transferMethod_select())
+                transferMethod.append(transferMethod_select(parameterList[i].transferMethod))
 
                 let explanation = document.createElement("td");
                 let required = document.createElement("td");
-                required.append(required_select())
+                required.append(required_select(parameterList[i].required))
 
                 let type = document.createElement("td");
-                type.append(type_select())
+                type.append(type_select(parameterList[i].type))
 
                 let sample = document.createElement("td");
                 let trash = document.createElement("td")
@@ -450,62 +453,60 @@ function resDelete(id) {
 
 
 // 전송방법 selectBox
-function transferMethod_select() {
+function transferMethod_select(param) {
+    param = param.replaceAll("\"", "")
     let select = document.createElement("select")
     select.className = "form-select"
-    let option1 = document.createElement("option")
-    option1.value = "1"
-    option1.innerText = "Header"
-
-    let option2 = document.createElement("option")
-    option2.value = "2"
-    option2.innerText = "Path Variable"
-
-    let option3 = document.createElement("option")
-    option3.value = "3"
-    option3.innerText = "Query String"
-
-    select.append(option1, option2, option3)
+    let option = document.createElement("option")
+    if (param == "queryString") {
+        option.innerText = "Query String"
+    } else if (param == "header") {
+        option.innerText = "Header"
+    } else if (param == "pathVariable") {
+        option.innerText = "Path Variable"
+    } else {
+        option.innerText = "undefined"
+    }
+    select.append(option)
     return select;
 }
 
 // 필수여부 selectBody
-function required_select() {
+function required_select(param) {
     let select = document.createElement("select")
     select.className = "form-select"
-    let option1 = document.createElement("option")
-    option1.value = "1"
-    option1.innerText = "필수"
-
-    let option2 = document.createElement("option")
-    option2.value = "2"
-    option2.innerText = "필수 아님"
-
-    select.append(option1, option2)
+    let option = document.createElement("option")
+    if (param == true) {
+        option.innerText = "필수"
+    } else if (param == false) {
+        option.innerText = "필수 아님"
+    } else {
+        option.innerText = "undefined"
+    }
+    select.append(option)
     return select;
 }
 
 // type selectBody
-function type_select() {
+function type_select(param) {
+    console.log(param.replaceAll("\"", ""))
+    param = param.replaceAll("\"", "")
     let select = document.createElement("select")
     select.className = "form-select"
-    let option1 = document.createElement("option")
-    option1.value = "1"
-    option1.innerText = "String"
+    let option = document.createElement("option")
+    if (param == "String") {
+        option.innerText = "String"
+    } else if (param == "integer") {
+        option.innerText = "Integer"
+    } else if (param == "boolean") {
+        option.innerText = "Boolean"
+    } else if (param == "Number") {
+        option.innerText = "Number"
+    } else {
+        option.innerText = "undefined"
+    }
 
-    let option2 = document.createElement("option")
-    option2.value = "2"
-    option2.innerText = "Integer"
-
-    let option3 = document.createElement("option")
-    option3.value = "3"
-    option3.innerText = "Boolean"
-
-    let option4 = document.createElement("option")
-    option4.value = "4"
-    option4.innerText = "Number"
-
-    select.append(option1, option2, option3, option4)
+    select.append(option)
     return select;
 }
 
@@ -564,6 +565,7 @@ function insertPath(e) {
     console.log("INSERT +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
     console.log(e.target) // 클릭한 uri
     console.log(e.target.parentNode.id) // 클릭한 uri
+
     console.log(e.target.parentNode.name) // 클릭한 resourceId
 
     // console.log(e.target.parentNode.childNodes[0].textContent) // 클릭한 uri

@@ -150,9 +150,19 @@
         SELECT ap.id, ap.method,ap.uri,ap."resourceId"
         FROM public."apiDetails" as ap join public."resource" as res on res.id = ap."resourceId" where res."apisId" =
         #{apisId}
-        and ap.uri ILIKE CONCAT('%', #{keyword},'%')
+        and ap.uri ILIKE CONCAT(#{defaultUri},'%', #{keyword},'%')
         and res."garbage" = false or res."apisId" = #{apisId}
-        and ap.uri ILIKE CONCAT('%', #{keyword},'%') and
+        and ap.uri ILIKE CONCAT(#{defaultUri},'%', #{keyword},'%') and
+        ap.trash = false order by ap.id
+    </select>
+    <select id="exactMatchUri" parameterType="hashmap" resultType="com.ipa.openapi_inzent.model.ApiDetailsDTO">
+        <!--키워드와 정확하게 일치하지 않는다면 새로 등록할건지 물어봐야됨-->
+        SELECT ap.id, ap.method,ap.uri,ap."resourceId"
+        FROM public."apiDetails" as ap join public."resource" as res on res.id = ap."resourceId" where res."apisId" =
+        #{apisId}
+        and ap.uri ILIKE CONCAT(#{defaultUri}, #{keyword})
+        and res."garbage" = false or res."apisId" = #{apisId}
+        and ap.uri ILIKE CONCAT(#{defaultUri}, #{keyword}) and
         ap.trash = false order by ap.id
     </select>
     <!-- 신규 리소스 등록   -->

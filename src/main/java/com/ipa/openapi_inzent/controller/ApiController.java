@@ -539,8 +539,6 @@ public class ApiController {
                     }
                 }
 //                2-3. resParam 넣으려면 response table id값 필요 JSON으로 바꿔서 넣기
-                System.out.println("//////////////////reqData/////////////////////");
-
                 if (String.valueOf(obj.get("reqData")).replaceAll("\\\\", "") == null) {
                     System.out.println("데이터 없음");
                 } else if (String.valueOf(obj.get("reqData")) == "null") {
@@ -551,20 +549,27 @@ public class ApiController {
                     String req = String.valueOf(obj.get("reqData")).replaceAll("\\\\", "");
                     req = req.substring(1);
                     req = req.substring(0, req.length() - 1);
+                    try {
+                        if (!JsonParser.parseString(req).isJsonNull()) {
+                            System.out.println("안 비어있음");
+                            JsonObject jsonObject = (JsonObject) JsonParser.parseString(req);
 
-                    JsonObject jsonObject = (JsonObject) JsonParser.parseString(req);
+                            /* key를 뽑아서 리스트로 변환*/
+                            List<String> keys = new ArrayList<>(jsonObject.keySet());
 
-                    /* key를 뽑아서 리스트로 변환*/
-                    List<String> keys = new ArrayList<>(jsonObject.keySet());
+                            for (int j = 0; j < jsonObject.keySet().size(); j++) {
+                                BodyDTO bodyDTO = new BodyDTO();
+                                bodyDTO.setApiDetailsId(apiDetailsId);
+                                bodyDTO.setKey(keys.get(j));
+                                bodyDTO.setValue(jsonObject.get(keys.get(j)).toString().replaceAll("\"", ""));
+                                apiDetailsService.insertBody(bodyDTO);
+                            }
+                            System.out.println();
+                        }
+                    } catch (Exception e) {
 
-                    for (int j = 0; j < jsonObject.keySet().size(); j++) {
-                        BodyDTO bodyDTO = new BodyDTO();
-                        bodyDTO.setApiDetailsId(apiDetailsId);
-                        bodyDTO.setKey(keys.get(j));
-                        bodyDTO.setValue(jsonObject.get(keys.get(j)).toString().replaceAll("\"", ""));
-                        apiDetailsService.insertBody(bodyDTO);
                     }
-                    System.out.println();
+
                 }
             }
         }
@@ -639,8 +644,12 @@ public class ApiController {
 
     @GetMapping("/search/path")
     @ResponseBody
-    public JsonObject searchKeyword(String keyword, int apisId) {
-        List<ApiDetailsDTO> searchList = apiDetailsService.searchPath(keyword, apisId);
+    public JsonObject searchKeyword(String keyword, int apisId, String defaultUri) {
+        System.out.println("defaultUri = " + defaultUri);
+        List<ApiDetailsDTO> searchList = apiDetailsService.searchPath(keyword, apisId, defaultUri);
+        /*exactMatchUri 이 값이 있다면 키워드와 정확하게 일치하는 uri가 있다는 것 */
+        List<ApiDetailsDTO> exactMatchUri = apiDetailsService.exactMatchUri(keyword, apisId, defaultUri);
+        System.out.println("exactMatchUri = " + exactMatchUri);
         JsonArray array = new JsonArray();
         for (ApiDetailsDTO a : searchList) {
             JsonObject object = new JsonObject();
@@ -650,8 +659,21 @@ public class ApiController {
             object.addProperty("resourceId", a.getResourceId());
             array.add(object);
         }
+
+        JsonArray ecactList = new JsonArray();
+        for (ApiDetailsDTO a : exactMatchUri) {
+            JsonObject object = new JsonObject();
+            object.addProperty("id", a.getId());
+            object.addProperty("uri", a.getUri());
+            object.addProperty("method", a.getMethod());
+            object.addProperty("resourceId", a.getResourceId());
+            ecactList.add(object);
+        }
+
+
         JsonObject result = new JsonObject();
         result.addProperty("responseText", array.toString());
+        result.addProperty("exactMatchUri", ecactList.toString());
 
         return result;
     }

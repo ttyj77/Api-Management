@@ -75,4 +75,6 @@ public interface ApiDetailsDAO {
     void removeParam(int id) throws DataAccessException;
 
     void allResParamDelete(int id) throws DataAccessException;
+
+    List<ApiDetailsDTO> exactMatchUri(HashMap<String, Object> map) throws DataAccessException;
 }

@@ -73,10 +73,12 @@ public class ApiDetailsService {
         return apiDetailsDao.selectAllTag();
     }
 
-    public List<ApiDetailsDTO> searchPath(String keyword, int apisId) {
+    public List<ApiDetailsDTO> searchPath(String keyword, int apisId, String defaultUri) {
         HashMap<String, Object> map = new HashMap<>();
         map.put("keyword", keyword);
         map.put("apisId", apisId);
+        map.put("defaultUri", defaultUri);
+
         return apiDetailsDao.searchPath(map);
     }
 
@@ -156,4 +158,14 @@ public class ApiDetailsService {
     public void allResParamDelete(int id) {
         apiDetailsDao.allResParamDelete(id);
     }
+
+    public List<ApiDetailsDTO> exactMatchUri(String keyword, int apisId, String defaultUri) {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("keyword", keyword);
+        map.put("apisId", apisId);
+        map.put("defaultUri", defaultUri);
+
+        return apiDetailsDao.exactMatchUri(map);
+    }
+
 }

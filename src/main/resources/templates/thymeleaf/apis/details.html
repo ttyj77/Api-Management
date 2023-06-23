@@ -298,6 +298,10 @@
                 }
                 // console.log(document.getElementById("searchPathTbody").children[0])
                 // [요청 json 데이터 선언]
+                console.log("=====1=1=1=1=1=1=1=1=1=1=1=1=1=1=1=1=1=1=1=1=1=1=1=1=1")
+                console.log(document.getElementById("resourceId"))
+                console.log(document.getElementById("resourceId").value)
+
                 let jsonData = { // Body에 첨부할 json 데이터
                     "idx": document.getElementById("apiId").value, //api index
                     "uriId": document.getElementById("pathid").value,
@@ -338,7 +342,8 @@
                 // path 검색 결과 지우기
                 document.getElementById("searchPathTbody").innerHTML = ""
                 showAllMethod();
-                // }
+                document.getElementById("resourceId").value = null
+                setTimeout(() => location.reload(), 80);
             }
 
 
@@ -554,19 +559,46 @@
 
             }
 
+            function newResourceUri(keyword, defaultUri, tbody) {
+                document.getElementById("resourceId").value = null
+                console.log("=====================7=7=7=7=7=7=7=7=7=7=7=7=77777777=================================")
+                console.log(document.getElementById("resourceId").value)
+                let newUri = keyword
+                let h5 = document.createElement("h5")
+                h5.innerText = newUri
+                let tr = document.createElement("tr")
+                let td = document.createElement("td")
+                td.colSpan = 4
+                let newFullPath = defaultUri + '' + h5.innerText
+                td.innerText = newFullPath + ' 을 새로 등록하시겠습니까?'
+
+                tr.onclick = function () {
+                    newInsertPath(newFullPath);
+                }
+                // 신규라는 의미이다.
+                tr.id = "0"
+
+
+                tr.append(td)
+                tbody.append(tr)
+            }
+
             //     url 실시간 검색
             function searchPath(value) {
                 let keyword = value.value
                 let apisId = document.getElementById("apiId").value
-
+                let defaultUri = document.getElementById("path").name + "/"
                 if (keyword.charAt(0) == "/") {
                     console.log("첫글자 슬래시")
                     keyword = keyword.slice(1)
                 }
+                console.log("keyword " + keyword)
                 let data = {
+                    "defaultUri": defaultUri,
                     "keyword": keyword,
                     "apisId": apisId,
                 };
+
                 $.ajax({
                     url: "/api/search/path",
                     type: "get",
@@ -574,34 +606,20 @@
 
                     success: (message) => {
                         let array = JSON.parse(message.responseText);
+                        let exactMatchUri = JSON.parse(message.exactMatchUri);
                         let tbody = document.getElementById("searchPathTbody")
                         tbody.innerHTML = ""
                         if (array.length == 0) {
                             // DB에 없는 경우
                             // 해당 글자를 그대로 받고 + 새로 등록하시겠습니까?
-
-                            let defaultUri = document.getElementById("path").name
-                            let newUri = keyword
-                            let h5 = document.createElement("h5")
-                            h5.innerText = newUri
-                            let tr = document.createElement("tr")
-                            let td = document.createElement("td")
-                            td.colSpan = 4
-                            let newFullPath = defaultUri + '/' + h5.innerText
-                            td.innerText = newFullPath + ' 을 새로 등록하시겠습니까?'
-
-                            tr.onclick = function () {
-                                newInsertPath(newFullPath);
-                            }
-                            // 신규라는 의미이다.
-                            tr.id = "0"
-
-
-                            tr.append(td)
-                            tbody.append(tr)
+                            newResourceUri(keyword, defaultUri, tbody);
 
                         } else {
-
+                            if (exactMatchUri.length == 0) {
+                                console.log("비슷한건 있어도 정확하게 일치하는건 없다.")
+                                console.log(exactMatchUri)
+                                newResourceUri(keyword, defaultUri, tbody);
+                            }
                             let arr = []
                             for (let i = 0; i < array.length; i++) {
                                 arr[i] = array[i].uri
@@ -662,7 +680,13 @@
                                 tr.onclick = function () {
                                     insertPath(event);
                                 }
-
+                                console.log("==========1=2=2=2=2=2=2=2=2=2=2=2=2=2=2=2")
+                                console.log(array[i])
+                                console.log(array[i].resourceId)
+                                document.getElementById("resourceId").value = array[i].resourceId
+                                console.log("" +
+                                    "333333333333333333333333333")
+                                console.log(document.getElementById("resourceId").value)
                                 tr.append(id, path, possibleMethod, impossibleMethod)
                                 tbody.append(tr)
 
@@ -1058,7 +1082,7 @@
                             <div class="multiselect mt-4 ml-2 mr-2" style="margin-left: 1.5% !important;">
                                 <div class="selectBox">
                                     <select name="getTagBox" id="getTagBox">
-                                        <option value=""> -- 태그 선택 --</option>
+                                        <option value="">  태그 선택  </option>
                                         <option th:each="list : ${tagList}" th:value="${list?.id}"
                                                 th:utext="${list?.name}">
                                         </option>
@@ -1194,7 +1218,7 @@
                             <div class="multiselect mt-4 ml-2 mr-2" style="margin-left: 1.5% !important;">
                                 <div class="selectBox">
                                     <select name="postTagBox" id="postTagBox">
-                                        <option value=""> -- 태그 선택 --</option>
+                                        <option value="">  태그 선택 </option>
                                         <option th:each="list : ${tagList}" th:value="${list?.id}"
                                                 th:utext="${list?.name}">
                                         </option>
@@ -1355,7 +1379,7 @@
                             <div class="multiselect mt-4 ml-2 mr-2" style="margin-left: 1.5% !important;">
                                 <div class="selectBox">
                                     <select name="putTagBox" id="putTagBox">
-                                        <option value=""> -- 태그 선택 --</option>
+                                        <option value="">  태그 선택 </option>
                                         <option th:each="list : ${tagList}" th:value="${list?.id}"
                                                 th:utext="${list?.name}">
                                         </option>
@@ -1510,7 +1534,7 @@
                             <div class="multiselect mt-4 ml-2 mr-2" style="margin-left: 1.5% !important;">
                                 <div class="selectBox">
                                     <select name="deleteTagBox">
-                                        <option value=""> -- 태그 선택 --</option>
+                                        <option value="">  태그 선택 </option>
                                         <option th:each="list : ${tagList}" th:value="${list?.id}"
                                                 th:utext="${list?.name}">
                                         </option>
@@ -1945,24 +1969,24 @@
                                         <td id="dModal_parameter_Name"></td>
                                         <td>
                                             <select class="form-select" aria-label="Default select example">
-                                                <option value="1">Header</option>
-                                                <option value="2">Path Variable</option>
-                                                <option value="3">Query String</option>
+                                                <!--                                                <option value="1">Header</option>-->
+                                                <!--                                                <option value="2">Path Variable</option>-->
+                                                <!--                                                <option value="3">Query String</option>-->
                                             </select>
                                         </td>
                                         <td id="dModal_parameter_explanation"></td>
                                         <td id="dModal_parameter_required">
                                             <select class="form-select" aria-label="Default select example">
-                                                <option value="1">필수</option>
-                                                <option value="2">필수아님</option>
+                                                <!--                                                <option value="1">필수</option>-->
+                                                <!--                                                <option value="2">필수아님</option>-->
                                             </select>
                                         </td>
                                         <td>
                                             <select class="form-select" aria-label="Default select example">
-                                                <option value="1">String</option>
-                                                <option value="2">Integer</option>
-                                                <option value="3">boolean</option>
-                                                <option value="4">number</option>
+                                                <!--                                                <option value="1">String</option>-->
+                                                <!--                                                <option value="2">Integer</option>-->
+                                                <!--                                                <option value="3">boolean</option>-->
+                                                <!--                                                <option value="4">number</option>-->
                                             </select>
                                         </td>
                                         <td id="dModal_parameter_sample"></td>
