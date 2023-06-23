@@ -39,7 +39,7 @@ public class AuthorizationController {
         }
         model.addAttribute("roleList", temp);
 
-        return "authorization";
+        return "/authorization";
     }
 
     // 권한관리 역할 삭제

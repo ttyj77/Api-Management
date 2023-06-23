@@ -95,9 +95,11 @@ function detailModal(value) {
 
                     let key = document.createElement("td")
                     let type = document.createElement("td")
+                    type.innerText = "application/json"
                     let value = document.createElement("td")
 
                     let trash = document.createElement("td")
+
                     let icon = document.createElement("i")
                     icon.className = "fa-solid fa-trash-can"
                     icon.style.color = "#797a7c"
@@ -691,5 +693,47 @@ function resDeleteBeforeInsert(value) {
     console.log(value)
     console.log(value.parentNode)
     value.parentNode.remove()
+}
 
+function IsJson() {
+    console.log("??????????????")
+    let method = ['get', 'post', 'put', 'delete']
+
+    for (let i = 0; i < 4; i++) {
+        console.log(method[i])
+        if (method[i] == "post" || method[i] == "put") {
+            console.log(document.getElementById(method[i]).style.display)
+            console.log(document.getElementById(method[i]).style.display == "block")
+            if (document.getElementById(method[i]).style.display == "block") {
+                console.log("아아아")
+                let reqData = document.getElementById(method[i] + "ReqData")
+                console.log(reqData.value)
+                console.log("str!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+
+                try {
+                    JSON.parse(reqData.value);
+                    insertResource();
+                    return true;
+                } catch (e) {
+                    console.log(reqData.value == "")
+                    console.log("Json 타입 error")
+                    if (reqData.value == "") {
+                        Swal.fire({
+                            icon: 'error', text: '요청데이터를 입력해주세요.'
+                        }).then(() => {
+                            $("#resourceModal").modal("show")
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error', text: 'JSON 타입으로 입력해주세요.'
+                        }).then(() => {
+                            console.log(reqData.value)
+                            $("#resourceModal").modal("show")
+                        });
+                    }
+                    return false;
+                }
+            }
+        }
+    }
 }

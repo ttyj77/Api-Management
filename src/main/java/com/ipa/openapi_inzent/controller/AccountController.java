@@ -31,7 +31,7 @@ public class AccountController {
         model.addAttribute("list", userService.selectAll());
         model.addAttribute("userList", userService.userList());
         model.addAttribute("roleList", roleService.selectAll());
-        return "accountList";
+        return "/accountList";
     }
 
     @PostMapping("/turnActivate/{id}")
