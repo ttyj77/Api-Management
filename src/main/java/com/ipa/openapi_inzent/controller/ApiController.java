@@ -539,6 +539,8 @@ public class ApiController {
                     }
                 }
 //                2-3. resParam 넣으려면 response table id값 필요 JSON으로 바꿔서 넣기
+                System.out.println("//////////////////reqData/////////////////////");
+
                 if (String.valueOf(obj.get("reqData")).replaceAll("\\\\", "") == null) {
                     System.out.println("데이터 없음");
                 } else if (String.valueOf(obj.get("reqData")) == "null") {

@@ -403,6 +403,29 @@ public class MydataController {
         System.out.println("list.size() = " + list.size());
         return "/mydata/mydataSendReq";
     }
+    @GetMapping("/selectToken")
+    @ResponseBody
+    public JsonObject selectToken(String orgCode) {
+        System.out.println("MydataController.selectToken");
+        System.out.println("code = " + orgCode);
+        MdAgencyDTO mdAgencyDTO = mydataService.mdAstOrgCode(orgCode);
+        System.out.println("mdAgencyDTO = " + mdAgencyDTO);
+        JsonObject object = new JsonObject();
+        SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd Hh:mm");
+        String issueDate = date.format(mdAgencyDTO.getMdTokenDTO().getCreateDate());
+        String expireDate = date.format(mdAgencyDTO.getMdTokenDTO().getEndDate());
+
+        object.addProperty("token", mdAgencyDTO.getMdTokenDTO().getAccessToken());
+
+        object.addProperty("clientId",mdAgencyDTO.getMdTokenDTO().getConsumerNum() );
+        object.addProperty("serviceName",mdAgencyDTO.getMdServiceDTO().getMdServiceName());
+        object.addProperty("orgCode", mdAgencyDTO.getCode());
+        object.addProperty("agencyName",mdAgencyDTO.getName());
+
+        object.addProperty("issueDate", issueDate);
+        object.addProperty("expireDate", expireDate);
+        return object;
+    }
 
     @PostMapping("/mdTakeAccount")
     @ResponseBody

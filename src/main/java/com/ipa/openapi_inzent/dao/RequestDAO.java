@@ -26,5 +26,4 @@ public interface RequestDAO {
     List<RequestDTO> requestSearch(String keyword) throws DataAccessException;
 
 
-    UserDTO selectToken(String ownNum) throws DataAccessException;
 }
