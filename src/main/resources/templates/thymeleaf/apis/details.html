@@ -220,6 +220,7 @@
                 const searchParams = new URLSearchParams(location.search);
 
                 let method = ['get', 'post', 'put', 'delete']
+
                 let jsonArr = new Array();
                 for (let i = 0; i < 4; i++) {
                     let paramArr = new Array();
@@ -257,7 +258,7 @@
                         } else {
                             obj.tag = ""
                         }
-
+                        /* json check */
                         if (method[i] == "post" || method[i] == "put") {
                             obj.reqData = reqData.value;
                         }
@@ -343,7 +344,8 @@
                 document.getElementById("searchPathTbody").innerHTML = ""
                 showAllMethod();
                 document.getElementById("resourceId").value = null
-                setTimeout(() => location.reload(), 80);
+                setTimeout(() => location.reload(), 150);
+                // onClick="location.reload()"
             }
 
 
@@ -1082,7 +1084,7 @@
                             <div class="multiselect mt-4 ml-2 mr-2" style="margin-left: 1.5% !important;">
                                 <div class="selectBox">
                                     <select name="getTagBox" id="getTagBox">
-                                        <option value="">  태그 선택  </option>
+                                        <option value=""> 태그 선택</option>
                                         <option th:each="list : ${tagList}" th:value="${list?.id}"
                                                 th:utext="${list?.name}">
                                         </option>
@@ -1218,7 +1220,7 @@
                             <div class="multiselect mt-4 ml-2 mr-2" style="margin-left: 1.5% !important;">
                                 <div class="selectBox">
                                     <select name="postTagBox" id="postTagBox">
-                                        <option value="">  태그 선택 </option>
+                                        <option value=""> 태그 선택</option>
                                         <option th:each="list : ${tagList}" th:value="${list?.id}"
                                                 th:utext="${list?.name}">
                                         </option>
@@ -1379,7 +1381,7 @@
                             <div class="multiselect mt-4 ml-2 mr-2" style="margin-left: 1.5% !important;">
                                 <div class="selectBox">
                                     <select name="putTagBox" id="putTagBox">
-                                        <option value="">  태그 선택 </option>
+                                        <option value=""> 태그 선택</option>
                                         <option th:each="list : ${tagList}" th:value="${list?.id}"
                                                 th:utext="${list?.name}">
                                         </option>
@@ -1534,7 +1536,7 @@
                             <div class="multiselect mt-4 ml-2 mr-2" style="margin-left: 1.5% !important;">
                                 <div class="selectBox">
                                     <select name="deleteTagBox">
-                                        <option value="">  태그 선택 </option>
+                                        <option value=""> 태그 선택</option>
                                         <option th:each="list : ${tagList}" th:value="${list?.id}"
                                                 th:utext="${list?.name}">
                                         </option>
@@ -1641,7 +1643,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" disabled id="resourceBtn"
-                            onclick="insertResource()">저장
+                            onclick="IsJson()">저장
                     </button>
                 </div>
             </div>
@@ -1887,8 +1889,6 @@
                                 <!--                                    금융업권금융업권</h6>-->
                                 <div class="badge badge-dark" style="height: 30px;"><span
                                         style="vertical-align: -webkit-baseline-middle;">금융업권금융업권</span></div>
-                                <div class="badge badge-dark" style="height: 30px;"><span
-                                        style="vertical-align: -webkit-baseline-middle;">후라토식당</span></div>
 
                             </div>
                         </div>
