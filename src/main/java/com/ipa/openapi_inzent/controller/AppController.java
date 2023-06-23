@@ -72,19 +72,19 @@ public class AppController {
             String username = principal.toString();
             userDTO = logIn;
         }
-
-//        UserDTO logIn = userDTO;
-
-        String uri_2 = "/accounts/deposit/detail";
-        List<GetDataDTO> list = getDataService.selectAll(userDTO.getOwnNum(), uri_2);
-
-
         if (userDTO == null) {
+            System.out.println("AppController.main");
             String errorMessage = "아이디와 비밀번호를 확인해주세요.";
 
             errorMessage = URLEncoder.encode(errorMessage, "UTF-8");
             return "redirect:/app/login?error=true&exception=" + errorMessage;
         }
+
+        String uri_2 = "/accounts/deposit/detail";
+        List<GetDataDTO> list = getDataService.selectAll(userDTO.getOwnNum(), uri_2);
+
+
+
 
         session.removeAttribute("choiceAgency");
 
@@ -158,18 +158,7 @@ public class AppController {
         return "redirect:/";
     }
 
-    @GetMapping("/app/agencyChoice")
-    public String agencyChoice() {
-
-        return "/app/agencyChoice";
-    }
-
     // ### 카드 ###
-    @GetMapping("/app/cardDetail")
-    public String cardDetail() {
-        //파라미터들 있어야함 ( 카드 정보 )
-        return "/app/cardDetail";
-    }
 
     @PostMapping("/app/card/myAccount")
     @ResponseBody
@@ -191,12 +180,6 @@ public class AppController {
         object.addProperty("cardList", array.toString());
 
         return object;
-    }
-
-    // 추가
-    @GetMapping("/app/card/insert")
-    public String cardInsert() {
-        return "/app/cardInsert";
     }
 
 

@@ -1,0 +1,175 @@
+.bi {
+    padding: 7px;
+}
+
+#iconBox {
+    height: 12rem;
+    background-color: #91aeff63;
+    display: flex;
+    align-items: center;
+    /*justify-content: center;*/
+    margin-top: 5%;
+    border-radius: 30px;
+    width: 90%;
+    padding: 35px;
+}
+
+input[type="checkbox"] {
+    zoom: 2.5;
+}
+
+#iconBoxUnder {
+    width: 100%;
+    /* text-align: center; */
+    display: flex;
+    justify-content: space-around;
+}
+
+.texts {
+    display: flex;
+    justify-content: center;
+    font-size: 23px;
+
+}
+
+* {
+    /*font-family: 'NanumSquareRound', sans-serif;*/
+    font-family: 'Noto Sans KR', sans-serif;
+    /*font-family: 'Noto Serif KR', serif;*/
+}
+
+.listHover {
+    border-bottom: 1px solid black;
+    padding: 40px 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.listHover:active {
+    background-color: #f5f5f5;
+}
+
+.btn-plus {
+    width: 25%;
+    border-radius: 20%;
+    height: 85%;
+    background-color: #ff7675;
+    color: #fafafa;
+    border-color: #ff7675;
+    font-size: xx-large;
+    margin-right: 10px;
+}
+
+.btn-minus {
+    width: 25%;
+    border-radius: 20%;
+    height: 85%;
+    background-color: #86b7fe;
+    color: #fafafa;
+    border-color: #86b7fe;
+    font-size: xx-large;
+    margin-left: 10px;
+}
+
+.btn-delete {
+    width: 25%;
+    border-radius: 20%;
+    height: 85%;
+    background-color: #86b7fe;
+    color: #fafafa;
+    border-color: #86b7fe;
+    font-size: xx-large;
+    margin-left: 10px;
+}
+
+.btn-cancel {
+    width: 25%;
+    border-radius: 20%;
+    height: 85%;
+    background-color: #636e72;
+    color: #fafafa;
+    border-color: #636e72;
+    font-size: xx-large;
+    margin-left: 10px;
+}
+
+.btn:hover {
+    color: #f5f5f5 !important;
+}
+
+#targetBox {
+    background-color: #91aeff63;
+    border-radius: 30px;
+    width: 90%;
+}
+
+#listBox {
+    display: flex;
+    height: 79%;
+    justify-content: center;
+    margin-top: 3%;
+}
+
+#listBox-1 {
+    width: 95%;
+    height: 100%;
+    background-color: #fafafa99;
+    border-radius: 10px;
+    overflow: auto;
+}
+
+.oneBox {
+    margin-top: 2%;
+}
+
+.box {
+    border-radius: 70%;
+    overflow: hidden;
+}
+
+.profile {
+    width: 100%;
+    object-fit: cover;
+}
+
+.bankName {
+    margin: 0px 20px;
+    display: flex;
+    align-items: center;
+}
+
+.cntAccount {
+    width: 40px;
+    height: 40px;
+    font-size: 27px;
+}
+
+.accountList {
+    font-size: xx-large;
+    border-bottom: 1px solid black;
+    padding: 20px 10px;
+}
+
+.accountList:active {
+    background-color: #e5ffff;
+}
+
+.fontXL {
+    font-size: xx-large;
+}
+
+.fontXXL {
+    font-size: xxx-large;
+}
+
+.fontL {
+    font-size: x-large;
+}
+
+.noList {
+    /*border-bottom: 1px solid black;*/
+    padding: 40px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

@@ -63,7 +63,7 @@ public class SecurityConfig {
             http.authorizeRequests() //authorizeRequests
                     .antMatchers(HttpMethod.GET, "/spring-cloud-service/**", "/spring-cloud-gateway/**", "/error/*", "/newIndex", "/login",
                             "/login_proc", "/user/login", "/user/register", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**",
-                            "/authorized", "/userInfo", "/test", "/app/login", "/app/authorized").permitAll() // 설정된 url은 인증되지 않더라도 누구든 접근 가능
+                            "/authorized", "/userInfo", "/test", "/app/login", "/app/authorized","/app/main").permitAll() // 설정된 url은 인증되지 않더라도 누구든 접근 가능
                     .antMatchers("/api", "/api/** ", "/app/**", "/api/details/**", "/mydata/**").authenticated()
                     .antMatchers("/api/trash", "/requestPage").hasAnyRole("PROVIDER", "ADMIN", "MYDATA")
                     .antMatchers("/accountList", "/authorization").hasRole("ADMIN")

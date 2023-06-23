@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>자산 선택</title>
+    <title>INFINITY MANAGER</title>
     <link
             href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
             rel="stylesheet">
@@ -16,155 +16,13 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200&display=swap" rel="stylesheet">
-
-    <style>
-        .fontGown {
-            font-family: 'Gowun Dodum', sans-serif;
-        }
-
-        #fontBasic {
-            font-family: 'Noto Serif KR', serif;
-        }
-
-        input[type="checkbox"] {
-            zoom: 2.5;
-        }
-
-        .targetBox {
-            border-radius: 30px;
-            width: 90%;
-            border: 1px solid #E4E2E3;
-        }
-
-        .inBox {
-            background-color: #ecf0f1;
-            border-radius: 30px;
-            width: 90%;
-            border: 1px solid #E4E2E3;
-        }
-
-        .box {
-            border-radius: 70%;
-            overflow: hidden;
-        }
-
-        .btn-commit:active {
-            background-color: #9c88ff;
-        }
-
-        .btn-commit {
-            width: 90%;
-            border-radius: 20px;
-            height: 7%;
-            background-color: #8c7ae6;
-            color: #fafafa;
-            border-color: #8c7ae6;
-            font-size: 2.2rem;
-            position: fixed;
-            bottom: 0;
-            margin-bottom: 30px;
-        }
-
-        .btn:hover {
-            color: #f5f5f5 !important;
-        }
-
-
-    </style>
-    <script>
-        let org_code = []
-
-        function endAdd() {
-            Swal.fire({
-                showCancelButton: true,
-                cancelButtonText: "아니요",
-                confirmButtonText: "예",
-                confirmButtonColor: '#8c7ae6',
-                title: "자산 연결을 종료하시겠어요?",
-                text: "종료하면 처음부터 다시 시작해야해요.",
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    location.href = '/app/main';
-                }
-            });
-        }
-
-
-        // input box 갯수 세기
-        function cntCheck(value) {
-            console.log("check 들어옴")
-            let cnt = 0;
-            let checkboxes = document.getElementsByName('property');
-            checkboxes.forEach((checkbox) => {
-                if (checkbox.checked) {
-                    cnt = cnt + 1;
-                }
-            })
-
-            if (cnt > 0) {
-                document.getElementById('nextBtn').disabled = false;
-            } else {
-                document.getElementById('nextBtn').disabled = true;
-            }
-            /*선택한 금융상품의 기관 코드 가져오기 */
-            console.log(value)
-            console.log(value.parentNode)
-            console.log(value.parentNode.id)
-
-            org_code.push(value.parentNode.id)
-            console.log(org_code)
-
-
-        }
-
-        function connectProperty() {
-
-            /* 코드 중복제거 */
-            const set = new Set(org_code);
-            const uniqueOrgArr = [...set];
-
-
-            console.log("orgCode !! ")
-            console.log(uniqueOrgArr)
-
-            let chbox = document.getElementsByClassName('bankOne');
-            let total = chbox.length;
-            let list = [];
-            for (let i = 0; i < total; i++) {
-                console.log(chbox[i].checked)
-                if (chbox[i].checked) {
-                    list.push(chbox[i].parentNode.children[0].children[1].innerText);
-                }
-            }
-
-            console.log(list);
-            // let org_code = ;
-            let data = {
-                "accountList": list,
-                "org_code_list": uniqueOrgArr,
-
-            }
-            // 자산 연결
-            $.ajax({
-                url: "/app/connectAgency",
-                data: data,
-                type: 'post',
-
-                success: () => {
-                    console.log("성공");
-                    location.href = '/app/main';
-                }
-            })
-            // 스케쥴링 하는가에 따라 달라짐
-            // location.href = '/app/sendReq';
-
-        }
-    </script>6
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500&display=swap" rel="stylesheet">
+    <script src="/js/app/addProperty.js"></script>
+    <link href="/css/app/addProperty.css" rel="stylesheet"/>
 </head>
 <body>
 <div class="container-xl">
-    <div class="row mt-5 mb-5 fontGown">
+    <div class="row mt-5 mb-5 fontNoto">
         <h1 class="col-1 text-right mt-5" onclick="history.go(-1)"><</h1>
         <h1 class="col-10 text-center mt-5">자산 연결</h1>
         <h1 class="col-1 text-left mt-5" onclick="endAdd()">×</h1>
@@ -181,16 +39,6 @@
         <div class="text-muted d-flex justify-content-center mb-5" style="font-size: 25px">
             ※ 선택하신 기관에 보유하고 있는 자산이 존재하지 않는다면 보이지 않습니다.
         </div>
-<!--        <th:block th:if="${#lists.isEmpty(mdAgencyDTOList)}">-->
-<!--            <div class="d-flex align-items-center justify-content-center flex-column">-->
-<!--                <img src="/images/exclamation.png" class="mb-5" style="width: 30%;">-->
-<!--                <div class="d-flex justify-content-center align-items-center h-100">-->
-<!--                    <div style="font-size: xx-large; font-weight: bold; color: #1a237e">선택하신 기관에 연결할 수 있는 자산이 존재하지-->
-<!--                        않습니다.-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </th:block>-->
         <th:block th:each="agency:${mdAgencyDTOList}">
             <div class="d-flex justify-content-center target mt-4 " style="height: 9rem">
                 <div class="d-flex shadow p-5 targetBox justify-content-between align-items-center">

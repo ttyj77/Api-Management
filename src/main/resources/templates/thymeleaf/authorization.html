@@ -11,7 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>accountList</title>
+    <title>INFINITY MANAGER</title>
     <th:block layout:fragment="css">
         <!-- Custom fonts for this template -->
         <link
@@ -34,82 +34,8 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js"
                 integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
                 crossorigin="anonymous"></script>
+        <script src="/js/authorization.js"></script>
 
-        <script>
-            function eraseWarning(value) {
-                let name = value.getAttribute("role_name");
-                let id = value.getAttribute("role_id");
-                Swal.fire({
-                    showCancelButton: true,
-                    cancelButtonText: "취소",
-                    confirmButtonText: "확인",
-                    text: name + " 역할을 삭제하시겠습니까?",
-                    icon: "warning",
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        Swal.fire({
-                            title: '삭제 성공',
-                            icon: 'success'
-                        }).then(() => {
-                            location.href = "/roleDelete/" + id;
-                        });
-                    }
-                });
-            }
-
-            function changeColor() {
-                $('#dataTable tbody tr').mouseover(function () {
-                    $(this).addClass('changeColor');
-                }).mouseout(function () {
-                    $(this).removeClass('changeColor');
-                })
-            }
-
-            function changeConfirm() {
-                let name = document.querySelector("#authName");
-                let description = document.querySelector("#authDesc");
-                let code = document.querySelector("#authCode");
-
-                if (name.value === '' || code.value === '') {
-                    swal({
-                        title: "권한 추가 처리에 실패하였습니다.",
-                        text: "다시 입력해주세요.",
-                        icon: "error"
-                    });
-                } else if (description.value === '') {
-                    swal({
-                        title: "아무런 설명이 추가되지 않았습니다, 그래도 추가하시겠습니까?",
-                        icon: "warning",
-                        buttons: true,
-                        dangerMode: true,
-                    })
-                        .then((willDelete) => {
-                            if (willDelete) {
-                                swal("추가되었습니다.", {
-                                    icon: "success",
-                                });
-                            } else {
-                                swal("취소되었습니다.");
-                            }
-                        });
-                }
-            }
-
-            function mydataAuthCorrection() {
-                $('#mydataAuthCheck').attr("disabled", false);
-            }
-
-            function adminAuthCorrection() {
-                $('#adminAuthCheck').attr("disabled", false);
-            }
-
-            function commonAuthCorrection() {
-            }
-
-            function providerAuthCorrection() {
-                $('#providerAuthCheck').attr("disabled", false);
-            }
-        </script>
     </th:block>
 
 </head>

@@ -2,7 +2,7 @@
 <html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>INFINITY MANAGER</title>
 
     <!-- Custom styles for this template -->
     <link href="/css/sidebar.css" rel="stylesheet">
@@ -15,8 +15,8 @@
     <div style="width: 100vw; height: 100px; background-color: #fafafa">
         <div style="display: flex; justify-content: space-between;">
             <div>
-                <img src="/images/logo4.png" style="width: 200px; margin-left: 1%; cursor: pointer;"
-                     onclick="javascript:location.href='/api'">
+                <img src="/images/logo4.png" style="width: 200px; margin-left: 1%; cursor: pointer;"  onerror="this.style.visibility='hidden'"
+                     onclick="location.href='/api'">
             </div>
             <div style="margin-top: 30px; margin-right: 55px; display: flex; align-items: center" >
                 <i style="width: 20px; margin-right:10px; cursor: pointer" class="fa-solid fa-user"
@@ -25,7 +25,7 @@
             </div>
         </div>
     </div>
-    <div style="width: 100vw; height: 50px; background-color: #12192c"></div>
+    <div style="width: 100vw; height: 50px; background-color: #12192c;"></div>
 </th:block>
 
 <th:block th:fragment="sideBarFragment">

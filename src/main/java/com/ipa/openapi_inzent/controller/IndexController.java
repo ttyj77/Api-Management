@@ -52,19 +52,5 @@ public class IndexController {
     }
 
 
-    @GetMapping("/modal")
-    public String modal() {
-        return "modalTest";
-    }
-
-    @GetMapping("/register")
-    public String regis() {
-        return "register";
-    }
-
-    @GetMapping("/newSideBar")
-    public String newSideBar() {
-        return "newSideBar";
-    }
 
 }

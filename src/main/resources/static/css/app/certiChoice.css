@@ -1,0 +1,27 @@
+.fontGown {
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+#fontBasic {
+    font-family: 'Noto Serif KR', serif;
+}
+
+input[type="checkbox"] {
+    zoom: 2.0;
+}
+
+.targetBox {
+    /*background-color: #91aeff63;*/
+    border-radius: 30px;
+    width: 90%;
+    border: 1px solid #E4E2E3;
+}
+
+.box {
+    border-radius: 70%;
+    overflow: hidden;
+}
+.profile {
+    width: 100%;
+    object-fit: cover;
+}

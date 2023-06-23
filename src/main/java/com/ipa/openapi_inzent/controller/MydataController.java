@@ -547,7 +547,7 @@ public class MydataController {
                     r.addProperty("code", mdProviderDTO.getResCode());
                     r.addProperty("apiCode", mdProviderDTO.getApiCode());
                     r.addProperty("customerNum", mdProviderDTO.getCustomerNum());
-                    r.addProperty("regularTransmission", mdProviderDTO.getRegularTransmission());
+//                    r.addProperty("regularTransmission", mdProviderDTO.getRegularTransmission());
 
                     providerArray.add(r);
                 }
@@ -580,12 +580,12 @@ public class MydataController {
                 object.addProperty("id", mdProviderDTO.getId());
                 object.addProperty("reqDate", reqDate);
                 object.addProperty("reqTime", mdProviderDTO.getReqTime());
-                object.addProperty("runtime", mdProviderDTO.getRuntime());
                 object.addProperty("resDate", mdProviderDTO.getResDate());
+                object.addProperty("runtime", mdProviderDTO.getRuntime());
                 object.addProperty("resCode", mdProviderDTO.getResCode());
                 object.addProperty("apiCode", mdProviderDTO.getApiCode());
                 object.addProperty("customerNum", mdProviderDTO.getCustomerNum());
-                object.addProperty("regularTransmission", mdProviderDTO.getRegularTransmission());
+//                object.addProperty("regularTransmission", mdProviderDTO.getRegularTransmission());
                 object.addProperty("uniqueNum", mdProviderDTO.getUniqueNum());
                 object.addProperty("statusInfo", mdProviderDTO.getStatusInfo());
 //                object.addProperty("apiResources", mdProviderDTO.getApiResources());
@@ -604,21 +604,6 @@ public class MydataController {
     }
 
 
-    @GetMapping("/chart")
-    public String showChart() {
-
-        return "/mydata/chart";
-    }
-
-    @GetMapping("/statistics-Daily")
-    public String statistics_Daily() {
-        return "/mydata/statistics-Daily";
-    }
-
-    @GetMapping("/statistics-7Day")
-    public String statistics_7Day() {
-        return "/mydata/statistics-7Day";
-    }
 
     @GetMapping("/statistics/{orgCode}/{date}")
     public String statistics(Model model, @PathVariable String orgCode, @PathVariable String date) throws ParseException {

@@ -74,57 +74,86 @@ label {
 
 }
 
+.resourceTable {
 
-/*tooltip css start*/
-/*#tooltipRenew{*/
-/*    padding: 8px 2px;*/
-/*    background-color: #444444;*/
-/*    border-radius: 5px;*/
-/*    color: #ffffff;*/
-/*position: absolute;*/
-/*opacity: 0;*/
-/*transition: all ease 0.5s;*/
-/*}*/
-/*#tooltipDoc{*/
-/*    padding: 8px 2px;*/
-/*    background-color: #444444;*/
-/*    border-radius: 5px;*/
-/*    color: #ffffff;*/
-/*    position: absolute;*/
-/*    opacity: 0;*/
-/*    transition: all ease 0.5s;*/
-/*}*/
-/*#tooltipUI{*/
-/*    padding: 8px 2px;*/
-/*    background-color: #444444;*/
-/*    border-radius: 5px;*/
-/*    color: #ffffff;*/
-/*    position: absolute;*/
-/*    opacity: 0;*/
-/*    transition: all ease 0.5s;*/
-/*}*/
-/*#tooltipDelete{*/
-/*    padding: 8px 2px;*/
-/*    background-color: #444444;*/
-/*    border-radius: 5px;*/
-/*    color: #ffffff;*/
-/*    position: absolute;*/
-/*    opacity: 0;*/
-/*    transition: all ease 0.5s;*/
-/*}*/
-/*.renew:hover + #tooltipRenew{*/
-/*    opacity: 1;*/
-/*}*/
-/*.doc:hover + #tooltipDoc{*/
-/*    opacity: 1;*/
-/*}*/
-/*.ui:hover + #tooltipUI{*/
-/*    opacity: 1;*/
-/*}*/
-/*.delete:hover + #tooltipDelete{*/
-/*    opacity: 1;*/
-/*}*/
-/*tooltip css end*/
+    width: 20%;
+    font-weight: bold;
+    /*background-color: #7fffd452;*/
+}
+
+.selectBox {
+    position: relative;
+}
+
+.selectBox select {
+    width: 100%;
+    font-weight: bold;
+    border-radius: 6px;
+    height: 37px;
+}
+
+.overSelect {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+}
+
+.checkboxes {
+    display: none;
+    border: 1px #dadada solid;
+}
+
+.checkboxes label {
+    display: block;
+}
+
+.checkboxes label:hover {
+    /*background-color: #1e90ff;*/
+}
+
+
+.authorizationSelectBox {
+    display: none;
+    border: 1px #dadada solid;
+}
+
+.authorizationSelectBox label {
+    display: block;
+}
+
+.authorizationSelectBox label:hover {
+    /*background-color: #1e90ff;*/
+}
+
+.tdContent:hover {
+    background-color: #f5f6fb;
+}
+
+.tdHead {
+    background-color: #f5f5f5 !important;
+    width: 30% !important;
+
+}
+
+.table td {
+    padding: 0.75rem !important;
+}
+
+.trContent {
+    vertical-align: middle;
+!important;
+}
+
+.borderTop {
+    border-top: 1px solid #dee2e6 !important;
+}
+
+.modal-body {
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+}
 
 @media only screen and (max-width: 930px) {
     .demo02 {
@@ -227,10 +256,6 @@ label {
 .hover {
     --bs-btn-hover-color: #ffffff !important;
 }
-
-/*.httpMethodBtn{*/
-/*    width: 20%;*/
-/*}*/
 
 #nav-tab > button {
     width: 20%

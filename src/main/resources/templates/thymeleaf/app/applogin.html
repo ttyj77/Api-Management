@@ -2,85 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>INFINITY MANAGER</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
           crossorigin="anonymous">
-    <link rel="stylesheet" th:href="@{/css/appLogin.css}"/>
-    <style>
-        * {
-            padding: 0;
-            margin: 0;
-            border: none;
-        }
+    <link href="/images/logo_img.png" rel="shortcut icon" type="image/x-icon">
 
-        body {
-            font-size: 14px;
-            font-family: 'Roboto', sans-serif;
-        }
-
-        .login-wrapper {
-            width: 90%;
-            /*height: 350px;*/
-            padding: 40px;
-            box-sizing: border-box;
-        }
-
-        .login-wrapper > h2 {
-            font-size: 50px;
-            color: #6A24FE;
-            margin-bottom: 20px;
-        }
-
-        #login-form > input {
-            width: 100%;
-            height: 48px;
-            padding: 0 10px;
-            box-sizing: border-box;
-            margin-bottom: 16px;
-            border-radius: 6px;
-            background-color: #F8F8F8;
-        }
-
-        #login-form > input::placeholder {
-            color: #D2D2D2;
-        }
-
-        #login-form > input[type="submit"] {
-            color: #fff;
-            font-size: 30px;
-            background-color: #6A24FE;
-            margin-top: 20px;
-        }
-
-        #login-form > input[type="checkbox"] {
-            display: none;
-        }
-
-        #login-form > label {
-            color: #999999;
-        }
-
-        #login-form input[type="checkbox"] + label {
-            cursor: pointer;
-            padding-left: 26px;
-            background-image: url("checkbox.png");
-            background-repeat: no-repeat;
-            background-size: contain;
-        }
-
-        #login-form input[type="checkbox"]:checked + label {
-            background-image: url("checkbox-active.png");
-            background-repeat: no-repeat;
-            background-size: contain;
-        }
-
-    </style>
-
+    <link href="/css/app/applogin.css" rel="stylesheet"/>
 </head>
 <body style="    text-align: -webkit-center;
-    margin-top: 50%;">
+    margin-top: 30%;">
 <div class="login-wrapper">
     <img src="../images/ODJGGE0.jpg" style="width: 70%; margin-bottom: 20px">
     <!--    <h2>Login</h2>-->
@@ -116,45 +48,6 @@
 &nonce=13wvazekn9o"><span class="box"><img class="profile shadow-lg" style="margin-right: 20px;" src="/images/inzent.png"></span>인젠트
         로그인</a>
 </div>
-<script>
-    // 스페이스바 금지
-    function checkSpacebar() {
-        let kcode = event.keyCode;
-        if (kcode == 32) {
-            event.returnValue = false;
-        }
-    }
-
-    let send = document.getElementById("send");
-    console.log(send)
-    send.addEventListener("click", function () {
-        let form = document.getElementById("login-form");
-        let id = document.getElementById("id");
-        let pw = document.getElementById("pw");
-        //
-        // if (pw.value.trim() == "" || id.value.trim() == "") {
-        //     alert("id와 비번 잘 적어라");
-        //     return false;
-        // }
-        //
-        // form.action = "http://www.naver.com";
-        // form.mothod = "GET";
-
-        // form.submit();
-        console.log($('#login-form').serialize())
-        $.ajax({
-            url: "/login-proc",
-            data: $('#login-form').serialize(),
-            method: "post",
-
-            success: (message) => {
-                console.log("성공")
-                window.location.href = "/app/main"
-            }, error: (e) => {
-                console.log("통신 실패", e)
-            }
-        })
-    });
-</script>
+<script src="/js/app/applogin.js"></script>
 </body>
 </html>

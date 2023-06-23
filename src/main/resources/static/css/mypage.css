@@ -1,0 +1,29 @@
+.tdContent:hover {
+    background-color: #f5f6fb;
+}
+
+.tdHead {
+    vertical-align: middle !important;
+    background-color: #f5f5f5 !important;
+    width: 25%;
+}
+
+.tdHeadLong {
+    vertical-align: middle !important;
+    background-color: #f5f5f5 !important;
+    width: 37%;
+}
+
+#myBox {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+    border: 2px solid rgba(0, 0, 0, 0.23);
+    width: 65%;
+}
+
+#totalBox {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    align-content: center;
+}

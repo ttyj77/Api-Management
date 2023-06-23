@@ -1,0 +1,54 @@
+.fontGown {
+    font-family: 'Gowun Dodum', sans-serif;
+}
+.fontNoto {
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+#fontBasic {
+    font-family: 'Noto Serif KR', serif;
+}
+
+input[type="checkbox"] {
+    zoom: 2.5;
+}
+
+.targetBox {
+    border-radius: 30px;
+    width: 90%;
+    border: 1px solid #E4E2E3;
+}
+
+.inBox {
+    background-color: #ecf0f1;
+    border-radius: 30px;
+    width: 90%;
+    border: 1px solid #E4E2E3;
+}
+
+.box {
+    border-radius: 70%;
+    overflow: hidden;
+}
+
+.btn-commit:active {
+    background-color: #9c88ff;
+}
+
+.btn-commit {
+    width: 90%;
+    border-radius: 20px;
+    height: 7%;
+    background-color: #8c7ae6;
+    color: #fafafa;
+    border-color: #8c7ae6;
+    font-size: 2.2rem;
+    position: fixed;
+    bottom: 0;
+    margin-bottom: 30px;
+}
+
+.btn:hover {
+    color: #f5f5f5 !important;
+}
+

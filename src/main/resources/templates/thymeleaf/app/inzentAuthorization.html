@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>INZENT</title>
+    <title>INFINITY MANAGER</title>
     <link
             href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
             rel="stylesheet">
@@ -20,139 +20,12 @@
             integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
             crossorigin="anonymous"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200&display=swap" rel="stylesheet">
-
-    <style>
-        .fontGown {
-            font-family: 'Gowun Dodum', sans-serif;
-            /*font-family: 'NanumSquareRound', sans-serif;*/
-            /*font-family: 'Nanum Gothic', sans-serif;*/
-        }
-
-        #fontBasic {
-            font-family: 'Noto Serif KR', serif;
-        }
-
-        input[type="checkbox"] {
-            zoom: 2.0;
-        }
-
-        .btn-commit:active {
-            background-color: #9c88ff;
-        }
-
-        .btn-commit {
-            width: 90%;
-            border-radius: 20px;
-            /*height: 75%;*/
-            background-color: #8c7ae6;
-            color: #fafafa;
-            border-color: #8c7ae6;
-            font-size: 2.2rem;
-        }
-
-        .btn:hover {
-            color: #f5f5f5 !important;
-        }
-
-        .checkAgree {
-            display: flex;
-            justify-content: space-evenly;
-            align-items: center;
-            width: 90%;
-            border-radius: 20px;
-            /*height: 75%;*/
-            background-color: #d2d0d0;
-            font-size: 2rem;
-            height: 112px;
-        }
-
-        .listHover {
-            border-bottom: 1px solid black;
-            padding: 40px 50px 35px 20px;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        #targetBox {
-            /*background-color: #91aeff63;*/
-            border-radius: 30px;
-            width: 90%;
-            border: 1px solid #E4E2E3;
-            height: 33rem;
-        }
-
-        #listBox {
-            /*height: 85%;*/
-        }
-
-        .fontColor {
-            color: #5a5c69;
-        }
-
-        .getPad {
-            padding: 2.5rem;
-            padding-bottom: 1rem !important;
-        }
-
-        .box {
-            border-radius: 70%;
-            overflow: hidden;
-        }
-
-        .profile {
-            width: 100%;
-            object-fit: cover;
-        }
-
-
-    </style>
-    <script>
-        window.onload = function () {
-            document.getElementById("agree").checked = false;
-        };
-
-        // 필수 checkbox 확인
-        function goCheck() {
-            console.log("goCheck")
-            console.log($('#agree').val());
-            let checkAgree = document.getElementById("agree");
-            if (checkAgree.checked == false) {
-                checkAgree.checked = true;
-                document.getElementById("nextBtn").disabled = false;
-            } else {
-                checkAgree.checked = false;
-                document.getElementById("nextBtn").disabled = true;
-            }
-        }
-
-        function goCheckInput() {
-            let checkAgree = document.getElementById("agree");
-            if (checkAgree.checked == false) {
-                document.getElementById("nextBtn").disabled = true;
-            } else {
-                document.getElementById("nextBtn").disabled = false;
-            }
-        }
-
-        function endAdd() {
-            Swal.fire({
-                showCancelButton: true,
-                cancelButtonText: "아니요",
-                confirmButtonText: "예",
-                // cancelButtonColor: '#f5f5f5',
-                confirmButtonColor: '#8c7ae6',
-                title: "자산 연결을 종료하시겠어요?",
-                text: "종료하면 처음부터 다시 시작해야해요.",
-                // reverseButtons: true
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    location.href = '/app/main';
-                }
-            });
-        }
-
-
-    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&family=Noto+Serif+KR:wght@200&display=swap" rel="stylesheet">
+    <link href="/images/logo_img.png" rel="shortcut icon" type="image/x-icon">
+    <script src="/js/app/inzentAuth.js"></script>
+    <link href="/css/app/inzentAuth.css" rel="stylesheet"/>
 </head>
 <body>
 <div class="container-xl">

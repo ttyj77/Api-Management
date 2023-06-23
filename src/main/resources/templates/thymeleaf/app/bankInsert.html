@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>은행</title>
+    <title>INFINITY MANAGER</title>
     <link
             href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
             rel="stylesheet">
@@ -15,200 +15,12 @@
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&family=Noto+Serif+KR:wght@200&display=swap" rel="stylesheet">    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="/images/logo_img.png" rel="shortcut icon" type="image/x-icon">
 
-    <style>
-        * {
-            font-family: 'Gowun Dodum', sans-serif;
-            /*font-family: 'NanumSquareRound', sans-serif;*/
-            /*font-family: 'Nanum Gothic', sans-serif;*/
-        }
 
-        input[type="checkbox"] {
-            zoom: 2.5;
-        }
-
-        .btn-commit:active {
-            background-color: #9c88ff;
-        }
-
-        .btn-commit {
-            width: 94%;
-            border-radius: 10px;
-            height: 75%;
-            background-color: #8c7ae6;
-            color: #fafafa;
-            border-color: #8c7ae6;
-            font-size: 3rem;
-        }
-
-        .btn:hover {
-            color: #f5f5f5 !important;
-        }
-
-        .listHover {
-            border-bottom: 1px solid black;
-            padding: 40px 50px 35px 20px;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        #targetBox {
-            background-color: #91aeff63;
-            border-radius: 30px;
-            width: 90%;
-        }
-
-        #listBox {
-            display: flex;
-            height: 75%;
-            justify-content: center;
-            margin-top: 3%;
-        }
-
-        #listBox-1 {
-            width: 95%;
-            height: 100%;
-            background-color: #fafafa99;
-            border-radius: 10px;
-            overflow: auto;
-            font-size: 2.5rem
-        }
-
-        .box {
-            border-radius: 70%;
-            overflow: hidden;
-        }
-
-        .profile {
-            width: 100%;
-            object-fit: cover;
-        }
-
-        .bankName {
-            margin-left: 20px;
-            display: flex;
-            align-items: center;
-        }
-
-    </style>
-
-    <script>
-        window.onload = function () {
-            let total_bank = document.getElementsByClassName("banks").length;
-            document.getElementById("total-bank").innerText = total_bank;
-            let checkboxes = document.getElementsByName('bank');
-            let cnt = 0;
-            console.log(checkboxes);
-            checkboxes.forEach((checkbox) => {
-                if (document.getElementById("checkAll").checked == true) {
-                    cnt = cnt - 1;
-                } else {
-                    if (checkbox.checked) {
-                        cnt = cnt + 1;
-                    }
-                }
-            })
-
-            document.getElementById("choose-bank").innerText = cnt;
-        };
-
-        function cntCheck() {
-            let cnt = 0;
-            let checkboxes = document.getElementsByName('bank');
-            checkboxes.forEach((checkbox) => {
-                console.log("============")
-                if (document.getElementById("checkAll").checked) {
-                    cnt = cnt - 1;
-                } else {
-                    if (checkbox.checked) {
-                        console.log("짜잘이들 체크 됨")
-                        cnt = cnt + 1;
-                    }
-                }
-            })
-            // 체크박스 갯수
-            let chbox = document.getElementsByClassName('bankOne');
-            let total = chbox.length;
-            console.log(total);
-            for (let i = 0; i < total; i++) {
-                if (document.getElementById("checkAll").checked) {
-                    if (!chbox[i].checked) {
-                        console.log("들어옴")
-                        $('#checkAll').prop("checked", false);
-                        cnt = total - 1;
-                    }
-                }
-
-            }
-
-            document.getElementById("choose-bank").innerText = cnt;
-
-            if (cnt > 0) {
-                document.getElementById('connectProperty').disabled = false;
-            } else {
-                document.getElementById('connectProperty').disabled = true;
-            }
-        }
-
-        function selectAll(selectAll) {
-            console.log("전체선택")
-            const checkboxes = document.getElementsByName('bank');
-            let total = document.getElementsByClassName('bankOne').length;
-
-            checkboxes.forEach((checkbox) => {
-                checkbox.checked = selectAll.checked;
-            })
-            if (document.getElementById('checkAll').checked == true) {
-                document.getElementById("choose-bank").innerText = total;
-                document.getElementById('connectProperty').disabled = false;
-            } else {
-                document.getElementById("choose-bank").innerText = 0;
-                document.getElementById('connectProperty').disabled = true;
-            }
-        }
-
-        function addProperty() {
-            let chbox = document.getElementsByClassName('bankOne');
-            let total = chbox.length;
-            let list = [];
-            console.log(total);
-            for (let i = 0; i < total; i++) {
-                console.log(chbox[i].checked)
-                if (chbox[i].checked) {
-
-                    console.log(chbox[i].parentNode.children[0].children[1].innerText);
-
-                    list.push(chbox[i].parentNode.children[0].children[1].innerText);
-                    $('#checkAll').prop("checked", false);
-                    cnt = total - 1;
-                }
-            }
-            console.log("===========")
-            console.log(list);
-
-            location.href = '/app/certificationSendReq/' + list;
-        }
-
-        function endAdd() {
-            Swal.fire({
-                showCancelButton: true,
-                cancelButtonText: "아니요",
-                confirmButtonText: "예",
-                // cancelButtonColor: '#f5f5f5',
-                confirmButtonColor: '#8c7ae6',
-                title: "자산 연결을 종료하시겠어요?",
-                text: "종료하면 처음부터 다시 시작해야해요.",
-                // reverseButtons: true
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    location.href = '/app/main';
-                }
-            });
-        }
-
-    </script>
 </head>
 <body>
 <div class="container-xl">
@@ -220,8 +32,8 @@
     <div class="d-flex justify-content-center" style="height: 6.3rem">
         <div class="mt-3" style="background-color: #8c7ae6; border-radius: 30px;
         width: 90%;">
-            <div class="d-flex justify-content-between p-4 align-items-center">
-                <h2 class="font-weight-bold" style="color : white;">INFINITY에서 관리할 내 자산이 있는 기관을 선택해주세요</h2>
+            <div class="d-flex justify-content-center p-4 align-items-center">
+                <h2 style="color : white;">INFINITY에서 관리할 내 자산이 있는 기관을 선택해주세요</h2>
             </div>
         </div>
     </div>
