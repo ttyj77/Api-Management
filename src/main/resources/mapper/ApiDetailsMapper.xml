@@ -124,6 +124,14 @@
         select Distinct re.id,re.garbage , ad.uri from public."resource" as re join public."apiDetails" as ad on
         ad."resourceId" = re.id
     </select>
+    <!-- 리소스 비어있는지 확인 -->
+    <select id="resourceNull" resultType="com.ipa.openapi_inzent.model.ResourceDTO">
+        select * from public.resource where garbage = true;
+    </select>
+    <!-- api details 비어있는지 확인 -->
+    <select id="detailsNull" resultType="com.ipa.openapi_inzent.model.ApiDetailsDTO">
+        select * from public."apiDetails" where trash = true;
+    </select>
     <select id="trashSearch" parameterType="string" resultType="com.ipa.openapi_inzent.model.ApiDetailsDTO">
         select r."apisId", r.id as resource_id, ad.id, ad."resourceId", ad.method, ad.url, ad.uri, ad.summary,
         r.garbage,

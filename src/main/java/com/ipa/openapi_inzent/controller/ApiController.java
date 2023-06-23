@@ -694,11 +694,26 @@ public class ApiController {
     public String apiTrash(Model model) {
         List<ResourceDTO> rlist = apiDetailsService.goTrashResource();
         List<ResourceDTO> resourceTrashList = apiDetailsService.resourceTrashList();
+
+        // 리스트 null check
+        List<ResourceDTO> resourceNull = apiDetailsService.resourceNull();
+
+        // details null check
+        List<ApiDetailsDTO> detailsNull = apiDetailsService.detailsNull();
+
+
         List<ApiDetailsDTO> adlist = apiDetailsService.goTrashDetail();
         List<ApiDetailsDTO> temp = new ArrayList<>();
+        System.out.println("rlist = " + rlist);
+        System.out.println("resourceTrashList = " + resourceTrashList);
+        System.out.println("adlist = " + adlist);
+
+
 
         model.addAttribute("rlist", rlist);
         model.addAttribute("resourceTrashList", resourceTrashList);
+        model.addAttribute("resourceCheck", resourceNull);
+        model.addAttribute("detailsCheck", detailsNull);
         model.addAttribute("adlist", adlist);
 
         return "/apis/trash";
