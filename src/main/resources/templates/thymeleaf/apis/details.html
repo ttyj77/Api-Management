@@ -331,13 +331,13 @@
                     }
                 })
 
-                // 추가 버튼 누르면 모달안의 input value 삭제
+                // 추가 버튼 누르면 안의 input value 삭제
                 let get_input = $("#resourceModal input[type=text]");
 
                 $.each(get_input, function (index, value) {
                     $(value).val('')
                 });
-                // path 검색 모달의 내용지우기
+                // path 검색 의 내용지우기
                 document.getElementById("pathSearchBar").value = '';
                 // path 검색 결과 지우기
                 document.getElementById("searchPathTbody").innerHTML = ""
@@ -347,7 +347,7 @@
             }
 
 
-            // 파라미터 추가 모달의 추가 버튼
+            // 파라미터 추가 의 추가 버튼
             function insertParameter(value) {
                 let method = value.parentNode.id.split("-")[0]
                 let tbody = document.getElementById(method + "ParameterItemBody")
@@ -406,7 +406,7 @@
                     $("#resourceModal").modal('show')
 
 
-                    // 추가 버튼 누르면 모달안의 input value 삭제
+                    // 추가 버튼 누르면 안의 input value 삭제
                     let get_input = $("#insertParameterModal input[type=text]");
                     $.each(get_input, function (index, value) {
                         $(value).val('')
@@ -416,7 +416,7 @@
 
             }
 
-            // 응답코드 추가 모달의 추가 버튼
+            // 응답코드 추가 의 추가 버튼
             function insertResCode(value) {
                 let method = value.parentNode.id.split("-")[0]
                 let tbody = document.getElementById(method + "ResCodeItemBody")
@@ -514,7 +514,7 @@
                     $("#insertResCodeModal").modal('hide')
                     $("#resourceModal").modal('show')
 
-                    // 추가 버튼 누르면 모달안의 input value 삭제
+                    // 추가 버튼 누르면 안의 input value 삭제
                     let get_input = $("#insertResCodeModal input[type=text]");
                     $.each(get_input, function (index, value) {
                         $(value).val('')
@@ -1141,7 +1141,7 @@
                                             </tr>
                                             </thead>
                                             <tbody id="getParameterItemBody">
-                                            <!--                리소스 추가 페이지 - 파라미터 추가 모달의 추가 버튼 누르면 파라미터 정보 들어가는 곳               -->
+                                            <!--                리소스 추가 페이지 - 파라미터 추가 의 추가 버튼 누르면 파라미터 정보 들어가는 곳               -->
 
                                             </tbody>
                                             <tfoot style="text-align:right;">
@@ -1172,7 +1172,7 @@
                                             </tr>
                                             </thead>
                                             <tbody id="getResCodeItemBody">
-                                            <!--                리소스 추가 페이지 - 응답코드 추가 모달의 추가 버튼 누르면 응답코드 정보 들어가는 곳               -->
+                                            <!--                리소스 추가 페이지 - 응답코드 추가 의 추가 버튼 누르면 응답코드 정보 들어가는 곳               -->
 
                                             </tbody>
                                             <tfoot style="text-align:right;">
@@ -1284,7 +1284,7 @@
                                             </tr>
                                             </thead>
                                             <tbody id="postParameterItemBody">
-                                            <!--                리소스 추가 페이지 - 파라미터 추가 모달의 추가 버튼 누르면 파라미터 정보 들어가는 곳               -->
+                                            <!--                리소스 추가 페이지 - 파라미터 추가 의 추가 버튼 누르면 파라미터 정보 들어가는 곳               -->
 
                                             </tbody>
                                             <tfoot style="text-align:right;">
@@ -1314,7 +1314,7 @@
                                             </tr>
                                             </thead>
                                             <tbody id="postResCodeItemBody">
-                                            <!--                리소스 추가 페이지 - 응답코드 추가 모달의 추가 버튼 누르면 응답코드 정보 들어가는 곳               -->
+                                            <!--                리소스 추가 페이지 - 응답코드 추가 의 추가 버튼 누르면 응답코드 정보 들어가는 곳               -->
 
                                             </tbody>
                                             <tfoot style="text-align:right;">
@@ -1437,7 +1437,7 @@
                                             </tr>
                                             </thead>
                                             <tbody id="putParameterItemBody">
-                                            <!--                리소스 추가 페이지 - 파라미터 추가 모달의 추가 버튼 누르면 파라미터 정보 들어가는 곳               -->
+                                            <!--                리소스 추가 페이지 - 파라미터 추가 의 추가 버튼 누르면 파라미터 정보 들어가는 곳               -->
 
                                             </tbody>
                                             <tfoot style="text-align:right;">
@@ -1468,7 +1468,7 @@
                                             </tr>
                                             </thead>
                                             <tbody id="putResCodeItemBody">
-                                            <!--                리소스 추가 페이지 - 응답코드 추가 모달의 추가 버튼 누르면 응답코드 정보 들어가는 곳               -->
+                                            <!--                리소스 추가 페이지 - 응답코드 추가 의 추가 버튼 누르면 응답코드 정보 들어가는 곳               -->
 
                                             </tbody>
                                             <tfoot style="text-align:right;">
@@ -1587,7 +1587,7 @@
                                             </tr>
                                             </thead>
                                             <tbody id="deleteParameterItemBody">
-                                            <!--                리소스 추가 페이지 - 파라미터 추가 모달의 추가 버튼 누르면 파라미터 정보 들어가는 곳               -->
+                                            <!--                리소스 추가 페이지 - 파라미터 추가 의 추가 버튼 누르면 파라미터 정보 들어가는 곳               -->
 
                                             </tbody>
                                             <tfoot style="text-align:right;">
@@ -1617,7 +1617,7 @@
                                             </tr>
                                             </thead>
                                             <tbody id="deleteResCodeItemBody">
-                                            <!--                리소스 추가 페이지 - 응답코드 추가 모달의 추가 버튼 누르면 응답코드 정보 들어가는 곳               -->
+                                            <!--                리소스 추가 페이지 - 응답코드 추가 의 추가 버튼 누르면 응답코드 정보 들어가는 곳               -->
 
                                             </tbody>
                                             <tfoot style="text-align:right;">
@@ -1709,7 +1709,7 @@
         </div>
     </div>
 
-    <!-- 응답코드 추가 모달 -->
+    <!-- 응답코드 추가  -->
     <div class="modal fade" id="insertResCodeModal" tabindex="-1" role="dialog"
          aria-labelledby="resCodeModalShowLabel"
          aria-hidden="true">
@@ -1768,7 +1768,7 @@
         </div>
     </div>
 
-    <!-- 응답코드 Json 추가 모달 -->
+    <!-- 응답코드 Json 추가  -->
     <div class="modal fade" id="insertResCodeJson" tabindex="-1" role="dialog"
          aria-labelledby="insertResCodeJsonModalShowLabel"
          aria-hidden="true">
@@ -1811,7 +1811,7 @@
         </div>
     </div>
 
-    <!--path 검색 모달-->
+    <!--path 검색 -->
     <div class="modal fade" id="searchPathModal" tabindex="-1" role="dialog"
          aria-labelledby="searchPathModalLabel"
          aria-hidden="true">
@@ -1862,7 +1862,7 @@
 
         </div>
     </div>
-    <!--  디테일 정보 모달  -->
+    <!--  디테일 정보   -->
     <div class="modal fade tab" id="detailModal" tabindex="-1">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
@@ -2061,7 +2061,7 @@
             </div>
         </div>
     </div>
-    <!--detail 모달 끝-->
+    <!--detail  끝-->
 
 </div>
 <!-- End of Main Content -->
