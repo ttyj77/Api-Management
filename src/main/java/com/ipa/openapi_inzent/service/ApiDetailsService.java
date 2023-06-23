@@ -168,4 +168,11 @@ public class ApiDetailsService {
         return apiDetailsDao.exactMatchUri(map);
     }
 
+    public List<ResourceDTO> resourceNull() {
+        return apiDetailsDao.resourceNull();
+    }
+
+    public List<ApiDetailsDTO> detailsNull() {
+        return apiDetailsDao.detailsNull();
+    }
 }

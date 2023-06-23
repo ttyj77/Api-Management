@@ -184,7 +184,7 @@
                     <!--                        </form>-->
                     <!--                    </div>-->
                     <h3># Resources</h3>
-                    <div th:if="${#lists.size(resourceTrashList) == 0}">리소스 관련 휴지통이 비었습니다.</div>
+                    <div th:if="${#lists.size(resourceCheck) == 0}">리소스 관련 휴지통이 비었습니다.</div>
                 </div>
             </div>
             <th:block th:each="index:${resourceTrashList}" th:if="${index.garbage == true}">
@@ -250,7 +250,7 @@
             </th:block>
             <!--  /////////////////////////////////////////////////////////////// -->
             <h3># Details</h3>
-            <div th:if="${#lists.size(adlist) == 0}">Details 관련 휴지통이 비었습니다.</div>
+            <div th:if="${#lists.size(detailsCheck) == 0}">Details 관련 휴지통이 비었습니다.</div>
             <div class="accordion" id="accordionExampleDetails" th:each="index:${rlist}">
                 <div class="accordion-item">
                     <h2 class="accordion-header" th:id="'heading'+${index.id}">
