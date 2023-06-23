@@ -9,6 +9,7 @@ import com.ipa.openapi_inzent.service.ApiDetailsService;
 import com.ipa.openapi_inzent.service.ApiService;
 import com.ipa.openapi_inzent.service.RoleService;
 import com.ipa.openapi_inzent.service.UserService;
+import com.nimbusds.jose.util.JSONObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -410,7 +411,7 @@ public class ApiController {
 
         System.out.println(paramMap);
         int resourceId = 0;
-        System.out.println((paramMap.get("resourceId")).equals(""));
+         System.out.println((paramMap.get("resourceId")).equals(""));
         if (!(paramMap.get("resourceId")).equals("")) {
             resourceId = Integer.parseInt(paramMap.get("resourceId")); // 리소스 아이디
         }
@@ -539,7 +540,6 @@ public class ApiController {
                     }
                 }
 //                2-3. resParam 넣으려면 response table id값 필요 JSON으로 바꿔서 넣기
-                System.out.println("//////////////////reqData/////////////////////");
 
                 if (String.valueOf(obj.get("reqData")).replaceAll("\\\\", "") == null) {
                     System.out.println("데이터 없음");
@@ -552,19 +552,23 @@ public class ApiController {
                     req = req.substring(1);
                     req = req.substring(0, req.length() - 1);
 
-                    JsonObject jsonObject = (JsonObject) JsonParser.parseString(req);
+                    if (!JsonParser.parseString(req).isJsonNull()) {
+                        JsonObject jsonObject = (JsonObject) JsonParser.parseString(req);
 
-                    /* key를 뽑아서 리스트로 변환*/
-                    List<String> keys = new ArrayList<>(jsonObject.keySet());
 
-                    for (int j = 0; j < jsonObject.keySet().size(); j++) {
-                        BodyDTO bodyDTO = new BodyDTO();
-                        bodyDTO.setApiDetailsId(apiDetailsId);
-                        bodyDTO.setKey(keys.get(j));
-                        bodyDTO.setValue(jsonObject.get(keys.get(j)).toString().replaceAll("\"", ""));
-                        apiDetailsService.insertBody(bodyDTO);
+                        /* key를 뽑아서 리스트로 변환*/
+                        List<String> keys = new ArrayList<>(jsonObject.keySet());
+
+                        for (int j = 0; j < jsonObject.keySet().size(); j++) {
+                            BodyDTO bodyDTO = new BodyDTO();
+                            bodyDTO.setApiDetailsId(apiDetailsId);
+                            bodyDTO.setKey(keys.get(j));
+                            bodyDTO.setValue(jsonObject.get(keys.get(j)).toString().replaceAll("\"", ""));
+                            apiDetailsService.insertBody(bodyDTO);
+                        }
+                        System.out.println();
                     }
-                    System.out.println();
+
                 }
             }
         }

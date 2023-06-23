@@ -258,6 +258,17 @@
         on ms.id = mt."mdServiceId" inner join public."mdAgency" as ma on ma.id = ms."agencyId"
         where mt.id = #{id}
     </select>
+    <!-- 전송요구내역에 기관 토큰 가져오기 -->
+    <select id="mdAstOrgCode" parameterType="string" resultMap="mdAST">
+        select mt.id as "tokenId", mt."mdServiceId", mt."mdServiceId", mt."consumerNum",mt."createDate",
+        mt."endDate", mt."accessToken", ms.id, ms."agencyId" ,ms."clientId", ms."name" as "mdServiceName"
+        , ms."callbackUrl", ma.code,ma.division, ma.name,ma.industry, ma.address, ma."domainName", ma."publicApiIp",
+        ma."authenticationMethod",
+        ma."TLSNum", ma."agencyIp", ma."agencyPort"
+        from public."mdToken" as mt inner join public."mdService" as ms
+        on ms.id = mt."mdServiceId" inner join public."mdAgency" as ma on ma.id = ms."agencyId"
+        where ma.code = #{code}
+    </select>
     <select id="mdTokenSearch" parameterType="string" resultMap="mdAST">
         select mt.id as "tokenId", mt."mdServiceId", mt."mdServiceId", mt."consumerNum",mt."createDate",
         mt."endDate", mt."accessToken", ms.id, ms."agencyId" ,ms."clientId", ms."name" as "mdServiceName"

@@ -267,33 +267,39 @@
             }
 
             function selectToken(value) {
+                let target = document.getElementById("tokenTarget");
+                console.log("셀렉트토큰 들어옴");
                 console.log(value)
                 console.log(value.parentNode.parentNode)
-                let ownNum = value.parentNode.parentNode.getAttribute("client_num");
-                console.log(ownNum);
+                let orgCode = value.parentNode.parentNode.getAttribute("org_code");
+                console.log(orgCode);
 
                 let data = {
-                    "ownNum": ownNum,
+                    "orgCode": orgCode,
                 }
                 $.ajax({
-                    url: "/request/selectToken",
+                    url: "/mydata/selectToken",
                     data: data,
                     type: 'get',
 
                     success: (message) => {
-
                         console.log("성공");
-                        console.log(message)
-                        let accountList = JSON.parse(message);
+                        console.log(message);
+                        document.getElementById("userInfo").innerText = message.clientId;
+
+                        document.getElementById("mdServiceName").innerText = message.serviceName;
+                        document.getElementById("agencyName").innerText = message.agencyName;
+                        document.getElementById("agencyCode").innerText = message.orgCode;
+                        document.getElementById("accessToken").innerText = message.token;
+                        document.getElementById("entryTime").innerText = message.issueDate;
+                        document.getElementById("endTime").innerText = message.expireDate;
+                        $('#tokenModal').modal('show');
 
                     },
                     error: (e) => {
                         console.log("통신 실패", e);
-                        let tr = document.createElement("tr");
-                        let td_1 = document.createElement("td");
-                        td_1.innerText = "데이터가 없습니다."
-                        tr.append(td_1);
-                        target.append(tr);
+                        // 값이 없을 때
+                        $('#noTokenModal').modal('show');
                     }
                 })
             }
@@ -401,7 +407,6 @@
                                                data-toggle="tooltip" data-bs-toggle="modal" data-bs-target="#assetModal"
                                                title="자산목록" onclick="showAcc(this)"></i> <i
                                                 class="fa-solid fa-file-shield"
-                                                data-bs-toggle="modal" data-bs-target="#tokenModal"
                                                 style="cursor: pointer" data-toggle="tooltip"
                                                 title="발급 토큰 정보" onclick="selectToken(this)"></i></td>
                                     </tr>
@@ -443,7 +448,7 @@
                                             <td>요청시간</td>
                                             <td>응답일자</td>
                                             <td>응답시간(sec)</td>
-                                            <td>응답 Code</td>
+                                            <td>응답Code</td>
                                             <td>요청API</td>
                                             <td>통합고객번호</td>
                                             <!--                                            <td>정기적 전송</td>-->
@@ -593,13 +598,13 @@
                 <div class="modal fade" id="tokenModal" tabindex="-1" role="dialog"
                      aria-labelledby="tokenModalLabel"
                      aria-hidden="true">
-                    <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="tokenModalLabel">발급 토큰 정보</h5>
                             </div>
                             <div class="modal-body" style="overflow-x: hidden">
-                                <div class="w-100 p-2">
+                                <div class="w-100 p-2" id="tokenTarget">
                                     <div class="border mb-3">
                                         <div class="border-bottom">
                                             <h5 class="text-muted p-3 m-0">기본 정보</h5>
@@ -607,14 +612,6 @@
                                         <div class="p-4">
                                             <table class="table table-borderless">
                                                 <tbody>
-                                                <tr>
-                                                    <td class="tdHead">
-                                                        클라이언트 ID
-                                                    </td>
-                                                    <td class="tdContent" id="clientId">
-
-                                                    </td>
-                                                </tr>
                                                 <tr style="border-top: 1px solid #dee2e6">
                                                     <td class="tdHead">
                                                         사용자 정보(CI)
@@ -698,6 +695,26 @@
                     </div>
                 </div>
                 <!-- 발급 토큰 조회 모달 끝 -->
+
+                <div class="modal fade" id="noTokenModal" tabindex="-1" role="dialog"
+                     aria-labelledby="tokenModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="noTokenModalLabel">발급 토큰 정보</h5>
+                            </div>
+                            <div class="modal-body" style="overflow-x: hidden">
+                                <div class="w-100 p-2">
+                                    <h5 class="text-muted">발급 토큰 정보가 없습니다.</h5>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
             </div>
             <!-- End of Main Content -->

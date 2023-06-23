@@ -53,9 +53,5 @@
         or content ILIKE CONCAT('%', #{keyword}, '%');
     </select>
 
-    <!--  전송요구내역 페이지에서 User OwnNum으로 토큰 가져오기  -->
-    <select id="selectToken" parameterType="string" resultType="com.ipa.openapi_inzent.model.UserDTO">
-        select * from public."user" where "ownNum" = #{ownNum}
-    </select>
 
 </mapper>

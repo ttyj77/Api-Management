@@ -47,7 +47,4 @@ public class RequestService {
         return requestDao.requestSearch(keyword);
     }
 
-    public UserDTO selectToken(String ownNum){
-        return requestDao.selectToken(ownNum);
-    }
 }

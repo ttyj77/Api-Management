@@ -238,5 +238,9 @@ public class MydataService {
         reqInfoDTO.setCode(orgCode);
         return mydataDao.selectReqInfoId(reqInfoDTO);
     }
+
+    public MdAgencyDTO mdAstOrgCode(String code) {
+        return mydataDao.mdAstOrgCode(code);
+    }
 }
 

@@ -361,6 +361,10 @@
         box-shadow: 0px 5px 0px 0px #cbcbcb57;
     }
 
+    .btnBlue.btnPush {
+        box-shadow: 0px 5px 0px 0px #032575b8;
+    }
+
     .btnPush:hover {
         margin-top: 15px;
         margin-bottom: 5px;
@@ -370,11 +374,18 @@
         box-shadow: 0px 0px 0px 0px #A66615;
     }
 
+    .btnBlue.btnPush:hover {
+        box-shadow: 0px 0px 0px 0px #032575b8;
+    }
+
     .btnPurple.btnPush:hover {
         box-shadow: 0px 0px 0px 0px #6D184B;
     }
     .btnOrange {
         background: #e35646;
+    }
+    .btnBlue {
+        background: #3146ebcf;
     }
 
     .btnPurple {
@@ -404,13 +415,15 @@
 <body style="overflow: hidden">
 <header class="header">
     <div class="header-menu">
-        <img src="../images/logo_img.png" style="margin-left: 1%; width: 150px cursor: pointer;"
-             onclick="location.href='/newIndex'">
+        <img src="../images/logo_img.png" style="margin-left: 1%; cursor: pointer;"
+             onclick="location.href='/'">
         <div style="font-size: 15%;">
             <a title="Button push orange" class="button btnPush btnOrange" sec:authorize="isAnonymous()"
-               onclick="checkWeb()">LOGIN</button></a>
+               onclick="checkWeb()" style="cursor: pointer">LOGIN</button></a>
+            <a title="Button push Blue" class="button btnPush btnBlue" sec:authorize="isAuthenticated()"
+               onclick="location.href='/api'"  style="cursor: pointer">API</a>
             <a title="Button push purple" class="button btnPush btnPurple" sec:authorize="isAuthenticated()"
-               onclick="location.href='/logout'">LOGOUT</a>
+               onclick="location.href='/logout'"  style="cursor: pointer">LOGOUT</a>
         </div>
     </div>
 </header>

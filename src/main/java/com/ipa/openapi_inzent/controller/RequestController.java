@@ -172,20 +172,5 @@ public class RequestController {
         return "requestPage";
     }
 
-    @GetMapping("/request/selectToken")
-    @ResponseBody
-    public JsonObject selectToken(String ownNum) {
-        UserDTO userDTO = requestService.selectToken(ownNum);
-        JsonObject object = new JsonObject();
-        SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd Hh:mm:ss");
-        String issueDate = date.format(userDTO.getIssueDate());
-        String exprieDate = date.format(userDTO.getExpireDate());
-
-        object.addProperty("token", userDTO.getToken());
-
-        object.addProperty("issueDate", issueDate);
-        object.addProperty("expireDate", exprieDate);
-        return object;
-    }
 
 }
