@@ -220,7 +220,7 @@ public class MydataApiService {
         mydataApiDAO.dataInsert(getDataDTO);
     }
 
-    public void invest001Insert(String org_code,
+    public void invest001Insert(String orgCode,
                                 int responseCode, double result, JsonObject jsonObject, String apiCode, String apiResouceUri) {
         System.out.println("MydataApiService.invest001Insert");
         System.out.println("resu = " + result);
@@ -233,9 +233,9 @@ public class MydataApiService {
         List<MdReqInfoDTO> reqInfoList = mydataService.mdReqAll();
         System.out.println("reqInfoList = " + reqInfoList);
         String cliNum = "9704261153";
-        System.out.println("org_code = " + org_code);
-        JsonObject object = (JsonObject) JsonParser.parseString(org_code);
-        String orgCode = object.get("org_code").toString().replaceAll("\"", "");
+        System.out.println("org_code = " + orgCode);
+//        JsonObject object = (JsonObject) JsonParser.parseString(orgCode);
+//        String orgCode = object.get("org_code").toString().replaceAll("\"", "");
         System.out.println("orgCode = " + orgCode);
 
         int reqId = mydataService.selectReqInfoId(orgCode, cliNum);
