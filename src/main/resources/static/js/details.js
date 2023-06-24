@@ -698,43 +698,45 @@ function resDeleteBeforeInsert(value) {
 function IsJson() {
     console.log("??????????????")
     let method = ['get', 'post', 'put', 'delete']
+    let cnt = 0;
+    let check = [];
+
 
     for (let i = 0; i < 4; i++) {
         console.log(method[i])
+        console.log(document.getElementById(method[i]).style.display)
+        console.log(check)
         if (method[i] == "post" || method[i] == "put") {
-            console.log(document.getElementById(method[i]).style.display)
-            console.log(document.getElementById(method[i]).style.display == "block")
+            console.log("1차 들어옴")
             if (document.getElementById(method[i]).style.display == "block") {
-                console.log("아아아")
-                let reqData = document.getElementById(method[i] + "ReqData")
-                console.log(reqData.value)
-                console.log("str!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-
-                try {
-                    JSON.parse(reqData.value);
-                    insertResource();
-                    return true;
-                } catch (e) {
-                    console.log(reqData.value == "")
-                    console.log("Json 타입 error")
-                    if (reqData.value == "") {
-                        Swal.fire({
-                            icon: 'error', text: '요청데이터를 입력해주세요.'
-                        }).then(() => {
-                            $("#resourceModal").modal("show")
-                        });
-                    } else {
-                        Swal.fire({
-                            icon: 'error', text: 'JSON 타입으로 입력해주세요.'
-                        }).then(() => {
-                            console.log(reqData.value)
-                            $("#resourceModal").modal("show")
-                        });
-                    }
-                    return false;
-                }
+                console.log("2차 들어옴")
+                cnt = cnt + 1;
+                check.push(method[i])
             }
         }
+
+    }
+    console.log("------------------------------ CNT " + cnt)
+    console.log("------------------------------ CHECK " + check)
+    if (cnt == 0) {
+        return true;
+    } else if (cnt > 0) {
+        try {
+            for (let i = 0; i < cnt; i++) {
+                let reqData = document.getElementById(check[i] + "ReqData")
+                JSON.parse(reqData.value);
+            }
+        } catch (e) {
+            Swal.fire({
+                icon: 'error', text: '요청데이터를 정확히 입력해주세요.',
+            }).then(() => {
+                console.log("modal show 위에 로고")
+                $("#resourceModal").modal("show")
+                // alert("나와라")
+            });
+            return false;
+        }
+        return true;
     }
 }
 
