@@ -79,7 +79,6 @@ function agencyModal(value) {
 
 
 function createAgencyModal(list) {
-    console.log("ㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹ")
     console.log(list);
     //ipPort 초기화
     document.getElementById("ipPort").innerHTML = "";
