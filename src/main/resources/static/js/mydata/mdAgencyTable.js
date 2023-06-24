@@ -104,8 +104,6 @@ function createAgencyModal(list) {
             document.getElementById("ipPort").append(list.agencyPort)
         }
     }
-
-
 }
 
 /* 우측 상단 셀렉트 박스 변경시 리스트 체인지 */

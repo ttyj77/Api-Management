@@ -37,6 +37,7 @@ public class MydataApiController {
     @GetMapping("/invest/accounts")
     @ResponseBody
     public StringBuffer invest_001(@RequestParam String org_code, @RequestParam String limit, HttpServletRequest header) {
+        System.out.println("MydataApiController.invest_001");
 
         long start = System.currentTimeMillis();
         Date date = new Date();
@@ -183,9 +184,12 @@ public class MydataApiController {
 
             JsonObject org_code = (JsonObject) parser.parse(body); // org_code
 
+
             String apiCode = "금투-002";
             String apiResouceUri = "/accounts/basic";
             /* data insert */
+            System.out.println("MydataApiController.getData2");
+            System.out.println("org_code = " + org_code);
             mydataApiService.invest001Insert(org_code.toString(), responseCode, timeResult, jsonObject, apiCode, apiResouceUri);
 
 //          DB insert

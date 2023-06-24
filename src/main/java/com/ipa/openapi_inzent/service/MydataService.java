@@ -75,7 +75,7 @@ public class MydataService {
                 m.setReqDate(newFormat.format(forMatDate)); //요청일 ex) 2021-11-23
                 m.setReqTime(timeFormat.format(forMatDate)); //요청시간 ex) 15:18:16.614
                 cal.setTime(forMatDate);
-                cal.add(Calendar.MILLISECOND, m.getRuntime()); // 요청일에 응답시간(runtime)을 더함 => 응답일자
+                cal.add(Calendar.MILLISECOND, (int) m.getRuntime()); // 요청일에 응답시간(runtime)을 더함 => 응답일자
                 m.setResDate(dfFormat.format(cal.getTime())); //응답일자 ex) 2021-11-23 15:18:16.642
 
             }
@@ -100,7 +100,7 @@ public class MydataService {
                 m.setReqDate(newFormat.format(forMatDate)); //요청일 ex) 2021-11-23
                 m.setReqTime(timeFormat.format(forMatDate)); //요청시간 ex) 15:18:16.614
                 cal.setTime(forMatDate);
-                cal.add(Calendar.MILLISECOND, m.getRuntime()); // 요청일에 응답시간(runtime)을 더함 => 응답일자
+                cal.add(Calendar.MILLISECOND, (int) m.getRuntime()); // 요청일에 응답시간(runtime)을 더함 => 응답일자
                 m.setResDate(dfFormat.format(cal.getTime())); //응답일자 ex) 2021-11-23 15:18:16.642
             }
         } catch (ParseException e) {
@@ -160,7 +160,7 @@ public class MydataService {
                 m.setReqDate(newFormat.format(forMatDate)); //요청일 ex) 2021-11-23
                 m.setReqTime(timeFormat.format(forMatDate)); //요청시간 ex) 15:18:16.614
                 cal.setTime(forMatDate);
-                cal.add(Calendar.MILLISECOND, m.getRuntime()); // 요청일에 응답시간(runtime)을 더함 => 응답일자
+                cal.add(Calendar.MILLISECOND, (int) m.getRuntime()); // 요청일에 응답시간(runtime)을 더함 => 응답일자
                 m.setResDate(dfFormat.format(cal.getTime())); //응답일자 ex) 2021-11-23 15:18:16.642
             }
         } catch (ParseException e) {
@@ -205,7 +205,7 @@ public class MydataService {
                 m.setReqDate(newFormat.format(forMatDate)); //요청일 ex) 2021-11-23
                 m.setReqTime(timeFormat.format(forMatDate)); //요청시간 ex) 15:18:16.614
                 cal.setTime(forMatDate);
-                cal.add(Calendar.MILLISECOND, m.getRuntime()); // 요청일에 응답시간(runtime)을 더함 => 응답일자
+                cal.add(Calendar.MILLISECOND, (int) m.getRuntime()); // 요청일에 응답시간(runtime)을 더함 => 응답일자
                 m.setResDate(dfFormat.format(cal.getTime())); //응답일자 ex) 2021-11-23 15:18:16.642
             }
         } catch (ParseException e) {
@@ -231,12 +231,12 @@ public class MydataService {
         return mydataDao.mdAgencyCode(orgCode);
     }
 
-    public int selectReqInfoId(String cliNum, String orgCode) {
-
-        MdReqInfoDTO reqInfoDTO = new MdReqInfoDTO();
-        reqInfoDTO.setClientNum(cliNum);
-        reqInfoDTO.setCode(orgCode);
-        return mydataDao.selectReqInfoId(reqInfoDTO);
+    public int selectReqInfoId(String orgCode,String cliNum) {
+        System.out.println("MydataService.selectReqInfoId");
+        System.out.println("cliNum = " + cliNum);
+        System.out.println("orgCode = " + orgCode);
+        System.out.println(mydataDao.selectReqInfoId(orgCode, cliNum));
+        return mydataDao.selectReqInfoId(orgCode, cliNum);
     }
 
     public MdAgencyDTO mdAstOrgCode(String code) {

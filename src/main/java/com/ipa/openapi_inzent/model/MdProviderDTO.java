@@ -12,8 +12,8 @@ public class MdProviderDTO {
 
     // 입력받을 때 x100 해서 정수로 만들꺼임
     // 그냥 바로 double 함
-//    private double runtime;
-    private int runtime;
+    private double runtime;
+//    private int runtime;
 
     // resDate 는 reqDate + runtime
     private String resDate;

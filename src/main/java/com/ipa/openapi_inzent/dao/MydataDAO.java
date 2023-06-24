@@ -58,7 +58,7 @@ public interface MydataDAO {
 
     MdAgencyDTO mdAgencyCode(String orgCode) throws DataAccessException;
 
-    int selectReqInfoId(MdReqInfoDTO mdReqInfoDTO) throws DataAccessException;
+    int selectReqInfoId(String code,String clientNum) throws DataAccessException;
 
     MdAgencyDTO mdAstOrgCode(String code) throws DataAccessException;
 }

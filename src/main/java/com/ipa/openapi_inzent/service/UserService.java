@@ -28,7 +28,7 @@ public class UserService {
         userDTO.setOwnNum(String.valueOf(random.nextInt(999999) + 1));
         userDao.register(userDTO);
         int id = userDTO.getId();
-        if (!userDTO.getToken().isEmpty()) {//토큰이 있다면 만료기간 넣기
+        if (userDTO.getToken() != null) {//토큰이 있다면 만료기간 넣기
             userDao.tokenExpireDate(id);
         }
         return id;

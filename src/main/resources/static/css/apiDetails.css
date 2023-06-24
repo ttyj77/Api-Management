@@ -16,6 +16,14 @@ tbody {
     padding: 0 !important;
 }
 
+#swagger {
+    background-color: #85EA2D;
+}
+
+#swagger:hover {
+    background-color: rgba(148, 234, 74, 0.95);
+}
+
 .btn-control {
     width: 100%;
     display: flex;
