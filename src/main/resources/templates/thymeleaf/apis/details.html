@@ -217,135 +217,146 @@
             }
 
             function insertResource() {
-                const searchParams = new URLSearchParams(location.search);
+                console.log("isJson")
+                console.log(IsJson())
+                if (IsJson()) {
+                    console.log("isJson true")
+                    const searchParams = new URLSearchParams(location.search);
 
-                let method = ['get', 'post', 'put', 'delete']
+                    let method = ['get', 'post', 'put', 'delete']
 
-                let jsonArr = new Array();
-                for (let i = 0; i < 4; i++) {
-                    let paramArr = new Array();
-                    let resCodeArr = new Array();
-                    let param = new Object();
+                    let jsonArr = new Array();
+                    for (let i = 0; i < 4; i++) {
+                        let paramArr = new Array();
+                        let resCodeArr = new Array();
+                        let param = new Object();
 
-                    //insertOperationId
-                    let obj = new Object();
+                        //insertOperationId
+                        let obj = new Object();
 
-                    let operationId = document.getElementById(method[i] + "OperationId")
-                    let summary = document.getElementById(method[i] + "Summary");
-                    let tag = document.getElementById(method[i] + "TagBox")
+                        let operationId = document.getElementById(method[i] + "OperationId")
+                        let summary = document.getElementById(method[i] + "Summary");
+                        let tag = document.getElementById(method[i] + "TagBox")
 
-                    let reqData = document.getElementById(method[i] + "ReqData")
+                        let reqData = document.getElementById(method[i] + "ReqData")
 
-                    // tab display 확인 none이면 값 있어도 등록 안함
-                    let display = document.getElementById(method[i]).style.display
+                        // tab display 확인 none이면 값 있어도 등록 안함
+                        let display = document.getElementById(method[i]).style.display
 
-                    // 파리미터 tr
-                    let param_tr = $('#' + method[i] + "ParameterItemBody tr");
+                        // 파리미터 tr
+                        let param_tr = $('#' + method[i] + "ParameterItemBody tr");
 
-                    // 응답코드 tr
-                    let resCode_tr = $('#' + method[i] + "ResCodeItemBody tr");
+                        // 응답코드 tr
+                        let resCode_tr = $('#' + method[i] + "ResCodeItemBody tr");
 
-                    if (operationId.value != "" && display == "block") {
+                        if (operationId.value != "" && display == "block") {
 
-                        console.log(operationId.value)
-                        obj.operation = operationId.value;
-                        obj.summary = summary.value
-                        console.log("==============================Tag value ==========================")
+                            console.log(operationId.value)
+                            obj.operation = operationId.value;
+                            obj.summary = summary.value
+                            console.log("==============================Tag value ==========================")
 
-                        console.log(tag == null)
-                        if (tag != null) { // 태그가 있다면,
-                            obj.tag = tag.value.toString()
-                        } else {
-                            obj.tag = ""
+                            console.log(tag == null)
+                            if (tag != null) { // 태그가 있다면,
+                                obj.tag = tag.value.toString()
+                            } else {
+                                obj.tag = ""
+                            }
+                            /* json check */
+                            if (method[i] == "post" || method[i] == "put") {
+                                obj.reqData = reqData.value;
+                            }
+
+                            // 파라미터 추가 시 tr 추출
+                            $.each(param_tr, function (index, value) {
+                                param = new Object();
+                                let tdList = $(value)
+                                param.name = tdList.children().eq(1).text();
+                                param.transferMethod = tdList.children().eq(2).text()
+                                param.explanation = tdList.children().eq(3).text()
+                                param.required = tdList.children().eq(4).text()
+                                param.type = tdList.children().eq(5).text()
+                                param.sample = tdList.children().eq(6).text()
+                                paramArr.push(param)
+                            });
+                            obj.param = paramArr
+
+                            // 파라미터 추가 시 tr 추출
+                            $.each(resCode_tr, function (index, value) {
+                                param = new Object();
+                                let tdList = $(value)
+                                console.log("8888888888888888888888888888")
+                                console.log(tdList.children())
+                                param.code = tdList.children().eq(1).text()
+                                param.explanation = tdList.children().eq(2).text()
+                                param.type = tdList.children().eq(3).text()
+                                param.paramKey = tdList.children().eq(5).text()
+                                param.paramValue = tdList.children().eq(6).text()
+                                param.paramType = tdList.children().eq(7).text()
+
+                                // 여기서 리스트 하나더 돌리자. resCode parameter list
+                                resCodeArr.push(param)
+                            });
+                            obj.resCode = resCodeArr
                         }
-                        /* json check */
-                        if (method[i] == "post" || method[i] == "put") {
-                            obj.reqData = reqData.value;
+                        jsonArr.push(obj)
+                    }
+                    // console.log(document.getElementById("searchPathTbody").children[0])
+                    // [요청 json 데이터 선언]
+                    console.log("=====1=1=1=1=1=1=1=1=1=1=1=1=1=1=1=1=1=1=1=1=1=1=1=1=1")
+                    console.log(document.getElementById("resourceId"))
+                    console.log(document.getElementById("resourceId").value)
+
+                    let jsonData = { // Body에 첨부할 json 데이터
+                        "idx": document.getElementById("apiId").value, //api index
+                        "uriId": document.getElementById("pathid").value,
+                        "resourceId": document.getElementById("resourceId").value,
+                        "url": document.getElementById("url").value,
+                        "path": document.getElementById("path").value,
+                        "get": JSON.stringify(jsonArr[0]),
+                        "post": JSON.stringify(jsonArr[1]),
+                        "put": JSON.stringify(jsonArr[2]),
+                        "delete": JSON.stringify(jsonArr[3]),
+                    }
+
+
+                    $.ajax({
+                        url: "/api/resource/insert",
+                        data: JSON.stringify(jsonData), //전송 데이터
+                        dataType: "json",
+                        method: "post",
+                        traditional: true, //필수
+                        async: true, //비동기 여부
+                        timeout: 5000, //타임 아웃 설정
+                        dataType: "JSON", //응답받을 데이터 타입 (XML,JSON,TEXT,HTML,JSONP)
+                        contentType: "application/json; charset=utf-8", //헤더의 Content-Type을 설정
+
+                        success: (message) => {
+                            console.log(message)
                         }
+                    })
 
-                        // 파라미터 추가 시 tr 추출
-                        $.each(param_tr, function (index, value) {
-                            param = new Object();
-                            let tdList = $(value)
-                            param.name = tdList.children().eq(1).text();
-                            param.transferMethod = tdList.children().eq(2).text()
-                            param.explanation = tdList.children().eq(3).text()
-                            param.required = tdList.children().eq(4).text()
-                            param.type = tdList.children().eq(5).text()
-                            param.sample = tdList.children().eq(6).text()
-                            paramArr.push(param)
-                        });
-                        obj.param = paramArr
+                    // 추가 버튼 누르면 안의 input value 삭제
+                    let get_input = $("#resourceModal input[type=text]");
 
-                        // 파라미터 추가 시 tr 추출
-                        $.each(resCode_tr, function (index, value) {
-                            param = new Object();
-                            let tdList = $(value)
-                            console.log("8888888888888888888888888888")
-                            console.log(tdList.children())
-                            param.code = tdList.children().eq(1).text()
-                            param.explanation = tdList.children().eq(2).text()
-                            param.type = tdList.children().eq(3).text()
-                            param.paramKey = tdList.children().eq(5).text()
-                            param.paramValue = tdList.children().eq(6).text()
-                            param.paramType = tdList.children().eq(7).text()
+                    $.each(get_input, function (index, value) {
+                        $(value).val('')
+                    });
+                    // path 검색 의 내용지우기
+                    document.getElementById("pathSearchBar").value = '';
+                    // path 검색 결과 지우기
+                    document.getElementById("searchPathTbody").innerHTML = ""
+                    showAllMethod();
+                    document.getElementById("resourceId").value = null
+                    // onClick="location.reload()"
+                    Swal.fire({
+                        icon: 'success', text: '성공적으로 저장되었습니다.',
+                    }).then(() => {
+                        setTimeout(() => location.reload(), 150);
+                        // alert("나와라")
+                    });
 
-                            // 여기서 리스트 하나더 돌리자. resCode parameter list
-                            resCodeArr.push(param)
-                        });
-                        obj.resCode = resCodeArr
-                    }
-                    jsonArr.push(obj)
                 }
-                // console.log(document.getElementById("searchPathTbody").children[0])
-                // [요청 json 데이터 선언]
-                console.log("=====1=1=1=1=1=1=1=1=1=1=1=1=1=1=1=1=1=1=1=1=1=1=1=1=1")
-                console.log(document.getElementById("resourceId"))
-                console.log(document.getElementById("resourceId").value)
-
-                let jsonData = { // Body에 첨부할 json 데이터
-                    "idx": document.getElementById("apiId").value, //api index
-                    "uriId": document.getElementById("pathid").value,
-                    "resourceId": document.getElementById("resourceId").value,
-                    "url": document.getElementById("url").value,
-                    "path": document.getElementById("path").value,
-                    "get": JSON.stringify(jsonArr[0]),
-                    "post": JSON.stringify(jsonArr[1]),
-                    "put": JSON.stringify(jsonArr[2]),
-                    "delete": JSON.stringify(jsonArr[3]),
-                }
-
-
-                $.ajax({
-                    url: "/api/resource/insert",
-                    data: JSON.stringify(jsonData), //전송 데이터
-                    dataType: "json",
-                    method: "post",
-                    traditional: true, //필수
-                    async: true, //비동기 여부
-                    timeout: 5000, //타임 아웃 설정
-                    dataType: "JSON", //응답받을 데이터 타입 (XML,JSON,TEXT,HTML,JSONP)
-                    contentType: "application/json; charset=utf-8", //헤더의 Content-Type을 설정
-
-                    success: (message) => {
-                        console.log(message)
-                    }
-                })
-
-                // 추가 버튼 누르면 안의 input value 삭제
-                let get_input = $("#resourceModal input[type=text]");
-
-                $.each(get_input, function (index, value) {
-                    $(value).val('')
-                });
-                // path 검색 의 내용지우기
-                document.getElementById("pathSearchBar").value = '';
-                // path 검색 결과 지우기
-                document.getElementById("searchPathTbody").innerHTML = ""
-                showAllMethod();
-                document.getElementById("resourceId").value = null
-                setTimeout(() => location.reload(), 150);
-                // onClick="location.reload()"
             }
 
 
@@ -525,6 +536,7 @@
                     // 추가로 응답 코드 테이블도 삭제해야 됨
                     document.getElementById("appendJsonResCode").innerHTML = ""
                 }
+                return true;
             }
 
             // 파라미터 추가 버튼 클릭시 이동
@@ -763,6 +775,7 @@
         </script>
     </th:block>
 </head>
+<!--setTimeout(() => location.reload(), 150);-->
 <body>
 <div layout:fragment="content">
     <!-- Page Wrapper -->
@@ -782,10 +795,10 @@
             </div>
             <div class="d-flex mb-3">
                 <div class="w-100 d-flex">
-<!--                    <select class="form-select mr-4" onchange="selectChange(this)" id="show" style="width: 35%;">-->
-<!--                        <option value="resource" selected>리소스</option>-->
-<!--                        <option value="tag">태그</option>-->
-<!--                    </select>-->
+                    <!--                    <select class="form-select mr-4" onchange="selectChange(this)" id="show" style="width: 35%;">-->
+                    <!--                        <option value="resource" selected>리소스</option>-->
+                    <!--                        <option value="tag">태그</option>-->
+                    <!--                    </select>-->
                     <!--                     <button type="button" class="btn btn-secondary" id="pick" data-bs-toggle="modal"></button>-->
                     <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
                             data-bs-target="#resourceModal" onclick="tabHidden()">
@@ -1643,7 +1656,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" disabled id="resourceBtn"
-                            onclick="IsJson()">저장
+                            onclick="insertResource()">저장
                     </button>
                 </div>
             </div>
