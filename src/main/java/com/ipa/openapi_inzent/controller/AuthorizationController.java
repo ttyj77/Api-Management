@@ -45,7 +45,6 @@ public class AuthorizationController {
     // 권한관리 역할 삭제
     @GetMapping("/roleDelete/{id}")
     public String roleDelete(@PathVariable int id) {
-        System.out.println("AuthorizationController.roleDelete");
         roleService.deleteRole(id);
         return "redirect:/authorization";
     }
@@ -68,16 +67,12 @@ public class AuthorizationController {
             userDTO = logIn;
         }
 
-        System.out.println("userDTO.getExpireDate() = " + userDTO.getExpireDate());
-        System.out.println("userDTO = " + userDTO);
-
         if (userDTO.getExpireDate() == null) {
             return "redirect:/app/main";
         }
 
         model.addAttribute("user", userDTO);
 
-        System.out.println("인젠트 인증 페이지");
         return "/app/inzentAuthorization";
     }
 }

@@ -3,7 +3,6 @@ window.onload = function () {
     document.getElementById("total-bank").innerText = total_bank;
     let checkboxes = document.getElementsByName('bank');
     let cnt = 0;
-    console.log(checkboxes);
     checkboxes.forEach((checkbox) => {
         if (document.getElementById("checkAll").checked == true) {
             cnt = cnt - 1;
@@ -21,12 +20,10 @@ function cntCheck() {
     let cnt = 0;
     let checkboxes = document.getElementsByName('bank');
     checkboxes.forEach((checkbox) => {
-        console.log("============")
         if (document.getElementById("checkAll").checked) {
             cnt = cnt - 1;
         } else {
             if (checkbox.checked) {
-                console.log("짜잘이들 체크 됨")
                 cnt = cnt + 1;
             }
         }
@@ -34,11 +31,9 @@ function cntCheck() {
     // 체크박스 갯수
     let chbox = document.getElementsByClassName('bankOne');
     let total = chbox.length;
-    console.log(total);
     for (let i = 0; i < total; i++) {
         if (document.getElementById("checkAll").checked) {
             if (!chbox[i].checked) {
-                console.log("들어옴")
                 $('#checkAll').prop("checked", false);
                 cnt = total - 1;
             }
@@ -56,7 +51,6 @@ function cntCheck() {
 }
 
 function selectAll(selectAll) {
-    console.log("전체선택")
     const checkboxes = document.getElementsByName('bank');
     let total = document.getElementsByClassName('bankOne').length;
 
@@ -76,20 +70,14 @@ function addProperty() {
     let chbox = document.getElementsByClassName('bankOne');
     let total = chbox.length;
     let list = [];
-    console.log(total);
     for (let i = 0; i < total; i++) {
-        console.log(chbox[i].checked)
         if (chbox[i].checked) {
-
-            console.log(chbox[i].parentNode.children[0].children[1].innerText);
 
             list.push(chbox[i].parentNode.children[0].children[1].innerText);
             $('#checkAll').prop("checked", false);
             cnt = total - 1;
         }
     }
-    console.log("===========")
-    console.log(list);
 
     location.href = '/app/certificationSendReq/' + list;
 }

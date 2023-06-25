@@ -286,9 +286,6 @@ public class MydataController {
     @GetMapping("/providerTable")
     public String mdProviderSelectAll(Model model) {
         List<MdProviderDTO> list = mydataService.mdProviderSelectAll();
-        System.out.println("MydataController.mdProviderSelectAll");
-        System.out.println(list);
-        System.out.println("=============================================");
         model.addAttribute("list", list);
         return "/mydata/mdProviderTable";
     }
@@ -406,7 +403,6 @@ public class MydataController {
         System.out.println("list.size() = " + list.size());
         return "/mydata/mydataSendReq";
     }
-
     @GetMapping("/selectToken")
     @ResponseBody
     public JsonObject selectToken(String orgCode) {
@@ -421,10 +417,10 @@ public class MydataController {
 
         object.addProperty("token", mdAgencyDTO.getMdTokenDTO().getAccessToken());
 
-        object.addProperty("clientId", mdAgencyDTO.getMdTokenDTO().getConsumerNum());
-        object.addProperty("serviceName", mdAgencyDTO.getMdServiceDTO().getMdServiceName());
+        object.addProperty("clientId",mdAgencyDTO.getMdTokenDTO().getConsumerNum() );
+        object.addProperty("serviceName",mdAgencyDTO.getMdServiceDTO().getMdServiceName());
         object.addProperty("orgCode", mdAgencyDTO.getCode());
-        object.addProperty("agencyName", mdAgencyDTO.getName());
+        object.addProperty("agencyName",mdAgencyDTO.getName());
 
         object.addProperty("issueDate", issueDate);
         object.addProperty("expireDate", expireDate);
@@ -537,7 +533,7 @@ public class MydataController {
             System.out.println("mdProviderDTO = " + mdProviderDTO);
             System.out.println("mdProviderDTO = " + mdProviderDTO.getMdReqInfoDTO().getCode());
             if (dday.equals("") || dday.equals(reqDate)) {
-                if (customerNum.equals(mdProviderDTO.getCustomerNum()) && mdProviderDTO.getMdReqInfoDTO().getCode().equals(org_code)) {
+                if (customerNum.equals(mdProviderDTO.getCustomerNum())&& mdProviderDTO.getMdReqInfoDTO().getCode().equals(org_code)) {
                     System.out.println("들어옴");
 
                     JsonObject r = new JsonObject();
@@ -606,6 +602,7 @@ public class MydataController {
         System.out.println("jsonObject = " + jsonObject);
         return jsonObject;
     }
+
 
 
     @GetMapping("/statistics/{orgCode}/{date}")

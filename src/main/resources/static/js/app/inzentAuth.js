@@ -4,8 +4,6 @@ window.onload = function () {
 
 // 필수 checkbox 확인
 function goCheck() {
-    console.log("goCheck")
-    console.log($('#agree').val());
     let checkAgree = document.getElementById("agree");
     if (checkAgree.checked == false) {
         checkAgree.checked = true;

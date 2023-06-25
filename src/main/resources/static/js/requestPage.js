@@ -46,7 +46,6 @@ function reqDetail(reqId) {
         url: "/selectOne/" + id, data: data, method: "get",
 
         success: (message) => {
-            console.log(message);
             document.getElementById('reqId').innerText = id;
             let title = document.getElementsByClassName('reqTitle');
             for (let i = 0; i < title.length; i++) {

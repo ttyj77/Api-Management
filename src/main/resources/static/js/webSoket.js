@@ -12,11 +12,9 @@ function disconnect() {
     if (stompClient !== null) {
         stompClient.disconnect();
     }
-    console.log("Disconnected");
 }
 
 function sendNotification(message) {
-    console.log("message : " + "알림전송 메세지")
     stompClient.send("/send-notification", {}, message);
 }
 

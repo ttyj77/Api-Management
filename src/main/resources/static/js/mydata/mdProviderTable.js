@@ -1,5 +1,4 @@
 function providerModal(value) {
-    console.log("id : " + value.id)
     let data = {
         "id": value.id,
     };
@@ -10,7 +9,6 @@ function providerModal(value) {
 
         success: (message) => {
             $('#serviceInfoModal').modal('show');
-            console.log(message)
             createProviderModal(message);
 
         },
@@ -21,7 +19,6 @@ function providerModal(value) {
 }
 
 function createProviderModal(data) {
-    console.log(data)
     document.getElementById("reqSEQ").innerText = data.reqSEQ
     document.getElementById("name").innerText = data.agencyName + " : " + data.serviceName
     document.getElementById("apiResources").innerText = data.apiResources
@@ -42,7 +39,6 @@ function input() {
     let tbody = document.getElementById("userNumTbody");
     tbody.innerHTML = "";
     let dday = document.getElementById("input_date").value;
-    console.log(dday);
     let data = {
         "dday": dday,
     }
@@ -53,11 +49,8 @@ function input() {
 
         success: (message) => {
 
-            console.log("calendar!!!!!!!!!!!!!!!!!!!!!!!!!!")
             let plist = JSON.parse(message.providerList);
-            console.log(plist);
             let col_cnt = Object.keys(plist[0]).length;
-            console.log(col_cnt);
             for (let i = 0; i < plist.length; i++) {
                 let keys = Object.keys(plist[i]);
                 let tr = document.createElement("tr");

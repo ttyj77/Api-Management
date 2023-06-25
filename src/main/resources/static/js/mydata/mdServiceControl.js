@@ -23,7 +23,6 @@ function serviceInfoModal(value) {
 }
 
 function createServiceModal(message) {
-    console.log(message)
     document.getElementById("callbackUrlTbody").innerHTML = ""
 
 

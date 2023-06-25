@@ -1,24 +1,3 @@
-// $(document).ready(function(){
-//     $.ajax({
-//         url:"/api/grant",
-//         type:"get",
-//
-//         success: (message) => {
-//             console.log(message);
-//             let apiList = JSON.parse(message.apisList);
-//             let list = JSON.parse(message.list);
-//             for (i in apiList){
-//                 console.log("==========================");
-//                 console.log(apiList[i].apisId);
-//                 $('#' + apiList[i].apisId).attr("sec:authorize", "hasRole(" + "\'ADMIN\'" + ")");
-//             }
-//
-//
-//
-//         }
-//     })
-// });
-
 
 function saveApi() {
     // 입력 확인
@@ -90,21 +69,16 @@ function removeApi(apiOne) {
 function insertApis(e, id) {
     if (e.target.parentNode.className == "h3 font-weight-bold text-primary mb-1" || e.target.parentNode.className == "col mr-2") {
         location.href = '/api/details/' + id;
-        console.log(e.target.parentNode.className)
-    } else {
-        console.log("해당없음!!")
     }
 }
 
 function updateApi(apiOne) {
-    console.log("update Api : 연필 모달")
     let context = document.getElementById('contextApi');
     let name = document.getElementById('nameApi');
     let explanation = document.getElementById('explanationApi');
     let buttonApi = document.getElementsByClassName("btn btn-dark btn-sm api")
 
     let apiId = apiOne.getAttribute("apiId");
-    console.log(apiId)
     let data = {
         "apiId": apiId,
     };
@@ -119,7 +93,6 @@ function updateApi(apiOne) {
             name.value = message.apiName;
             explanation.textContent = message.apiExplanation;
             buttonApi.id = message.apiId;
-            console.log("===================================");
             if (message.apiDisclosure) {
                 $('#radio1').prop("checked", true);
             } else {
@@ -127,7 +100,6 @@ function updateApi(apiOne) {
             }
             document.getElementById("updateModalLabel").innerText = message.apiName;
             let selectedRoleList = JSON.parse(message.selectedRoleList);
-            console.log(selectedRoleList)
             let target2 = document.getElementById("target2")
             target2.innerHTML = ""
             for (let i = 0; i < selectedRoleList.length; i++) {
@@ -166,7 +138,6 @@ function roleList() {
             method: "get",
             success: (message) => {
                 $('#roleModal').modal('show')
-                console.log(message);
 
                 let array = JSON.parse(message.responseText);
 
@@ -203,9 +174,6 @@ function roleList() {
 
 /* 체크박스 체크 시 input 안에 checkd 넣기*/
 function is_checked(value) {
-    console.log(value.id)
-
-    console.log($('#' + value.id).prop("checked"))
 
     if ($('#' + value.id).prop("checked")) {
         $('#' + value.id).prop("checked", true);
@@ -216,8 +184,6 @@ function is_checked(value) {
 
 /* 역할 모달에서 닫기를 누르면 뱃지 만들어주는용도 */
 function drawRole(value) {
-    console.log("drawRole")
-    console.log(value.id)
     let target;
     let parent;
     if (value.id == "insertServiceModal") { //서비스 등록모달
@@ -235,20 +201,12 @@ function drawRole(value) {
 
     let childNodes = parent.childNodes;
 
-    console.log(parent)
-    console.log(parent.length)
-    console.log(childNodes)
-
-    console.log(childNodes.length)
     let cnt = childNodes.length;
     for (let i = 0; i < cnt; i++) {
 
         let check = childNodes[i].childNodes[0];
-        console.log("check : " + check.id)
         let isChecked = $('#' + check.id).is(':checked');
-        console.log(isChecked)
         if (isChecked) { //체크가 되어있다면
-            console.log(check)
             let h5 = document.createElement("h5")
             let badge = document.createElement("span")
             badge.className = "badge badge-secondary"
@@ -258,9 +216,7 @@ function drawRole(value) {
             inputHidden.value = i+1;
             inputHidden.type = "hidden"
             if (value.id == "updateApisModal") {
-                console.log("update Api modal span id BADGE_ 추가");
                 let id = check.id.substr(4,)
-                console.log(id)
                 badge.id = "BADGE_" + id
 
             }
@@ -279,10 +235,7 @@ function drawRole(value) {
 
 // 기존 Apis 역할 모달 리스트  기존 Apis 는 기존의 역할을 가지고 있어야 된다.
 function apisModalRoleList() {
-    console.log("apiModalRoleList")
     let api = document.getElementsByClassName("btn btn-dark btn-sm api")
-    console.log(api)
-    console.log(api.id)
 
     let data = {
         "apiId": api.id,
@@ -295,10 +248,8 @@ function apisModalRoleList() {
         data: data,
         success: (message) => {
             $('#roleUpdateModal').modal('show')
-            console.log(message);
 
             let array = JSON.parse(message.responseText);
-            console.log("array : " + array)
 
             let roleBody = document.getElementById("apiRoleModalBody")
             roleBody.innerHTML = ""
@@ -331,21 +282,11 @@ function apisModalRoleList() {
             let cnt = document.getElementById("target2").childNodes.length;
             let parent = document.getElementById("target2").childNodes
 
-
-            console.log(parent)
-            console.log(parent[0])
-            console.log(parent[1])
-            console.log(parent[0].childNodes[0].id)
-            console.log(parent[0].childNodes[1])
-            console.log(parent[0].childNodes[2])
-            console.log("CNT!!!" + cnt)
             for (let j = 0; j < cnt; j++) {
                 let badgeId = parent[j].childNodes[0].id
 
                 let id = "API_" + badgeId.substring(6,)
-                console.log("id===========" + id)
                 if (!$('#' + id).prop("checked")) {
-                    console.log("checked false")
                     $('#' + id).prop("checked", true);
                 }
             }

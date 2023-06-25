@@ -66,8 +66,6 @@ public class RequestController {
         object.addProperty("reqUsername", requestDTO.getReqUsername());
         object.addProperty("reqNickname", requestDTO.getReqNickname());
 
-        System.out.println("object = " + object);
-
         return object;
     }
 
@@ -85,26 +83,18 @@ public class RequestController {
         if (principal instanceof UserDetails) {
             //일반로그인
             String username = ((UserDetails) principal).getUsername();
-            System.out.println("username 1 = " + username);
-            System.out.println((UserDetails) principal);
             userDTO = userDetails.getUserDTO();
         } else {
             //인젠트 로그인
             UserDTO logIn = (UserDTO) session.getAttribute("logIn");
-            System.out.println("==============" + logIn);
             String username = principal.toString();
-            System.out.println("username 2  = " + username);
-            System.out.println("userinfo 2  " + principal);
             userDTO = logIn;
         }
 
         if (userDTO == null) {
             return "redirect:/user/login";
         }
-        System.out.println("id = " + id);
-        System.out.println("logIn = " + userDTO);
         RequestDTO requestDTO = requestService.selectUserId(id);
-        System.out.println("requestDTO = " + requestDTO);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date now = new Date();
         String procDate = sdf.format(now);
@@ -127,25 +117,18 @@ public class RequestController {
         if (principal instanceof UserDetails) {
             //일반로그인
             String username = ((UserDetails) principal).getUsername();
-            System.out.println("username 1 = " + username);
-            System.out.println((UserDetails) principal);
             userDTO = userDetails.getUserDTO();
         } else {
             //인젠트 로그인
             UserDTO logIn = (UserDTO) session.getAttribute("logIn");
-            System.out.println("==============" + logIn);
             String username = principal.toString();
-            System.out.println("username 2  = " + username);
-            System.out.println("userinfo 2  " + principal);
             userDTO = logIn;
         }
 
         if (userDTO == null) {
             return "redirect:/user/login";
         }
-        System.out.println("id = " + id);
         RequestDTO requestDTO = requestService.selectUserId(id);
-        System.out.println("requestDTO = " + requestDTO);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date now = new Date();
         String procDate = sdf.format(now);
@@ -168,7 +151,6 @@ public class RequestController {
     @GetMapping("/requestSearch")
     public String requestSearch(Model model, String keyword) {
         model.addAttribute("list", requestService.requestSearch(keyword));
-        System.out.println("requestService.requestS earch(keyword) = " + requestService.requestSearch(keyword));
         return "requestPage";
     }
 

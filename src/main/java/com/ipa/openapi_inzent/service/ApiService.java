@@ -22,7 +22,6 @@ public class ApiService {
     }
 
     public void insertRole(ApisRoleDTO apisRoleDTO) {
-        System.out.println("apisRoleDTO.getRoleId() = " + apisRoleDTO.getRoleId());
         apiDao.insertRole(apisRoleDTO);
     }
 

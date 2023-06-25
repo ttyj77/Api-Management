@@ -48,7 +48,6 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script>
             function removeAlert() {
-                console.log("alert")
                 Swal.fire({
                     showCancelButton: true,
                     cancelButtonText: "취소",
@@ -69,9 +68,7 @@
 
             // 토근 발급 목록 detail 모달 ajax
             function tokenDetail(value) {
-                console.log(value);
                 let tokenId = value.getAttribute("token_id");
-                console.log("tokenIDdddddddd= ",tokenId)
                 let data = {
                     "id": tokenId,
                 }
@@ -82,7 +79,6 @@
                     type: "get",
 
                     success: (message) => {
-                        console.log(message)
 
                         document.getElementById("clientId").innerText = message.clientId;
                         document.getElementById("userInfo").innerText = message.consumerNum;

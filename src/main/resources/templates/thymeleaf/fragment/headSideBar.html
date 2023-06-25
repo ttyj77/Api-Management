@@ -115,15 +115,12 @@
                 bodypadding = document.getElementById(bodyId)
             const div_id = document.getElementById("navbar")
             if (toggle && navbar) {
-                console.log("333")
                 div_id.addEventListener('mouseover', () => {
-                    // console.log("mouseOver")
                     navbar.classList.toggle('expander');
 
                     bodypadding.classList.toggle('body-pd')
                 })
                 div_id.addEventListener('mouseout', () => {
-                    // console.log("mouseout!!!!!!!!!!!")
                     navbar.className = "l-navbar"
 
                     bodypadding.className = ""
@@ -140,10 +137,7 @@
         linkColor.forEach(l => l.addEventListener('click', returnId))
 
         function colorLink(value) {
-            console.log(value)
-            console.log("1111111")
             linkColor.forEach(l => l.classList.remove('active'))
-            // console.log(this)
             value.classList.add('active')
         }
 
@@ -153,24 +147,12 @@
             return docum
         }
 
-        // $(".nav__list a").on("click", function () {
-        //     $(".nav__list").find(".active").removeClass("active");
-        //     console.log($(this))
-        //     $(this).addClass("active");
-        //     console.log($(this))
-        // });
-
-        // window.onload(function () {
-        //     colorLink()
-        // })
-
 
         /* COLLAPSE MENU */
         const linkCollapse = document.getElementsByClassName('collapse__link2')
         var i
 
         for (i = 0; i < linkCollapse.length; i++) {
-            console.log("22222")
             linkCollapse[i].addEventListener('click', function () {
                 const collapseMenu = this.nextElementSibling
                 collapseMenu.classList.toggle('showCollapse2')
@@ -181,25 +163,18 @@
         }
 
         function marginValue() {
-            console.log(document.getElementById("body-pd").className)
             let className = document.getElementById("body-pd").className
             if (className == "body-pd") {
-                console.log("sidebar close")
                 document.getElementById("sidebarMargin").style.marginLeft = "8%"
 
             } else {
-                console.log("sidebar open")
                 document.getElementById("sidebarMargin").style.marginLeft = "15%"
             }
         }
 
         function divChange() {
             let sideDiv = document.getElementById("sidebarMargin")
-            // console.log("===============")
-            // console.log(document.getElementById("navbar").className == "l-navbar")
-            // console.log(sideDiv)
             if (document.getElementById("navbar").className == "l-navbar") {
-                // console.log(false)
                 sideDiv.style.marginLeft = "4.5%"
                 sideDiv.style.transition = "all 600ms ease 0s"
                 document.getElementById("contentBody").style.width = "100%"
@@ -213,7 +188,6 @@
                 }
 
             } else {
-                // console.log(true) // sidebar 열림
                 sideDiv.style.marginLeft = "17%"
                 sideDiv.style.transition = "all 600ms ease 0s"
                 document.getElementById("contentBody").style.width = "82%"
@@ -234,7 +208,6 @@
         });
 
         toggle_id.addEventListener('mouseout', (event) => {
-            // console.log("mouseOut")
             divChange()
         });
     </script>

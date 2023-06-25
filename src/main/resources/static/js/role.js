@@ -62,13 +62,10 @@ function updateApi(apiOne) {
         url: "/user/selectOneRole", data: data, method: "get",
 
         success: (message) => {
-            console.log(message)
-            console.log(JSON.parse(message.selectedRoleList))
 
             let selectedRoleList = JSON.parse(message.selectedRoleList);
             let target2 = document.getElementById("target2")
             target2.innerHTML = ""
-            console.log("뱃지 들어가유!!!!!!!!!!!!!!!!!!!");
             for (let i = 0; i < selectedRoleList.length; i++) {
                 let h5 = document.createElement("h5")
                 let badge = document.createElement("span")
@@ -77,8 +74,6 @@ function updateApi(apiOne) {
                 badge.className = "badge badge-secondary";
                 badge.innerText = selectedRoleList[i].name;
                 badge.id = "BADGE_" + selectedRoleList[i].code;
-
-                console.log("id = ", selectedRoleList[i].id);
 
                 inputHidden.name = "roleId"
                 inputHidden.value = selectedRoleList[i].id
@@ -101,7 +96,6 @@ function updateApi(apiOne) {
 
 // 기존 Apis 역할 모달 리스트  기존 Apis 는 기존의 역할을 가지고 있어야 된다.
 function apisModalRoleList() {
-    console.log("apiModalRoleList")
 
     // 1. 전체리스트를 가져온다
     $.ajax({
@@ -109,17 +103,12 @@ function apisModalRoleList() {
         method: "get",
         success: (message) => {
             $('#roleUpdateModal').modal('show')
-            console.log(message);
 
             let array = JSON.parse(message.responseText);
-            console.log("array : " + array)
-            console.log(array)
-
 
             let roleBody = document.getElementById("apiRoleModalBody")
             roleBody.innerHTML = ""
             for (let i = 0; i < array.length; i++) {
-                console.log(array[i].id)
                 let roleBox = document.createElement("div");
                 roleBox.className = "form-check"
 
@@ -147,22 +136,11 @@ function apisModalRoleList() {
             let cnt = document.getElementById("target2").childNodes.length;
             let parent = document.getElementById("target2").childNodes
 
-
-            console.log(cnt)
-            console.log(parent)
-            console.log(parent[0])
-            console.log(parent[1])
-            console.log(parent[0].childNodes[0].id)
-            console.log(parent[0].childNodes[1])
-            console.log(parent[0].childNodes[2])
-            console.log("CNT!!!" + cnt)
             for (let j = 0; j < cnt; j++) {
                 let badgeId = parent[j].childNodes[0].id
 
                 let id = "API_" + badgeId.substring(6,)
-                console.log("id===========" + id)
                 if (!$('#' + id).prop("checked")) {
-                    console.log("checked false")
                     $('#' + id).prop("checked", true);
                 }
             }
@@ -177,12 +155,9 @@ function apisModalRoleList() {
 
 /* 역할 모달에서 닫기를 누르면 뱃지 만들어주는용도 */
 function drawRole(value) {
-    console.log("drawRole")
-    console.log(value.id)
     let target;
     let parent;
     if (value.id == "userRoleModal") { //서비스 등록모달
-        console.log("?????????????????")
         target = document.getElementById("target2")
         parent = document.getElementById("apiRoleModalBody")
     }
@@ -200,12 +175,8 @@ function drawRole(value) {
 
         let check = childNodes[i].childNodes[0];
 
-        console.log("check : " + check)
-        console.log("check : " + check.id)
         let isChecked = $('#' + check.id).is(':checked');
-        console.log(isChecked)
         if (isChecked) { //체크가 되어있다면
-            console.log(check)
             let h5 = document.createElement("h5")
             let badge = document.createElement("span")
             badge.className = "badge badge-secondary"
@@ -216,9 +187,7 @@ function drawRole(value) {
             inputHidden.type = "hidden"
 
             if (value.id == "userRoleModal") {
-                console.log("update Api modal span id BADGE_ 추가")
                 let id = check.id.substr(4,)
-                console.log(id)
                 badge.id = "BADGE_" + id
 
                 let inputHidden = document.createElement("input")
@@ -236,9 +205,6 @@ function drawRole(value) {
 
 /* 체크박스 체크 시 input 안에 checkd 넣기*/
 function is_checked(value) {
-    console.log(value.id)
-
-    console.log($('#' + value.id).prop("checked"))
 
     if ($('#' + value.id).prop("checked")) {
         $('#' + value.id).prop("checked", true);

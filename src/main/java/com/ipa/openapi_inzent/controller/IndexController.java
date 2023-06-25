@@ -26,7 +26,6 @@ public class IndexController {
     @ResponseBody
     public UserDTO test(HttpSession session) {
         UserDTO logIn = (UserDTO) session.getAttribute("logIn");
-        System.out.println("logIn = " + logIn);
         return logIn;
     }
 

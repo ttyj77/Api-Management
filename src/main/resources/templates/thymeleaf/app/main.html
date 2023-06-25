@@ -25,28 +25,17 @@
     <link href="/css/app/appMain.css" rel="stylesheet"/>
     <script>
         function showAccount(value) {
-            console.log(value);
             let orgCode = value.getAttribute("id");
             let industry = value.getAttribute("industry");
-            console.log(orgCode);
-            console.log(industry);
-            console.log("============================!!!!")
             let cnt = document.getElementsByClassName(orgCode);
-            console.log($(cnt).length);
             if ($(cnt).length != 0) {
-                console.log("삭제 조건들어옴");
-                console.log(cnt.length);
-
                 for (let i = cnt.length - 1; i >= 0; i--) {
-                    console.log(i);
-                    console.log(cnt[i]);
 
                     cnt[i].remove();
                 }
                 $('#' + orgCode).css("background-color", "transparent");
             } else {
                 let clientNum = [[${user.ownNum}]];
-                console.log(clientNum);
                 let data = {
                     "clientNum": clientNum, "industry": industry,
                 };
@@ -61,48 +50,27 @@
                         success: (message) => {
                             let balance = JSON.parse(message.balance);
                             let bankList = JSON.parse(message.bankList);
-                            console.log(balance);
-                            console.log("==================");
-                            console.log(bankList.length);
                             for (let i = 0; i < bankList.length; i += 2) {
                                 let reqData = JSON.parse(message.bankList)[i];
                                 let resData = JSON.parse(message.bankList)[i + 1];
 
-                                console.log(reqData);
-                                console.log(resData);
-                                console.log(resData.account_list)
-                                console.log("=====================!!!!!!!")
-                                console.log(resData.account_list.length);
-                                console.log("=====================!!!!!!!")
-
-                                console.log("res_acc_list = " + resData.account_list);
-
                                 for (let j = 0; j < resData.account_list.length; j++) {
-                                    console.log(resData.account_list[j].prod_name);
-                                    console.log(resData.account_list[j].account_num);
-
-                                    console.log(resData.account_list);
 
                                     let div_1 = document.createElement("div");
                                     div_1.className = "accountList " + reqData.org_code;
 
                                     let div_2 = document.createElement("div");
                                     div_2.className = "d-flex";
-                                    console.log("j = " + j);
 
 
                                     let bankName = document.createElement("div");
                                     bankName.innerText = resData.account_list[j].prod_name;
                                     let accountNum = document.createElement("div");
                                     let accNum = resData.account_list[j].account_num;
-                                    console.log("***********")
-                                    console.log(accNum);
-                                    console.log("***************")
                                     accountNum.className = "text-muted";
                                     accountNum.innerText = "( " + accNum + " )";
                                     let balanceNum = "";
                                     for (let k = 0; k < balance.length; k += 2) {
-                                        console.log(balance[k].account_num)
                                         if (accNum == balance[k].account_num) {
                                             balanceNum = balance[k + 1].detail_list[0].balance_amt;
                                             break;
@@ -113,19 +81,14 @@
 
                                     let balanceDiv = document.createElement("div");
                                     balanceDiv.className = "d-flex justify-content-end";
-                                    console.log("잔액 : " + balanceNum);
 
                                     let balanceAccount = balanceNum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-
-                                    console.log(balanceAccount);
 
                                     balanceDiv.innerText = balanceAccount + " 원";
 
                                     let reqOrg = reqData.org_code;
-                                    console.log(reqOrg);
                                     let target = document.getElementById(reqOrg);
                                     if (reqOrg == orgCode) {
-                                        console.log("기관코드 같은 조건 들어옴");
                                         $('#' + orgCode).css("background-color", "#f5f5f5");
                                         div_2.append(bankName, accountNum);
                                         div_1.append(div_2, balanceDiv);
@@ -150,33 +113,18 @@
                         success: (message) => {
                             let balance = JSON.parse(message.balance);
                             let investList = JSON.parse(message.investList);
-                            console.log(balance);
-                            console.log("==================");
-                            console.log(investList.length);
                             for (let i = 0; i < investList.length; i += 2) {
                                 let reqData = JSON.parse(message.investList)[i];
                                 let resData = JSON.parse(message.investList)[i + 1];
 
-                                console.log(reqData);
-                                console.log(resData);
-                                console.log(resData.account_list)
-                                console.log("=====================!!!!!!!")
-                                console.log(resData.account_list.length);
-                                console.log("=====================!!!!!!!")
 
                                 for (let j = 0; j < resData.account_list.length; j++) {
-                                    console.log(resData.account_list[j].account_name);
-                                    console.log(resData.account_list[j].account_num);
-
-                                    console.log(resData.account_list);
 
                                     let div_1 = document.createElement("div");
                                     div_1.className = "accountList " + reqData.org_code;
 
                                     let div_2 = document.createElement("div");
                                     div_2.className = "d-flex";
-                                    console.log("j = " + j);
-
 
                                     let agencyName = document.createElement("div");
                                     agencyName.innerText = resData.account_list[j].account_name;
@@ -201,19 +149,14 @@
 
                                     let balanceDiv = document.createElement("div");
                                     balanceDiv.className = "d-flex justify-content-end";
-                                    console.log("잔액 : " + balanceNum);
 
                                     let balanceAccount = balanceNum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-
-                                    console.log(balanceAccount);
 
                                     balanceDiv.innerText = balanceAccount + " 원";
 
                                     let reqOrg = reqData.org_code;
-                                    console.log(reqOrg);
                                     let target = document.getElementById(reqOrg);
                                     if (reqOrg == orgCode) {
-                                        console.log("기관코드 같은 조건 들어옴");
                                         $('#' + orgCode).css("background-color", "#f5f5f5");
                                         div_2.append(agencyName, accountNum);
                                         div_1.append(div_2, balanceDiv);

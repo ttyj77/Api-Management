@@ -4,13 +4,9 @@ $(document).ready(function () {
 
 function getGraph() {
 
-    console.log("들어옴")
     let date = document.getElementById('date').innerText;
-    console.log(date);
     let day = date.replaceAll("-", "").toString();
-    console.log(typeof day);
     let orgCode = document.getElementById('orgCode').getAttribute("value");
-    console.log(orgCode);
 
     // 선 그래프 데이터
     let xlabel = [];
@@ -33,13 +29,9 @@ function getGraph() {
         url: "/mydata/chartData", type: "get", data: data,
 
         success: (message) => {
-            console.log("차트 통신 성공")
             let timeList = JSON.parse(message.timeList);
             let resourcesSeq = JSON.parse(message.resourcesSeq);
             let errorSeq = JSON.parse(message.errorSeq);
-            console.log(timeList);
-            console.log(resourcesSeq);
-            console.log(errorSeq);
 
             // 선 그래프 데이터 넣기
             for (let i = 0; i < timeList.length; i++) {

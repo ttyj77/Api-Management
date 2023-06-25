@@ -1,6 +1,5 @@
 function infoModal(value) {
 
-    console.log("infoModal", value.id)
     let data = {
         "id": value.id,
     };
@@ -14,7 +13,6 @@ function infoModal(value) {
             $('#etcModal').modal('show');
             document.getElementById("etcModalTbody").innerHTML = ""
             let array = JSON.parse(message.responseText);
-            console.log(array)
             createEtcModal(array);
 
 
@@ -51,9 +49,6 @@ function createEtcModal(array) {
 
 /* selectOne : 기관 클릭 시 개별 상세 모달 */
 function agencyModal(value) {
-    console.log(value)
-    console.log(value.parentNode)
-    console.log("agencyModal", value.parentNode.id)
 
     let data = {
         "id": value.parentNode.id,
@@ -67,7 +62,6 @@ function agencyModal(value) {
             $('#agencyModal').modal('show');
             let list = JSON.parse(message.responseText);
             createAgencyModal(list);
-            console.log(list)
 
 
         },
@@ -79,7 +73,6 @@ function agencyModal(value) {
 
 
 function createAgencyModal(list) {
-    console.log(list);
     //ipPort 초기화
     document.getElementById("ipPort").innerHTML = "";
 
@@ -92,8 +85,6 @@ function createAgencyModal(list) {
     document.getElementById("publicApiIp").innerText = list.publicApiIp
     // document.getElementById("authenticationMethod").innerText = list.authenticationMethod
     // document.getElementById("TLSNum").innerText = list.TLSNum
-    console.log(list.agencyIp == null)
-    console.log( list.agencyPort == null)
     if (list.agencyIp == null && list.agencyPort == null) {
         document.getElementById("ipPort").innerText = "데이터가 없습니다.";
     } else {
@@ -109,9 +100,6 @@ function createAgencyModal(list) {
 /* 우측 상단 셀렉트 박스 변경시 리스트 체인지 */
 function selectChange(value) {
 
-    console.log("selectChange")
-    console.log(value)
-
     let data = {
         "division": value,
     };
@@ -124,7 +112,6 @@ function selectChange(value) {
             document.getElementById("agencyListTbody").innerHTML = ""
             let array = JSON.parse(message.responseText);
             createAgencyList(array);
-            console.log(array)
 
         },
         error: (e) => {
@@ -190,7 +177,6 @@ function createAgencyList(array) {
 
 /* 기관 관리 삭제 */
 function deleteRow(value) {
-    console.log(value.parentNode.parentNode.id)
     let data = {
         "id": value.parentNode.parentNode.id,
     };
