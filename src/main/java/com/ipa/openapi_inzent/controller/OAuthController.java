@@ -75,7 +75,6 @@ public class OAuthController {
 
     @GetMapping(value = "/authorized")
     public String showEmployees(@RequestParam("code") String code, HttpServletRequest httpServletRequest, HttpServletRequest requestInf) throws JsonProcessingException, IOException {
-        System.out.println("Authorization Code------" + code);
 
         ResponseEntity<String> response;
         RestTemplate restTemplate = new RestTemplate();
@@ -97,7 +96,6 @@ public class OAuthController {
         access_token_url += "&code_verifier=A7MvYn9hmuJQZt7Unepbx9khicAo2IWAAhSCAbeSoA2";
         HttpEntity<String> request = new HttpEntity<String>(headers);
         response = restTemplate.exchange(access_token_url, HttpMethod.POST, request, String.class);
-        System.out.println("Access Token Response ---------" + response.getBody());
 
         // Get the Access Token From the recieved JSON response
         ObjectMapper mapper = new ObjectMapper();
@@ -130,7 +128,6 @@ public class OAuthController {
         UserDTO userDTO1 = new UserDTO();
 
         if (userDTO.isEmpty()) { // 첫 소셜로그인
-            System.out.println("처음 로그인 함");
             userDTO1.setUsername("inzent_" + username);
 //            userDTO1.setNickname("ROLE_NORMAL");
             userDTO1.setPassword(passwordEncoder.encode("password"));
@@ -146,7 +143,6 @@ public class OAuthController {
             userRoleDTO.setRoleId(2); // 일반 사용자 ( ROLE_NORMAL )
             userService.insertRole(userRoleDTO);
         } else {
-            System.out.println("이후 로그인 부터는 토큰만 업데이트 해주면 됨");
             UserDTO updateUser = userDTO.get(0);
             updateUser.setToken(token);
             userService.update(updateUser);
@@ -168,7 +164,6 @@ public class OAuthController {
 
     @GetMapping(value = "/app/authorized")
     public String appAuthorized(@RequestParam("code") String code, HttpServletRequest httpServletRequest, HttpServletRequest requestInf) throws JsonProcessingException, IOException {
-        System.out.println("Authorization Code------" + code);
 
         ResponseEntity<String> response;
         RestTemplate restTemplate = new RestTemplate();
@@ -177,7 +172,6 @@ public class OAuthController {
 
 
         String encodedCredentials = new String(Base64.encodeBase64(credentials.getBytes()));
-        System.out.println("encodedCredentials = " + encodedCredentials);
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
         headers.add("Authorization", "Basic " + encodedCredentials);
@@ -191,7 +185,6 @@ public class OAuthController {
         access_token_url += "&code_verifier=A7MvYn9hmuJQZt7Unepbx9khicAo2IWAAhSCAbeSoA2";
         HttpEntity<String> request = new HttpEntity<String>(headers);
         response = restTemplate.exchange(access_token_url, HttpMethod.POST, request, String.class);
-        System.out.println("Access Token Response ---------" + response.getBody());
 
         // Get the Access Token From the recieved JSON response
         ObjectMapper mapper = new ObjectMapper();
@@ -225,7 +218,6 @@ public class OAuthController {
         UserDTO userDTO1 = new UserDTO();
 
         if (userDTO.isEmpty()) { // 첫 소셜로그인
-            System.out.println("처음 로그인 함");
             userDTO1.setUsername("inzent_" + username);
 //            userDTO1.setNickname("ROLE_NORMAL");
             userDTO1.setPassword(passwordEncoder.encode("password"));
@@ -242,7 +234,6 @@ public class OAuthController {
             userRoleDTO.setRoleId(2); // 일반 사용자 ( ROLE_NORMAL )
             userService.insertRole(userRoleDTO);
         } else {
-            System.out.println("이후 로그인 부터는 토큰만 업데이트 해주면 됨");
             UserDTO updateUser = userDTO.get(0);
             updateUser.setToken(token);
             userService.update(updateUser);
@@ -301,7 +292,6 @@ public class OAuthController {
 
             statusCodeValue = responseResource.getStatusCodeValue();
         }
-        System.out.println(userDTO == null);
         if (userDTO == null) {
             userDTO = authLogin(userCustomDetails, session);
         }
@@ -347,8 +337,6 @@ public class OAuthController {
     @GetMapping("/userInfo")
     @ResponseBody
     public String userINfo(@AuthenticationPrincipal UserCustomDetails userCustomDetails) {
-        System.out.println("userCustomDetails = " + userCustomDetails);
-        System.out.println("userCustomDetails = " + userCustomDetails.getUserDTO());
         return "userINfo";
     }
 }

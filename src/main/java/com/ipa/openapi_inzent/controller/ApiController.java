@@ -53,20 +53,14 @@ public class ApiController {
         if (principal instanceof UserDetails) {
             //일반로그인
             String username = ((UserDetails) principal).getUsername();
-            System.out.println("username 1 = " + username);
-            System.out.println((UserDetails) principal);
             userDTO = userCustomDetails.getUserDTO();
         } else {
             //인젠트 로그인
             UserDTO logIn = (UserDTO) session.getAttribute("logIn");
-            System.out.println("==============" + logIn);
             String username = principal.toString();
-            System.out.println("username 2  = " + username);
-            System.out.println("userinfo 2  " + principal);
             userDTO = logIn;
         }
 
-        System.out.println("ApiController.apis============================================");
         // 순수 apis 목록
         List<ApiDTO> apisList = apiService.selectAll();
         // apisRole + role 목록
@@ -84,10 +78,6 @@ public class ApiController {
         // 비공개 + role 지정 없는 애들 넣을 목록
         List<Integer> nothing = new ArrayList<>();
 
-        System.out.println("apisList = " + apisList);
-        System.out.println("apisRoleList = " + apisRoleList);
-
-
         // APIs들 최종 리스트에 추가
         for (ApiDTO a : apisList) {
             if (a.isDisclosure()) {
@@ -99,8 +89,6 @@ public class ApiController {
                 temp.add(a.getId());
             }
         }
-
-        System.out.println("noShow = " + noShow);
 
         for (RoleDTO r : apisRoleList) {
             for (int id : noShow) {
@@ -124,7 +112,6 @@ public class ApiController {
                 }
             }
         }
-        System.out.println("비공개 + 지정된 role이 없는 APIs = " + temp);
 
         // 비공개 + 지정된 role이 없는 APIs들 관리자 권한만 부여, passList에 추가
         for (UserRoleDTO userRoleDTO : userRoleList) {
@@ -146,10 +133,6 @@ public class ApiController {
         }
 
         List<ApiDTO> newList = passList.stream().distinct().collect(Collectors.toList());
-        System.out.println("passList.size() = " + passList.size());
-        System.out.println("newList.size() = " + newList.size());
-
-        System.out.println("passList = " + newList);
         model.addAttribute("list", newList);
         return "/apis/index";
     }
@@ -161,7 +144,6 @@ public class ApiController {
         List<ApiDTO> list = apiService.giveRole();
         // 역할 없는 비공개인 apis들을 분류하기 위해 apis list 호출
         List<ApiDTO> apiDTOList = apiService.selectAll();
-        System.out.println("apiDTOList = " + apiDTOList);
 
         JsonArray jsonArray = new JsonArray();
         for (ApiDTO a : apiDTOList) {
@@ -175,8 +157,6 @@ public class ApiController {
 
         object.addProperty("apisList", jsonArray.toString());
 
-        System.out.println("list = " + list);
-
         JsonArray array1 = new JsonArray();
         for (ApiDTO apiDTO : list) {
             JsonObject jsonObject = new JsonObject();
@@ -189,8 +169,6 @@ public class ApiController {
             }
         }
         object.addProperty("list", array1.toString());
-
-        System.out.println("object = " + object);
 
         return object;
     }
@@ -220,9 +198,6 @@ public class ApiController {
 
         object.addProperty("selectedRoleList", selectRoleArray.toString());
 
-//        System.out.println("roleAll = " + roleAll);
-        System.out.println("object = " + object);
-
         return object;
     }
 
@@ -232,14 +207,8 @@ public class ApiController {
     public JsonObject roleList() {
 
         JsonObject result = new JsonObject();
-//        List<RoleDTO> roleList = roleService.selectApisRoleList(apiId);
         List<RoleDTO> roleAll = roleService.selectAll();
 
-        System.out.println("roleAll = " + roleAll);
-//
-//        for (RoleDTO role : roleList) {
-//            object.addProperty(role.getCode(), role.getName());
-//        }
         JsonArray array = new JsonArray();
         for (RoleDTO r : roleAll) {
             JsonObject roleObject = new JsonObject();
@@ -261,7 +230,6 @@ public class ApiController {
         JsonObject result = new JsonObject();
         List<RoleDTO> roleAll = roleService.selectAll();
 
-//        System.out.println("roleAll = " + roleAll);
         JsonArray array = new JsonArray();
         for (RoleDTO r : roleAll) {
             JsonObject roleObject = new JsonObject();
@@ -278,15 +246,12 @@ public class ApiController {
     @GetMapping("/details/{apisId}") // id = apisId
     public String details(Model model, @PathVariable int apisId, HttpServletResponse response) {
         // 리소스 list, 안에 들어갈 apiId 조건으로 묶여 있는 apiDetails List 필요
-        System.out.println("apisId = " + apisId);
 
         ApiDTO a = apiService.selectOne(apisId); // detail 맨 위 정보 때문에 필요 (ex. 보험업권) // apisId
         List<ResourceDTO> resourceList = apiDetailsService.resourceList(apisId); // apisId
         List<ApiDetailsDTO> apiDetailsDTOList = apiDetailsService.detailsList(apisId);
         List<TagDTO> tagList = apiDetailsService.selectAllTag();
 
-        System.out.println("apisId = " + apisId);
-        System.out.println("resourceList = " + resourceList);
         model.addAttribute("api", a);
         model.addAttribute("resourceIndex", resourceList);
         model.addAttribute("apiDetailsDTOList", apiDetailsDTOList);
@@ -306,13 +271,9 @@ public class ApiController {
     @PostMapping("/insert")
     public String insert(ApiDTO apiDTO, ApisRoleDTO
             apisRoleDTO, @RequestParam(value = "roleId") List<String> roleId) {
-        System.out.println("id===================" + roleId);
         int id = apiService.insertApi(apiDTO);
-//        List<RoleDTO> list = roleService.selectAll();
-        System.out.println("roleId = " + roleId);
         apisRoleDTO.setApisId(id);
         if (roleId.contains("0")) {
-            System.out.println("0 조건 들어옴");
             roleId.remove(0);
         }
 
@@ -323,8 +284,6 @@ public class ApiController {
                 apisRoleDTO.setRoleId(Integer.parseInt(role));
                 apiService.insertRole(apisRoleDTO);
             }
-            System.out.println("apisRoleDTO = " + apisRoleDTO);
-
         }
         return "redirect:/api";
     }
@@ -337,29 +296,20 @@ public class ApiController {
         apiDTO.setName(name);
         apiDTO.setDisclosure(disclosure);
         apiDTO.setExplanation(explanation);
-        System.out.println("apiDTO = " + apiDTO);
         apiService.update(apiDTO);
-        System.out.println("roleId = " + roleId);
-        System.out.println("id = " + id);
         List<ApiDTO> roleList = apiService.selectRoleList(id);
-        System.out.println("roleList = " + roleList);
         ApisRoleDTO apisRoleDTO = new ApisRoleDTO();
         apisRoleDTO.setApisId(id);
-        System.out.println("apisRoleDTO = " + apisRoleDTO);
         apiService.deleteRole(id);
         if (roleId.contains("0")) {
-            System.out.println("0 조건 들어옴");
             roleId.remove(0);
         }
-        System.out.println("-----------------------------");
-        System.out.println("roleId = " + roleId);
 
         if (roleId.isEmpty()) {
             System.out.println("선택된 ROLE 없음");
         } else {
             for (String role : roleId) {
                 apisRoleDTO.setRoleId(Integer.parseInt(role));
-                System.out.println("apisRoleDTO = " + apisRoleDTO);
                 apiService.insertRole(apisRoleDTO);
             }
 
@@ -377,7 +327,6 @@ public class ApiController {
     public JsonObject resources(Model model, @PathVariable int id) {
         // 리소스 하나씩
         List<ApiDetailsDTO> resourceInAdList = apiDetailsService.resourceInAdList(id); // resource table id
-        System.out.println("resourceInAdList = " + resourceInAdList);
         JsonObject object = new JsonObject();
         List<ApiDetailsDTO> adList = apiDetailsService.resourceInAdList(id);
         return object;
@@ -399,9 +348,6 @@ public class ApiController {
         JsonObject object = new JsonObject();
         object = (JsonObject) JsonParser.parseString(paramMap.get("get"));
 
-        System.out.println(object.size()); // 0
-        System.out.println(object.isEmpty()); // true
-
         System.out.println("[request post] : " + String.valueOf(paramMap.get("post")));
         System.out.println("[request put] : " + String.valueOf(paramMap.get("put")));
         System.out.println("[request delete] : " + String.valueOf(paramMap.get("delete")));
@@ -410,12 +356,10 @@ public class ApiController {
 
         System.out.println(paramMap);
         int resourceId = 0;
-        System.out.println((paramMap.get("resourceId")).equals(""));
         if (!(paramMap.get("resourceId")).equals("")) {
             resourceId = Integer.parseInt(paramMap.get("resourceId")); // 리소스 아이디
         }
         int apiId = Integer.parseInt(paramMap.get("idx")); // APIS 아이디
-        System.out.println("apiId = " + apiId);
 
         getTagId(paramMap, apiId, resourceId);
 
@@ -425,11 +369,6 @@ public class ApiController {
         ResourceDTO resourceDTO = new ResourceDTO();
         resourceDTO.setApisId(resourceId);
         int uriId = Integer.parseInt(paramMap.get("uriId"));
-        System.out.println("uriId = " + uriId);
-        System.out.println("==================================RESOURCEID");
-        System.out.println("array = " + array);
-        System.out.println(String.valueOf(paramMap.get("resourceId")).isEmpty());
-//        int resourceId = Integer.parseInt(paramMap.get("resourceId"));
         String resId = String.valueOf(paramMap.get("resourceId"));
 
         for (int i = 0; i < array.length; i++) {
@@ -444,8 +383,6 @@ public class ApiController {
                     int tagId = Integer.parseInt(obj.get("tag").toString().replaceAll("[^\\w+]", ""));
                     resourceDTO.setTagId(tagId);
                 }
-                System.out.println("===============111111111111111===================");
-                System.out.println("resourceId = " + resourceId);
                 // uri 아이디가 넘어오지 않는다면 리소스가 새롭게 등록되어야 되지만
                 if (resourceId == 0) { //기존의 리소스가 아니라 새로 등록이라면 apiDetails 전에 resource 먼저 등록
                     System.out.println("리소스 새로등록");
@@ -453,14 +390,10 @@ public class ApiController {
                     System.out.println("resourceDTO = " + resourceDTO);
 
                     resourceId = apiDetailsService.insertResource(resourceDTO); // 리소스 생성
-                    System.out.println("resourceId = " + resourceId);
                 } else { ///있는 리소스라면 받아온 리소스 아이디 입력
                     System.out.println("기존 리소스 사용");
                 }
-                System.out.println("++++++++++++++++++++++++++++++");
                 ApiDetailsDTO apiDetailsDTO = new ApiDetailsDTO();
-                System.out.println("resourceId = " + resourceId);
-
 
                 apiDetailsDTO.setOperationId(obj.get("operation").toString());
                 apiDetailsDTO.setSummary(obj.get("summary").toString());
@@ -469,15 +402,12 @@ public class ApiController {
                 apiDetailsDTO.setMethod(array[i].toUpperCase());
                 apiDetailsDTO.setResourceId(resourceId);
                 apiDetailsDTO.setApisId(apiId);
-                System.out.println("apiDetailsDTO = " + apiDetailsDTO);
 
 
                 int apiDetailsId = apiDetailsService.insertApiDetail(apiDetailsDTO);  // 페이지 아이디?
                 System.out.println("//////////////////param/////////////////////");
 
-                System.out.println(obj.get("param"));
                 JsonArray paramArr = (JsonArray) obj.get("param");
-                System.out.println(paramArr.size());
                 // 파라미터가 있다면 등록
                 if (paramArr.size() != 0) {
                     for (int k = 0; k < paramArr.size(); k++) {
@@ -501,21 +431,15 @@ public class ApiController {
 
                 System.out.println("//////////////////resCode/////////////////////");
                 JsonArray resParamArr = (JsonArray) obj.get("resCode");
-                System.out.println(resParamArr);
-                System.out.println(resParamArr.size());
                 if (resParamArr.size() > 0) {
                     System.out.println("응답코드 등록");
 
                     for (int k = 0; k < resParamArr.size(); k++) {
-                        System.out.println("??????????????");
                         JsonObject resParam = (JsonObject) resParamArr.get(k);
-                        System.out.println("resParam  : " + resParam);
                         String[] paramKeyList = String.valueOf(resParam.get("paramKey")).split(",");
                         String[] paramValueList = String.valueOf(resParam.get("paramValue")).split(",");
                         String[] paramTypeList = String.valueOf(resParam.get("paramType")).split(",");
 
-                        System.out.println("paramMap = " + paramMap + ", apiId = " + apiId + ", resourceId = " + resourceId);
-                        System.out.println("apiDetailsId : " + apiDetailsId);
 //                        2. 분리 후 FOR문을 통해 DB에 넣는다.
 //                2-1. response 에 넣기 위해서는 apiDetails id 필요
                         ResponseDTO responseDTO = new ResponseDTO();
@@ -524,7 +448,6 @@ public class ApiController {
                         responseDTO.setRespMsg(String.valueOf(resParam.get("explanation")));
                         responseDTO.setType(String.valueOf(resParam.get("type")));
                         int responsId = apiDetailsService.insertResponse(responseDTO);
-                        System.out.println("responsId = " + responsId);
 //                2-2. 키와 VALUE 값을 콤마를 기준으로 분리한다.
                         for (int j = 0; j < paramKeyList.length; j++) {
                             ResParamDTO resParamDTO = new ResParamDTO();
@@ -553,7 +476,6 @@ public class ApiController {
                     req = req.substring(0, req.length() - 1);
                     try {
                         if (!JsonParser.parseString(req).isJsonNull()) {
-                            System.out.println("안 비어있음");
                             JsonObject jsonObject = (JsonObject) JsonParser.parseString(req);
 
                             /* key를 뽑아서 리스트로 변환*/
@@ -566,7 +488,6 @@ public class ApiController {
                                 bodyDTO.setValue(jsonObject.get(keys.get(j)).toString().replaceAll("\"", ""));
                                 apiDetailsService.insertBody(bodyDTO);
                             }
-                            System.out.println();
                         }
                     } catch (Exception e) {
 
@@ -603,8 +524,6 @@ public class ApiController {
 //        parameter jsonArray
         JsonArray paramArray = new JsonArray();
         List<ParameterDTO> list = apiDetailsService.searchParameter(id);
-        System.out.println("id" + id);
-        System.out.println("list parma = " + list);
         for (int i = 0; i < list.size(); i++) {
             JsonObject param = new JsonObject();
             param.addProperty("id", list.get(i).getId());
@@ -623,7 +542,6 @@ public class ApiController {
         JsonArray bodyArray = new JsonArray();
         List<BodyDTO> bodyList = apiDetailsService.selectBody(id);
 
-        System.out.println("bodyList parma = " + bodyList);
         for (int i = 0; i < bodyList.size(); i++) {
             JsonObject param = new JsonObject();
             param.addProperty("id", bodyList.get(i).getId());
@@ -647,11 +565,9 @@ public class ApiController {
     @GetMapping("/search/path")
     @ResponseBody
     public JsonObject searchKeyword(String keyword, int apisId, String defaultUri) {
-        System.out.println("defaultUri = " + defaultUri);
         List<ApiDetailsDTO> searchList = apiDetailsService.searchPath(keyword, apisId, defaultUri);
         /*exactMatchUri 이 값이 있다면 키워드와 정확하게 일치하는 uri가 있다는 것 */
         List<ApiDetailsDTO> exactMatchUri = apiDetailsService.exactMatchUri(keyword, apisId, defaultUri);
-        System.out.println("exactMatchUri = " + exactMatchUri);
         JsonArray array = new JsonArray();
         for (ApiDetailsDTO a : searchList) {
             JsonObject object = new JsonObject();
@@ -704,11 +620,6 @@ public class ApiController {
 
         List<ApiDetailsDTO> adlist = apiDetailsService.goTrashDetail();
         List<ApiDetailsDTO> temp = new ArrayList<>();
-        System.out.println("rlist = " + rlist);
-        System.out.println("resourceTrashList = " + resourceTrashList);
-        System.out.println("adlist = " + adlist);
-
-
 
         model.addAttribute("rlist", rlist);
         model.addAttribute("resourceTrashList", resourceTrashList);
@@ -727,8 +638,6 @@ public class ApiController {
 
     @GetMapping("/resourceDelete/{id}")
     public String resourceDetele(@PathVariable int id) {
-        System.out.println("ApiController.resourceDetele");
-        System.out.println("id = " + id);
         apiDetailsService.resourceDelete(id);
         return "redirect:/api/trash";
     }
@@ -788,7 +697,6 @@ public class ApiController {
 
             for (ResponseDTO res : responseList) {
                 JsonObject response = new JsonObject();
-                System.out.println("res.getId() = " + res.getId());
                 response.addProperty("id", res.getId());
                 response.addProperty("apiDetailsId", res.getApiDetailsId());
                 response.addProperty("respCode", res.getRespCode());
@@ -816,7 +724,6 @@ public class ApiController {
         object.addProperty("resParamList", resParamArr.toString());
 
 
-        System.out.println("object = " + object);
         return object;
     }
 
@@ -824,8 +731,6 @@ public class ApiController {
     @GetMapping("/remove/resCode")
     @ResponseBody
     public void removeResCode(int id) {
-        System.out.println("ApiController.removeResCode");
-        System.out.println("id   " + id);
         apiDetailsService.removeResCode(id);
     }
 
@@ -833,8 +738,6 @@ public class ApiController {
     @GetMapping("/remove/resParam")
     @ResponseBody
     public void removeResParam(int id) {
-        System.out.println("ApiController.removeResParam");
-        System.out.println("id   " + id);
         apiDetailsService.removeResParam(id);
     }
 
@@ -842,8 +745,6 @@ public class ApiController {
     @GetMapping("/remove/param")
     @ResponseBody
     public void removeparam(int id) {
-        System.out.println("ApiController.removeparam");
-        System.out.println("id   " + id);
         apiDetailsService.removeParam(id);
     }
 

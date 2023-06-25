@@ -37,7 +37,6 @@ public class MydataApiController {
     @GetMapping("/invest/accounts")
     @ResponseBody
     public StringBuffer invest_001(@RequestParam String org_code, @RequestParam String limit, HttpServletRequest header) {
-        System.out.println("MydataApiController.invest_001");
 
         long start = System.currentTimeMillis();
         Date date = new Date();
@@ -51,9 +50,6 @@ public class MydataApiController {
 
         );
 
-        System.out.println("====Header===end");
-        System.out.println("token = " + token);
-        System.out.println("limit = " + limit);
 
         String x_api_tran_id = "1168119031SAA202303171424";
         String x_api_type = "user-search";
@@ -73,8 +69,6 @@ public class MydataApiController {
             con.setRequestProperty("accept", "application/json; charset=UTF-8");
             int responseCode = con.getResponseCode();
 
-            System.out.println("responseCode = " + responseCode);
-
             BufferedReader br;
             if (responseCode == 200) { // 정상 호출
                 br = new BufferedReader(new InputStreamReader(con.getInputStream()));
@@ -91,13 +85,9 @@ public class MydataApiController {
             }
             // 특정 코드 실행 되고 난 후 시간
             long end = System.currentTimeMillis();
-            System.out.println("end = " + end);
 
             // 초 단위 실행시간
             double result = (end - start) / 1000.0;
-//            System.out.println("result = " + Integer.parseInts(String.valueOf(result)));
-
-            System.out.println("result = " + result);
 
             br.close();
             JsonParser jsonParser = new JsonParser();
@@ -166,13 +156,9 @@ public class MydataApiController {
 
             // 특정 코드 실행 되고 난 후 시간
             long end = System.currentTimeMillis();
-            System.out.println("end = " + end);
 
             // 초 단위 실행시간
             double timeResult = (end - start) / 1000.0;
-//            System.out.println("result = " + Integer.parseInts(String.valueOf(result)));
-
-            System.out.println("result = " + timeResult);
 
             br.close();
 
@@ -180,16 +166,12 @@ public class MydataApiController {
             JsonParser parser = new JsonParser();
             JsonObject jsonObject = (JsonObject) parser.parse(result); // response
 
-            System.out.println(jsonObject);
-
             JsonObject org_code = (JsonObject) parser.parse(body); // org_code
 
 
             String apiCode = "금투-002";
             String apiResouceUri = "/accounts/basic";
             /* data insert */
-            System.out.println("MydataApiController.getData2");
-            System.out.println("org_code = " + org_code);
             mydataApiService.invest001Insert(org_code.toString(), responseCode, timeResult, jsonObject, apiCode, apiResouceUri);
 
 //          DB insert
@@ -247,25 +229,17 @@ public class MydataApiController {
 
             // 특정 코드 실행 되고 난 후 시간
             long end = System.currentTimeMillis();
-            System.out.println("end = " + end);
 
             // 초 단위 실행시간
             double timeResult = (end - start) / 1000.0;
-//            System.out.println("result = " + Integer.parseInts(String.valueOf(result)));
-
-            System.out.println("result = " + timeResult);
-
 
             br.close();
 
             String result = response.toString();
             JsonParser parser = new JsonParser();
             JsonObject jsonObject = (JsonObject) parser.parse(result); // response
-            System.out.println("jsonObject ====================================");
-            System.out.println(jsonObject);
 
             JsonObject org_code = (JsonObject) parser.parse(body); // org_code
-            System.out.println("org_code = " + org_code.get("org_code"));
 
             String apiCode = "금투-003";
             String apiResouceUri = "/accounts/transactions";

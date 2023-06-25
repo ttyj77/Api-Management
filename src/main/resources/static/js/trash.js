@@ -41,13 +41,9 @@ function goReturn(one) {
 }
 
 function completeDelete(one) {
-    console.log(one)
     let id = one.getAttribute('id');
     let resource = one.getAttribute('resource');
     let detail = one.getAttribute('detail');
-    console.log(resource);
-    console.log(detail);
-    console.log(id);
     if (resource == null) {
         Swal.fire({
             showCancelButton: true,
@@ -87,7 +83,6 @@ function completeDelete(one) {
 
 window.onload = function () {
     let target = document.querySelectorAll('.apiContext');
-    console.log(target)
     let h3 = document.createElement('h3').innerText = "# APIs";
     target[0].append(h3);
 }

@@ -1,11 +1,5 @@
 function detailModal(value) {
 
-    // console.log(value.children())
-    // $("#detailModal").modal('show')
-    // let details = value.lastElementChild.lastElementChild;
-
-    // let id = details.getAttribute("detailid")
-    console.log(value)
     let data = {
         "id": value,
     }
@@ -16,15 +10,9 @@ function detailModal(value) {
         method: "get",
 
         success: (message) => {
-            console.log("detailModal!!!!")
-            console.log(message)
             let parameterList = JSON.parse(message.parameterList)
-            console.log(parameterList)
-            console.log(document.getElementById("dModal_url"))
 
             document.getElementById("dModal_url").innerText = message.url + message.uri;
-            console.log(message.url)
-            console.log(message.uri)
             document.getElementById("dModal_method").innerText = message.method
             document.getElementById("dModal_summary").innerText = message.summary.replace(/\"/gi, "");
 
@@ -38,9 +26,6 @@ function detailModal(value) {
             tbody.innerHTML = ""
             // 파라미터 개수의 따라서 table 생성
             for (let i = 0; i < parameterList.length; i++) {
-                console.log("=1=1=1=1=1=1=1=1 param list =1=1=1=1=1==1=1")
-                console.log(parameterList[i])
-                console.log("==================================")
                 let tr = document.createElement("tr")
                 let name = document.createElement("td");
                 let transferMethod = document.createElement("td")
@@ -77,19 +62,14 @@ function detailModal(value) {
             }
             // document.getElementById("dModal_parameter_Name").innerText = message
             let bodyReqList = JSON.parse(message.bodyReqList)
-            console.log(bodyReqList)
             //  요청Body 정보
-            console.log(bodyReqList.length > 0)
             // 요청 BODY 부분 시작
             if (bodyReqList.length > 0) { // 응답 데이터가 있다면
                 let table = document.getElementById("resBodyTable")
                 table.innerHTML = ""
                 for (let i = 0; i < bodyReqList.length; i++) {
                     let tr = document.createElement("tr")
-                    console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!table!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-                    console.log(bodyReqList[i].apiDetailsId)
                     let allBody = document.getElementsByName("allBodyParam")
-                    console.log(allBody)
                     $(allBody).attr("id", bodyReqList[i].apiDetailsId)
                     // allBody.id = bodyReqList[i].apiDetailsId
 
@@ -161,13 +141,10 @@ function resTableDeleteCheck(value) {
 }
 
 function paramterDelete(value) {
-    console.log("paramterDelete")
     let id = value.id
     let apiId = value.apiDetailsId
 
     /* 응답 body 개별삭제 */
-    console.log(id)
-    console.log(apiId)
     Swal.fire({
         showCancelButton: true,
         cancelButtonText: "취소",
@@ -189,7 +166,6 @@ function paramterDelete(value) {
 
 
 function resBodyDelete(id) {
-    console.log("==============resBodyDelete=============")
     let data = {
         "id": id
     }
@@ -219,23 +195,14 @@ function showResData(id) {
         method: "get",
 
         success: (message) => {
-            console.log("================message===================")
-            console.log(message)
-            console.log("================message===================")
-            console.log(message.responseList)
 
             let resList = JSON.parse(message.responseList)
             let temp = null;
-            console.log("길이 : " + resList.length);
             for (let i = 0; i < resList.length; i++) {
                 let id = resList[i].id;
-                console.log("id = " + id);
             }
 
             let resParamList = JSON.parse(message.resParamList)
-            console.log(resList)
-            console.log()
-            console.log(resParamList)
 
             // 요청 BODY 부분 끝
 
@@ -309,10 +276,7 @@ function showResData(id) {
                 for (let i = 0; i < resParamList.length; i++) {
 
                     if (resList[d].id == resParamList[i].resId) {
-                        console.log(resParamList[i].resId)
-                        console.log(resList[d].id)
                         let id = resList[d].id
-                        console.log(document.getElementById("resParamTbody" + id))
                         $('#' + 'resParamTbody' + id).append(`
                          <tr id=` + resParamList[i].id + `>
                             <td>` + resParamList[i].key.replace(/\"/gi, "") + `</td>
@@ -345,12 +309,7 @@ function showResData(id) {
 
 // 응답파라미터 삭제
 function removeResCodeParam(value) {
-    console.log("removeResCode")
-    console.log(value)
-    console.log(value.closest(".detailModal_ResouceId").id)
     let apiDetailsId = value.closest(".detailModal_ResouceId").id
-
-    console.log(value.parentNode.parentNode.parentNode.parentNode.parentNode)
 
     let id = value.parentNode.id
 
@@ -376,8 +335,6 @@ function removeResCodeParam(value) {
 
 // 응답 삭제
 function removeResCode(value) {
-    console.log(value.id)
-    console.log(value.parentNode.id)
     let id = value.id
     let apiDetailsId = value.parentNode.id
     Swal.fire({
@@ -491,7 +448,6 @@ function required_select(param) {
 
 // type selectBody
 function type_select(param) {
-    console.log(param.replaceAll("\"", ""))
     param = param.replaceAll("\"", "")
     let select = document.createElement("select")
     select.className = "form-select"
@@ -547,9 +503,6 @@ function insertResJson() {
         tr.append(index, keyTd, valueTd, typeTd)
         tbody.append(tr)
 
-        console.log(tbody.parentNode)
-        console.log(tbody.childElementCount)
-
         $("#insertResCodeJson").modal('hide')
 
         $("#insertResCodeModal").modal('show')
@@ -564,23 +517,11 @@ function insertResJson() {
 
 // 검색 결과 표를 클릭하면 input 박스에 들어감
 function insertPath(e) {
-    console.log("INSERT +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-    console.log(e.target) // 클릭한 uri
-    console.log(e.target.parentNode.id) // 클릭한 uri
 
-    console.log(e.target.parentNode.name) // 클릭한 resourceId
-
-    // console.log(e.target.parentNode.childNodes[0].textContent) // 클릭한 uri
-    console.log(e.target.parentNode.childNodes[1].textContent) // 클릭한 uri
-    console.log(e.target.parentNode.childNodes[3].textContent) // 클릭한 uri의 impossibleMethod
-
-    console.log("저장 버트 activate 확인ㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹ")
     let resourceBtn = document.getElementById("resourceBtn");
     if ($("path").val()) {
-        console.log("풀림")
         resourceBtn.disabled = true;
     } else {
-        console.log("잠김")
         resourceBtn.disabled = false;
     }
 
@@ -607,22 +548,15 @@ function insertPath(e) {
     let impossibleMethod = e.target.parentNode.childNodes[3].textContent
 
     const arr = impossibleMethod.split(',');
-    console.log(arr) // 작성 불가능한 메서드 리스트
 
     // 작성 불가능한 메서드들은 disabled 처리
     for (let i = 0; i < buttonList.length; i++) {
         for (let j = 0; j < arr.length; j++) {
-            console.log("===================")
-            console.log(arr[j])
             let trim = buttonList[i].innerText.trim()
-            console.log(trim)
-            console.log("===================")
             if (trim == arr[j]) {
-                console.log("일치 = 작성불가능")
                 buttonList[i].style.display = 'none'
 
                 let visible = document.getElementById(trim.toLowerCase())
-                console.log(visible)
                 visible.style.display = "none"
                 //     tab hidden
                 tabHidden()
@@ -631,11 +565,7 @@ function insertPath(e) {
         // 버튼 누르면 모달안의 input value 삭제
         let id = '#' + buttonList[i].innerText.trim().toLowerCase() + '-content'
         let get_input = $(id + ' input[type=text]');
-        console.log("====================get_input11122222222222222=======================")
-        console.log(get_input)
         $.each(get_input, function (index, value) {
-            console.log(index)
-            console.log(value)
             $(value).val('')
         });
 
@@ -645,10 +575,6 @@ function insertPath(e) {
 
 /* resBody 큼직한 삭제 */
 function removeResBody(value) {
-    console.log("응답 바디 삭제 ")
-    console.log(value)
-    console.log(value.parentNode)
-    console.log(value.parentNode.parentNode.id)
     let id = value.parentNode.parentNode.id
     Swal.fire({
         showCancelButton: true,
@@ -670,7 +596,6 @@ function removeResBody(value) {
 }
 
 function allResParamDelete(id) {
-    console.log("==============resBodyDelete=============")
     let data = {
         "id": id
     }
@@ -689,35 +614,24 @@ function allResParamDelete(id) {
 }
 
 function resDeleteBeforeInsert(value) {
-    console.log("resDeleteBeforeInsert")
-    console.log(value)
-    console.log(value.parentNode)
     value.parentNode.remove()
 }
 
 function IsJson() {
-    console.log("??????????????")
     let method = ['get', 'post', 'put', 'delete']
     let cnt = 0;
     let check = [];
 
 
     for (let i = 0; i < 4; i++) {
-        console.log(method[i])
-        console.log(document.getElementById(method[i]).style.display)
-        console.log(check)
         if (method[i] == "post" || method[i] == "put") {
-            console.log("1차 들어옴")
             if (document.getElementById(method[i]).style.display == "block") {
-                console.log("2차 들어옴")
                 cnt = cnt + 1;
                 check.push(method[i])
             }
         }
 
     }
-    console.log("------------------------------ CNT " + cnt)
-    console.log("------------------------------ CHECK " + check)
     if (cnt == 0) {
         return true;
     } else if (cnt > 0) {
@@ -730,7 +644,6 @@ function IsJson() {
             Swal.fire({
                 icon: 'error', text: '요청데이터를 정확히 입력해주세요.',
             }).then(() => {
-                console.log("modal show 위에 로고")
                 $("#resourceModal").modal("show")
                 // alert("나와라")
             });
@@ -741,9 +654,7 @@ function IsJson() {
 }
 
 function methodSwitch(value) {
-    console.log(value)
     let method = value.innerText.toLowerCase()
-    console.log(method)
     let visible = document.getElementById(method)
     let content = document.getElementById(method + "-tab")
 
@@ -851,12 +762,9 @@ function insertResource() {
 
             if (operationId.value != "" && display == "block") {
 
-                console.log(operationId.value)
                 obj.operation = operationId.value;
                 obj.summary = summary.value
-                console.log("==============================Tag value ==========================")
 
-                console.log(tag == null)
                 if (tag != null) { // 태그가 있다면,
                     obj.tag = tag.value.toString()
                 } else {
@@ -885,8 +793,6 @@ function insertResource() {
                 $.each(resCode_tr, function (index, value) {
                     param = new Object();
                     let tdList = $(value)
-                    console.log("8888888888888888888888888888")
-                    console.log(tdList.children())
                     param.code = tdList.children().eq(1).text()
                     param.explanation = tdList.children().eq(2).text()
                     param.type = tdList.children().eq(3).text()
@@ -901,11 +807,7 @@ function insertResource() {
             }
             jsonArr.push(obj)
         }
-        // console.log(document.getElementById("searchPathTbody").children[0])
         // [요청 json 데이터 선언]
-        console.log("=====1=1=1=1=1=1=1=1=1=1=1=1=1=1=1=1=1=1=1=1=1=1=1=1=1")
-        console.log(document.getElementById("resourceId"))
-        console.log(document.getElementById("resourceId").value)
 
         let jsonData = { // Body에 첨부할 json 데이터
             "idx": document.getElementById("apiId").value, //api index
@@ -932,7 +834,6 @@ function insertResource() {
             contentType: "application/json; charset=utf-8", //헤더의 Content-Type을 설정
 
             success: (message) => {
-                console.log(message)
             }
         })
 
@@ -1033,8 +934,6 @@ function insertResCode(value) {
     let code_val = document.getElementById("code-name").value
     let explanation_val = document.getElementById("code-explanation").value
 
-    console.log(tbody)
-    console.log(tbody.childElementCount)
     if (code_val == "") {
         document.getElementById("code-name").parentNode.children[0].style.color = "#1d61ff";
         document.getElementById("code-name").focus()
@@ -1056,7 +955,6 @@ function insertResCode(value) {
         delUpdate.className = "delUpdate"
 
         //여기서 응답 파라미터 추가해야됨
-        console.log("////////////////////////////////resParameter")
         //그냥 하낟 추가하면 안되고
         let resCodeParam_tr = $("#appendJsonResCode tr");
         let cnt = $("#appendJsonResCode tr").length // 해당 응답코드의 파라미터 갯수
@@ -1070,13 +968,10 @@ function insertResCode(value) {
         $.each(resCodeParam_tr, function (index, value) {
             param = new Object();
             let tdList = $(value)
-            console.log(tdList.children())
             key.push(tdList.children().eq(1).text())
             paramValue.push(tdList.children().eq(2).text())
             paramType.push(tdList.children().eq(3).text())
         });
-
-        console.log("9999999999999999999999999")
 
         // let value = resCodeArr.toString()
 
@@ -1171,8 +1066,6 @@ window.onload = function () {
 
 function newResourceUri(keyword, defaultUri, tbody) {
     document.getElementById("resourceId").value = null
-    console.log("=====================7=7=7=7=7=7=7=7=7=7=7=7=77777777=================================")
-    console.log(document.getElementById("resourceId").value)
     let newUri = keyword
     let h5 = document.createElement("h5")
     h5.innerText = newUri
@@ -1199,10 +1092,8 @@ function searchPath(value) {
     let apisId = document.getElementById("apiId").value
     let defaultUri = document.getElementById("path").name + "/"
     if (keyword.charAt(0) == "/") {
-        console.log("첫글자 슬래시")
         keyword = keyword.slice(1)
     }
-    console.log("keyword " + keyword)
     let data = {
         "defaultUri": defaultUri,
         "keyword": keyword,
@@ -1226,8 +1117,6 @@ function searchPath(value) {
 
             } else {
                 if (exactMatchUri.length == 0) {
-                    console.log("비슷한건 있어도 정확하게 일치하는건 없다.")
-                    console.log(exactMatchUri)
                     newResourceUri(keyword, defaultUri, tbody);
                 }
                 let arr = []
@@ -1237,7 +1126,6 @@ function searchPath(value) {
 
                 let result1 = [...new Set(arr)];
 
-                // console.log(result1); //중복 제거됨
                 let mt = []
                 for (let i = 0; i < result1.length; i++) {
                     let tr = document.createElement("tr")
@@ -1273,8 +1161,6 @@ function searchPath(value) {
                     let http2 = ["GET", "POST", "PUT", "DELETE"]
 
                     http2 = http2.sort();
-                    // console.log(http.length)
-                    // console.log(mt.length)
                     for (let j = http.length; j >= 0; j--) {
                         for (let l = mt.length; l >= 0; l--) {
                             if (mt[l] == http[j]) {
@@ -1290,13 +1176,7 @@ function searchPath(value) {
                     tr.onclick = function () {
                         insertPath(event);
                     }
-                    console.log("==========1=2=2=2=2=2=2=2=2=2=2=2=2=2=2=2")
-                    console.log(array[i])
-                    console.log(array[i].resourceId)
                     document.getElementById("resourceId").value = array[i].resourceId
-                    console.log("" +
-                        "333333333333333333333333333")
-                    console.log(document.getElementById("resourceId").value)
                     tr.append(id, path, possibleMethod, impossibleMethod)
                     tbody.append(tr)
 
@@ -1332,13 +1212,10 @@ function newInsertPath(uri) {
     pathid.value = "0" // 선택한 uri id , 새로 생성 시 0
 
     // 라라라ㅏ
-    console.log("저장 버트 activate 확인ㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹ")
     let resourceBtn = document.getElementById("resourceBtn");
     if ($("path").val()) {
-        console.log("잠김")
         resourceBtn.disabled = true;
     } else {
-        console.log("풀림")
         resourceBtn.disabled = false;
     }
 

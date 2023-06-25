@@ -83,8 +83,6 @@ public class ApiDetailsService {
     }
 
     public int insertResource(ResourceDTO resourceDTO) {
-        System.out.println("ApiDetailsService.insertResource");
-        System.out.println("resourceDTO = " + resourceDTO);
         apiDetailsDao.insertResource(resourceDTO);
         int id = resourceDTO.getId();
         return id;
@@ -92,9 +90,7 @@ public class ApiDetailsService {
 
     public int insertApiDetail(ApiDetailsDTO apiDetailsDTO) {
         apiDetailsDao.insertApiDetail(apiDetailsDTO);
-        System.out.println("apiDetailsDTO = " + apiDetailsDTO);
         int id = apiDetailsDTO.getId();
-        System.out.println("apiDetailsId  = " + id);
         return id;
     }
 

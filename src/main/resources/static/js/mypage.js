@@ -24,7 +24,6 @@ function overlapCheck() {
 // 비밀번호 변경
 function updatePw(value) {
     let userId = value.getAttribute("user_id");
-    console.log("userId = ", userId);
     $('#updatePw').attr('action', '/user/updatePw/' + userId);
 }
 

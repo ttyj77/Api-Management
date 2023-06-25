@@ -4,7 +4,6 @@ function input() {
     tbody.innerHTML = "";
     let dday = document.getElementById("input_date").value;
     let date = dday.replaceAll("-", "");
-    console.log(dday);
     let data = {
         "dday": date,
     }
@@ -15,9 +14,7 @@ function input() {
 
         success: (message) => {
 
-            console.log("calendar!!!!!!!!!!!!!!!!!!!!!!!!!!")
             let dailyList = JSON.parse(message.dailyApiList);
-            console.log(dailyList);
 
             for (let i = 0; i < dailyList.length; i++) {
                 let tr = document.createElement("tr");
@@ -48,7 +45,6 @@ function statisticsSearch() {
     tbody.innerHTML = "";
 
     let keyword = document.getElementById("statistics").value;
-    console.log(keyword);
 
     let data = {
         "keyword": keyword,
@@ -61,9 +57,7 @@ function statisticsSearch() {
 
         success: (message) => {
 
-            console.log("search!!!!!!!!!!!!!!!!!!!!!!!!!!")
             let dailyList = JSON.parse(message.dailyApiList);
-            console.log(dailyList);
 
             for (let i = 0; i < dailyList.length; i++) {
                 let tr = document.createElement("tr");

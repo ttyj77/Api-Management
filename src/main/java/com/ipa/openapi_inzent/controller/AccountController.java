@@ -38,9 +38,7 @@ public class AccountController {
     @ResponseBody
     public void turnActivate(@PathVariable int id) {
         UserDTO userDTO = userService.userOne(id);
-        System.out.println("userDTO.isActivate() before = " + userDTO.isActivate());
         userDTO.setActivate(!userDTO.isActivate());
-        System.out.println("userDTO.isActivate() after = " + userDTO.isActivate());
         userService.update(userDTO);
     }
 
@@ -50,8 +48,6 @@ public class AccountController {
         JsonObject object = new JsonObject();
 
         List<UserDTO> list = userService.accountListSearch(keyword);
-        System.out.println("keyword = " + keyword);
-        System.out.println("list = " + list);
 
         JsonArray userArr = new JsonArray();
 
@@ -69,8 +65,6 @@ public class AccountController {
         }
         object.addProperty("userList", userArr.toString());
 
-        System.out.println("object = " + object);
-
         return object;
     }
 
@@ -81,11 +75,7 @@ public class AccountController {
         JsonObject object = new JsonObject();
         List<UserDTO> wholeList = userService.userList();
         List<UserDTO> tfList = userService.choiceActivate(Boolean.parseBoolean(activate));
-//        System.out.println("wholeList = " + wholeList);
-//        System.out.println("tfList = " + tfList);
-        System.out.println("activate = " + activate);
         if (activate.equals("whole")) {
-            System.out.println(" whole 조건 들어옴");
             JsonArray userArr = new JsonArray();
             for (UserDTO userDTO : wholeList) {
                 if (userDTO.isApprove()) {
@@ -101,7 +91,6 @@ public class AccountController {
             }
             object.addProperty("userList", userArr.toString());
         } else {
-            System.out.println(" else 조건 들어옴");
             JsonArray userArr = new JsonArray();
             for (UserDTO userDTO : tfList) {
                 if (userDTO.isApprove()) {

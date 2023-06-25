@@ -32,7 +32,6 @@ public class RoleController {
     @ResponseBody
     public List<RoleDTO> selectALl() {
         List<RoleDTO> list = roleService.selectAll();
-        System.out.println("list = " + list);
         return list;
     }
 

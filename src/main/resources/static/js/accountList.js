@@ -117,22 +117,15 @@ function activate(value) {
 
 function makeAction() {
     let id = document.getElementById('saveId').value;
-    console.log(id);
     $('#makeAction').attr('action', '/user/updatePwd/' + id);
 }
 
 // 활성화 선택
 function showActivate(value) {
-    console.log(value);
-    console.log(value.id);
 
     let on = document.getElementById("true");
     let off = document.getElementById("false");
     let whole = document.getElementById("whole");
-
-    console.log(on);
-    console.log(off);
-    console.log(whole);
 
     // 버튼 초기화
     on.className = "btn btn-outline-primary mr-2";
@@ -140,30 +133,23 @@ function showActivate(value) {
     whole.className = "btn btn-outline-secondary mr-2";
 
     if (value.id == "whole") {
-        console.log("whole조건");
         whole.className = "btn btn-secondary mr-2";
     } else if (value.id == "true") {
-        console.log("on조건");
         on.className = "btn btn-primary mr-2";
     } else if (value.id == "false") {
-        console.log("off조건");
         off.className = "btn btn-danger mr-2";
     }
 
     let tbody = document.getElementById("tbody");
     tbody.innerHTML = "";
 
-    console.log("==================================");
     let activate = value.id;
     let data = {
         "activate": activate,
     }
     $.ajax({
         url: "/showActivate", data: data, type: "get", success: (message) => {
-            console.log(message);
-            console.log(message.userList);
             let userList = JSON.parse(message.userList);
-            console.log(userList.length);
             for (let i = 0; i < userList.length; i++) {
 
                 //tr
@@ -232,7 +218,6 @@ function showSearch() {
     let whole = document.getElementById("whole");
 
     let keyword = document.getElementById("keyword").value;
-    console.log("keyword = " + keyword);
 
     // 버튼 초기화
     on.className = "btn btn-outline-primary mr-2";
@@ -242,16 +227,12 @@ function showSearch() {
     let tbody = document.getElementById("tbody");
     tbody.innerHTML = "";
 
-    console.log("==================================");
     let data = {
         "keyword": keyword,
     }
     $.ajax({
         url: "/accountSearch", data: data, type: "get", success: (message) => {
-            console.log(message);
-            console.log(message.userList);
             let userList = JSON.parse(message.userList);
-            console.log(userList.length);
             for (let i = 0; i < userList.length; i++) {
 
                 //tr

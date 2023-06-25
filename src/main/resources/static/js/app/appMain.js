@@ -49,9 +49,7 @@ function showCategory(value) {
     // 목록 초기화
     target.innerHTML = "";
     let category = value.getAttribute("id");
-    console.log("카테고리요!!!!!! = " + category);
     let custnum = value.getAttribute("custnum");
-    console.log("custnum = " + custnum);
     let data = {
         "clientNum": custnum, "industry": category,
     }
@@ -88,7 +86,6 @@ function showCategory(value) {
             url: "/app/card/myAccount", data: data, type: "post",
 
             success: (message) => {
-                console.log("카드!!!!!!!!!!!!!!!!")
                 let cardList = JSON.parse(message.cardList);
 
                 if (cardList.length == 0) {
@@ -171,20 +168,9 @@ function showCategory(value) {
                     document.getElementById("btn-minus").disabled = true;
                 } else {
                     document.getElementById("btn-minus").disabled = false;
-                    console.log(agency);
-                    // console.log(reqData)
-                    // let reqList = JSON.parse(message)
-                    // console.log(resData);
-                    console.log("=====================");
-                    // console.log(resData.account_list[0]);
                     for (let i = 0; i < bankList.length; i += 2) {
                         let reqData = JSON.parse(message.bankList)[i];
                         let resData = JSON.parse(message.bankList)[i + 1];
-
-                        console.log("i = " + i);
-                        console.log(resData.account_list);
-                        // console.log(resData.account_list.prod_name);
-                        console.log(resData.account_list.length);
 
                         let div_1 = document.createElement("div");
 
@@ -196,11 +182,7 @@ function showCategory(value) {
                         let div_2 = document.createElement("div");
                         div_2.className = "listHover";
                         div_2.id = reqData.org_code + "1";
-                        for (let j = 0; j < resData.account_list.length; j++) {
-                            console.log(resData.account_list[j].prod_name);
-                            console.log(resData.account_list[j].account_num);
 
-                        }
                         let div_3 = document.createElement("div")
                         div_3.className = "d-flex align-items-center";
 
@@ -237,7 +219,6 @@ function showCategory(value) {
             }
         });
     } else if (category == "invest") {
-        console.log("금융투자!!!!!!!!!!!!!!!");
         // 목록 이름
         document.getElementById('listName').innerText = " My 투자 목록";
 
@@ -268,7 +249,6 @@ function showCategory(value) {
 
             success: (message) => {
                 // 데이터
-                console.log(JSON.parse(message.investList));
                 let agency = JSON.parse(message.agency);
                 let investList = JSON.parse(message.investList);
                 // 해당 업권에 계좌 정보가 하나도 없을 때
@@ -294,17 +274,10 @@ function showCategory(value) {
                     document.getElementById("btn-minus").disabled = true;
                 } else {
                     document.getElementById("btn-minus").disabled = false;
-                    console.log(agency);
-                    console.log("===================== 금융투자!!!!!!!!!");
 
                     for (let i = 0; i < investList.length; i += 2) {
                         let reqData = investList[i];
                         let resData = investList[i + 1];
-
-                        console.log("i = " + i);
-                        console.log(resData.account_list);
-                        // console.log(resData.account_list.prod_name);
-                        console.log(resData.account_list.length);
 
                         let div_1 = document.createElement("div");
 
@@ -382,9 +355,7 @@ function showCategory(value) {
             url: "/app/insu/myAccount", data: data, type: "post",
 
             success: (message) => {
-                console.log("보험!!!!!!!!!!!!!!!!")
                 let insuList = JSON.parse(message.insuList);
-                console.log(insuList.length == 0)
 
                 if (insuList.length == 0) {
                     let div_1 = document.createElement("div");
@@ -427,18 +398,13 @@ function deleteAcc(industry) {
     let chbox = document.getElementsByClassName('bankOne');
     let total = chbox.length;
     let list = [];
-    console.log(total);
     for (let i = 0; i < total; i++) {
-        console.log(chbox[i].checked)
         if (chbox[i].checked) {
-            console.log(chbox[i].parentNode.parentNode.id);
 
             list.push(chbox[i].parentNode.parentNode.id);
 
         }
     }
-    console.log(list);
-    console.log(industry);
     // let arraylist = []
     let data = {
         "choiceAgency": list, "industry": industry,
@@ -477,17 +443,13 @@ function deleteAcc(industry) {
 
 // 체크박스 체크되면 버튼 disabled 비활성화
 function cntCheck() {
-    console.log("cntcheck!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     let cnt = 0;
     let checkboxes = document.getElementsByName('bank');
     checkboxes.forEach((checkbox) => {
-        console.log(checkbox.checked);
         if (checkbox.checked) {
             cnt = cnt + 1;
         }
     })
-
-    console.log(cnt);
 
     if (cnt > 0) {
         document.getElementById('btn-delete').disabled = false;

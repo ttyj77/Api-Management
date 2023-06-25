@@ -2,12 +2,9 @@
 function providerDetailModal(value) {
     let tbody = document.getElementById("userNumTbody");
     tbody.innerHTML = "";
-    console.log("providerDetailModal=========");
     let clientNum = value.getAttribute("client_num");
     let org_code = value.getAttribute("org_code");
 
-    console.log(org_code)
-    console.log(clientNum);
     // date 조회 할 때 고객번호 param으로 사용하기 위해
     let forDate = document.getElementById("input_submit");
     $(forDate).attr("cnum", clientNum);
@@ -24,7 +21,6 @@ function providerDetailModal(value) {
 
         success: (message) => {
             let plist = JSON.parse(message.providerList);
-            console.log(plist);
             let col_cnt = Object.keys(plist[0]).length-1;
             for (let i = 0; i < plist.length; i++) {
                 let tr = document.createElement("tr");
@@ -56,7 +52,6 @@ function providerDetailInfo(value) {
     let tbody = document.getElementById("userNumTbody");
     tbody.innerHTML = "";
     let id = value.getAttribute("id");
-    console.log("id=", id);
     let data = {
         "id": id,
     }
@@ -67,8 +62,6 @@ function providerDetailInfo(value) {
 
         success: (message) => {
             let cn = document.getElementsByClassName("inputClientNum");
-            console.log(message)
-            console.log("디테일인포들어옴")
             for (let i = 0; i < cn.length; i++) {
                 $(cn).attr({
                     "client_num": message.consumerNum,
@@ -76,7 +69,7 @@ function providerDetailInfo(value) {
                 });
 
                 document.getElementById("reqSEQ").innerText = message.reqSEQ;
-                document.getElementById("uniqueNum").innerText = message.uniqueNum;
+                // document.getElementById("uniqueNum").innerText = message.uniqueNum;
                 document.getElementById("apiResources").innerText = message.apiResources;
                 // 증권번호 ( 계좌 번호 ) resData에서 가져와야함 !!!(여기에요)
                 // if (!message.apiResources.equals("/accounts")){
@@ -98,9 +91,6 @@ function input(value) {
     let dday = document.getElementById("input_date").value;
     let org_code = value.getAttribute("orgCode");
     let cnum = value.getAttribute("cnum");
-    console.log("!!!!!!!!!!!!!!!")
-    console.log(cnum);
-    console.log(dday);
     let data = {
         "dday": dday,
         "customerNum": cnum,
@@ -113,11 +103,8 @@ function input(value) {
 
         success: (message) => {
 
-            console.log("calendar!!!!!!!!!!!!!!!!!!!!!!!!!!")
             let plist = JSON.parse(message.providerList);
-            console.log(plist);
             let col_cnt = Object.keys(plist[0]).length;
-            console.log(col_cnt);
             for (let i = 0; i < plist.length; i++) {
                 let tr = document.createElement("tr");
                 tr.style.fontSize = '14px';
@@ -134,6 +121,7 @@ function input(value) {
 
                     let td = document.createElement("td");
                     td.innerText = plist[i][key];
+                    console.log(plist[i])
                     tr.append(td);
                 }
                 tbody.append(tr);
@@ -149,8 +137,6 @@ function showAcc(value) {
     target.innerHTML = "";
     let clientNum = value.getAttribute("client");
     let orgCode = value.getAttribute("code");
-    console.log(clientNum);
-    console.log(orgCode);
 
     let data = {
         "clientNum": clientNum,
@@ -164,9 +150,7 @@ function showAcc(value) {
 
         success: (message) => {
 
-            console.log("성공");
             let accountList = JSON.parse(message.accountList);
-            console.log(accountList);
             for (let i = 0; i < accountList.length; i++) {
                 let tr = document.createElement("tr");
                 let td_1 = document.createElement("td");
@@ -200,11 +184,7 @@ function showAcc(value) {
 
 function selectToken(value) {
     let target = document.getElementById("tokenTarget");
-    console.log("셀렉트토큰 들어옴");
-    console.log(value)
-    console.log(value.parentNode.parentNode)
     let orgCode = value.parentNode.parentNode.getAttribute("org_code");
-    console.log(orgCode);
 
     let data = {
         "orgCode": orgCode,
@@ -215,8 +195,6 @@ function selectToken(value) {
         type: 'get',
 
         success: (message) => {
-            console.log("성공");
-            console.log(message);
             document.getElementById("userInfo").innerText = message.clientId;
 
             document.getElementById("mdServiceName").innerText = message.serviceName;

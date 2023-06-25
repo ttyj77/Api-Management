@@ -25,7 +25,6 @@ public class UserCustomDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         List<UserDTO> userDTO = userService.findByUsername(username);
         if (userDTO.size() == 0) {
-            System.out.println("아이디 정보 없음");
             throw new UsernameNotFoundException(username);
         } else {
             UserDTO userDTO2 = userDTO.get(0);

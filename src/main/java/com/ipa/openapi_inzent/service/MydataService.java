@@ -63,20 +63,24 @@ public class MydataService {
     ///////////////////////////////////////////////////////////////////////////////////////////
     public List<MdProviderDTO> mdProviderSelectAll() {
         List<MdProviderDTO> list = mydataDao.mdProviderSelectAll();
-        SimpleDateFormat dfFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        SimpleDateFormat dfFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         SimpleDateFormat newFormat = new SimpleDateFormat("yyyy-MM-dd");
-        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss:SSS");
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss.SSS");
+        SimpleDateFormat time2Format = new SimpleDateFormat("HH:mm:ss");
 
         Calendar cal = Calendar.getInstance();
 
         try {
             for (MdProviderDTO m : list) {
                 Date forMatDate = dfFormat.parse(m.getReqDate());
+
                 m.setReqDate(newFormat.format(forMatDate)); //요청일 ex) 2021-11-23
-                m.setReqTime(timeFormat.format(forMatDate)); //요청시간 ex) 15:18:16.614
+                String reqTime = newFormat.format(forMatDate) + " " + time2Format.format(forMatDate);
+                m.setReqTime(reqTime); //요청시간 ex) 15:18:16.614
                 cal.setTime(forMatDate);
-                cal.add(Calendar.MILLISECOND, (int) m.getRuntime()); // 요청일에 응답시간(runtime)을 더함 => 응답일자
-                m.setResDate(dfFormat.format(cal.getTime())); //응답일자 ex) 2021-11-23 15:18:16.642
+                cal.add(Calendar.MILLISECOND, (int) (m.getRuntime()*1000)); // 요청일에 응답시간(runtime)을 더함 => 응답일자
+                String resDate = newFormat.format(cal.getTime()) + " " + timeFormat.format(cal.getTime());
+                m.setResDate(resDate); //응답일자 ex) 2021-11-23 15:18:16.642
 
             }
         } catch (ParseException e) {
@@ -87,10 +91,10 @@ public class MydataService {
 
     public List<MdProviderDTO> mdReqList() {
         List<MdProviderDTO> list = mydataDao.mdReqList();
-        SimpleDateFormat dfFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        SimpleDateFormat dfFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         SimpleDateFormat hmsFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         SimpleDateFormat newFormat = new SimpleDateFormat("yyyy-MM-dd");
-        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss:SSS");
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
 
         Calendar cal = Calendar.getInstance();
 
@@ -99,6 +103,7 @@ public class MydataService {
                 Date forMatDate = dfFormat.parse(m.getReqDate());
                 m.setReqDate(newFormat.format(forMatDate)); //요청일 ex) 2021-11-23
                 m.setReqTime(timeFormat.format(forMatDate)); //요청시간 ex) 15:18:16.614
+                System.out.println("newFormat.format(forMatDate) = " + newFormat.format(forMatDate));
                 cal.setTime(forMatDate);
                 cal.add(Calendar.MILLISECOND, (int) m.getRuntime()); // 요청일에 응답시간(runtime)을 더함 => 응답일자
                 m.setResDate(dfFormat.format(cal.getTime())); //응답일자 ex) 2021-11-23 15:18:16.642
@@ -122,9 +127,9 @@ public class MydataService {
     ///////////////////////////////////////////////////////////////////////////////////////////
     public List<MdCollectorDTO> mdCollectorSelectAll() {
         List<MdCollectorDTO> list = mydataDao.mdCollectorSelectAll();
-        SimpleDateFormat dfFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        SimpleDateFormat dfFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         SimpleDateFormat newFormat = new SimpleDateFormat("yyyy-MM-dd");
-        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss:SSS");
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
 
         Calendar cal = Calendar.getInstance();
 
@@ -148,9 +153,9 @@ public class MydataService {
         mdProviderDTO.setCustomerNum(customerNum);
         mdProviderDTO.setCode(code);
         List<MdProviderDTO> list = mydataDao.mdProviderCustomerList(mdProviderDTO);
-        SimpleDateFormat dfFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        SimpleDateFormat dfFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         SimpleDateFormat newFormat = new SimpleDateFormat("yyyy-MM-dd");
-        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss:SSS");
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
 
         Calendar cal = Calendar.getInstance();
 
@@ -193,9 +198,9 @@ public class MydataService {
 
     public List<MdProviderDTO> mdProviderSearch(String keyword) {
         List<MdProviderDTO> list = mydataDao.mdProviderSearch(keyword);
-        SimpleDateFormat dfFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        SimpleDateFormat dfFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         SimpleDateFormat newFormat = new SimpleDateFormat("yyyy-MM-dd");
-        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss:SSS");
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
 
         Calendar cal = Calendar.getInstance();
 
@@ -232,10 +237,6 @@ public class MydataService {
     }
 
     public int selectReqInfoId(String orgCode,String cliNum) {
-        System.out.println("MydataService.selectReqInfoId");
-        System.out.println("cliNum = " + cliNum);
-        System.out.println("orgCode = " + orgCode);
-        System.out.println(mydataDao.selectReqInfoId(orgCode, cliNum));
         return mydataDao.selectReqInfoId(orgCode, cliNum);
     }
 

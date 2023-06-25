@@ -18,7 +18,6 @@ function endAdd() {
 
 // input box 갯수 세기
 function cntCheck(value) {
-    console.log("check 들어옴")
     let cnt = 0;
     let checkboxes = document.getElementsByName('property');
     checkboxes.forEach((checkbox) => {
@@ -33,12 +32,8 @@ function cntCheck(value) {
         document.getElementById('nextBtn').disabled = true;
     }
     /*선택한 금융상품의 기관 코드 가져오기 */
-    console.log(value)
-    console.log(value.parentNode)
-    console.log(value.parentNode.id)
 
     org_code.push(value.parentNode.id)
-    console.log(org_code)
 
 
 }
@@ -49,21 +44,15 @@ function connectProperty() {
     const set = new Set(org_code);
     const uniqueOrgArr = [...set];
 
-
-    console.log("orgCode !! ")
-    console.log(uniqueOrgArr)
-
     let chbox = document.getElementsByClassName('bankOne');
     let total = chbox.length;
     let list = [];
     for (let i = 0; i < total; i++) {
-        console.log(chbox[i].checked)
         if (chbox[i].checked) {
             list.push(chbox[i].parentNode.children[0].children[1].innerText);
         }
     }
 
-    console.log(list);
     // let org_code = ;
     let data = {
         "accountList": list,
@@ -77,7 +66,6 @@ function connectProperty() {
         type: 'post',
 
         success: () => {
-            console.log("성공");
             location.href = '/app/main';
         }
     })

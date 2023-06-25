@@ -16,7 +16,6 @@ import java.io.IOException;
 
 public class UserAuthSuccessHandler implements AuthenticationSuccessHandler {
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException {
-        System.out.println("success handler in");
         UserDTO userDTO = ((UserCustomDetails) authentication.getPrincipal()).getUserDTO();
         // 계정 정지 => 회원가입 요청 상태 + 거절일때
         if (!userDTO.isActivate()) {
@@ -26,8 +25,6 @@ public class UserAuthSuccessHandler implements AuthenticationSuccessHandler {
 
         HttpSession session = httpServletRequest.getSession();
         session.setAttribute("logIn", userDTO);
-        System.out.println("session = " + session.getAttribute("logIn"));
-        System.out.println("success handler out");
         httpServletResponse.sendRedirect("/api");
     }
 }

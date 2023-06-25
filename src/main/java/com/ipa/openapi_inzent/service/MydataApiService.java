@@ -30,14 +30,10 @@ public class MydataApiService {
     }
 
     public void reqHistoryInsert(MdProviderDTO mdProviderDTO) {
-        System.out.println("MydataApiService.reqHistoryInsert");
-        System.out.println(mdProviderDTO);
         mydataApiDAO.providerHistoryInsert(mdProviderDTO);
     }
 
     public int reqInfoInsert(MdReqInfoDTO mdReqInfoDTO) {
-        System.out.println("MydataApiService.reqInfoInsert");
-        System.out.println(mdReqInfoDTO);
         mydataApiDAO.reqInfoInsert(mdReqInfoDTO);
         return mdReqInfoDTO.getId();
     }
@@ -68,8 +64,6 @@ public class MydataApiService {
             con.setRequestProperty("X-FSI-SVC-DATA-KEY", "Y");
             con.setRequestProperty("accept", "application/json; charset=UTF-8");
             int responseCode = con.getResponseCode();
-
-            System.out.println("responseCode = " + responseCode);
 
             BufferedReader br;
             if (responseCode == 200) { // 정상 호출
@@ -141,14 +135,6 @@ public class MydataApiService {
             JsonParser parser = new JsonParser();
             jsonObject = (JsonObject) parser.parse(result);
 
-            System.out.println(jsonObject);
-
-//            JsonObject org_code = (JsonObject) parser.parse(body); // org_code
-//            DataDTO dataDTO = new DataDTO();
-//            dataDTO.setResponse(jsonObject.get("basic_list").toString());
-//            dataDTO.setOrg_code(org_code.get("org_code").toString());
-//            dataDTO.setX_api_type(x_api_type);
-//            dataDTO.setX_api_tran_id(x_api_tran_id);
 
 //          DB insert
 //          dataService.insert(dataDTO);
@@ -207,7 +193,6 @@ public class MydataApiService {
             JsonParser parser = new JsonParser();
             jsonObject = (JsonObject) parser.parse(result); // response
 
-            System.out.println(jsonObject);
 
 
         } catch (Exception e) {
@@ -222,7 +207,6 @@ public class MydataApiService {
 
     public void invest001Insert(String orgCode,
                                 int responseCode, double result, JsonObject jsonObject, String apiCode, String apiResouceUri) {
-        System.out.println("MydataApiService.invest001Insert");
         System.out.println("resu = " + result);
         System.out.println("runtime = " + (result));
 
@@ -231,19 +215,13 @@ public class MydataApiService {
         UUID uuid = UUID.randomUUID();
 
         List<MdReqInfoDTO> reqInfoList = mydataService.mdReqAll();
-        System.out.println("reqInfoList = " + reqInfoList);
         String cliNum = "9704261153";
-        System.out.println("org_code = " + orgCode);
-//        JsonObject object = (JsonObject) JsonParser.parseString(orgCode);
-//        String orgCode = object.get("org_code").toString().replaceAll("\"", "");
-        System.out.println("orgCode = " + orgCode);
 
         int reqId = mydataService.selectReqInfoId(orgCode, cliNum);
 
 
         if (mydataService.selectReqInfoId(orgCode, cliNum) > 0) {
             MdProviderDTO mdProviderDTO = new MdProviderDTO();
-            System.out.println("조건문 clientNum 같음");
 
             mdProviderDTO.setX_api_type(x_api_type);
             mdProviderDTO.setX_api_tran_id(x_api_tran_id);
@@ -276,7 +254,6 @@ public class MydataApiService {
             mdProviderDTO.setResData(jsonObject.toString());
             mdProviderDTO.setApiCode(apiCode);
 
-            System.out.println("mdProviderDTO = " + mdProviderDTO);
             reqHistoryInsert(mdProviderDTO);
         } else {
             System.out.println("조건문 clientNum 안같음 else문");
@@ -290,8 +267,6 @@ public class MydataApiService {
             mdReqInfoDTO.setServiceName("마이데이터 서비스");
             mdReqInfoDTO.setReqType("마이데이터");
             mdReqInfoDTO.setClientNum("9704261153");
-
-            System.out.println("mdReqInfoDTO = " + mdReqInfoDTO);
 
         }
     }
