@@ -89,10 +89,10 @@ public class OAuthController {
 
         ClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
         restTemplate = new RestTemplate(httpRequestFactory);
-        String access_token_url = "http://52.78.136.223:9000/oauth2/token";
+        String access_token_url = "http://localhost:9000/oauth2/token";
         access_token_url += "?code=" + code;
         access_token_url += "&grant_type=authorization_code";
-        access_token_url += "&redirect_uri=http://15.165.67.119:8080/authorized";
+        access_token_url += "&redirect_uri=http://localhost:8080/authorized";
         access_token_url += "&code_verifier=A7MvYn9hmuJQZt7Unepbx9khicAo2IWAAhSCAbeSoA2";
         HttpEntity<String> request = new HttpEntity<String>(headers);
         response = restTemplate.exchange(access_token_url, HttpMethod.POST, request, String.class);
@@ -178,10 +178,10 @@ public class OAuthController {
 
         ClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
         restTemplate = new RestTemplate(httpRequestFactory);
-        String access_token_url = "http://52.78.136.223:9000/oauth2/token";
+        String access_token_url = "http://localhost:9000/oauth2/token";
         access_token_url += "?code=" + code;
         access_token_url += "&grant_type=authorization_code";
-        access_token_url += "&redirect_uri=http://15.165.67.119:8080/app/authorized";
+        access_token_url += "&redirect_uri=http://localhost:8080/app/authorized";
         access_token_url += "&code_verifier=A7MvYn9hmuJQZt7Unepbx9khicAo2IWAAhSCAbeSoA2";
         HttpEntity<String> request = new HttpEntity<String>(headers);
         response = restTemplate.exchange(access_token_url, HttpMethod.POST, request, String.class);
@@ -312,7 +312,7 @@ public class OAuthController {
     public RedirectView inzentRegister() {
         System.out.println("OAuthController.inzentRegister");
 
-        return new RedirectView("http://52.78.136.223:9000/login");
+        return new RedirectView("http://localhost:9000/login");
     }
 
     public UserDTO authLogin(@AuthenticationPrincipal UserCustomDetails userCustomDetails, HttpSession session) {

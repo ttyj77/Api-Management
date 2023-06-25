@@ -1,5 +1,7 @@
 package com.ipa.openapi_inzent.service;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.ipa.openapi_inzent.dao.MydataDAO;
 import com.ipa.openapi_inzent.model.*;
 import org.apache.coyote.RequestInfo;
@@ -236,8 +238,19 @@ public class MydataService {
         return mydataDao.mdAgencyCode(orgCode);
     }
 
-    public int selectReqInfoId(String orgCode,String cliNum) {
-        return mydataDao.selectReqInfoId(orgCode, cliNum);
+    public int selectReqInfoId(String orgCode, String cliNum) {
+        System.out.println("MydataService.selectReqInfoId");
+        System.out.println("orgCode = " + orgCode);
+        String code;
+        try {
+            JsonObject jsonObject = (JsonObject) JsonParser.parseString(orgCode);
+            code = jsonObject.get("org_code").toString().replaceAll("\"", "");
+        } catch (Exception e) {
+            code = orgCode.replaceAll("\"", "");
+        }
+        System.out.println("code = " + code);
+
+        return mydataDao.selectReqInfoId(code, cliNum);
     }
 
     public MdAgencyDTO mdAstOrgCode(String code) {

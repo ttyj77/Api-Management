@@ -75,7 +75,6 @@ function detailModal(value) {
 
                     let key = document.createElement("td")
                     let type = document.createElement("td")
-                    type.innerText = "application/json"
                     let value = document.createElement("td")
 
                     let trash = document.createElement("td")
@@ -242,7 +241,7 @@ function showResData(id) {
                                     </thead>
                                     <tbody class="table-group-divider">
                                     <tr class="detailModal_ResouceId" style="text-align: center" id=` + resList[d].apiDetailsId + `>
-                                        <td style="vertical-align: middle;">` + resList[d].type + `</td>
+                                        <td style="vertical-align: middle;"> application/json</td>
                                         <td>
                                             <table class="table">
                                                 <thead style="background-color: #1c294e21">
