@@ -289,9 +289,12 @@ public class ApiController {
         System.out.println("resourceList = " + resourceList);
         model.addAttribute("api", a);
         model.addAttribute("resourceIndex", resourceList);
+        for (ApiDetailsDTO api : apiDetailsDTOList) {
+            api.setSummary(api.getSummary().replaceAll("\"", ""));
+            api.setOperationId(api.getOperationId().replaceAll("\"", ""));
+        }
         model.addAttribute("apiDetailsDTOList", apiDetailsDTOList);
         model.addAttribute("tagList", tagList);
-
 
         return "/apis/details";
     }
@@ -707,7 +710,6 @@ public class ApiController {
         System.out.println("rlist = " + rlist);
         System.out.println("resourceTrashList = " + resourceTrashList);
         System.out.println("adlist = " + adlist);
-
 
 
         model.addAttribute("rlist", rlist);
