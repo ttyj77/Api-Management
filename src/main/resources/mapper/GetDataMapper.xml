@@ -70,7 +70,7 @@
         select "resCode", count(*) from public."providerHistory" as ph join public."reqInfo" as ri on ri.id =
         ph."reqInfoId"
         where ri.code = #{orgCode} and to_char("reqDate", 'yyyyMMDD') = #{date}
-        group by "resCode";
+        group by "resCode" order by count(*) desc;
     </select>
 
     <select id="errorAll" resultType="com.ipa.openapi_inzent.model.ErrorDTO">
@@ -111,5 +111,61 @@
         group by ri."code", "cnDate") as table1 join public."mdAgency" as ma on ma.code = table1.code
         where table1.code ILIKE CONCAT('%', #{keyword}, '%') or ma.name ILIKE CONCAT('%', #{keyword}, '%');
     </select>
+    
+    <select id="periodStatistics" parameterType="string" resultType="com.ipa.openapi_inzent.model.DailyApiStatisticsDTO">
+        select ma.name, ma.code, SUM(table1."totalRequest") as "totalRequest",SUM(table1."successCnt") as "successCnt",
+        SUM(table1."failCnt") as "failCnt", ma.logo, ma.industry from
+        (select to_char(ph."reqDate", 'yyyyMMDD') "cnDate",ri."code", count(*) as "totalRequest", count(1)FILTER(where
+        ph."resCode" = '200' ) as "successCnt",count(1)FILTER(where ph."resCode" != '200' ) as "failCnt" from
+        public."providerHistory" as ph join public."reqInfo" as ri on ri.id = ph."reqInfoId"
+        group by ri."code", "cnDate") as table1
+        join public."mdAgency" as ma
+        on ma.code = table1.code where table1.code = #{org_code}
+        and table1."cnDate" Between #{start_date} and #{end_date}
+        group by ma.name, ma.logo, ma.industry, ma.code;
+    </select>
+
+    <select id="periodStatisticsAll" resultType="com.ipa.openapi_inzent.model.DailyApiStatisticsDTO">
+        select ma.name, ma.code, SUM(table1."totalRequest") as "totalRequest",SUM(table1."successCnt") as "successCnt",
+        SUM(table1."failCnt") as "failCnt", ma.logo, ma.industry from
+        (select to_char(ph."reqDate", 'yyyyMMDD') "cnDate",ri."code", count(*) as "totalRequest", count(1)FILTER(where
+        ph."resCode" = '200' ) as "successCnt",count(1)FILTER(where ph."resCode" != '200' ) as "failCnt" from
+        public."providerHistory" as ph join public."reqInfo" as ri on ri.id = ph."reqInfoId"
+        group by ri."code", "cnDate") as table1
+        join public."mdAgency" as ma
+        on ma.code = table1.code
+        group by ma.name, ma.logo, ma.industry, ma.code;
+    </select>
+
+    <select id="periodStatisticsCalendar" parameterType="string" resultType="com.ipa.openapi_inzent.model.DailyApiStatisticsDTO">
+        select ma.name, ma.code, SUM(table1."totalRequest") as "totalRequest",SUM(table1."successCnt") as "successCnt",
+        SUM(table1."failCnt") as "failCnt", ma.logo, ma.industry from
+        (select to_char(ph."reqDate", 'yyyyMMDD') "cnDate",ri."code", count(*) as "totalRequest", count(1)FILTER(where
+        ph."resCode" = '200' ) as "successCnt",count(1)FILTER(where ph."resCode" != '200' ) as "failCnt" from
+        public."providerHistory" as ph join public."reqInfo" as ri on ri.id = ph."reqInfoId"
+        group by ri."code", "cnDate") as table1
+        join public."mdAgency" as ma
+        on ma.code = table1.code where table1."cnDate" Between #{start_date} and #{end_date}
+        group by ma.name, ma.logo, ma.industry, ma.code;
+    </select>
+
+    <select id="periodResourceSeq" parameterType="string" resultType="com.ipa.openapi_inzent.model.DailyApiSeqDTO">
+        select count(*) as seq, "apiResources" from public."providerHistory" as ph
+        join public."reqInfo" as ri on ri.id = ph."reqInfoId"
+        where ri.code = #{orgCode} and to_char(ph."reqDate",
+        'yyyyMMDD') Between #{start_date} and #{end_date}
+        group by "apiResources";
+    </select>
+
+    <select id="periodApiResource" parameterType="string" resultType="com.ipa.openapi_inzent.model.DailyApiErrorDTO">
+        select "resCode", count(*) from public."providerHistory" as ph join public."reqInfo" as ri on ri.id =
+        ph."reqInfoId"
+        where ri.code = #{orgCode} and to_char("reqDate", 'yyyyMMDD') Between #{start_date} and #{end_date}
+        group by "resCode" order by count(*) desc;
+    </select>
+
 
 </mapper>
+
+
+

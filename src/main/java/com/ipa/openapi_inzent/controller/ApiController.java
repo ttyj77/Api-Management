@@ -254,6 +254,10 @@ public class ApiController {
 
         model.addAttribute("api", a);
         model.addAttribute("resourceIndex", resourceList);
+        for (ApiDetailsDTO api : apiDetailsDTOList) {
+            api.setSummary(api.getSummary().replaceAll("\"", ""));
+            api.setOperationId(api.getOperationId().replaceAll("\"", ""));
+        }
         model.addAttribute("apiDetailsDTOList", apiDetailsDTOList);
         model.addAttribute("tagList", tagList);
 

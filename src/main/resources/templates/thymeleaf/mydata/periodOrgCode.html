@@ -51,7 +51,8 @@
             height: 300px;
             overflow-y: auto;
         }
-        .boxThree{
+
+        .boxThree {
             width: 49%;
             height: 300px;
             /*overflow-y: auto;*/
@@ -91,12 +92,15 @@
             <div id="content">
                 <div class="container-fluid">
                     <h1 class="h3 mb-2">API 통계</h1>
-                    <h5 th:text="${#dates.format(day,'yyyy-MM-dd')}" id="date">2023-06-15</h5>
+                    <h5 th:if="${tf == false}" th:text="|${#dates.format(sday,'yyyy-MM-dd')} ~ ${#dates.format(eday,'yyyy-MM-dd')}|">2023-06-15</h5>
+                    <input type="hidden" id="date" th:start_date="${sday}" th:end_date="${eday}">
                     <div class="mb-2 d-flex"><h5 class="backBox mr-2"><img class="profile"
-                                                                           th:src="|/images/${dailyApiOne.industry}/${dailyApiOne.logo}|"><span id="orgCode" th:value="${dailyApiOne.code}" th:text="${dailyApiOne.name}">인젠트뱅크</span>
+                                                                           th:src="|/images/${agency.industry}/${agency.logo}|"><span
+                            id="orgCode" th:value="${agency.code}" th:text="${agency.name}">인젠트뱅크</span>
                     </h5>
                         <h5 class="d-flex align-items-center">
-                            총 API 호출 수 :&nbsp; <span style="color: #0c4128; font-weight: bolder" th:text="${dailyApiOne.totalRequest}">3517</span>
+                            총 API 호출 수 :&nbsp; <span style="color: #0c4128; font-weight: bolder"
+                                                     th:text="${agency.totalRequest}">3517</span>
                         </h5>
                     </div>
                     <div class="d-flex justify-content-around">
@@ -121,7 +125,7 @@
 
                         <div class="shadow-lg boxTwo d-flex justify-content-around">
                             <canvas id="pie-chart" width="700" height="300"></canvas>
-                            <script src="/js/chart.js"></script>
+                            <script src="/js/periodChart.js"></script>
                         </div>
                         <div class="shadow-lg boxTwo">
                             <table class="table table-hover" id="dataTable"
@@ -145,7 +149,6 @@
                     </div>
 
                 </div>
-
 
             </div>
             <!-- End of Content Wrapper -->

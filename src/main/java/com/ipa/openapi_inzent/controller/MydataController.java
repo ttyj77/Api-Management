@@ -378,6 +378,7 @@ public class MydataController {
 
         return "/mydata/mydataSendReq";
     }
+
     @GetMapping("/selectToken")
     @ResponseBody
     public JsonObject selectToken(String orgCode) {
@@ -389,10 +390,10 @@ public class MydataController {
 
         object.addProperty("token", mdAgencyDTO.getMdTokenDTO().getAccessToken());
 
-        object.addProperty("clientId",mdAgencyDTO.getMdTokenDTO().getConsumerNum() );
-        object.addProperty("serviceName",mdAgencyDTO.getMdServiceDTO().getMdServiceName());
+        object.addProperty("clientId", mdAgencyDTO.getMdTokenDTO().getConsumerNum());
+        object.addProperty("serviceName", mdAgencyDTO.getMdServiceDTO().getMdServiceName());
         object.addProperty("orgCode", mdAgencyDTO.getCode());
-        object.addProperty("agencyName",mdAgencyDTO.getName());
+        object.addProperty("agencyName", mdAgencyDTO.getName());
 
         object.addProperty("issueDate", issueDate);
         object.addProperty("expireDate", expireDate);
@@ -435,7 +436,7 @@ public class MydataController {
         List<MdProviderDTO> list = mydataService.mdProviderCustomerList(customerNum, code);
 
         JsonArray providerArray = new JsonArray();
-        
+
         for (MdProviderDTO mdProviderDTO : list) {
             JsonObject r = new JsonObject();
             r.addProperty("id", mdProviderDTO.getId());
@@ -478,7 +479,7 @@ public class MydataController {
         for (MdProviderDTO mdProviderDTO : list) {
             String reqDate = mdProviderDTO.getReqDate();
             if (dday.equals("") || dday.equals(reqDate)) {
-                if (customerNum.equals(mdProviderDTO.getCustomerNum())&& mdProviderDTO.getMdReqInfoDTO().getCode().equals(org_code)) {
+                if (customerNum.equals(mdProviderDTO.getCustomerNum()) && mdProviderDTO.getMdReqInfoDTO().getCode().equals(org_code)) {
 
                     JsonObject r = new JsonObject();
 
@@ -540,7 +541,6 @@ public class MydataController {
         jsonObject.addProperty("providerList", r.toString());
         return jsonObject;
     }
-
 
 
     @GetMapping("/statistics/{orgCode}/{date}")
@@ -648,9 +648,10 @@ public class MydataController {
         return object;
     }
 
+
     @GetMapping("/statistics/calendar")
     @ResponseBody
-    public JsonObject statisticsCalendar(String dday) throws ParseException {
+    public JsonObject statisticsCalendar(String sday, String eday) throws ParseException {
 
         List<DailyApiStatisticsDTO> dailyApiList = getDataService.dailyAPIStatistics();
 
@@ -662,7 +663,7 @@ public class MydataController {
 
         JsonArray array = new JsonArray();
         for (DailyApiStatisticsDTO d : dailyApiList) {
-            if (dday.equals("") || dday.equals(d.getDate())) {
+            if (sday.equals("") || sday.equals(d.getDate())) {
                 JsonObject dObj = new JsonObject();
 
                 dObj.addProperty("date", d.getDate());
@@ -716,10 +717,128 @@ public class MydataController {
 
         List<DailyApiStatisticsDTO> dailyApiList = getDataService.dailyAPIStatistics();
 
-
         model.addAttribute("dailyApiList", dailyApiList);
 
         return "/mydata/dailyStatistics";
+    }
+
+    @GetMapping("/periodStatistics/{orgCode}/{start_date}/{end_date}")
+    public String periodDetail(Model model, @PathVariable String orgCode , @PathVariable String start_date, @PathVariable String end_date) throws ParseException {
+        System.out.println("start_date = " + start_date);
+        System.out.println("end_date = " + end_date);
+
+        SimpleDateFormat dayFormat = new SimpleDateFormat("yyyyMMdd");
+        Date sday = dayFormat.parse(start_date);
+        Date eday = dayFormat.parse(end_date);
+        Boolean tf = false; // 전체 기간 검색
+        if (end_date.equals("20991231")) {
+            tf = true; // 캘린더 후 검색
+        }
+        System.out.println("tf = " + tf);
+        System.out.println("orgCode = " + orgCode);
+
+        // 기관 정보 + 총 호출 횟수 + 성공 + 실패 횟수들
+        DailyApiStatisticsDTO period = getDataService.periodStatistics(orgCode, start_date, end_date);
+
+        // 리소스들 사용 빈도
+        List<DailyApiSeqDTO> apiSeqDTOList = getDataService.periodResourceSeq(orgCode, start_date, end_date);
+
+        // 에러코드 빈도 수
+        List<DailyApiErrorDTO> errorDTOList = getDataService.periodApiResource(orgCode, start_date, end_date);
+
+        // 에러코드 내용 출력
+        List<ErrorDTO> errorList = getDataService.errorAll();
+
+        // 에러코드 빈도 수 넣을 최종 리스트
+        List<ErrorDTO> errorSeqList = new ArrayList<>();
+//
+        for (DailyApiErrorDTO d : errorDTOList) {
+            for (ErrorDTO e : errorList) {
+                if (d.getResCode().equals(e.getError())) {
+                    ErrorDTO temp = new ErrorDTO();
+                    temp.setError(d.getResCode());
+                    temp.setSeq(d.getCount());
+                    temp.setReason(e.getReason());
+                    errorSeqList.add(temp);
+                }
+            }
+        }
+
+
+
+        model.addAttribute("tf", tf);
+        model.addAttribute("sday", sday);
+        model.addAttribute("eday", eday);
+
+        model.addAttribute("agency", period);
+        model.addAttribute("resourceSeq",apiSeqDTOList);
+        model.addAttribute("errorSeqList", errorSeqList);
+
+        System.out.println("MydataController.periodDetail");
+
+        return "/mydata/periodOrgCode";
+    }
+
+//    @GetMapping("/statistics/{orgCode}/{date}")
+//    public String statistics(Model model, @PathVariable String orgCode, @PathVariable String date) throws ParseException {
+//
+//        SimpleDateFormat dayFormat = new SimpleDateFormat("yyyyMMdd");
+//        Date day = dayFormat.parse(date);
+//        model.addAttribute("day", day);
+//
+//        return "/mydata/statistics";
+//    }
+
+    @GetMapping("/weekStatistics")
+    public String showPeriod(Model model) {
+
+//        List<DailyApiStatisticsDTO> periodApiList = getDataService.periodStatistics();
+        List<DailyApiStatisticsDTO> periodApiListAll = getDataService.periodStatisticsAll();
+        System.out.println("periodApiListAll = " + periodApiListAll);
+        model.addAttribute("periodApiListAll", periodApiListAll);
+
+        return "/mydata/periodStatistics";
+    }
+
+    @GetMapping("/periodStatistics/calendar")
+    @ResponseBody
+    public JsonObject periodStatisticsCalendar(String sday, String eday) throws ParseException {
+        int temp = 0;
+        int start_date = Integer.parseInt(sday);
+        int end_date = Integer.parseInt(eday);
+
+        // 시작일보다 끝나는 일이 더 작을 경우 바꿈
+        if (start_date > end_date) {
+            temp = start_date;
+            start_date = end_date;
+            end_date = temp;
+        }
+
+        List<DailyApiStatisticsDTO> periodApiList = getDataService.periodStatisticsCalendar(String.valueOf(start_date), String.valueOf(end_date));
+        System.out.println("periodApiList = " + periodApiList);
+
+        JsonObject object = new JsonObject();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat dayFormat = new SimpleDateFormat("yyyyMMdd");
+
+
+        JsonArray array = new JsonArray();
+        for (DailyApiStatisticsDTO d : periodApiList) {
+            JsonObject dObj = new JsonObject();
+
+            dObj.addProperty("name", d.getName());
+            dObj.addProperty("code", d.getCode());
+            dObj.addProperty("totalRequest", d.getTotalRequest());
+
+            dObj.addProperty("successCnt", d.getSuccessCnt());
+            dObj.addProperty("failCnt", d.getFailCnt());
+
+            array.add(dObj);
+        }
+        object.addProperty("periodApiList", array.toString());
+
+        return object;
     }
 
     // "" 없애주는 function

@@ -32,23 +32,8 @@
                 integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
                 crossorigin="anonymous"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script src="/js/mydata/dailyStatistics.js"></script>
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-        <script type="text/javascript"
-                src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"/>
+        <script src="/js/mydata/periodStatistics.js"></script>
 
-        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-
-        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-
-        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-
-        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-        <link rel="stylesheet" href="/resources/demos/style.css">
-        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     </th:block>
 
 </head>
@@ -67,7 +52,7 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">1일 통계</h1>
+                    <h1 class="h3 mb-2 text-gray-800">기간 통계</h1>
                     <p class="mb-4"></p>
 
                     <!-- DataTales Example -->
@@ -80,21 +65,9 @@
                                        style="width: 220px; text-align: center;">
                                 <input type="date" id="end_date" name="end_date"
                                        style="width: 220px; text-align: center;">
-                                <input type="submit" onclick="input(this)" id="input_submit" value="조회">
+                                <input type="submit" onclick="inputDate(this)" id="input_submit" value="조회">
                             </div>
                             <!-- Topbar Search -->
-                            <div class="col input-group mt-3 mr-3"
-                                 style="width: 40%; align-self: end;">
-                                <input type="text" class="form-control m-0" id="statistics"
-                                       placeholder="검색어를 입력해주세요( 기관명, 기관코드 )"
-                                       aria-label="Search" name="keyword">
-                                <div class="input-group-append">
-                                    <button class="btn btn-sm" type="button" onclick="statisticsSearch()"
-                                            style="background-color: black; color: white">
-                                        <i class="fa-solid fa-magnifying-glass" style="color: #ffffff;"></i> 조회
-                                    </button>
-                                </div>
-                            </div>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -102,20 +75,22 @@
                                        style="text-align: center; font-size: 13px">
                                     <thead>
                                     <tr style=" width: -webkit-fill-available; font-weight: bold; background-color: #f5f6fb;">
-                                        <td>통계일자</td>
+<!--                                        <td>통계일자</td>-->
                                         <td>기관명</td>
                                         <td>기관코드</td>
-                                        <td>성공한API호출 횟수</td>
+                                        <td>총 API 호출 횟수</td>
+                                        <td>성공한 API호출 횟수</td>
                                         <td>실패한 API호출 횟수</td>
                                     </tr>
                                     </thead>
 
                                     <tbody id="userNumTbody">
-                                    <tr th:each="list:${dailyApiList}"
-                                        th:onclick="'location.href=\'/mydata/statistics/'+ @{${list.code}} +'/'+ @{${list.date}} + '\''">
-                                        <td th:text="${list.date}">20211116</td>
+                                    <tr th:each="list:${periodApiListAll}"
+                                        th:onclick="'location.href=\'/mydata/periodStatistics/'+ @{${list.code}} + '/20000101/20991231\''">
+<!--                                        <td th:text="${list.date}">20211116</td>-->
                                         <td th:text="${list.name}">교보생명보험(주)</td>
                                         <td th:text="${list.code}">ZVAAAI0000</td>
+                                        <td th:text="${list.totalRequest}">ZVAAAI0000</td>
                                         <td th:text="${list.successCnt}">8963</td>
                                         <td th:text="${list.failCnt}">23</td>
                                     </tr>
