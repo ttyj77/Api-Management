@@ -36,7 +36,15 @@ function inputDate() {
 
                 tr.append(td_1, td_2, td_3, td_4, td_5);
                 tr.onclick = function () {
-                    location.href = "/mydata/statistics/" + periodApiList[i].code + "/" + sdate + "/" + edate;
+                    let temp = 0;
+
+                    // 시작일보다 끝나는 일이 더 작을 경우 바꿈
+                    if (sdate > edate) {
+                        temp = sdate;
+                        sdate = edate;
+                        edate = temp;
+                    }
+                    location.href = "/mydata/periodStatistics/" + periodApiList[i].code + "/" + sdate + "/" + edate;
                 };
                 tbody.append(tr);
             }

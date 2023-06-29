@@ -93,4 +93,8 @@ public class GetDataService {
     public List<DailyApiErrorDTO> periodApiResource(String orgCode, String startDate, String endDate) {
         return getDataDao.periodApiResource(orgCode, startDate, endDate);
     }
+
+    public List<DailyApiStatisticsDTO> periodTimeList(String code, String startDate, String endDate) {
+        return getDataDao.periodTimeList(code, startDate, endDate);
+    }
 }

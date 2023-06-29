@@ -36,6 +36,10 @@ function getGraph() {
             let resourcesSeq = JSON.parse(message.resourcesSeq);
             let errorSeq = JSON.parse(message.errorSeq);
 
+            console.log(timeList);
+            console.log(resourcesSeq);
+            console.log(errorSeq);
+
             // 선 그래프 데이터 넣기
             for (let i = 0; i < timeList.length; i++) {
                 xlabel.push(timeList[i].hh);

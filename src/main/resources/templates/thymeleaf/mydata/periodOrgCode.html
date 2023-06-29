@@ -93,7 +93,7 @@
                 <div class="container-fluid">
                     <h1 class="h3 mb-2">API 통계</h1>
                     <h5 th:if="${tf == false}" th:text="|${#dates.format(sday,'yyyy-MM-dd')} ~ ${#dates.format(eday,'yyyy-MM-dd')}|">2023-06-15</h5>
-                    <input type="hidden" id="date" th:start_date="${sday}" th:end_date="${eday}">
+                    <input type="hidden" id="date" th:start_date="${start_date}" th:end_date="${end_date}">
                     <div class="mb-2 d-flex"><h5 class="backBox mr-2"><img class="profile"
                                                                            th:src="|/images/${agency.industry}/${agency.logo}|"><span
                             id="orgCode" th:value="${agency.code}" th:text="${agency.name}">인젠트뱅크</span>

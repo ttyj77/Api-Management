@@ -49,4 +49,5 @@ public interface GetDataDAO {
 
     List<DailyApiErrorDTO> periodApiResource(String orgCode, String start_date, String end_date) throws DataAccessException;
 
+    List<DailyApiStatisticsDTO> periodTimeList(String orgCode, String start_date, String end_date) throws DataAccessException;
 }

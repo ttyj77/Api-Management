@@ -723,13 +723,14 @@ public class MydataController {
     }
 
     @GetMapping("/periodStatistics/{orgCode}/{start_date}/{end_date}")
-    public String periodDetail(Model model, @PathVariable String orgCode , @PathVariable String start_date, @PathVariable String end_date) throws ParseException {
+    public String periodDetail(Model model, @PathVariable String orgCode, @PathVariable String start_date, @PathVariable String end_date) throws ParseException {
         System.out.println("start_date = " + start_date);
         System.out.println("end_date = " + end_date);
 
         SimpleDateFormat dayFormat = new SimpleDateFormat("yyyyMMdd");
         Date sday = dayFormat.parse(start_date);
         Date eday = dayFormat.parse(end_date);
+
         Boolean tf = false; // 전체 기간 검색
         if (end_date.equals("20991231")) {
             tf = true; // 캘린더 후 검색
@@ -765,13 +766,15 @@ public class MydataController {
         }
 
 
-
         model.addAttribute("tf", tf);
         model.addAttribute("sday", sday);
+        model.addAttribute("start", start_date);
         model.addAttribute("eday", eday);
+        model.addAttribute("end", end_date);
+
 
         model.addAttribute("agency", period);
-        model.addAttribute("resourceSeq",apiSeqDTOList);
+        model.addAttribute("resourceSeq", apiSeqDTOList);
         model.addAttribute("errorSeqList", errorSeqList);
 
         System.out.println("MydataController.periodDetail");
@@ -779,15 +782,6 @@ public class MydataController {
         return "/mydata/periodOrgCode";
     }
 
-//    @GetMapping("/statistics/{orgCode}/{date}")
-//    public String statistics(Model model, @PathVariable String orgCode, @PathVariable String date) throws ParseException {
-//
-//        SimpleDateFormat dayFormat = new SimpleDateFormat("yyyyMMdd");
-//        Date day = dayFormat.parse(date);
-//        model.addAttribute("day", day);
-//
-//        return "/mydata/statistics";
-//    }
 
     @GetMapping("/weekStatistics")
     public String showPeriod(Model model) {
@@ -800,18 +794,103 @@ public class MydataController {
         return "/mydata/periodStatistics";
     }
 
+    @GetMapping("/periodChartData")
+    @ResponseBody
+    public JsonObject showChartData(String start_date, String end_date, String code) throws ParseException {
+        System.out.println("MydataController.showChartData");
+        JsonObject object = new JsonObject();
+        System.out.println("start_date = " + start_date);
+        System.out.println("end_date = " + end_date);
+        System.out.println("code = " + code);
+
+        SimpleDateFormat dayFormat = new SimpleDateFormat("yyyyMMdd");
+        Date sday = dayFormat.parse(start_date);
+        Date eday = dayFormat.parse(end_date);
+
+
+        // 총 호출 횟수 + 성공 + 실패 횟수들
+        List<DailyApiStatisticsDTO> dailyTimeList = getDataService.periodTimeList(code, start_date, end_date);
+
+        JsonArray timeArr = new JsonArray();
+        for (DailyApiStatisticsDTO d : dailyTimeList) {
+            JsonObject tArr = new JsonObject();
+            tArr.addProperty("code", d.getCode());
+            tArr.addProperty("hh", d.getHh());
+            tArr.addProperty("successCnt", d.getSuccessCnt());
+            tArr.addProperty("failCnt", d.getFailCnt());
+            timeArr.add(tArr);
+        }
+        object.addProperty("timeList", timeArr.toString());
+
+        // 리소스들 사용 빈도
+        List<DailyApiSeqDTO> apiSeqDTOList = getDataService.periodResourceSeq(code, start_date, end_date);
+        JsonArray resourcesArr = new JsonArray();
+        for (DailyApiSeqDTO d : apiSeqDTOList) {
+            JsonObject rArr = new JsonObject();
+            rArr.addProperty("apiResource", d.getApiResources());
+            rArr.addProperty("seq", d.getSeq());
+            resourcesArr.add(rArr);
+        }
+        System.out.println("resourcesArr = " + resourcesArr);
+        object.addProperty("resourcesSeq", resourcesArr.toString());
+
+        // 에러코드 빈도 수
+        List<DailyApiErrorDTO> errorDTOList = getDataService.periodApiResource(code, start_date, end_date);
+        System.out.println("errorDTOList = " + errorDTOList);
+
+        // 에러코드 내용 출력
+        List<ErrorDTO> errorList = getDataService.errorAll();
+
+        // 에러코드 빈도 수 넣을 최종 리스트
+        List<ErrorDTO> errorSeqList = new ArrayList<>();
+
+        for (DailyApiErrorDTO d : errorDTOList) {
+            for (ErrorDTO e : errorList) {
+                if (d.getResCode().equals(e.getError())) {
+                    ErrorDTO temp = new ErrorDTO();
+                    temp.setError(d.getResCode());
+                    temp.setSeq(d.getCount());
+                    temp.setReason(e.getReason());
+                    errorSeqList.add(temp);
+                }
+            }
+        }
+        JsonArray errorArr = new JsonArray();
+        for (ErrorDTO e : errorSeqList) {
+            JsonObject err = new JsonObject();
+            err.addProperty("error", e.getError());
+            err.addProperty("reason", e.getReason());
+            err.addProperty("seq", e.getSeq());
+            errorArr.add(err);
+        }
+        object.addProperty("errorSeq", errorArr.toString());
+
+
+        return object;
+
+    }
+
     @GetMapping("/periodStatistics/calendar")
     @ResponseBody
     public JsonObject periodStatisticsCalendar(String sday, String eday) throws ParseException {
         int temp = 0;
-        int start_date = Integer.parseInt(sday);
-        int end_date = Integer.parseInt(eday);
+        int start_date = 0;
+        int end_date = 0;
 
-        // 시작일보다 끝나는 일이 더 작을 경우 바꿈
-        if (start_date > end_date) {
-            temp = start_date;
-            start_date = end_date;
-            end_date = temp;
+        if (sday.equals("") || eday.equals("")) {
+            start_date = 20000101;
+            end_date = 20991231;
+        } else {
+
+            start_date = Integer.parseInt(sday);
+            end_date = Integer.parseInt(eday);
+
+            // 시작일보다 끝나는 일이 더 작을 경우 바꿈
+            if (start_date > end_date) {
+                temp = start_date;
+                start_date = end_date;
+                end_date = temp;
+            }
         }
 
         List<DailyApiStatisticsDTO> periodApiList = getDataService.periodStatisticsCalendar(String.valueOf(start_date), String.valueOf(end_date));
@@ -825,6 +904,7 @@ public class MydataController {
 
         JsonArray array = new JsonArray();
         for (DailyApiStatisticsDTO d : periodApiList) {
+
             JsonObject dObj = new JsonObject();
 
             dObj.addProperty("name", d.getName());

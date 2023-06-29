@@ -164,6 +164,22 @@
         group by "resCode" order by count(*) desc;
     </select>
 
+    <select id="periodTimeList" parameterType="string" resultType="com.ipa.openapi_inzent.model.DailyApiStatisticsDTO">
+        select table3.code, table3.hh,sum(table3."totalRequest") as "totalRequest",sum(table3."successCnt") as "successCnt",sum(table3."failCnt") as "failCnt" from (select table1.code, table1.hh, table2."totalRequest",table2."successCnt", table2."failCnt" from
+        (SELECT to_char(ph."reqDate",'yyyyMMDD') date, ri.code, hh FROM public."providerHistory" as ph
+        cross JOIN (SELECT to_char(generate_series( TO_CHAR(NOW(),'YYYYMMDD 00:00')::timestamp, TO_CHAR(NOW(),'YYYYMMDD
+        23:00')::timestamp, '1 hours'),'HH24:MI') as "hh") AS "time"
+        join public."reqInfo" as ri on ri.id = ph."reqInfoId"
+        group by to_char(ph."reqDate", 'yyyyMMDD'), ri.code,hh
+        ) as "table1" left join (select to_char(ph."reqDate", 'yyyyMMDD') "cnDate",to_char(ph."reqDate", 'HH24:00')
+        "cnHour",ri."code", count(*) as "totalRequest", count(1)FILTER(where ph."resCode" = '200' ) as
+        "successCnt",count(1)FILTER(where ph."resCode" != '200' ) as "failCnt" from public."providerHistory" as ph join
+        public."reqInfo" as ri on ri.id = ph."reqInfoId"
+        group by ri."code", "cnDate", "cnHour") as "table2" on table1."date" = table2."cnDate" and table1.hh =
+        table2."cnHour" and table1.code = table2.code where table1.code = #{orgCode} and date Between #{start_date} and #{end_date} order by hh asc) as table3
+        group by table3.code, table3.hh order by hh asc;
+    </select>
+
 
 </mapper>
 
