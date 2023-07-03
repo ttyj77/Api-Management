@@ -69,4 +69,32 @@ public class GetDataService {
     public List<DailyApiStatisticsDTO> dailyStatisticsSearch(String keyword) {
         return getDataDao.dailyStatisticsSearch(keyword);
     }
+
+    public List<DailyApiStatisticsDTO> periodApiList() {
+        return getDataDao.periodApiList();
+    }
+
+    public List<DailyApiStatisticsDTO> periodStatisticsAll() {
+        return getDataDao.periodStatisticsAll();
+    }
+
+    public List<DailyApiStatisticsDTO> periodStatisticsCalendar(String sday, String eday) {
+        return getDataDao.periodStatisticsCalendar(sday, eday);
+    }
+
+    public DailyApiStatisticsDTO periodStatistics(String orgCode, String startDate, String endDate) {
+        return getDataDao.periodStatistics(orgCode, startDate, endDate);
+    }
+
+    public List<DailyApiSeqDTO> periodResourceSeq(String orgCode, String startDate, String endDate) {
+        return getDataDao.periodResourceSeq(orgCode, startDate, endDate);
+    }
+
+    public List<DailyApiErrorDTO> periodApiResource(String orgCode, String startDate, String endDate) {
+        return getDataDao.periodApiResource(orgCode, startDate, endDate);
+    }
+
+    public List<DailyApiStatisticsDTO> periodTimeList(String code, String startDate, String endDate) {
+        return getDataDao.periodTimeList(code, startDate, endDate);
+    }
 }

@@ -261,6 +261,7 @@ public class ApiController {
         model.addAttribute("apiDetailsDTOList", apiDetailsDTOList);
         model.addAttribute("tagList", tagList);
 
+
         return "/apis/details";
     }
 

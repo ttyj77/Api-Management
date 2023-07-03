@@ -4,6 +4,7 @@ import com.ipa.openapi_inzent.model.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.dao.DataAccessException;
 
+import javax.xml.crypto.Data;
 import java.util.List;
 
 @Mapper
@@ -35,4 +36,18 @@ public interface GetDataDAO {
     List<DailyApiStatisticsDTO> dailyStatisticsDate(String dday) throws DataAccessException;
 
     List<DailyApiStatisticsDTO> dailyStatisticsSearch(String keyword) throws DataAccessException;
+
+    List<DailyApiStatisticsDTO> periodApiList() throws DataAccessException;
+
+    List<DailyApiStatisticsDTO> periodStatisticsAll() throws DataAccessException;
+
+    List<DailyApiStatisticsDTO> periodStatisticsCalendar(String start_date, String end_date) throws DataAccessException;
+
+    DailyApiStatisticsDTO periodStatistics(String org_code, String start_date, String end_date) throws DataAccessException;
+
+    List<DailyApiSeqDTO> periodResourceSeq(String orgCode, String start_date, String end_date) throws DataAccessException;
+
+    List<DailyApiErrorDTO> periodApiResource(String orgCode, String start_date, String end_date) throws DataAccessException;
+
+    List<DailyApiStatisticsDTO> periodTimeList(String orgCode, String start_date, String end_date) throws DataAccessException;
 }
