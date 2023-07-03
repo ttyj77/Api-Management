@@ -11,7 +11,7 @@ function detailModal(value) {
 
         success: (message) => {
             let parameterList = JSON.parse(message.parameterList)
-
+            console.log(parameterList)
             document.getElementById("dModal_url").innerText = message.url + message.uri;
             document.getElementById("dModal_method").innerText = message.method
             document.getElementById("dModal_summary").innerText = message.summary.replace(/\"/gi, "");
@@ -33,6 +33,7 @@ function detailModal(value) {
 
                 let explanation = document.createElement("td");
                 let required = document.createElement("td");
+                console.log(parameterList[i])
                 required.append(required_select(parameterList[i].required))
 
                 let type = document.createElement("td");
@@ -434,6 +435,8 @@ function required_select(param) {
     let select = document.createElement("select")
     select.className = "form-select"
     let option = document.createElement("option")
+    console.log("required select =======")
+    console.log(param)
     if (param == true) {
         option.innerText = "필수"
     } else if (param == false) {

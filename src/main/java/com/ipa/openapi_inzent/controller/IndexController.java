@@ -50,6 +50,9 @@ public class IndexController {
         return "mdAgencyTable";
     }
 
-
+    @GetMapping("/datepicker")
+    public String datepicker() {
+        return "/datepicker";
+    }
 
 }

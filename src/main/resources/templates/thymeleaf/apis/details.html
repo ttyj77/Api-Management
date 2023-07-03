@@ -154,10 +154,10 @@
                                         <td th:text="${detail?.version}" data-bs-toggle="modal"
                                             data-bs-target="#detailModal"></td>
                                         <td>
-                                            <i onclick="location.href='#'" style="cursor: pointer;"
-                                               data-toggle="tooltip"
-                                               title="Swagger 문서"
-                                               class="fa-solid fa-file-word doc"></i>
+<!--                                            <i onclick="location.href='#'" style="cursor: pointer;"-->
+<!--                                               data-toggle="tooltip"-->
+<!--                                               title="Swagger 문서"-->
+<!--                                               class="fa-solid fa-file-word doc"></i>-->
                                             <i sec:authorize="hasAnyRole('ADMIN','MYDATA','PROVIDER')"
                                                th:detailId="${detail.id}" th:detailName="${detail?.summary}"
                                                onclick="goTrash(this)" style="cursor: pointer;"
@@ -1143,7 +1143,7 @@
                                 <!--                                <h6 style="background-color: #1c294e; display:inline-block;padding: 15px;color: white;border-radius: 18px">-->
                                 <!--                                    금융업권금융업권</h6>-->
                                 <div class="badge badge-dark" style="height: 30px;"><span
-                                        style="vertical-align: -webkit-baseline-middle;">금융업권금융업권</span></div>
+                                        style="vertical-align: -webkit-baseline-middle;">금융업권</span></div>
 
                             </div>
                         </div>

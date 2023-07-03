@@ -421,8 +421,14 @@ public class ApiController {
                         parameterDTO.setName(String.valueOf(param.get("name")));
                         parameterDTO.setTransferMethod(String.valueOf(param.get("transferMethod")));
                         parameterDTO.setExplanation(String.valueOf(param.get("explanation")));
-                        Boolean b = Boolean.valueOf(String.valueOf(param.get("required")));
+
+                        System.out.println("required !!!!!!!!!!! ");
+                        System.out.println(param.get("required").toString().replaceAll("\"",""));
+
+                        Boolean b = Boolean.valueOf(param.get("required").toString().replaceAll("\"",""));
                         parameterDTO.setRequired(b);
+
+
                         parameterDTO.setType(String.valueOf(param.get("type")));
                         parameterDTO.setSample(String.valueOf(param.get("sample")));
 
@@ -537,6 +543,7 @@ public class ApiController {
             param.addProperty("type", list.get(i).getType());
             param.addProperty("required", list.get(i).getRequired());
             param.addProperty("sample", list.get(i).getSample());
+            System.out.println("param = " + param);
             paramArray.add(param);
         }
 

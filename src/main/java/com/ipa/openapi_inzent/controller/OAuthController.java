@@ -102,7 +102,7 @@ public class OAuthController {
         JsonNode node = mapper.readTree(response.getBody());
         String token = node.path("access_token").asText();
 
-        String url = "http://52.78.136.223:8000/resource/userInfo";
+        String url = "http://localhost:8000/resource/userInfo";
 
         // Use the access token for authentication
         HttpHeaders headers1 = new HttpHeaders();
@@ -191,7 +191,7 @@ public class OAuthController {
         JsonNode node = mapper.readTree(response.getBody());
         String token = node.path("access_token").asText();
 
-        String url = "http://52.78.136.223:8000/resource/userInfo";
+        String url = "http://localhost:8000/resource/userInfo";
 
         // Use the access token for authentication
         HttpHeaders headers1 = new HttpHeaders();
@@ -279,7 +279,7 @@ public class OAuthController {
             String username = principal.toString();
             userDTO = logIn;
             RestTemplate restTemplate = new RestTemplate();
-            String url = "http://52.78.136.223:8000/resource/check";
+            String url = "http://localhost:8000/resource/check";
             String token = userService.findToken(userDTO.getId());
             System.out.println("===================================Token====================");
             System.out.println("token = " + token);
