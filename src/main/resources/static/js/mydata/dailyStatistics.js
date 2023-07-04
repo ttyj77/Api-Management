@@ -4,11 +4,9 @@ function input() {
     tbody.innerHTML = "";
     let sday = document.getElementById("start_date").value;
     let sdate = sday.replaceAll("-", "");
-    let eday = document.getElementById("end_date").value;
-    let edate = eday.replaceAll("-", "");
 
     let data = {
-        "sday": sdate, "eday": edate
+        "sday": sdate
     }
     $.ajax({
         url: "/mydata/statistics/calendar", type: "get", data: data,

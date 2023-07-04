@@ -651,7 +651,7 @@ public class MydataController {
 
     @GetMapping("/statistics/calendar")
     @ResponseBody
-    public JsonObject statisticsCalendar(String sday, String eday) throws ParseException {
+    public JsonObject statisticsCalendar(String sday) throws ParseException {
 
         List<DailyApiStatisticsDTO> dailyApiList = getDataService.dailyAPIStatistics();
 
